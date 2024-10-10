@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 
@@ -16,8 +17,15 @@ public class taikhoan {
     String username;
     String password;
     String email;
+    boolean trangthai;
 
     @ManyToOne
-    @JoinColumn(name="role")
-    vaitro vaitro;
+    @JoinColumn(name = "role") // Khóa ngoại tới bảng vai trò
+    private vaitro vaiTro;
+
+    @OneToOne(mappedBy = "taikhoan") // Ánh xạ ngược lại đến NhanVien
+    private nhanvien nhanVien;
+
+    @OneToOne(mappedBy = "taikhoan") // Ánh xạ ngược lại đến KhachHang
+    private khachhang khachHang;
 }

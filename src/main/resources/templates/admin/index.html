@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
     <meta charset="utf-8">
@@ -226,7 +227,7 @@
                     <!-- Người dùng -->
                     <li class="menu-title" data-key="t-pages">Tài Khoản</li>
 
-                    <li >
+                    <li sec:authorize="hasRole('ROLE_ADMIN')">
                         <a href="/admin/nhan-vien">
                             <i class="bi bi-person-workspace"></i>
                             <span data-key="t-horizontal">Nhân Viên</span>
