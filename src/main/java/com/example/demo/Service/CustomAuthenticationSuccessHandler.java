@@ -21,9 +21,9 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
         if (role.equals("ROLE_ADMIN")) {
             redirectUrl = "/admin/trang-chu";
         } else if(role.equals("ROLE_USER")) {
-            redirectUrl = "/admin/trang-chu";
+            redirectUrl = "/user/home";
         } else if(role.equals("ROLE_STAFF")) {
-            redirectUrl = "/staff/home";
+            redirectUrl = "/admin/trang-chu";
         } else {
             redirectUrl = "/"; // Trang mặc định nếu không phải ADMIN hoặc STAFF
         }

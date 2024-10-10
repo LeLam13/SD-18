@@ -1,4 +1,4 @@
-package com.example.demosecurity.dto.reponse;
+package com.example.demo.dto.reponse;
 
 import lombok.Data;
 import java.time.LocalDate;
