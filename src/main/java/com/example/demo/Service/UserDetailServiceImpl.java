@@ -22,7 +22,7 @@ public class UserDetailServiceImpl implements UserDetailsService {
         taikhoan taikhoan =
                 taikhoanRepo.findById(username).orElse(null);
         if(taikhoan != null){
-            vaitro vaitro = taikhoan.getVaitro();
+            vaitro vaitro = taikhoan.getVaiTro();
             return User
                     .withUsername(username)
                     .password(taikhoan.getPassword())
