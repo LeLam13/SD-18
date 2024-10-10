@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "nhanvien")
+@Table(name = "nhan_vien")
 public class nhanvien {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,8 +52,8 @@ public class nhanvien {
     private boolean trangThai;
 
 
-    @ManyToOne
-    @JoinColumn(name = "username_taikhoan", referencedColumnName = "username")
+    @OneToOne
+    @JoinColumn(name = "username_tai_khoan", referencedColumnName = "username", unique = true)
     private taikhoan taikhoan;
 
 
