@@ -135,7 +135,7 @@
                     </button>
                     <div class="dropdown-menu dropdown-menu-end">
                         <!-- item-->
-                        <a class="dropdown-item" th:href="@{|/admin/nhan-vien/thong-tin-ca-nhan|}"><i
+                        <a class="dropdown-item" th:href="@{|/admin/nhan-vien/thong-tin-ca-nhan|}" sec:authorize="hasRole('ROLE_STAFF')"><i
                                 class="mdi mdi-face-profile font-size-16 align-middle me-1"></i> Thông tin cá
                             nhân</a>
                         <a class="dropdown-item" href="/admin/doi-mat-khau">
