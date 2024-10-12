@@ -12,7 +12,6 @@ import java.util.List;
 @Controller
 @RequestMapping("${admin.domain}/mau-sac")
 public class MauSacController {
-
     @GetMapping("")
     public String show() {
         return "/admin/mauSac";
