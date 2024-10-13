@@ -19,15 +19,14 @@ public class SecurityConfig {
     }
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler) throws Exception {
-        String[] adminPermitAll = {"/assets/**"};
+        String[] adminPermitAll = {"/assets/**","/admin/AngularJs/**", "/admin/assets/**", "/admin/css/**", "/admin/images/**", "/admin/js/**"};
         http.csrf().disable().cors().disable();
 
         http.authorizeHttpRequests(r -> r
                         .requestMatchers(adminPermitAll).permitAll()
                         .requestMatchers("/guest/**").permitAll()
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/admin/**").hasAnyRole("ADMIN", "STAFF")
                         .requestMatchers("/user/**").hasRole("USER")
-                        .requestMatchers("/staff/**").hasRole("STAFF")
                         .anyRequest().permitAll()
                 )
                 .formLogin(f -> f
