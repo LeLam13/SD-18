@@ -47,7 +47,7 @@
                         <div class="card-header">
                             <div class="row">
                                 <div class="col-6">
-                                    <a th:href="@{/admin/khuyen-mai/form-add}" class="btn btn-primary">
+                                    <a href="#" class="btn btn-primary">
                                         Tạo Khuyến Mại
                                     </a>
                                 </div>
@@ -59,54 +59,51 @@
                                             Điều kiện lọc
                                         </button>
                                         <div class="dropdown-menu" style="width: 500px; margin-right: 3px">
-                                            <form class="row g-3 needs-validation"
-                                                  th:action="@{/admin/khuyen-mai/loc-khuyen-mai}"
-                                                  method="post" th:object="${khuyenMaiDTOFilter}"
-                                                  novalidate>
+                                            <form class="row g-3 ">
                                                 <div class="col-md-6">
                                                     <label class="form-label">Mã khuyến mại</label>
-                                                    <input th:field="*{maTen}" type="text" class="form-control">
+                                                    <input type="text" class="form-control">
                                                 </div>
 
                                                 <div class="col-md-6">
                                                     <label class="form-label">Loại mức giảm</label>
-                                                    <select th:field="*{loaiMucGiam}" class="form-select"
+                                                    <select class="form-select"
                                                             required>
                                                         <option value="">Tất cả</option>
-                                                        <option th:value="1">Tiền</option>
-                                                        <option th:value="0">Phần trăm</option>
+                                                        <option>Tiền</option>
+                                                        <option>Phần trăm</option>
                                                     </select>
                                                 </div>
 
                                                 <div class="col-md-6">
                                                     <label class="form-label">Mức giảm từ</label>
-                                                    <input th:field="*{mucGiam}" type="number" class="form-control">
+                                                    <input type="number" class="form-control">
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Đến</label>
-                                                    <input th:field="*{mucGiamMax}" type="number"
+                                                    <input type="number"
                                                            class="form-control">
                                                 </div>
 
                                                 <div class="col-md-6">
                                                     <label class="form-label">Trạng thái</label>
-                                                    <select th:field="*{trangThai}" class="form-select"
+                                                    <select class="form-select"
                                                             required>
                                                         <option value="">Tất cả</option>
-                                                        <option th:value="0">Hoạt động</option>
-                                                        <option th:value="1">Dừng hoạt động</option>
+                                                        <option>Hoạt động</option>
+                                                        <option>Dừng hoạt động</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label class="form-label">Sắp xếp</label>
-                                                    <select th:field="*{sort}" class="form-select">
+                                                    <select class="form-select">
                                                         <option value="">Mặc định</option>
-                                                        <option th:value="2">Mới nhất</option>
-                                                        <option th:value="3">Sắp hết hạn</option>
-                                                        <option th:value="0">Mức giảm tăng dần</option>
-                                                        <option th:value="1">Mức giảm giảm dần</option>
-                                                        <option th:value="0">Tên từ a-z</option>
-                                                        <option th:value="1">Tên từ z-a</option>
+                                                        <option>Mới nhất</option>
+                                                        <option>Sắp hết hạn</option>
+                                                        <option>Mức giảm tăng dần</option>
+                                                        <option>Mức giảm giảm dần</option>
+                                                        <option>Tên từ a-z</option>
+                                                        <option>Tên từ z-a</option>
                                                     </select>
                                                 </div>
                                                 <div class="col-6">
@@ -115,7 +112,7 @@
                                                         Lọc
                                                     </button>
                                                     <a class="btn btn-danger" type="button"
-                                                       th:href="@{/admin/khuyen-mai}"> Bỏ lọc
+                                                    > Bỏ lọc
                                                     </a>
                                                 </div>
                                             </form>
@@ -142,25 +139,24 @@
                                 </thead>
 
                                 <tbody>
-                                <tr th:each="km : ${khuyenMai}">
-                                    <td th:text="${km.ten}"></td>
-                                    <td th:text="${km.loai}"></td>
-                                    <td th:text="${km.mucGiam}"></td>
-                                    <td th:text="${km.ngayBatDau}"></td>
-                                    <td th:text="${km.ngayKetThuc}"></td>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
                                     <td>
                                         <span style="color: green; border: solid 1px green"
-                                              th:if="${km.trangThai == 0}">
-                                                                            Đã kích hoạt
+                                        >
                                                                         </span>
                                         <span style="color: red; border:solid 1px red; height: 10px"
-                                              th:if="${km.trangThai == 1}">Chưa kích hoạt</span>
+                                        ></span>
                                     </td>
                                     <td>
-                                        <a th:href="@{/admin/khuyen-mai/{id}(id=${km.ma})}" class="edit">
+                                        <a class="edit">
                                             <i class="material-icons" title="Edit">&#xE254;</i>
                                         </a>
-                                        <a th:href="@{/admin/khuyen-mai/delete/{id}(id=${km.ma})}" class="delete">
+                                        <a class="delete">
                                             <i class="material-icons" title="Delete">&#xE872;</i>
                                         </a>
                                     </td>
@@ -179,11 +175,10 @@
                                                     <span class="sr-only">Previous</span>
                                                 </a>
                                             </li>
-                                            <li th:each="pageNumber: ${#numbers.sequence(1, totalPage)}"
-                                                class="page-item">
+                                            <li
+                                                    class="page-item">
                                                 <a class="page-link"
-                                                   th:text="${pageNumber}"
-                                                   th:href="@{'/admin/khuyen-mai?pageNumber='+${pageNumber}}"></a>
+                                                ></a>
                                             </li>
                                             <li class="page-item">
                                                 <a class="page-link" href="#" aria-label="Next">
@@ -270,15 +265,5 @@
     </div>
 </div>
 </body>
-<script>
-    var currentDate = new Date();
 
-    function date(date) {
-        if (date < currentDate) {
-            document.getElementById("tt").innerHTML = "Còn hạn";
-        } else if (date > currentDate) {
-            document.getElementById("tt").innerHTML = "Hết hạn";
-        }
-    }
-</script>
 </html>
