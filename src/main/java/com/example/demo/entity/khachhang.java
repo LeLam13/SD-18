@@ -8,13 +8,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.Data;
+import lombok.*;
 
 import java.util.Date;
 
-@Data
+//@Data
 @Entity
 @Table(name = "khach_hang")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class khachhang {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

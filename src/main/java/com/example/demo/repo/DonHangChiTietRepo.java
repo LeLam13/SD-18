@@ -11,4 +11,7 @@ import java.util.List;
 public interface DonHangChiTietRepo extends JpaRepository<DonHangChiTiet,Integer> {
     @Query("SELECT d FROM DonHangChiTiet d WHERE d.donHang.idDonHang = :idDonHang")
     List<DonHangChiTiet> findByDonHangId(Integer idDonHang);
+
+    @Query("SELECT d FROM DonHangChiTiet d WHERE d.sanPhamChiTiet.idSanPhamChiTiet = :idSanPhamCT")
+    DonHangChiTiet findBySanPhamID(Integer idSanPhamCT);
 }

@@ -1,6 +1,7 @@
 package com.example.demo.Service;
 
 import com.example.demo.dto.reponse.DonHangTongSoLuongResponseDTO;
+import com.example.demo.dto.request.DonHangChiTietRequestDTO;
 import com.example.demo.dto.request.DonHangRequestDTO;
 import com.example.demo.entity.*;
 import com.example.demo.repo.*;
@@ -55,5 +56,29 @@ public class DonHangServiceImpl implements DonHangService{
     @Override
     public List<DonHangChiTiet> getAllProductsOrder(Integer id) {
         return donHangChiTietRepo.findByDonHangId(id);
+    }
+
+    @Override
+    public DonHangChiTiet updateDonHangChitiet(DonHangChiTietRequestDTO chitietRequestDTO) {
+        DonHangChiTiet oldDonHangCT = donHangChiTietRepo.findBySanPhamID(chitietRequestDTO.getIdSanPhamChiTiet());
+        System.out.println("oldDonHangCT: "+oldDonHangCT);
+        oldDonHangCT.setIdDonHangChiTiet(oldDonHangCT.getIdDonHangChiTiet());
+        Integer soLuong = oldDonHangCT.getSoLuong() + chitietRequestDTO.getSoLuong();
+        oldDonHangCT.setSoLuong(soLuong);
+        return donHangChiTietRepo.save(oldDonHangCT);
+    }
+
+    @Override
+    public DonHangChiTiet createDonHangChitiet(DonHangChiTietRequestDTO chitietRequestDTO) {
+//        SanPhamChiTiet oldSacPhamCT = sanPhamChiTietRepo.findById(chitietRequestDTO.getIdSanPhamChiTiet()).get();
+//        DonHangChiTiet newDonHangCT = new DonHangChiTiet();
+//
+//        newDonHangCT.setMaDonHangChiTiet(chitietRequestDTO.getMaDonHangChiTiet());
+//        newDonHangCT.setSoLuong(chitietRequestDTO.getSoLuong());
+//        newDonHangCT.setDonGia(oldSacPhamCT.getDonGia());
+//
+//        DonHang oldDonHang = donHangRepo.findById(chitietRequestDTO.getIdĐonHang()).get();
+//        newDonHangCT.setDonHang(oldDonHang);
+        return null;
     }
 }

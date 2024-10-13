@@ -11,19 +11,23 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-@Data
+//@Data
 @Entity
 @Table(name = "nhan_vien")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class nhanvien {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_nhan_vien")
-    private int idNhanVien;
+    private Integer idNhanVien;
 
     @Column(name = "ma_nhan_vien", nullable = false)
     private String maNhanVien;

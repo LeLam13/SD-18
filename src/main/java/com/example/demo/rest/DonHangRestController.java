@@ -52,16 +52,26 @@ public class DonHangRestController {
 
     @PostMapping("/don-hang/don-hang-chi-tiet/them-moi")
     public ResponseEntity<?> addDonHangChiTiet(@RequestBody DonHangChiTietRequestDTO donHangCTDTO){
-//        DonHang donHang = donHangService.createDonHAng(donHangDTO);
-//        System.out.println("log check: "+donHang);
+
+
         return ResponseEntity.ok("");
     }
 
-    @PostMapping("/don-hang/don-hang-chi-tiet/them-moi")
+    @PutMapping("/don-hang/don-hang-chi-tiet/cap-nhat")
     public ResponseEntity<?> updateDonHangChiTiet(@RequestBody DonHangChiTietRequestDTO donHangCTDTO){
 //        DonHang donHang = donHangService.createDonHAng(donHangDTO);
-        System.out.println("log check: "+donHangCTDTO);
-        return ResponseEntity.ok("");
+        System.out.println("log check DonHangChiTietRequestDTO: "+donHangCTDTO);
+        DonHangChiTiet donHangChiTiet = donHangService.updateDonHangChitiet(donHangCTDTO);
+
+        DonHangChiTietResponseDTO responseDTO = new DonHangChiTietResponseDTO();
+        responseDTO.setIdDonHangChiTiet(donHangChiTiet.getIdDonHangChiTiet());
+        responseDTO.setMaDonHangChiTiet(donHangChiTiet.getMaDonHangChiTiet());
+        responseDTO.setSoLuong(donHangChiTiet.getSoLuong());
+        responseDTO.setDonGia(donHangChiTiet.getDonGia());
+        responseDTO.setTenSanPham(donHangChiTiet.getSanPhamChiTiet().getTen());
+        responseDTO.setIdSanPham(donHangChiTiet.getSanPhamChiTiet().getIdSanPhamChiTiet());
+        System.out.println("donHangChiTiet: "+donHangChiTiet);
+        return ResponseEntity.ok(responseDTO);
     }
 
     @GetMapping("/don-hang/get-don-hang")

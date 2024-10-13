@@ -57,7 +57,7 @@ public class SanPhamChiTiet {
     private Integer soLuong;
 
     @Column(name = "don_gia")
-    private Integer donGia;
+    private Float donGia;
 
     @Column(name = "mo_ta")
     private String moTa;

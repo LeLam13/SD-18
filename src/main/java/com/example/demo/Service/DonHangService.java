@@ -1,6 +1,7 @@
 package com.example.demo.Service;
 
 import com.example.demo.dto.reponse.DonHangTongSoLuongResponseDTO;
+import com.example.demo.dto.request.DonHangChiTietRequestDTO;
 import com.example.demo.dto.request.DonHangRequestDTO;
 import com.example.demo.entity.DonHang;
 import com.example.demo.entity.DonHangChiTiet;
@@ -16,4 +17,7 @@ public interface DonHangService {
     List<DonHangTongSoLuongResponseDTO> getTongSoLuongDonHang();
 
     List<DonHangChiTiet> getAllProductsOrder(Integer id);
+
+    DonHangChiTiet updateDonHangChitiet(DonHangChiTietRequestDTO chitietRequestDTO);
+    DonHangChiTiet createDonHangChitiet(DonHangChiTietRequestDTO chitietRequestDTO);
 }

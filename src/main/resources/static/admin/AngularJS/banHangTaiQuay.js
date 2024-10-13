@@ -34,10 +34,12 @@ app.controller("banhang-ctrl", function ($scope, $http) {
     $scope.products = [];
     $scope.productDetails = [];
 
+    var selectedId = null;
     $scope.selectedId = null;
     //lấy don hàng chi tiết khi click đơn hàng
     $scope.selectOrder = function(id) {
         $scope.selectedId = id;
+        selectedId = id;
         console.log('Selected Order ID:', id);
         $http.get(`/don-hang/don-hang-chi-tiet/${$scope.selectedId}`).then(function (response){
             console.log("check don hàng chi tiết: ",response.data);
@@ -70,7 +72,6 @@ app.controller("banhang-ctrl", function ($scope, $http) {
 
     $scope.addDonHang = function() {
         var donHangData = angular.copy($scope.donHangAdd);
-
         $http({
             method: 'POST',
             url: '/don-hang/them-moi',
@@ -89,21 +90,27 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         });
     };
 
-    //thêm sản phẩm vào đơn hàng chi tiết
+    //thêm/cập nhật sản phẩm vào đơn hàng chi tiết
     $scope.addProductsDetail = function (idSanPhamChiTiet){
         $scope.dataProduct ={
             maDonHangChiTiet: $scope.generateRandomString(8),
-            idDonHang: $scope.selectedId,
+            idĐonHang: selectedId,
             idSanPhamChiTiet: idSanPhamChiTiet,
             soLuong: '1'
         }
         var dataProductsDetails = angular.copy($scope.dataProduct);
+        if ($scope.dataProduct.idDonHang === null) {
+            console.log("idDonHang is null, action blocked.");
+            alert("Bạn Chưa Chọn Đơn Hàng!");
+            return;  // Chặn không cho thực hiện nếu idDonHang là null
+        }
         //kiểm tra đã tồn tại sản phẩm chưa
         var productWithId = $scope.productDetails.find(item => item.idSanPham === idSanPhamChiTiet);
         if(productWithId){
+            //console.log("productWithId",productWithId);
             $http({
                 method: 'PUT',
-                url: '/don-hang/them-moi',
+                url: '/don-hang/don-hang-chi-tiet/cap-nhat',
                 data: dataProductsDetails,
                 headers: {
                     'Content-Type': 'application/json'
@@ -112,21 +119,42 @@ app.controller("banhang-ctrl", function ($scope, $http) {
                     return JSON.stringify(data);  // Chuyển đối tượng thành chuỗi JSON
                 }
             }).then(function(response) {
-                console.log('Sản phẩm thêm thành công');
-                $scope.getDonHang();
+                //console.log('Sản phẩm thêm thành công');
+                console.log('Sản phẩm thêm: ',response.data);
+                productWithId.soLuong++;
+                //console.log('Sản phẩm thêm thành công: ',productWithId);
             }).catch(function(error) {
                     console.error('Có lỗi xảy ra:', error);
             });
         }else {
-            console.log("check sản phẩm chưa tồn tạo ");
+            //console.log("check sản phẩm chưa tồn tạo ");
+            //thêm sản phẩm vào giỏ hàng
+            $http({
+                method: 'POST',
+                url: '/don-hang/don-hang-chi-tiet/them-moi',
+                data: dataProductsDetails,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                transformRequest: function(data) {
+                    return JSON.stringify(data);  // Chuyển đối tượng thành chuỗi JSON
+                }
+            }) .then(function(response) {
+                console.log('Sp dơn hàng chi tiết đã được thêm:', response.data);
+
+            }).catch(function(error) {
+                console.error('Có lỗi xảy ra:', error);
+            });
         }
         console.log("check Data spct",$scope.dataProduct);
     }
+
 
     //show-modal-khach
     $scope.openModal = function() {
         $('#show-modal-khach').modal('show');
     };
+
 
     //load data product when run
     $scope.getProducts();
