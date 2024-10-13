@@ -9,16 +9,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -70,18 +66,18 @@ public class SanPhamChiTiet {
     private String hinhAnh;
 
     @ManyToOne
-    @JoinColumn(name = "san_pham")
+    @JoinColumn(name = "id_san_pham")
     private SanPham idSanPham;
 
     @ManyToOne
-    @JoinColumn(name = "mau_sac")
+    @JoinColumn(name = "id_mau_sac")
     private MauSac idMauSac;
 
     @ManyToOne
-    @JoinColumn(name = "thuong_hieu")
+    @JoinColumn(name = "id_thuong_hieu")
     private ThuongHieu idThuongHieu;
 
     @ManyToOne
-    @JoinColumn(name = "kieu_dang")
+    @JoinColumn(name = "id_kieu_dang")
     private KieuDang idKieuDang;
 }
