@@ -76,10 +76,10 @@
 
                                     <tbody>
                                     <tr ng-repeat="m in items">
-
+                                        <td>{{m.idMauSac}}</td>
                                         <td>{{m.ten}}</td>
-                                        <td>{{m.ngayTao | date:'yyyy-MM-dd HH:mm:ss'}}</td>
-                                        <td>{{m.ngayCapNhat | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                        <td>{{m.createDate | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                        <td>{{m.updateDate | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                                         <td>
                                             <button data-bs-toggle="modal"
                                                     class="btn btn-primary"
