@@ -81,10 +81,10 @@
 
                                     <tbody>
                                     <tr ng-repeat="p in itemss">
-                                        <td>{{p.idKieuDang}}</td>
+                                        <td>{{p.id}}</td>
                                         <td>{{p.ten}}</td>
-                                        <td>{{p.createDate | date:'yyyy-MM-dd HH:mm:ss'}}</td>
-                                        <td>{{p.updateDate | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                        <td>{{p.ngayTao | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                        <td>{{p.ngayCapNhat | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                                         <td>
                                             <a href="" class="edit" data-bs-toggle="modal" data-bs-target="#kieuDang"
                                                ng-click=findById(p.id)>
