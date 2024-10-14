@@ -1,0 +1,141 @@
+<!-- views/forgot-password.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quên Mật Khẩu</title>
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #eef2f7;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .forgot-password-container {
+      background-color: white;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    .forgot-password-container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .forgot-password-container p {
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+
+    .form-group label {
+      color: #555;
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .form-control {
+      border-radius: 30px;
+      padding: 10px 15px;
+      font-size: 14px;
+      border: 1px solid #ddd;
+      transition: border-color 0.3s ease;
+      width: 80%; /* Ô nhập liệu dài bằng nút bấm */
+    }
+
+    .form-control:focus {
+      border-color: #007bff;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    }
+
+    .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+      border-radius: 30px;
+      width: 99%; /* Nút bấm chiếm toàn bộ chiều ngang */
+      padding: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
+    }
+
+    .footer-text {
+      margin-top: 20px;
+      text-align: center;
+      color: #777;
+      font-size: 13px;
+    }
+
+    .footer-text a {
+      color: #007bff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .footer-text a:hover {
+      text-decoration: underline;
+    }
+
+    /* Styles for success and error messages */
+    .message {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    .success-message {
+      color: green;
+    }
+
+    .error-message {
+      color: red;
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="forgot-password-container">
+  <h2>Quên Mật Khẩu</h2>
+  <p>Vui lòng nhập email của bạn để chúng tôi có thể gửi mật khẩu mới.</p>
+
+  <!-- Hiển thị thông báo thành công -->
+  <div th:if="${successMessage}" class="message success-message" th:text="${successMessage}"></div>
+
+  <!-- Hiển thị thông báo lỗi -->
+  <div th:if="${errorMessage}" class="message error-message" th:text="${errorMessage}"></div>
+
+  <form method="post" action="/forgot-password">
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" name="email" class="form-control" placeholder="Nhập email của bạn" required>
+    </div>
+    <br>
+    <button type="submit" class="btn btn-primary">Gửi Mật Khẩu Mới</button>
+  </form>
+
+  <p class="footer-text">
+    <a href="/login">Quay lại trang đăng nhập</a>
+  </p>
+</div>
+
+</body>
+</html>

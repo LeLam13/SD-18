@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:/www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{/admin/index}">
+
+<head>
+    <title>ALLDY SNAEKER | Bán Hàng Tại Quầy</title>
+</head>
+
+<body>
+    <div class="main-content" layout:fragment="content">
+        <style>
+            .table th, .table td {
+                vertical-align: middle;
+            }
+            .quantity-input {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .quantity-input input {
+                width: 50px;
+                text-align: center;
+            }
+            .remove-btn {
+                color: red;
+                cursor: pointer;
+            }
+
+            .table th,
+            .table td {
+                padding: 12px;
+                /* Điều chỉnh khoảng cách giữa các ô */
+                /*vertical-align: middle;*/
+                /* Căn giữa theo chiều dọc */
+            }
+
+            .table th {
+                background-color: #f8f9fa;
+                /* Màu nền cho tiêu đề cột */
+                position: sticky;
+                /* Giữ tiêu đề cố định khi cuộn */
+                top: 0;
+                /* Vị trí của tiêu đề */
+                z-index: 1;
+                /* Đảm bảo tiêu đề nằm trên cùng */
+            }
+
+            .payment-box {
+                border: 1px solid #ccc;
+                padding: 20px;
+                border-radius: 10px;
+                max-width: 350px;
+                max-height: 4500px;
+                margin: 0 auto;
+                font-size: 16px;
+            }
+            .payment-box input, .payment-box select {
+                margin-bottom: 10px;
+            }
+            .total-amount {
+                font-weight: bold;
+                font-size: 20px;
+            }
+            .customer-box {
+                border: 1px solid #ccc;  /* Viền xám nhạt */
+                padding: 10px;           /* Khoảng cách bên trong */
+                border-radius: 5px;      /* Bo góc cho hộp */
+                background-color: #f9f9f9; /* Màu nền xám nhạt */
+                color: #a5a5a5;          /* Màu chữ xám nhạt */
+                font-size: 14px;         /* Giảm kích thước chữ */
+            }
+            .item {
+                display: flex;
+                flex-direction: column;
+                justify-content: center; /* Giữ các phần tử ở giữa theo chiều dọc */
+                background-color: #282c34;
+                color: white;
+                border-radius: 10px;
+                padding: 7px;
+                width: 80px;
+                height: 40px;
+                cursor: pointer;
+                margin-right: 5px;
+                position: relative; /* Đặt các phần tử con một cách chính xác */
+            }
+
+            .item.active {
+                background-color: #007bff;
+            }
+
+            .item .count, .item .badge {
+                font-size: 10px;
+                font-weight: bold;
+                position: absolute;  /* Đặt vị trí chính xác */
+                left: 5px;           /* Canh sang trái */
+            }
+
+            .item .count {
+                top: 5px;             /* Canh phía trên cho count */
+            }
+
+            .item .badge {
+                bottom: 5px;          /* Canh phía dưới cho badge */
+            }
+
+            .item .icon {
+                font-size: 20px;
+                margin: auto;         /* Đặt icon vào giữa */
+                z-index: 1;           /* Đảm bảo icon nằm trên các phần tử khác nếu cần */
+            }
+
+            .plus-button {
+                background-color: #282c34;
+                color: white;
+                border: none;
+                border-radius: 50%;
+                padding: 10px;
+                font-size: 14px;
+                cursor: pointer;
+            }
+            .selected {
+                background-color: blue; /* Màu nền khi được chọn */
+            }
+        </style>
+        <div class="page-content">
+            <div class="container-fluid" ng-app="banhang-app" ng-controller="banhang-ctrl">
+
+                <div class="row">
+                    <div class="item" ng-repeat="donHangs in donHang" ng-click="selectOrder(donHangs.idDonHang)" ng-class="{'selected': selectedId === donHangs.idDonHang}">
+                        <div class="count" hidden>{{ donHangs.idDonHang }}</div>
+                        <div class="count">Đơn</div>
+                        <div class="icon">🛒</div>
+                        <div class="badge">{{ $index + 1 }}</div >
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-7">
+                        <div class="row">
+                            <h2>Giỏ hàng</h2>
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">Tên Sản phẩm</th>
+                                    <th scope="col" class="text-center">Số lượng</th>
+                                    <th scope="col">Đơn Giá</th>
+                                    <th scope="col">Giá bán</th>
+                                    <th scope="col">Tổng tiền</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="details in productDetails">
+                                    <td class="text-center">
+                                        <span class="remove-btn">&times;</span> <!-- Nút remove -->
+                                    </td>
+                                    <td>{{ details.tenSanPham}}</td>
+                                    <td class="text-center">
+                                        <div class="quantity-input">
+                                            <button class="btn btn-outline-secondary">-</button>
+                                            <input ng-model="details.soLuong" type="number" class="form-control" value="1" min="1">
+                                            <button class="btn btn-outline-secondary">+</button>
+                                        </div>
+                                    </td>
+                                    <td>{{ details.donGia}}</td>
+                                    <td>{{ details.donGia}}</td>
+                                    <td>{{details.soLuong*details.donGia}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination">
+                                        <li class="page-item">
+                                            <a class="page-link" href="#" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <h2>San Pham</h2>
+                            <table class="table table-bordered">
+                                <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">Tên Sản phẩm</th>
+                                    <th scope="col" class="text-center">Số lượng</th>
+                                    <th scope="col">Đơn Giá</th>
+                                    <th scope="col">Giá bán</th>
+                                    <th scope="col"></th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="itemProducts in products">
+                                    <td>
+                                        <img ng-src="/assets/img/{{itemProducts.hinhAnh}}" alt="" class="img-fluid mx-auto d-block" style="max-height: 100px; max-width: 100px;">
+                                    </td>
+                                    <td>{{itemProducts.idSanPham.ten}}</td>
+                                    <td class="text-center">
+                                        {{itemProducts.soLuong}}
+                                    </td>
+                                    <td>{{itemProducts.donGia}}</td>
+                                    <td>{{itemProducts.donGia}}</td>
+                                    <td class="text-center">
+<!--                                        <span class="remove-btn">&times;</span> &lt;!&ndash; Nút remove &ndash;&gt;-->
+                                        <button ng-click="addProductsDetail(itemProducts.idSanPhamChiTiet)" class="btn btn-outline-secondary">+</button>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="row">
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination">
+                                        <li class="page-item">
+                                            <a class="page-link" href="#" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-5">
+                        <div class="row">
+                            <div class="col-4">
+                                <button ng-click="addDonHang()" type="button" class="btn btn-primary">Tạo Đơn Hàng</button>
+                            </div>
+                            <div class="col-5">
+                                <button ng-click="openModal()" type="button" class="btn btn-secondary">Chọn Khách Hàng</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="payment-box mt-2">
+                                <div class="customer-box">
+                                    Thêm khách hàng vào đơn
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Tổng tiền:</label>
+                                    <span class="total-amount">2,522,500</span>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Khách phải trả:</label>
+                                    <span>2,322,500</span>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Khách còn thiếu:</label>
+                                    <span>0</span>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Phiếu giảm giá:</label>
+                                    <select class="form-select">
+                                        <option selected>Giảm giá mừng lễ</option>
+                                    </select>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Tiền giảm:</label>
+                                    <span>200,000</span>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Khách thanh toán:</label>
+                                    <button class="btn btn-success btn-sm"><i class="bi bi-calculator"></i></button>
+                                    <span style="margin-left: 10px">2,322,500</span>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Ghi chú:</label>
+                                    <textarea class="form-control" rows="2"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--modal-->
+                <div class="modal fade" id="show-modal-khach" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <table class="table">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">STT</th>
+                                        <th scope="col">Tên Khách Hàng</th>
+                                        <th scope="col">Số Điện Thoại</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr>
+                                        <th scope="row">1</th>
+                                        <td>Mark</td>
+                                        <td>Otto</td>
+                                        <td>@mdo</td>
+                                    </tr>
+                                    <tr>
+                                        <th scope="row">2</th>
+                                        <td>Jacob</td>
+                                        <td>Thornton</td>
+                                        <td>@fat</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <!--                    <button type="button" class="btn btn-primary">Save changes</button>-->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+
+</html>
