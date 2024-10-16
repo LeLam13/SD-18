@@ -22,4 +22,5 @@ public class EmployeeSignupDTO {
     private String soCanCuocCongDan;
     private String diaChi;
     private String gioiTinh;
+    private String vaiTro;
 }

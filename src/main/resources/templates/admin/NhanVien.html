@@ -19,7 +19,9 @@
     </style>
     <div class="page-content">
         <div class="container-fluid">
-
+            <div th:if="${error}" class="alert alert-danger" role="alert">
+                <span th:text="${error}"></span>
+            </div>
             <div class="row align-items-center">
                 <div class="col-md-6">
                 </div>
@@ -41,61 +43,53 @@
                 </div>
             </div>
             <h2>Thông Tin Nhân Viên</h2>
-            <form id="nhanVienForm" class="form">
-                <div class="mb-3 row">
-                    <label for="maNhanVien" class="col-sm-3 col-form-label">Mã Nhân Viên</label>
-                    <div class="col-sm-9">
-                        <input id="maNhanVien" ng-model="nhanVien.maNhanVien" class="form-control" disabled>
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="hoTen" class="col-sm-3 col-form-label">Họ và Tên</label>
-                    <div class="col-sm-9">
-                        <input id="hoTen" ng-model="nhanVien.hoTen" class="form-control" disabled>
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="soDienThoai" class="col-sm-3 col-form-label">Số Điện Thoại</label>
-                    <div class="col-sm-9">
-                        <input id="soDienThoai" ng-model="nhanVien.soDienThoai" class="form-control" disabled>
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="ngaySinh" class="col-sm-3 col-form-label">Ngày Sinh</label>
-                    <div class="col-sm-9">
-                        <input id="ngaySinh" ng-model="nhanVien.ngaySinh" type="date" class="form-control" disabled>
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="soCanCuocCongDan" class="col-sm-3 col-form-label">Số Căn Cước Công Dân</label>
-                    <div class="col-sm-9">
-                        <input id="soCanCuocCongDan" ng-model="nhanVien.soCanCuocCongDan" class="form-control" disabled>
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="diaChi" class="col-sm-3 col-form-label">Địa Chỉ</label>
-                    <div class="col-sm-9">
-                        <input id="diaChi" ng-model="nhanVien.diaChi" class="form-control" disabled>
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="gioiTinh" class="col-sm-3 col-form-label">Giới Tính</label>
-                    <div class="col-sm-9">
-                        <input id="gioiTinh" ng-model="nhanVien.gioiTinh" class="form-control" disabled>
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="trangThai" class="col-sm-3 col-form-label">Trạng Thái</label>
-                    <div class="col-sm-9">
-                        <input id="trangThai" ng-model="nhanVien.trangThai" class="form-control" disabled>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-9 offset-sm-3">
-                        <button type="button" class="btn btn-secondary" ng-click="goBack()">Quay lại</button>
-                    </div>
-                </div>
-            </form>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>Mã Nhân Viên</th>
+                    <th>Họ và Tên</th>
+                    <th>Số Điện Thoại</th>
+                    <th>Ngày Sinh</th>
+                    <th>Số Căn Cước Công Dân</th>
+                    <th>Địa Chỉ</th>
+                    <th>Giới Tính</th>
+                    <th>Trạng Thái</th>
+                    <th>Thao Tác</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td id="maNhanVien1"></td>
+                    <td id="hoTen1"></td>
+                    <td id="soDienThoai1"></td>
+                    <td id="ngaySinh1"></td>
+                    <td id="soCanCuocCongDan1"></td>
+                    <td id="diaChi1"></td>
+                    <td id="gioiTinh1"></td>
+                    <td id="trangThai1"></td>
+                    <td>
+                        <button type="button" class="btn btn-info" onclick="editEmployee('NV001')">Sửa</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteEmployee('NV001')">Xóa</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td id="maNhanVien2"></td>
+                    <td id="hoTen2"></td>
+                    <td id="soDienThoai2"></td>
+                    <td id="ngaySinh2"></td>
+                    <td id="soCanCuocCongDan2"></td>
+                    <td id="diaChi2"></td>
+                    <td id="gioiTinh2"></td>
+                    <td id="trangThai2"></td>
+                    <td>
+                        <button type="button" class="btn btn-info" onclick="editEmployee('NV002')">Sửa</button>
+                        <button type="button" class="btn btn-danger" onclick="deleteEmployee('NV002')">Xóa</button>
+                    </td>
+                </tr>
+                <!-- Thêm các nhân viên khác ở đây -->
+                </tbody>
+            </table>
+
 
 
             <!-- container-fluid -->
@@ -148,6 +142,13 @@
                                     <label for="gioiTinh">Giới tính:</label>
                                     <input type="text" id="gioiTinh" name="gioiTinh" class="form-control">
                                 </div>
+                                <div class="mb-3">
+                                    <label for="vaiTro">Vai trò:</label>
+                                    <select id="vaiTro" name="vaiTro" class="form-control" required>
+                                        <option value="STAFF">Nhân viên (STAFF)</option>
+                                        <option value="ADMIN">Quản trị viên (ADMIN)</option>
+                                    </select>
+                                </div>
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
                                 <button type="submit" class="btn btn-primary">Thêm nhân viên</button>
                             </form>
@@ -155,6 +156,9 @@
                     </div>
                 </div>
             </div>
+
+
+
 
 
 
