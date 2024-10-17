@@ -6,6 +6,9 @@ import com.example.demo.dto.request.NhanVienRequetsDTO;
 import com.example.demo.entity.MauSac;
 import com.example.demo.entity.nhanvien;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +22,14 @@ public class NhanVienRestController {
     private NhanVienService nhanVienService;
 
     @GetMapping("/admin/nhan-vien/find-all")
-    public ResponseEntity<?> findAll() {
-        List<nhanvien> ms = nhanVienService.getAll();
-        return ResponseEntity.ok(ms);
+    public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") int page,
+                                     @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<nhanvien> nhanViens = nhanVienService.getAll(pageable); // Phân trang
+        return ResponseEntity.ok(nhanViens); // Trả về trang hiện tại cùng dữ liệu
     }
+
+
     @GetMapping("/admin/nhan-vien/chiTiet/{idNhanVien}")
     public ResponseEntity<?> getNhanVien(@PathVariable("idNhanVien") Integer idNhanVien) {
         nhanvien ms = nhanVienService.getNhanVien(idNhanVien);

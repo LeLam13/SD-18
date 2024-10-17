@@ -1,19 +1,52 @@
 var app = angular.module("nhan-vien", []);
 app.controller("nhan-vien-ctrl", function ($scope, $http) {
 
-    $scope.form = {};
-    $scope.items = [];
+    $scope.page = 0;  // Trang hiện tại
+    $scope.size = 2; // Số lượng bản ghi trên mỗi trang
+    $scope.totalPages = 0; // Tổng số trang
+    $scope.pageInput = 1; // Giá trị nhập từ ô input
 
+    // Hàm tìm tất cả nhân viên
     $scope.findAll = function () {
-        $http.get("/admin/nhan-vien/find-all").then(resp => {
-            console.log(resp.data); // Thêm dòng này để kiểm tra dữ liệu trả về
-            $scope.items = resp.data;
+        var url = `/admin/nhan-vien/find-all?page=${$scope.page}&size=${$scope.size}`;
+        $http.get(url).then(resp => {
+            $scope.items = resp.data.content;
+            $scope.totalPages = resp.data.totalPages; // Cập nhật tổng số trang
         }).catch(error => {
             console.log(error);
         });
     };
 
+
+    // Hàm chuyển tới trang trước
+    $scope.previousPage = function () {
+        if ($scope.page > 0) {
+            $scope.page--;
+            $scope.findAll();
+        }
+    };
+
+    // Hàm chuyển tới trang sau
+    $scope.nextPage = function () {
+        if ($scope.page < $scope.totalPages - 1) {
+            $scope.page++;
+            $scope.findAll();
+        }
+    };
+
+    // Hàm nhảy tới trang theo số trang nhập từ ô input
+    $scope.goToPage = function () {
+        var pageNumber = $scope.pageInput - 1; // Đảm bảo trang bắt đầu từ 0
+        if (pageNumber >= 0 && pageNumber < $scope.totalPages) {
+            $scope.page = pageNumber;
+            $scope.findAll();
+        } else {
+            alert("Số trang không hợp lệ.");
+        }
+    };
+    // Khởi động để load dữ liệu
     $scope.findAll();
+
 
     $scope.getNhanVien = function (idNhanVien) {
         var url = "/admin/nhan-vien/chiTiet" + "/" + idNhanVien;
@@ -66,6 +99,5 @@ app.controller("nhan-vien-ctrl", function ($scope, $http) {
             console.log("Cập nhật không thành công:", error);
         });
     };
-
 
 });

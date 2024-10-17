@@ -6,6 +6,8 @@ import com.example.demo.dto.request.NhanVienRequetsDTO;
 import com.example.demo.entity.nhanvien;
 import com.example.demo.repo.NhanVienRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,10 +20,12 @@ public class NhanVienServiceImpl implements NhanVienService {
 
     @Autowired
     private NhanVienRepository nhanVienRepository;
+    @Autowired
+    private com.example.demo.repo.taikhoanRepo taikhoanRepo;
 
     @Override
-    public List<nhanvien> getAll() {
-        return nhanVienRepository.findAll();
+    public Page<nhanvien> getAll(Pageable pageable) {
+        return nhanVienRepository.findAll(pageable);
     }
 
     @Override
@@ -43,15 +47,24 @@ public class NhanVienServiceImpl implements NhanVienService {
 
         // Cập nhật tài khoản nếu có
         if (nhanVien.getTaikhoan() != null) {
-            nhanVien.getTaikhoan().setUsername(nhanVienRequestDTO.getUsername());
-            nhanVien.getTaikhoan().setEmail(nhanVienRequestDTO.getEmail());
-        }
+            if (nhanVienRequestDTO.getUsername() != null) {
+                nhanVien.getTaikhoan().setUsername(nhanVienRequestDTO.getUsername());
+                System.out.println("Cập nhật username: " + nhanVienRequestDTO.getUsername());
+            }
+            if (nhanVienRequestDTO.getEmail() != null && !nhanVienRequestDTO.getEmail().isEmpty()) {
+                nhanVien.getTaikhoan().setEmail(nhanVienRequestDTO.getEmail());
+                System.out.println("Cập nhật email: " + nhanVienRequestDTO.getEmail());
+            }
 
+            // Lưu tài khoản đã cập nhật
+            taikhoanRepo.save(nhanVien.getTaikhoan());
+            System.out.println("Lưu tài khoản đã cập nhật thành công");
+        }
         // Cập nhật ngày cập nhật
-        LocalDateTime date = LocalDateTime.now(); // Hoặc lấy từ request DTO nếu cần
+        LocalDateTime date = LocalDateTime.now();
         nhanVien.setUpdateDate(date);
 
-        // Lưu lại thay đổi
+        // Lưu lại thay đổi cho nhân viên
         return nhanVienRepository.save(nhanVien);
     }
 
