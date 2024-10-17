@@ -35,16 +35,22 @@ public class MauSacRestController {
         return ResponseEntity.ok(msDTO);
     }
 
-    @GetMapping("/admin/mau-sac/chiTiet/{idMauSac}")
-    public ResponseEntity<?> getMauSac(@PathVariable("idMauSac") Integer idMauSac) {
-        MauSac ms = mauSacService.getMauSac(idMauSac);
+    @GetMapping("/admin/mau-sac/chiTiet/{ma}")
+    public ResponseEntity<?> getMauSac(@PathVariable("ma") String ma) {
+        MauSac ms = mauSacService.getMauSac(ma);
         return ResponseEntity.ok(ms);
     }
 
-    @PostMapping("/admin/mau-sac/update/{idMauSac}")
+    @PostMapping("/admin/mau-sac/update/{ma}")
     public ResponseEntity<?> updateMauSac(@RequestBody MauSacRequestDTO msDTO) {
         mauSacService.updateMauSac(msDTO);
         return ResponseEntity.ok(msDTO);
+    }
+
+    @PostMapping("/admin/mau-sac/updateTT/{idMauSac}")
+    public ResponseEntity<?> updateTrangThai(@PathVariable("idMauSac") Integer idMauSac) {
+        mauSacService.updateTrangThai(idMauSac);
+        return ResponseEntity.ok("");
     }
 
     @DeleteMapping("/admin/mau-sac/delete/{idMauSac}")
@@ -52,4 +58,6 @@ public class MauSacRestController {
         mauSacService.deleteMauSac(idMauSac);
         return ResponseEntity.ok("");
     }
+
+
 }

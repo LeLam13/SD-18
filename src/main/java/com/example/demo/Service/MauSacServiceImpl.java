@@ -24,6 +24,7 @@ public class MauSacServiceImpl implements MauSacService {
     @Override
     public MauSac createMauSac(MauSacRequestDTO mauSacRequestDTO) {
         MauSac ms = new MauSac();
+        ms.setMa(mauSacRequestDTO.getMa());
         ms.setTen(mauSacRequestDTO.getTen());
         ms.setCreateDate(date);
         ms.setUpdateDate(date);
@@ -33,20 +34,35 @@ public class MauSacServiceImpl implements MauSacService {
 
     @Override
     public MauSac updateMauSac(MauSacRequestDTO mauSacRequestDTO) {
-        MauSac ms = mauSacRepo.findByIdMauSac(mauSacRequestDTO.getIdMauSac());
+        MauSac ms = mauSacRepo.findByMa(mauSacRequestDTO.getMa());
         ms.setTen(mauSacRequestDTO.getTen());
         ms.setUpdateDate(date);
         return mauSacRepo.save(ms);
     }
 
     @Override
-    public MauSac getMauSac(Integer idMauSac) {
-        return mauSacRepo.findByIdMauSac(idMauSac);
+    public MauSac getMauSac(String ma) {
+        return mauSacRepo.findByMa(ma);
     }
 
     @Override
-    public MauSac deleteMauSac(Integer idMauSac){
-         mauSacRepo.deleteById(idMauSac);
-         return null;
+    public MauSac updateTrangThai(Integer idMauSac) {
+        MauSac ms = mauSacRepo.findByIdMauSac(idMauSac);
+        if(ms.getTrangThai()==true){
+            ms.setTrangThai(false);
+        }
+        else{
+            ms.setTrangThai(true);
+        }
+        return mauSacRepo.save(ms);
     }
+
+
+    @Override
+    public MauSac deleteMauSac(Integer idMauSac) {
+        mauSacRepo.deleteById(idMauSac);
+        return null;
+    }
+
+
 }

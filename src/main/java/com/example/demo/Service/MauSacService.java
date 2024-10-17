@@ -15,7 +15,9 @@ public interface MauSacService {
 
     public MauSac updateMauSac(MauSacRequestDTO mauSacRequestDTO);
 
-    public MauSac getMauSac(Integer idMauSac);
+    public MauSac getMauSac(String ma);
+
+    public MauSac updateTrangThai(Integer idMauSac);
 
     public MauSac deleteMauSac(Integer idMauSac);
 
