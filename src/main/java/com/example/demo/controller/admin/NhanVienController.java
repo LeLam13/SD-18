@@ -1,20 +1,17 @@
 package com.example.demo.controller.admin;
 
 import com.example.demo.Service.EmailService;
-import com.example.demo.dto.EmployeeSignupDTO;
+import com.example.demo.dto.request.NhanVienRequetsDTO;
 import com.example.demo.entity.nhanvien;
 import com.example.demo.entity.taikhoan;
 import com.example.demo.entity.vaitro;
 import com.example.demo.repo.NhanVienRepository;
 import com.example.demo.repo.taikhoanRepo;
 import com.example.demo.repo.vaitroRepo;
-import jakarta.validation.Valid;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -50,7 +47,7 @@ public class NhanVienController {
     }
 
     @PostMapping("/addEmployee")
-    public String addEmployee(EmployeeSignupDTO dto, RedirectAttributes redirectAttributes) {
+    public String addEmployee(NhanVienRequetsDTO dto, RedirectAttributes redirectAttributes) {
         // Kiểm tra xem username có tồn tại không
         if (taikhoanRepo.existsByUsername(dto.getUsername())) {
             redirectAttributes.addFlashAttribute("error", "Tên đăng nhập đã tồn tại");
