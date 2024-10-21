@@ -1,5 +1,5 @@
 var app = angular.module("formSP-app", [])
-app.controller("ctrl", function ($scope, $http) {
+app.controller("san-pham-ctrl", function ($scope, $http) {
 
     var httpThuocTinh = "";
     var thuocTinhSL = undefined;
