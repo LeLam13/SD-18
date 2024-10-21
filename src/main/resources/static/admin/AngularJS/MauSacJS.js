@@ -145,6 +145,9 @@ app.controller("mau-sac-ctrl", function ($scope, $http) {
             $http.delete(url).then(function (r) {
                 alert("Delete thành công!!!")
                 $scope.findAll();
+            }).catch(error => {
+                alert("Lỗi Xóa !")
+                console.log("error", error);
             })
         }
     }

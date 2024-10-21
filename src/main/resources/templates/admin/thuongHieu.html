@@ -80,17 +80,17 @@
 
                                     <tbody>
                                     <tr ng-repeat="p in itemss">
-                                        <td>{{p.idThuongHieu}}</td>
+                                        <td>{{p.ma}}</td>
                                         <td>{{p.ten}}</td>
-                                        <td>{{p.createDate | date:'yyyy-MM-dd HH:mm:ss'}}</td>
-                                        <td>{{p.updateDate | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                        <td>{{p.createDate | date:'yyyy-MM-dd'}}</td>
+                                        <td>{{p.updateDate | date:'yyyy-MM-dd'}}</td>
                                         <td>
                                             <a href="" class="edit" data-bs-toggle="modal" data-bs-target="#update"
-                                               ng-click=findById(p.id)>
+                                               ng-click=findByMa(p.ma)>
                                                 <i class="material-icons" title="Edit">&#xE254;</i>
                                             </a>
                                             <a href="" class="edit"
-                                               ng-click=delete(p.id)
+                                               ng-click=delete(p.idThuongHieu)
                                             >
                                                 <i class="material-icons" title="Delete" >&#xE872;</i>
                                             </a>
@@ -166,7 +166,7 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Mã</label>
-                                <input type="text" disabled class="form-control" ng-model="id">
+                                <input type="text" disabled class="form-control" ng-model="ma">
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                             <div class="mb-3">
@@ -178,7 +178,7 @@
                         </div>
                         <!-- Modal footer -->
                         <div class="modal-footer">
-                            <button type="button" ng-click="update(id)" class="btn btn-danger">Cập nhật</button>
+                            <button type="button" ng-click="update(ma)" class="btn btn-danger">Cập nhật</button>
                         </div>
                     </form>
 
