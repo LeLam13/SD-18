@@ -123,7 +123,7 @@ public class HoaDonServiceImpl implements HoaDonService{
             hoaDonChiTietRepo.save(hoaDonChiTiet);
         }
 
-        return null;
+        return newHoaDon;
     }
 
 

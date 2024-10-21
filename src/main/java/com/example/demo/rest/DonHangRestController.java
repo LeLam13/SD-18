@@ -197,7 +197,7 @@ public class DonHangRestController {
         HoaDon newHoaDon = hoaDonService.createHoaDon(hoaDon,username);
 
         System.out.println("hoa don: "+hoaDon);
-        return ResponseEntity.ok("");
+        return ResponseEntity.ok(newHoaDon);
     }
 
 }

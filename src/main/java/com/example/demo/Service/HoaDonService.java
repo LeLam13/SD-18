@@ -5,5 +5,5 @@ import com.example.demo.entity.HoaDon;
 
 public interface HoaDonService {
     HoaDon createHoaDon(HoaDonResquestDTO hoaDon, String username);
-    String generateRandomString(int length)
+    String generateRandomString(int length);
 }
