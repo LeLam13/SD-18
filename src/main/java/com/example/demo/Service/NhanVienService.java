@@ -13,7 +13,7 @@ public interface NhanVienService {
     public nhanvien updateNhanVien(NhanVienRequetsDTO nhanVienRequestDTO);
 
     public nhanvien getNhanVien(Integer idNhanVien);
-
-    public nhanvien deleteNhanVien(Integer idNhanVien);
-
+    Page<nhanvien> getActiveNhanVien(Pageable pageable);
+    nhanvien softDeleteNhanVien(Integer idNhanVien);
+    Page<nhanvien> searchNhanVien(String keyword, Pageable pageable);
 }

@@ -24,6 +24,7 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(r -> r
                         .requestMatchers(adminPermitAll).permitAll()
+                        .requestMatchers("/admin/nhan-vien").hasRole("ADMIN")
                         .requestMatchers("/guest/**").permitAll()
                         .requestMatchers("/admin/**").hasAnyRole("ADMIN", "STAFF")
                         .requestMatchers("/user/**").hasRole("USER")

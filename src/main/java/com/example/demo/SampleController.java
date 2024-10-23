@@ -141,5 +141,8 @@ public class SampleController {
         }
     }
 
-
+    @GetMapping("/access-denied")
+    public String loi403() {
+        return "/access-denied";
+    }
 }

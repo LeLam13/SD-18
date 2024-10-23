@@ -30,14 +30,15 @@ public class NhanVienServiceImpl implements NhanVienService {
 
     @Override
     public nhanvien updateNhanVien(NhanVienRequetsDTO nhanVienRequestDTO) {
-        // Tìm nhân viên theo ID
         Optional<nhanvien> optionalNhanVien = nhanVienRepository.findById(nhanVienRequestDTO.getIdNhanVien());
         if (!optionalNhanVien.isPresent()) {
             throw new RuntimeException("Nhân viên không tồn tại!");
         }
 
         nhanvien nhanVien = optionalNhanVien.get();
-        // Cập nhật thông tin
+
+
+        // Cập nhật thông tin nhân viên
         nhanVien.setHoTen(nhanVienRequestDTO.getHoTen());
         nhanVien.setSoDienThoai(nhanVienRequestDTO.getSoDienThoai());
         nhanVien.setNgaySinh(nhanVienRequestDTO.getNgaySinh());
@@ -45,21 +46,6 @@ public class NhanVienServiceImpl implements NhanVienService {
         nhanVien.setDiaChi(nhanVienRequestDTO.getDiaChi());
         nhanVien.setGioiTinh(nhanVienRequestDTO.getGioiTinh());
 
-        // Cập nhật tài khoản nếu có
-        if (nhanVien.getTaikhoan() != null) {
-            if (nhanVienRequestDTO.getUsername() != null) {
-                nhanVien.getTaikhoan().setUsername(nhanVienRequestDTO.getUsername());
-                System.out.println("Cập nhật username: " + nhanVienRequestDTO.getUsername());
-            }
-            if (nhanVienRequestDTO.getEmail() != null && !nhanVienRequestDTO.getEmail().isEmpty()) {
-                nhanVien.getTaikhoan().setEmail(nhanVienRequestDTO.getEmail());
-                System.out.println("Cập nhật email: " + nhanVienRequestDTO.getEmail());
-            }
-
-            // Lưu tài khoản đã cập nhật
-            taikhoanRepo.save(nhanVien.getTaikhoan());
-            System.out.println("Lưu tài khoản đã cập nhật thành công");
-        }
         // Cập nhật ngày cập nhật
         LocalDateTime date = LocalDateTime.now();
         nhanVien.setUpdateDate(date);
@@ -69,7 +55,6 @@ public class NhanVienServiceImpl implements NhanVienService {
     }
 
 
-
     @Override
     public nhanvien getNhanVien(Integer idNhanVien) {
         return nhanVienRepository.findById(idNhanVien)
@@ -77,13 +62,25 @@ public class NhanVienServiceImpl implements NhanVienService {
     }
 
     @Override
-    public nhanvien deleteNhanVien(Integer idNhanVien) {
-        Optional<nhanvien> nhanVien = nhanVienRepository.findById(idNhanVien);
-        if (nhanVien.isPresent()) {
-            nhanVienRepository.deleteById(idNhanVien);
-            return nhanVien.get();
+    public nhanvien softDeleteNhanVien(Integer idNhanVien) {
+        Optional<nhanvien> nhanVienOpt = nhanVienRepository.findById(idNhanVien);
+        if (nhanVienOpt.isPresent()) {
+            nhanvien nhanVien = nhanVienOpt.get();
+            nhanVien.setTrangThai(false); // Thay đổi trạng thái thành false để xóa mềm
+            nhanVien.setDeleteBy("Tên người thực hiện xóa"); // Ghi nhận người thực hiện xóa nếu cần
+            return nhanVienRepository.save(nhanVien); // Lưu lại thay đổi
         } else {
             throw new RuntimeException("Không tìm thấy nhân viên với ID: " + idNhanVien);
         }
     }
+    @Override
+    public Page<nhanvien> getActiveNhanVien(Pageable pageable) {
+        return nhanVienRepository.findByTrangThaiTrue(pageable); // Lấy danh sách nhân viên có trạng thái true
+    }
+    @Override
+    public Page<nhanvien> searchNhanVien(String keyword, Pageable pageable) {
+        return nhanVienRepository.findByMaNhanVienContainingOrHoTenContainingOrSoDienThoaiContaining(
+                keyword, keyword, keyword, pageable);
+    }
+
 }

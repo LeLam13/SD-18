@@ -48,15 +48,16 @@ public class NhanVienController {
 
     @PostMapping("/addEmployee")
     public String addEmployee(NhanVienRequetsDTO dto, RedirectAttributes redirectAttributes) {
-        // Kiểm tra xem username có tồn tại không
         if (taikhoanRepo.existsByUsername(dto.getUsername())) {
             redirectAttributes.addFlashAttribute("error", "Tên đăng nhập đã tồn tại");
+            redirectAttributes.addFlashAttribute("dto", dto);  // Lưu dữ liệu đã nhập
             return "redirect:/admin/nhan-vien"; // Quay lại trang danh sách
         }
 
         // Kiểm tra xem email có tồn tại không
         if (taikhoanRepo.existsByEmail(dto.getEmail())) {
             redirectAttributes.addFlashAttribute("error", "Email đã tồn tại");
+            redirectAttributes.addFlashAttribute("dto", dto);  // Lưu dữ liệu đã nhập
             return "redirect:/admin/nhan-vien"; // Quay lại trang danh sách
         }
 
@@ -97,6 +98,10 @@ public class NhanVienController {
 
         return "redirect:/admin/nhan-vien";
     }
+
+
+
+
 
 
 }

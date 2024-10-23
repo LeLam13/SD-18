@@ -45,6 +45,11 @@
                         </div>
                     </div>
                 </div>
+                <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
+                    <div>
+                        <button class="btn btn-secondary" ng-click="refresh()">Làm mới dữ liệu</button>
+                    </div>
+                </div>
 
 
 
@@ -71,13 +76,13 @@
                         <td>{{ nv.maNhanVien }}</td>
                         <td>{{ nv.hoTen }}</td>
                         <td>{{ nv.soDienThoai }}</td>
-                        <td>{{ nv.ngaySinh | date:'yyyy-MM-dd' }}</td>
+                        <td>{{ nv.ngaySinh | date:'dd-MM-yyyy' }}</td>
                         <td>{{ nv.gioiTinh }}</td>
                         <td>{{ nv.trangThai }}</td>
                         <td>{{ nv.taikhoan.email }}</td>
                         <td>
                             <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#updateModal" ng-click="getNhanVien(nv.idNhanVien)">Cập nhật</button>
-                            <button type="button" class="btn btn-danger" ng-click="delete(nv.idNhanVien)">Xóa</button>
+                            <button type="button" class="btn btn-danger" ng-click="softDelete(nv.idNhanVien)">Xóa</button>
                         </td>
                     </tr>
                     </tbody>
@@ -128,7 +133,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Ngày Sinh</label>
-                                    <input ng-model="ngaySinh" class="form-control">
+                                    <input  ng-model="ngaySinh" class="form-control">
                                 </div>
                                 <div class="mb-3">
                                     <label class="form-label">Số Căn Cước Công Dân</label>
@@ -144,16 +149,6 @@
                                         <option value="Nam">Nam</option>
                                         <option value="Nữ">Nữ</option>
                                     </select>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Tên Tài Khoản</label>
-                                    <input type="text" ng-model="username" class="form-control" required>
-                                    <span id="eUsername" style="color:red;"></span>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Email</label>
-                                    <input type="email" ng-model="email" class="form-control" required>
-                                    <span id="eEmail" style="color:red;"></span>
                                 </div>
                             </div>
                             <div class="modal-footer">
@@ -185,50 +180,64 @@
                             <form id="addEmployeeForm" th:action="@{/admin/nhan-vien/addEmployee}" method="post">
                                 <div class="mb-3">
                                     <label for="username">Tên đăng nhập:</label>
-                                    <input type="text" id="username" name="username" class="form-control" required>
+                                    <input type="text" id="username" name="username" class="form-control" required
+                                           th:value="${dto != null ? dto.username : ''}">
                                 </div>
                                 <div class="mb-3">
                                     <label for="email">Email:</label>
-                                    <input type="email" id="email" name="email" class="form-control" required>
+                                    <input type="email" id="email" name="email" class="form-control" required
+                                           th:value="${dto != null ? dto.email : ''}">
                                 </div>
                                 <div class="mb-3">
                                     <label for="maNhanVien">Mã nhân viên:</label>
-                                    <input type="text" id="maNhanVien" name="maNhanVien" class="form-control" required>
+                                    <input type="text" id="maNhanVien" name="maNhanVien" class="form-control" required
+                                           th:value="${dto != null ? dto.maNhanVien : ''}">
                                 </div>
                                 <div class="mb-3">
                                     <label for="hoTen">Họ tên nhân viên:</label>
-                                    <input type="text" id="hoTen" name="hoTen" class="form-control" required>
+                                    <input type="text" id="hoTen" name="hoTen" class="form-control" required
+                                           th:value="${dto != null ? dto.hoTen : ''}">
                                 </div>
                                 <div class="mb-3">
                                     <label for="soDienThoai">Số điện thoại:</label>
-                                    <input type="text" id="soDienThoai" name="soDienThoai" class="form-control">
+                                    <input type="text" id="soDienThoai" name="soDienThoai" class="form-control" required
+                                           pattern="0[0-9]{9}" title="Số điện thoại phải có 10 số và bắt đầu bằng số 0" th:value="${dto != null ? dto.soDienThoai  : ''}">
+                                    <div class="invalid-feedback">
+                                        Số điện thoại phải là 10 chữ số và bắt đầu bằng số 0.
+                                    </div>
+
                                 </div>
                                 <div class="mb-3">
                                     <label for="ngaySinh">Ngày sinh:</label>
-                                    <input type="date" id="ngaySinh" name="ngaySinh" class="form-control">
+                                    <input type="date" id="ngaySinh" name="ngaySinh" class="form-control"
+                                           th:value="${dto != null ? dto.ngaySinh : ''}">
                                 </div>
                                 <div class="mb-3">
                                     <label for="soCanCuocCongDan">Số căn cước công dân:</label>
-                                    <input type="text" id="soCanCuocCongDan" name="soCanCuocCongDan" class="form-control">
+                                    <input type="text" id="soCanCuocCongDan" name="soCanCuocCongDan" class="form-control"
+                                           th:value="${dto != null ? dto.soCanCuocCongDan : ''}">
                                 </div>
                                 <div class="mb-3">
                                     <label for="diaChi">Địa chỉ:</label>
-                                    <input type="text" id="diaChi" name="diaChi" class="form-control">
+                                    <input type="text" id="diaChi" name="diaChi" class="form-control"
+                                           th:value="${dto != null ? dto.diaChi : ''}">
                                 </div>
                                 <div class="mb-3">
                                     <label for="gioiTinh">Giới tính:</label>
-                                    <input type="text" id="gioiTinh" name="gioiTinh" class="form-control">
+                                    <input type="text" id="gioiTinh" name="gioiTinh" class="form-control"
+                                           th:value="${dto != null ? dto.gioiTinh : ''}">
                                 </div>
                                 <div class="mb-3">
                                     <label for="vaiTro">Vai trò:</label>
                                     <select id="vaiTro" name="vaiTro" class="form-control" required>
-                                        <option value="STAFF">Nhân viên (STAFF)</option>
-                                        <option value="ADMIN">Quản trị viên (ADMIN)</option>
+                                        <option th:selected="${dto != null && dto.vaiTro == 'STAFF'}" value="STAFF">Nhân viên (STAFF)</option>
+                                        <option th:selected="${dto != null && dto.vaiTro == 'ADMIN'}" value="ADMIN">Quản trị viên (ADMIN)</option>
                                     </select>
                                 </div>
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
                                 <button type="submit" class="btn btn-primary">Thêm nhân viên</button>
                             </form>
+
                         </div>
                     </div>
                 </div>
@@ -250,6 +259,18 @@
     <!-- end main content-->
 </div>
 </body>
+<script>
+    document.getElementById("addEmployeeForm").addEventListener("submit", function(event) {
+        var phone = document.getElementById("soDienThoai").value;
+        var phonePattern = /^0[0-9]{9}$/;  // Bắt đầu với số 0 và theo sau là 9 chữ số.
+
+        if (!phonePattern.test(phone)) {
+            event.preventDefault(); // Ngăn form không gửi nếu không hợp lệ.
+            alert("Số điện thoại không hợp lệ. Số điện thoại phải có 10 chữ số và bắt đầu bằng số 0.");
+        }
+    });
+</script>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="/admin/AngularJS/NhanVien.js"></script>
 
