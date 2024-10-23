@@ -3,7 +3,7 @@
     layout:decorate="~{/admin/index}">
 
 <head>
-    <title>ALLDY SNAEKER | Hóa Đơn Tại Quầy</title>
+    <title>EIGHTEEN POLO | Quản lý hóa đơn</title>
 </head>
 
 <body>
@@ -16,7 +16,7 @@
             }
 
             .er {
-                color: red;
+                color: #ff0000;
                 font-size: 13px;
             }
 
@@ -273,7 +273,7 @@
                                                                 <input class="form-control col-6"
                                                                     ng-model="hoanThanh.sdtSearch"
                                                                     onchange="angular.element(this).scope().hoanThanh.getList(0)"
-                                                                    placeholder="Tìm kiếm theo số điện thoại hoặc mã đơn hàng"
+                                                                    placeholder="Tìm kiếm theo mã hóa đơn"
                                                                     style="width: 50%">
                                                             </div>
                                                         </div>
@@ -284,10 +284,16 @@
                                                             style="border-collapse: collapse; border-spacing: 0 8px; width: 100%;">
                                                             <thead>`
                                                                 <tr>
+                                                                    <th scope="col">ID</th>
                                                                     <th scope="col">Mã</th>
-                                                                    <th scope="col">Tên người nhận</th>
-                                                                    <th scope="col">Số điện thoại</th>
-                                                                    <th scope="col">Ngày mua</th>
+                                                                    <th scope="col">Create by</th>
+                                                                    <th scope="col">Update date</th>
+                                                                    <th scope="col">Update by</th>
+                                                                    <th scope="col">Tổng tiền</th>
+                                                                    <th scope="col">Tổng tiền khuyến mãi</th>
+                                                                    <th scope="col">Tổng tiền sau khuyến mãi</th>
+                                                                    <th scope="col">Ghi chú</th>
+                                                                    <th scope="col">Trạng thái thanh toán</th>
                                                                     <th></th>
                                                                 </tr>
                                                             </thead>
@@ -414,7 +420,7 @@
                                                                 <input class="form-control col-6"
                                                                     ng-model="huy.sdtSearch"
                                                                     onchange="angular.element(this).scope().huy.getList(0)"
-                                                                    placeholder="Tìm kiếm theo số điện thoại hoặc mã đơn hàng"
+                                                                    placeholder="Tìm kiếm theo mã đơn hàng"
                                                                     style="width: 50%">
                                                             </div>
                                                         </div>
