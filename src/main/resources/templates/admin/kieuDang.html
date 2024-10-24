@@ -56,11 +56,11 @@
                                         </button>
                                     </div>
                                     <div class="col-6 nav justify-content-end ">
-<!--                                        <form action="" class="d-flex">-->
-<!--                                            <input class="form-control me-2" name="name" type="text"-->
-<!--                                                   placeholder="Search">-->
-<!--                                            <button class="btn btn-primary" type="submit">Search</button>-->
-<!--                                        </form>-->
+                                        <!--                                        <form action="" class="d-flex">-->
+                                        <!--                                            <input class="form-control me-2" name="name" type="text"-->
+                                        <!--                                                   placeholder="Search">-->
+                                        <!--                                            <button class="btn btn-primary" type="submit">Search</button>-->
+                                        <!--                                        </form>-->
                                     </div>
                                 </div>
                             </div>
@@ -81,13 +81,13 @@
 
                                     <tbody>
                                     <tr ng-repeat="p in itemss">
-                                        <td>{{p.id}}</td>
+                                        <td>{{p.ma}}</td>
                                         <td>{{p.ten}}</td>
-                                        <td>{{p.ngayTao | date:'yyyy-MM-dd HH:mm:ss'}}</td>
-                                        <td>{{p.ngayCapNhat | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                        <td>{{p.createDate | date:'yyyy-MM-dd'}}</td>
+                                        <td>{{p.updateDate | date:'yyyy-MM-dd'}}</td>
                                         <td>
                                             <a href="" class="edit" data-bs-toggle="modal" data-bs-target="#kieuDang"
-                                               ng-click=findById(p.id)>
+                                               ng-click=findByMa(p.ma)>
                                                 <i class="material-icons" title="Edit">&#xE254;</i>
                                             </a>
                                             <a href="" class="edit" ng-click="delete(p.id)">
@@ -102,25 +102,25 @@
 
                                     </div>
                                     <div class="col-6">
-<!--                                        <nav aria-label="Page navigation example">-->
-<!--                                            <ul class="pagination justify-content-end">-->
-<!--                                                <li class="page-item">-->
-<!--                                                    <a class="page-link" href="#" aria-label="Previous">-->
-<!--                                                        <span aria-hidden="true">&laquo</span>-->
-<!--                                                        <span class="sr-only">Previous</span>-->
-<!--                                                    </a>-->
-<!--                                                </li>-->
-<!--                                                <li class="page-item"><a class="page-link" href="#">1</a></li>-->
-<!--                                                <li class="page-item"><a class="page-link" href="#">2</a></li>-->
-<!--                                                <li class="page-item"><a class="page-link" href="#">3</a></li>-->
-<!--                                                <li class="page-item">-->
-<!--                                                    <a class="page-link" href="#" aria-label="Next">-->
-<!--                                                        <span aria-hidden="true">&raquo;</span>-->
-<!--                                                        <span class="sr-only">Next</span>-->
-<!--                                                    </a>-->
-<!--                                                </li>-->
-<!--                                            </ul>-->
-<!--                                        </nav>-->
+                                        <!--                                        <nav aria-label="Page navigation example">-->
+                                        <!--                                            <ul class="pagination justify-content-end">-->
+                                        <!--                                                <li class="page-item">-->
+                                        <!--                                                    <a class="page-link" href="#" aria-label="Previous">-->
+                                        <!--                                                        <span aria-hidden="true">&laquo</span>-->
+                                        <!--                                                        <span class="sr-only">Previous</span>-->
+                                        <!--                                                    </a>-->
+                                        <!--                                                </li>-->
+                                        <!--                                                <li class="page-item"><a class="page-link" href="#">1</a></li>-->
+                                        <!--                                                <li class="page-item"><a class="page-link" href="#">2</a></li>-->
+                                        <!--                                                <li class="page-item"><a class="page-link" href="#">3</a></li>-->
+                                        <!--                                                <li class="page-item">-->
+                                        <!--                                                    <a class="page-link" href="#" aria-label="Next">-->
+                                        <!--                                                        <span aria-hidden="true">&raquo;</span>-->
+                                        <!--                                                        <span class="sr-only">Next</span>-->
+                                        <!--                                                    </a>-->
+                                        <!--                                                </li>-->
+                                        <!--                                            </ul>-->
+                                        <!--                                        </nav>-->
                                     </div>
                                 </div>
                             </div>
@@ -142,9 +142,9 @@
                         © ALLDY SNEAKER.
                     </div>
                     <div class="col-sm-6">
-<!--                        <div class="text-sm-end d-none d-sm-block">-->
-<!--                            Design & Develop by <a href="#!" class="text-decoration-underline">Themesbrand</a>-->
-<!--                        </div>-->
+                        <!--                        <div class="text-sm-end d-none d-sm-block">-->
+                        <!--                            Design & Develop by <a href="#!" class="text-decoration-underline">Themesbrand</a>-->
+                        <!--                        </div>-->
                     </div>
                 </div>
             </div>
@@ -165,19 +165,20 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Mã</label>
-                                <input type="text" disabled class="form-control" ng-model="id">
+                                <input type="text" disabled class="form-control" ng-model="ma">
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Tên Kiểu Dáng</label>
-                                <input type="text" class="form-control" ng-model="ten" ng-focus="erTenUd=''">
-                                <p  class="form-text text-danger ">{{erTenUd}}</p>
+                                <input type="text" class="form-control" ng-model="ten"
+                                       onfocus="document.getElementById('erTenUd').innerText=''">
+                                <i id="erTenUd" class="er"></i>
                                 <!--                                <p class="form-text text-danger" id="erTen"></p>-->
 
                             </div>
                         </div>
                         <!-- Modal footer -->
                         <div class="modal-footer">
-                            <button type="button" ng-click="update(id)" class="btn btn-danger">Cập nhật</button>
+                            <button type="button" ng-click="update(ma)" class="btn btn-danger">Cập nhật</button>
                         </div>
                     </form>
 
@@ -200,9 +201,10 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Tên Kiểu Dáng</label>
-                                <input type="text" class="form-control" ng-model="ten" ng-focus="erTen=''">
+                                <input type="text" class="form-control" ng-model="ten"
+                                       onfocus="document.getElementById('erTen').innerText=''">
                                 <!--<div ng-show="formData.tenError" class="form-text text-danger ">{{ formData.tenError }}</div>-->
-                                <p class="form-text text-danger">{{erTen}}</p>
+                                <i id="erTen" class="er"></i>
                             </div>
                         </div>
                         <!-- Modal footer -->

@@ -1,14 +1,15 @@
 package com.example.demo.rest;
 
 import com.example.demo.Service.DonHangService;
+import com.example.demo.Service.HoaDonService;
 import com.example.demo.dto.reponse.DonHangChiTietResponseDTO;
 import com.example.demo.dto.reponse.DonHangResponseDTO;
 import com.example.demo.dto.reponse.DonHangTongSoLuongResponseDTO;
+import com.example.demo.dto.reponse.KhachHangResponseDTO;
 import com.example.demo.dto.request.DonHangChiTietRequestDTO;
 import com.example.demo.dto.request.DonHangRequestDTO;
-import com.example.demo.entity.DonHang;
-import com.example.demo.entity.DonHangChiTiet;
-import com.example.demo.entity.SanPhamChiTiet;
+import com.example.demo.dto.request.HoaDonResquestDTO;
+import com.example.demo.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -23,7 +24,10 @@ import java.util.List;
 public class DonHangRestController {
     @Autowired
     DonHangService donHangService;
+    @Autowired
+    HoaDonService hoaDonService;
 
+    //sản phẩm chi tiết
     @GetMapping("/don-hang/san-pham-chi-tiet")
     public ResponseEntity<?> getAllProduct(){
         List<SanPhamChiTiet> spct = donHangService.getAllProducts();
@@ -31,6 +35,7 @@ public class DonHangRestController {
         return ResponseEntity.ok(spct);
     }
 
+    //don hàng chi tiết
     @GetMapping("/don-hang/don-hang-chi-tiet/{id}")
     public ResponseEntity<?> getAllProductDonHang(@PathVariable("id") Integer id){
         List<DonHangChiTiet> spct = donHangService.getAllProductsOrder(id);
@@ -52,9 +57,17 @@ public class DonHangRestController {
 
     @PostMapping("/don-hang/don-hang-chi-tiet/them-moi")
     public ResponseEntity<?> addDonHangChiTiet(@RequestBody DonHangChiTietRequestDTO donHangCTDTO){
+        DonHangChiTiet dhct = donHangService.createDonHangChitiet(donHangCTDTO);
 
+        DonHangChiTietResponseDTO responseDTO1 = new DonHangChiTietResponseDTO();
+        responseDTO1.setIdDonHangChiTiet(dhct.getIdDonHangChiTiet());
+        responseDTO1.setMaDonHangChiTiet(dhct.getMaDonHangChiTiet());
+        responseDTO1.setSoLuong(dhct.getSoLuong());
+        responseDTO1.setDonGia(dhct.getDonGia());
+        responseDTO1.setTenSanPham(dhct.getSanPhamChiTiet().getTen());
+        responseDTO1.setIdSanPham(dhct.getSanPhamChiTiet().getIdSanPhamChiTiet());
 
-        return ResponseEntity.ok("");
+        return ResponseEntity.ok(responseDTO1);
     }
 
     @PutMapping("/don-hang/don-hang-chi-tiet/cap-nhat")
@@ -74,6 +87,17 @@ public class DonHangRestController {
         return ResponseEntity.ok(responseDTO);
     }
 
+    @DeleteMapping("/don-hang/don-hang-chi-tiet/xoa/{id}")
+    public ResponseEntity<?> deleteDonHangchiTiet(@PathVariable("id") Integer id){
+        boolean isDelete = donHangService.deleDonHangChiTiet(id);
+        if(isDelete){
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    //đơn hàng
     @GetMapping("/don-hang/get-don-hang")
     public ResponseEntity<?> getDonHang(){
         List<DonHangTongSoLuongResponseDTO> donHang = donHangService.getTongSoLuongDonHang();
@@ -117,4 +141,63 @@ public class DonHangRestController {
 
         return ResponseEntity.ok(responseDTO);
     }
+
+    @DeleteMapping("/don-hang/don-hang/xoa/{id}")
+    public ResponseEntity<?> deleteDonHang(@PathVariable("id") Integer id){
+        boolean isDelete = donHangService.deleDonHang(id);
+        if(isDelete){
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.notFound().build();
+    }
+
+    //khách hàng
+    @GetMapping("/don-hang/get-khach-hang")
+    public ResponseEntity<?> getAllKhachHang(){
+        List<khachhang> listKhachHang = donHangService.getAllKhachHang();
+
+        List<KhachHangResponseDTO> responseKHDTOList = new ArrayList<>();
+        for (khachhang khachhang : listKhachHang) {
+            KhachHangResponseDTO responseDTO = new KhachHangResponseDTO();
+            responseDTO.setIdKhachHang(khachhang.getIdKhachHang());
+            responseDTO.setMaKhachHang(khachhang.getMaKhachHang());
+            responseDTO.setHoTen(khachhang.getHoTen());
+            responseDTO.setSoDienThoai(khachhang.getSoDienThoai());
+            responseDTO.setDiaChi(khachhang.getDiaChi());
+
+            responseKHDTOList.add(responseDTO);
+        }
+        return ResponseEntity.ok(responseKHDTOList);
+    }
+
+    @GetMapping("/don-hang/get-khach-hang/{id}")
+    public ResponseEntity<?> getKhachHangByID(@PathVariable("id") Integer id){
+        KhachHangResponseDTO khachHang = donHangService.getKhachHangById(id);
+        return  ResponseEntity.ok(khachHang);
+    }
+
+    //hoá đơn
+    @PostMapping("/hoa-don/them-moi")
+    public ResponseEntity<?> createHoaDon(@RequestBody HoaDonResquestDTO hoaDon){
+        String username = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetails) {
+                //return ((UserDetails) principal).getUsername();
+                System.out.println("test get user1: "+((UserDetails) principal).getUsername());
+                username = ((UserDetails) principal).getUsername();
+            } else {
+                System.out.println("test get user2: "+principal.toString());
+                //return principal.toString();
+            }
+        }
+
+        HoaDon newHoaDon = hoaDonService.createHoaDon(hoaDon,username);
+
+        System.out.println("hoa don: "+hoaDon);
+        return ResponseEntity.ok("");
+    }
+
 }

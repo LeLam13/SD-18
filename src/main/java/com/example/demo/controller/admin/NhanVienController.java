@@ -1,7 +1,7 @@
 package com.example.demo.controller.admin;
 
 import com.example.demo.Service.EmailService;
-import com.example.demo.dto.EmployeeSignupDTO;
+import com.example.demo.dto.request.NhanVienRequetsDTO;
 import com.example.demo.entity.nhanvien;
 import com.example.demo.entity.taikhoan;
 import com.example.demo.entity.vaitro;
@@ -15,22 +15,24 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 @Controller
 @RequestMapping("${admin.domain}/nhan-vien")
 public class NhanVienController {
 
+    @Autowired
+    private taikhoanRepo taikhoanRepo;
 
     @Autowired
-    com.example.demo.repo.taikhoanRepo taikhoanRepo;
+    private vaitroRepo vaitroRepo;
 
     @Autowired
-    com.example.demo.repo.vaitroRepo vaitroRepo;
-    @Autowired
-    com.example.demo.repo.NhanVienRepository NhanVienRepository;
+    private NhanVienRepository nhanVienRepository;
 
     @Autowired
-    EmailService emailService; // Thêm Autowired cho EmailService
+    private EmailService emailService; // Thêm Autowired cho EmailService
 
     BCryptPasswordEncoder pe = new BCryptPasswordEncoder(); // Khởi tạo BCryptPasswordEncoder
 
@@ -38,31 +40,39 @@ public class NhanVienController {
     public String getNhanVienView(){
         return "admin/NhanVien";
     }
+
     @GetMapping("thong-tin-ca-nhan")
     public String getUserDetail(){
         return "admin/thongTinUser";
     }
 
-
     @PostMapping("/addEmployee")
-    public String addEmployee(EmployeeSignupDTO dto) {
-        // Tạo một mật khẩu ngẫu nhiên
-        String rawPassword = RandomStringUtils.randomAlphanumeric(8); // Tạo mật khẩu 8 ký tự ngẫu nhiên
+    public String addEmployee(NhanVienRequetsDTO dto, RedirectAttributes redirectAttributes) {
+        // Kiểm tra xem username có tồn tại không
+        if (taikhoanRepo.existsByUsername(dto.getUsername())) {
+            redirectAttributes.addFlashAttribute("error", "Tên đăng nhập đã tồn tại");
+            return "redirect:/admin/nhan-vien"; // Quay lại trang danh sách
+        }
 
-        // Tạo một tài khoản mới cho nhân viên
+        // Kiểm tra xem email có tồn tại không
+        if (taikhoanRepo.existsByEmail(dto.getEmail())) {
+            redirectAttributes.addFlashAttribute("error", "Email đã tồn tại");
+            return "redirect:/admin/nhan-vien"; // Quay lại trang danh sách
+        }
+
+        // Tạo tài khoản và nhân viên như bình thường
+        String rawPassword = RandomStringUtils.randomAlphanumeric(8);
         taikhoan newAccount = new taikhoan();
         newAccount.setUsername(dto.getUsername());
-        newAccount.setPassword(pe.encode(rawPassword));  // Mã hóa mật khẩu
+        newAccount.setPassword(pe.encode(rawPassword));
         newAccount.setEmail(dto.getEmail());
         newAccount.setTrangthai(true);
-        // Thiết lập vai trò mặc định là STAFF
-        vaitro staffRole = vaitroRepo.findById("STAFF")  // Đảm bảo vai trò STAFF tồn tại
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy vai trò STAFF"));
-        newAccount.setVaiTro(staffRole);  // Gán vai trò STAFF cho tài khoản mới
 
-        taikhoanRepo.save(newAccount);  // Lưu tài khoản trước
+        vaitro role = vaitroRepo.findById(dto.getVaiTro())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy vai trò " + dto.getVaiTro()));
+        newAccount.setVaiTro(role);
+        taikhoanRepo.save(newAccount);
 
-        // Sau đó tạo và lưu thông tin nhân viên
         nhanvien newEmployee = new nhanvien();
         newEmployee.setMaNhanVien(dto.getMaNhanVien());
         newEmployee.setHoTen(dto.getHoTen());
@@ -71,23 +81,21 @@ public class NhanVienController {
         newEmployee.setSoCanCuocCongDan(dto.getSoCanCuocCongDan());
         newEmployee.setDiaChi(dto.getDiaChi());
         newEmployee.setGioiTinh(dto.getGioiTinh());
-        newEmployee.setTrangThai(true);  // Mặc định trạng thái là active
-
-        // Liên kết tài khoản với nhân viên
+        newEmployee.setTrangThai(true);
         newEmployee.setTaikhoan(newAccount);
-        NhanVienRepository.save(newEmployee);  // Lưu thông tin nhân viên
+        nhanVienRepository.save(newEmployee);
 
         // Gửi email với mật khẩu
         String subject = "Thông tin tài khoản của bạn";
         String body = "Chào " + dto.getHoTen() + ",\n\n"
                 + "Tài khoản của bạn đã được tạo thành công.\n"
                 + "Tên đăng nhập: " + dto.getUsername() + "\n"
-                + "Mật khẩu: " + rawPassword + "\n\n"  // Sử dụng mật khẩu ngẫu nhiên
+                + "Mật khẩu: " + rawPassword + "\n\n"
                 + "Vui lòng thay đổi mật khẩu sau khi đăng nhập lần đầu tiên.\n\n"
                 + "Cảm ơn bạn!";
-        emailService.sendEmail(dto.getEmail(), subject, body);  // Gửi email
+        emailService.sendEmail(dto.getEmail(), subject, body);
 
-        return "redirect:/admin/nhan-vien";  // Chuyển hướng tới trang đăng nhập
+        return "redirect:/admin/nhan-vien";
     }
 
 
