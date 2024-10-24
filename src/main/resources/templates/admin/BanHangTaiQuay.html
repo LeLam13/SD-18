@@ -18,7 +18,7 @@
                 justify-content: center;
             }
             .quantity-input input {
-                width: 50px;
+                width: 70px;
                 text-align: center;
             }
             .remove-btn {
@@ -47,7 +47,7 @@
 
             .payment-box {
                 border: 1px solid #ccc;
-                padding: 20px;
+                padding: 10px;
                 border-radius: 10px;
                 max-width: 350px;
                 max-height: 4500px;
@@ -84,9 +84,9 @@
                 position: relative; /* Đặt các phần tử con một cách chính xác */
             }
 
-            .item.active {
-                background-color: #007bff;
-            }
+            /*.item.active {*/
+            /*    background-color: #007bff;*/
+            /*}*/
 
             .item .count, .item .badge {
                 font-size: 10px;
@@ -107,6 +107,14 @@
                 font-size: 20px;
                 margin: auto;         /* Đặt icon vào giữa */
                 z-index: 1;           /* Đảm bảo icon nằm trên các phần tử khác nếu cần */
+            }
+
+            .item .close-icon {
+                font-size: 12px;
+                position: absolute;
+                right: 5px;  /* Đặt icon X ở phía bên phải */
+                top: 5px;    /* Canh phía trên */
+                z-index: 2;  /* Đảm bảo icon X nằm trên các phần tử khác */
             }
 
             .plus-button {
@@ -130,7 +138,8 @@
                         <div class="count" hidden>{{ donHangs.idDonHang }}</div>
                         <div class="count">Đơn</div>
                         <div class="icon">🛒</div>
-                        <div class="badge">{{ $index + 1 }}</div >
+                        <button ng-click="deleteDonHang(donHangs.idDonHang)" class="close-icon fas fa-times-circle"></button>
+                        <div class="badge">{{ $index + 1 }}</div>
                     </div>
                 </div>
 
@@ -152,14 +161,15 @@
                                 <tbody>
                                 <tr ng-repeat="details in productDetails">
                                     <td class="text-center">
-                                        <span class="remove-btn">&times;</span> <!-- Nút remove -->
+                                        <button ng-click="deleteDonHangChiTiet(details.idDonHangChiTiet)" type="button" class="btn btn-danger bi bi-trash3-fill"></button>
                                     </td>
                                     <td>{{ details.tenSanPham}}</td>
                                     <td class="text-center">
                                         <div class="quantity-input">
-                                            <button class="btn btn-outline-secondary">-</button>
-                                            <input ng-model="details.soLuong" type="number" class="form-control" value="1" min="1">
-                                            <button class="btn btn-outline-secondary">+</button>
+                                            <button ng-click="soLuongReduce(details)" class="btn btn-outline-secondary">-</button>
+                                            <input ng-model="details.soLuong" ng-forcus="saveOriginalQuantity(details)"
+                                                   ng-blur="checkQuantity(details)" type="number" class="form-control" value="1" min="1">
+                                            <button ng-click="soLuongPlus(details)" class="btn btn-outline-secondary">+</button>
                                         </div>
                                     </td>
                                     <td>{{ details.donGia}}</td>
@@ -254,39 +264,67 @@
                         <div class="row">
                             <div class="payment-box mt-2">
                                 <div class="customer-box">
-                                    Thêm khách hàng vào đơn
+                                    <div class="input-group">
+                                        <span class="input-group-text">Khach Hang</span>
+                                        <input type="text" id="nameKH" aria-label="First name" class="form-control">
+                                        <input type="text" id="sdtKH" aria-label="Last name" class="form-control">
+                                    </div>
                                 </div>
                                 <div class="mb-2">
                                     <label class="form-label">Tổng tiền:</label>
-                                    <span class="total-amount">2,522,500</span>
+<!--                                    <span class="total-amount">2,522,500</span>-->
+                                    <span class="total-amount">{{getSum()}}</span>
                                 </div>
                                 <div class="mb-2">
-                                    <label class="form-label">Khách phải trả:</label>
-                                    <span>2,322,500</span>
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Khách còn thiếu:</label>
-                                    <span>0</span>
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Phiếu giảm giá:</label>
-                                    <select class="form-select">
-                                        <option selected>Giảm giá mừng lễ</option>
+                                    <label class="form-label" >Phiếu giảm giá:</label>
+                                    <select class="form-select" id="discountSelect">
+                                        <option value="1" selected>Giảm giá mừng lễ</option>
                                     </select>
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Tiền giảm:</label>
                                     <span>200,000</span>
                                 </div>
                                 <div class="mb-2">
+                                    <label class="form-label">Tiền giảm:</label>
+<!--                                    <span>{{ getSum() * (parseFloat(discountRate.replace('%', '')) / 100)}}</span>-->
+                                    <span>{{ getTienGiam() }}</span>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Khách phải trả:</label>
+                                    <span>{{ getTienKhachPTra() }}</span>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Khách còn thiếu:</label>
+                                    <span>{{ getTienKhachPTra() }}</span>
+                                </div>
+                                <div class="mb-2">
                                     <label class="form-label">Khách thanh toán:</label>
-                                    <button class="btn btn-success btn-sm"><i class="bi bi-calculator"></i></button>
-                                    <span style="margin-left: 10px">2,322,500</span>
+<!--                                    <button class="btn btn-success btn-sm"><i class="bi bi-calculator"></i></button>-->
+                                    <input type="text" class="form-control" ng-model="khachThanhToan" id="exampleFormControlInput1">
+
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Số tiền thừa:</label>
+                                    <span>{{ tinhTienThua()  }}</span>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Phương thức thanh toán:</label>
+                                    <select class="form-select" id="paymentMethodSelect">
+                                        <option value="2" selected>Tiền Mặt</option>
+                                        <option value="3" >Thanh Toán Online</option>
+                                    </select>
+                                    <span>200,000</span>
                                 </div>
                                 <div class="mb-2">
                                     <label class="form-label">Ghi chú:</label>
                                     <textarea class="form-control" rows="2"></textarea>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-4">
+                                <button ng-click="createHoaDon()" type="button" class="btn btn-primary">Lưu Hoá Đơn</button>
+                            </div>
+                            <div class="col-4">
+                                <button  type="button" class="btn btn-secondary">In Hoá Đơn</button>
                             </div>
                         </div>
                     </div>
@@ -311,24 +349,20 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr>
-                                        <th scope="row">1</th>
-                                        <td>Mark</td>
-                                        <td>Otto</td>
-                                        <td>@mdo</td>
-                                    </tr>
-                                    <tr>
-                                        <th scope="row">2</th>
-                                        <td>Jacob</td>
-                                        <td>Thornton</td>
-                                        <td>@fat</td>
+                                    <tr ng-repeat="kh in khachHang">
+                                        <th scope="row">{{ $index + 1 }}</th>
+                                        <td>{{ kh.maKhachHang }}</td>
+                                        <td>{{ kh.hoTen }}</td>
+                                        <td>{{ kh.soDienThoai }}</td>
+                                        <td>
+                                            <button ng-click="getKhachHangByID(kh.idKhachHang)" type="button" class="btn btn-primary bi bi-box-fill"></button>
+                                        </td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                <!--                    <button type="button" class="btn btn-primary">Save changes</button>-->
                             </div>
                         </div>
                     </div>

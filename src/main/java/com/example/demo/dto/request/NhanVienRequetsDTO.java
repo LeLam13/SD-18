@@ -1,4 +1,4 @@
-package com.example.demo.dto;
+package com.example.demo.dto.request;
 
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -7,7 +7,8 @@ import java.time.LocalDate;
 import java.util.Date;
 
 @Data
-public class EmployeeSignupDTO {
+public class NhanVienRequetsDTO {
+    private Integer idNhanVien;
     private String username;
     private String password;
     private String fullname;
@@ -22,4 +23,7 @@ public class EmployeeSignupDTO {
     private String soCanCuocCongDan;
     private String diaChi;
     private String gioiTinh;
+    private String vaiTro;
+    private Date createDate;
+    private Date updateDate;
 }

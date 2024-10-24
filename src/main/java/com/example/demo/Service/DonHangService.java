@@ -1,11 +1,13 @@
 package com.example.demo.Service;
 
 import com.example.demo.dto.reponse.DonHangTongSoLuongResponseDTO;
+import com.example.demo.dto.reponse.KhachHangResponseDTO;
 import com.example.demo.dto.request.DonHangChiTietRequestDTO;
 import com.example.demo.dto.request.DonHangRequestDTO;
 import com.example.demo.entity.DonHang;
 import com.example.demo.entity.DonHangChiTiet;
 import com.example.demo.entity.SanPhamChiTiet;
+import com.example.demo.entity.khachhang;
 
 import java.util.List;
 
@@ -20,4 +22,14 @@ public interface DonHangService {
 
     DonHangChiTiet updateDonHangChitiet(DonHangChiTietRequestDTO chitietRequestDTO);
     DonHangChiTiet createDonHangChitiet(DonHangChiTietRequestDTO chitietRequestDTO);
+
+
+    boolean deleDonHangChiTiet(Integer id);
+
+    boolean deleDonHang(Integer id);
+
+
+    List<khachhang> getAllKhachHang();
+
+    KhachHangResponseDTO getKhachHangById(Integer id);
 }

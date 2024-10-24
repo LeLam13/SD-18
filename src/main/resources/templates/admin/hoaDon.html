@@ -99,6 +99,7 @@
                                                                     onchange="angular.element(this).scope().chuaXacNhan.getList(0)"
                                                                     placeholder="Tìm kiếm theo số điện thoại hoặc mã đơn hàng"
                                                                     style="width: 50%">
+
                                                             </div>
                                                         </div>
                                                     </div>
@@ -279,56 +280,54 @@
                                                         </div>
                                                     </div>
                                                     <div class="table-responsive mb-4">
-                                                        <table
-                                                            class="table align-middle datatable dt-responsive table-check nowrap"
-                                                            style="border-collapse: collapse; border-spacing: 0 8px; width: 100%;">
-                                                            <thead>`
-                                                                <tr>
-                                                                    <th scope="col">ID</th>
-                                                                    <th scope="col">Mã</th>
-                                                                    <th scope="col">Create by</th>
-                                                                    <th scope="col">Update date</th>
-                                                                    <th scope="col">Update by</th>
-                                                                    <th scope="col">Tổng tiền</th>
-                                                                    <th scope="col">Tổng tiền khuyến mãi</th>
-                                                                    <th scope="col">Tổng tiền sau khuyến mãi</th>
-                                                                    <th scope="col">Ghi chú</th>
-                                                                    <th scope="col">Trạng thái thanh toán</th>
-                                                                    <th></th>
-                                                                </tr>
+                                                        <table class="table align-middle datatable dt-responsive table-check nowrap"
+                                                               style="border-collapse: collapse; border-spacing: 0 8px; width: 100%;">
+                                                            <thead>
+                                                            <tr>
+                                                                <th scope="col">Mã hóa đơn</th>
+                                                                <th scope="col">ID khuyến mãi</th>
+                                                                <th scope="col">ID trạng thái</th>
+                                                                <th scope="col">ID phương thức thanh toán</th>
+                                                                <th scope="col">ID đơn hàng</th>
+                                                                <th scope="col">ID nhân viên</th>
+                                                                <th scope="col">ID khách hàng</th>
+                                                                <th scope="col">Create by</th>
+                                                                <th scope="col">Tổng tiền</th>
+                                                                <th scope="col">Tổng tiền khuyến mãi</th>
+                                                                <th scope="col">Tổng tiền sau khuyến mãi</th>
+                                                                <th scope="col">Ghi chú</th>
+                                                                <th scope="col">Trạng thái thanh toán</th>
+                                                                <th scope="col"></th>
+                                                            </tr>
                                                             </thead>
                                                             <tbody>
-                                                                <tr ng-if="hoanThanh.list.length == 0">
-                                                                    <td colspan="8">
-                                                                        <h4 class="text-center col-12 mt-5">Không có đơn
-                                                                            hàng liên quan</h4>
-                                                                    </td>
-                                                                </tr>
-                                                                <tr ng-repeat="d in hoanThanh.list">
-                                                                    <td style="cursor: pointer"
-                                                                        ng-click="hoanThanh.getDetail(d.ma)">{{d.ma}}
-                                                                    </td>
-                                                                    <td style="cursor: pointer"
-                                                                        ng-click="hoanThanh.getDetail(d.ma)">
-                                                                        {{d.tenNguoiNhan}}
-                                                                    </td>
-                                                                    <td style="cursor: pointer"
-                                                                        ng-click="hoanThanh.getDetail(d.ma)">
-                                                                        {{d.soDienThoai}}
-                                                                    </td>
-                                                                    <td style="cursor: pointer"
-                                                                        ng-click="hoanThanh.getDetail(d.ma)">
-                                                                        {{d.ngayDatHang | date:'yyyy-MM-dd HH:mm:ss'}}
-                                                                    </td>
-                                                                    <td>
-                                                                        <a href="/export/don-hang/{{d.ma}}"
-                                                                            class="btn btn-primary">In hóa đơn</a>
-                                                                    </td>
-                                                                </tr>
+                                                            <tr ng-if="hoanThanh.list.length == 0">
+                                                                <td colspan="14">
+                                                                    <h4 class="text-center col-12 mt-5">Không có đơn hàng liên quan</h4>
+                                                                </td>
+                                                            </tr>
+                                                            <tr ng-repeat="d in hoanThanh.list">
+                                                                <td>{{d.ma_hoa_don}}</td>
+                                                                <td>{{d.id_khuyen_mai}}</td>
+                                                                <td>{{d.id_trang_thai}}</td>
+                                                                <td>{{d.id_phuong_thuc_thanh_toan}}</td>
+                                                                <td>{{d.id_don_hang}}</td>
+                                                                <td>{{d.id_nhan_vien}}</td>
+                                                                <td>{{d.id_khach_hang}}</td>
+                                                                <td>{{d.create_by | date:'yyyy-MM-dd'}}</td>
+                                                                <td>{{d.tong_tien | currency}}</td>
+                                                                <td>{{d.tong_tien_khuyen_mai | currency}}</td>
+                                                                <td>{{d.tong_tien_sau_khuyen_mai | currency}}</td>
+                                                                <td>{{d.ghi_chu}}</td>
+                                                                <td>{{d.trang_thai_thanh_toan}}</td>
+                                                                <td>
+                                                                    <a href="/export/don-hang/{{d.ma_hoa_don}}" class="btn btn-primary">In hóa đơn</a>
+                                                                </td>
+                                                            </tr>
                                                             </tbody>
                                                         </table>
-                                                        <!-- end table -->
                                                     </div>
+
                                                     <!-- end table responsive -->
                                                 </div>
                                                 <div class="card-footer">
