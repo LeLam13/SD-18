@@ -79,7 +79,7 @@ public class NhanVienServiceImpl implements NhanVienService {
     }
     @Override
     public Page<nhanvien> searchNhanVien(String keyword, Pageable pageable) {
-        return nhanVienRepository.findByMaNhanVienContainingOrHoTenContainingOrSoDienThoaiContaining(
+        return nhanVienRepository.findByMaNhanVienContainingAndTrangThaiTrueOrHoTenContainingAndTrangThaiTrueOrSoDienThoaiContainingAndTrangThaiTrue(
                 keyword, keyword, keyword, pageable);
     }
 

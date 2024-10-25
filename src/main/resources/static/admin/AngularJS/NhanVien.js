@@ -112,8 +112,8 @@ app.controller("nhan-vien-ctrl", function ($scope, $http) {
         };
 
         $http.post(url, updateNhanVien).then(function (response) {
-            alert("Cập nhật thành công!");
-            location.reload(); // Tải lại trang để xem các thay đổi
+            alertify.success("Cập nhật nhân viên thành công")
+            $scope.findAll(); // Tải lại trang để xem các thay đổi
         }).catch(function (error) {
             console.log("Cập nhật không thành công:", error);
         });

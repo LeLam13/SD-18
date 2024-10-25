@@ -95,13 +95,6 @@ public class NhanVienController {
                 + "Vui lòng thay đổi mật khẩu sau khi đăng nhập lần đầu tiên.\n\n"
                 + "Cảm ơn bạn!";
         emailService.sendEmail(dto.getEmail(), subject, body);
-
         return "redirect:/admin/nhan-vien";
     }
-
-
-
-
-
-
 }
