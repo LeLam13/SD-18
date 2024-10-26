@@ -11,4 +11,5 @@ public class KhachHangController {
     public String getTaiKhoanNguoiDungView(){
         return "admin/KhachHang";
     }
+
 }
