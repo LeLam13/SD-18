@@ -1,150 +1,119 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-
-      layout:decorate="~{/admin/index}">
-<body data-topbar="dark">
-<div class="main-content" layout:fragment="content">
+      layout:decorate="~{/admin/index}" ng-app="khachhangApp">
+<head>
     <style>
-        .textDetail {
-            font-weight: bold;
-            font-size: 15px;
-            font-style: italic;
+        body {
+            font-family: Arial, sans-serif; /* Set a default font */
+            background-color: #f8f9fa; /* Light background color */
+            margin-top: 120px; /* Margin around the body */
         }
 
-        .er {
-            color: red;
-            font-size: 13px;
+        h1 {
+            text-align: center; /* Center the heading */
+            color: #343a40; /* Darker heading color */
+        }
+
+        table {
+            width: 100%; /* Full-width table */
+            border-collapse: collapse; /* Collapse borders */
+            margin: 20px 0; /* Margin around the table */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Add shadow */
+        }
+
+        th, td {
+            padding: 12px; /* Add padding to cells */
+            text-align: left; /* Align text to the left */
+            border-bottom: 1px solid #dee2e6; /* Light bottom border */
+        }
+
+        th {
+            background-color: #007bff; /* Primary color for header */
+            color: white; /* White text in header */
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2; /* Light grey for even rows */
+        }
+
+        tr:hover {
+            background-color: #e9ecef; /* Light grey on hover */
+        }
+
+        @media (max-width: 768px) {
+            table {
+                width: 100%; /* Full-width on small screens */
+                display: block; /* Make it block to enable scrolling */
+                overflow-x: auto; /* Enable horizontal scrolling */
+            }
         }
     </style>
-    <div class="page-content">
-        <div class="container-fluid">
+</head>
+<body data-topbar="dark">
+<div class="main-content" layout:fragment="content" ng-controller="KhachHangController">
+    <div class="container">
+        <h1>Thông Tin Khách Hàng</h1>
 
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                </div>
-                <div class="col-md-6 d-flex justify-content-end">
-                    <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3 me-2">
-                        <div>
-                            <input class="form-control"
-                                   placeholder="Nhập mã, tên hoặc sđt">
-                        </div>
-                    </div>
-                    <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
-                        <div>
-                            <button class="btn btn-secondary" data-toggle="modal"
-                                    data-target="#viewAdd"><i class="bx bx-plus me-1"></i> Thêm mới khách hàng
-                            </button>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-            <h2>Thông Tin Khách Hàng</h2>
-            <form id="khachHangForm" class="form">
-                <div class="mb-3 row">
-                    <label for="maKhachHang" class="col-sm-3 col-form-label">Mã Khách Hàng</label>
-                    <div class="col-sm-9">
-                        <input id="maKhachHang" ng-model="khachHang.maKhachHang" class="form-control" disabled>
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="hoTen" class="col-sm-3 col-form-label">Họ và Tên</label>
-                    <div class="col-sm-9">
-                        <input id="hoTen" ng-model="khachHang.hoTen" class="form-control" disabled>
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="soDienThoai" class="col-sm-3 col-form-label">Số Điện Thoại</label>
-                    <div class="col-sm-9">
-                        <input id="soDienThoai" ng-model="khachHang.soDienThoai" class="form-control" disabled>
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="ngaySinh" class="col-sm-3 col-form-label">Ngày Sinh</label>
-                    <div class="col-sm-9">
-                        <input id="ngaySinh" ng-model="khachHang.ngaySinh" type="date" class="form-control" disabled>
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="diaChi" class="col-sm-3 col-form-label">Địa Chỉ</label>
-                    <div class="col-sm-9">
-                        <input id="diaChi" ng-model="khachHang.diaChi" class="form-control" disabled>
-                    </div>
-                </div>
-                <div class="mb-3 row">
-                    <label for="gioiTinh" class="col-sm-3 col-form-label">Giới Tính</label>
-                    <div class="col-sm-9">
-                        <input id="gioiTinh" ng-model="khachHang.gioiTinh" class="form-control" disabled>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-sm-9 offset-sm-3">
-                        <button type="button" class="btn btn-secondary" ng-click="goBack()">Quay lại</button>
-                    </div>
-                </div>
-            </form>
-
-
-            <!-- container-fluid -->
-            <!--    //////////////////////////////////////////////////////////////////////-->
-
-            <div class="modal fade" id="viewAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel">Thêm Khách Hàng</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">×</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <form id="addCustomerForm" th:action="@{/admin/khach-hang/addCustomer}" method="post">
-                                <div class="mb-3">
-                                    <label for="email">Email:</label>
-                                    <input type="email" id="email" name="email" class="form-control" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="maKhachHang">Mã khách hàng:</label>
-                                    <input type="text" id="maKhachHang" name="maKhachHang" class="form-control" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="hoTen">Họ tên khách hàng:</label>
-                                    <input type="text" id="hoTen" name="hoTen" class="form-control" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="soDienThoai">Số điện thoại:</label>
-                                    <input type="text" id="soDienThoai" name="soDienThoai" class="form-control">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="ngaySinh">Ngày sinh:</label>
-                                    <input type="date" id="ngaySinh" name="ngaySinh" class="form-control">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="diaChi">Địa chỉ:</label>
-                                    <input type="text" id="diaChi" name="diaChi" class="form-control">
-                                </div>
-                                <div class="mb-3">
-                                    <label for="gioiTinh">Giới tính:</label>
-                                    <input type="text" id="gioiTinh" name="gioiTinh" class="form-control">
-                                </div>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                                <button type="submit" class="btn btn-primary">Thêm khách hàng</button>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
+        <!-- Search Bar and Add Button -->
+        <div class="d-flex justify-content-between mb-3">
+            <input type="text" class="form-control w-50" ng-model="searchQuery" placeholder="Search Khach Hang...">
+            <button class="btn btn-primary" ng-click="addKhachHang()">Add Khach Hang</button>
         </div>
-        <!-- End Page-content -->
 
-        <footer class="footer">
-        </footer>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Mã Khách Hàng</th>
+                <th>Họ Tên</th>
+                <th>Ngày Sinh</th>
+                <th>Số Điện Thoại</th>
+                <th>Giới Tính</th>
+                <th>Địa Chỉ</th>
+                <th>Tên Tài Khoản</th>
+            </tr>
+            </thead>
+            <tbody ng-cloak>
+            <tr ng-repeat="khach in khachhangList | filter:searchQuery">
+                <td>{{ khach.id_khach_hang }}</td>
+                <td>{{ khach.ma_khach_hang }}</td>
+                <td>{{ khach.ho_ten }}</td>
+                <td>{{ khach.ngay_sinh | date:'yyyy-MM-dd' }}</td>
+                <td>{{ khach.so_dien_thoai }}</td>
+                <td>{{ khach.gioi_tinh ? 'Nam' : 'Nữ' }}</td>
+                <td>{{ khach.dia_chi }}</td>
+                <td>{{ khach.username_tai_khoan }}</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
-    <!-- end main content-->
 </div>
-</body>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+<script>
+    var app = angular.module('khachhangApp', []);
+
+    app.controller('KhachHangController', function($scope, $http) {
+        $scope.khachhangList = [];
+        $scope.searchQuery = "";
+
+        $scope.fetchKhachHang = function() {
+            $http.get('/admin/khach-hang/api')
+                .then(function(response) {
+                    console.log("Data fetched:", response.data);
+                    $scope.khachhangList = response.data;
+                }, function(error) {
+                    console.error("Error fetching khach hang data:", error);
+                });
+        };
+
+        $scope.addKhachHang = function() {
+            // Implement the logic for adding a new Khach Hang
+            alert("Functionality to add Khach Hang will be implemented here.");
+        };
+
+        $scope.fetchKhachHang();
+    });
+</script>
+</body>
 </html>

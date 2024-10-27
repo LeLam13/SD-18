@@ -4,7 +4,7 @@ import com.example.demo.dto.request.UserSignupRequestDTO;
 import com.example.demo.entity.khachhang;
 import com.example.demo.entity.taikhoan;
 import com.example.demo.entity.vaitro;
-import com.example.demo.repo.KhachHangRePo;
+import com.example.demo.repo.*;
 import com.example.demo.repo.taikhoanRepo;
 import com.example.demo.repo.vaitroRepo;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -32,7 +32,7 @@ public class SampleController {
     private taikhoanRepo taikhoanRepo;
 
     @Autowired
-    private KhachHangRePo khachhangRePo;
+    KhachHangRepo khachHangRepo;
 
     @Autowired
     private vaitroRepo vaitroRepo;
@@ -89,13 +89,13 @@ public class SampleController {
 
         // Thiết lập các thuộc tính khác
         khachHang.setHoTen(dto.getHoTen());
-        khachHang.setSoDienThoai(Integer.parseInt(dto.getSoDienThoai()));
+        khachHang.setSoDienThoai(dto.getSoDienThoai());
         khachHang.setDiaChi(dto.getDiaChi());
         khachHang.setGioiTinh(dto.isGioiTinh());
         khachHang.setTaikhoan(taiKhoan); // Gán tài khoản cho khách hàng
 
         // Lưu khách hàng vào cơ sở dữ liệu
-        khachhangRePo.save(khachHang);
+        khachHangRepo.save(khachHang);
 
         // Tạo thông báo thành công
         model.addAttribute("successMessage", "Đăng ký thành công!"); // Thêm thông báo thành công
