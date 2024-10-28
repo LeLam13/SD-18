@@ -10,4 +10,5 @@ public interface HoaDonService {
     String generateRandomString(int length);
     List<HoaDon> getAllHoaDons();
 
+
 }

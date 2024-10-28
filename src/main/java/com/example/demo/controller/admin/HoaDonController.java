@@ -34,6 +34,8 @@ public class HoaDonController {
     public List<HoaDon> getAllHoaDons() {
 
         return hoaDonRepo.findAll();
+
     }
+    // sao ko return cai template ra
 
 }
