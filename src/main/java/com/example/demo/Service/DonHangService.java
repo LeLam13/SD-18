@@ -4,6 +4,7 @@ import com.example.demo.dto.reponse.DonHangTongSoLuongResponseDTO;
 import com.example.demo.dto.reponse.KhachHangResponseDTO;
 import com.example.demo.dto.request.DonHangChiTietRequestDTO;
 import com.example.demo.dto.request.DonHangRequestDTO;
+import com.example.demo.dto.request.KhachHangRequestDTO;
 import com.example.demo.entity.DonHang;
 import com.example.demo.entity.DonHangChiTiet;
 import com.example.demo.entity.SanPhamChiTiet;
@@ -32,4 +33,10 @@ public interface DonHangService {
     List<khachhang> getAllKhachHang();
 
     KhachHangResponseDTO getKhachHangById(Integer id);
+
+    khachhang addKhachHang(KhachHangRequestDTO khachHangRequestDTO,String username);
+
+    DonHang updateDonHangKH(Integer idDH, Integer id);
+
+    DonHang getDonHangByID(Integer id);
 }

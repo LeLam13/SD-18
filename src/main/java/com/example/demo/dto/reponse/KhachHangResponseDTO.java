@@ -15,7 +15,7 @@ public class KhachHangResponseDTO {
 
     private String hoTen;
 
-    private int soDienThoai;
+    private String soDienThoai;
 
     private String diaChi;
 }

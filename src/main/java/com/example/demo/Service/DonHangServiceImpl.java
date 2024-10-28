@@ -4,6 +4,7 @@ import com.example.demo.dto.reponse.DonHangTongSoLuongResponseDTO;
 import com.example.demo.dto.reponse.KhachHangResponseDTO;
 import com.example.demo.dto.request.DonHangChiTietRequestDTO;
 import com.example.demo.dto.request.DonHangRequestDTO;
+import com.example.demo.dto.request.KhachHangRequestDTO;
 import com.example.demo.entity.*;
 import com.example.demo.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -169,6 +170,50 @@ public class DonHangServiceImpl implements DonHangService{
         responseDTO.setHoTen(kh.getHoTen());
         responseDTO.setSoDienThoai(kh.getSoDienThoai());
         return responseDTO;
+    }
+
+    @Override
+    public khachhang addKhachHang(KhachHangRequestDTO khachHangRequestDTO,String username) {
+        taikhoan oldTaiKoan = taikhoanRepo.findByUsername(username);
+        if (oldTaiKoan == null) {
+            throw new RuntimeException("Không tìm thấy tài khoản");
+        }
+        nhanvien getNV = nhanVienRepo.findById(oldTaiKoan.getNhanVien().getIdNhanVien()).orElse(null);
+        if (getNV == null) {
+            throw new RuntimeException("Không tìm thấy nhân viên");
+        }
+
+        List<khachhang> khachhangList = khachhangRePo.findBySoDienThoai(khachHangRequestDTO.getSoDienThoai());
+        if (!khachhangList.isEmpty()) {
+            throw new RuntimeException("Số điện thoại đã tồn tại");
+        }
+
+        khachhang newkhachhang = new khachhang();
+
+        newkhachhang.setMaKhachHang(khachHangRequestDTO.getMaKhachHang());
+        newkhachhang.setHoTen("Khách Lẻ");
+        newkhachhang.setSoDienThoai(khachHangRequestDTO.getSoDienThoai());
+        khachhangRePo.save(newkhachhang);
+        return newkhachhang;
+    }
+
+    @Override
+    public DonHang updateDonHangKH(Integer idDH, Integer id) {
+        khachhang oldKhachHang = khachhangRePo.findById(id).get();
+        if(oldKhachHang == null){
+            throw new RuntimeException("Không tìm thấy khách hàng");
+        }
+        DonHang oldDonHang = donHangRepo.findById(idDH).get();
+        if(oldDonHang == null){
+            throw new RuntimeException("Không tìm thấy đơn hàng");
+        }
+        oldDonHang.setKhachHang(oldKhachHang);
+        return donHangRepo.save(oldDonHang);
+    }
+
+    @Override
+    public DonHang getDonHangByID(Integer id) {
+        return donHangRepo.findById(id).get();
     }
 
 }

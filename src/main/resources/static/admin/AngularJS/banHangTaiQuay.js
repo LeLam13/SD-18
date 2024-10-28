@@ -52,6 +52,20 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         }).catch(function (err){
             console.log("err: ", err);
         })
+
+        $http.get(`/don-hang/get-don-hang/${$scope.selectedId}`).then(function (response){
+            console.log("check don hàng sau khi update kh: ",response.data);
+            if (response.data.oldKhachHang) {
+                $('#nameKH').val(response.data.oldKhachHang.hoTen || '');
+                $('#sdtKH').val(response.data.oldKhachHang.soDienThoai || '');
+            } else {
+                $('#nameKH').val('');
+                $('#sdtKH').val('');
+            }
+            // $scope.productDetails = response.data;
+        }).catch(function (err){
+            console.log("err: ", err);
+        })
     };
 
     //lấy sản phẩm
@@ -75,6 +89,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         });
     }
 
+    //lấy all khách hàng
     $scope.getKhachHang = function (){
         $http.get("/don-hang/get-khach-hang").then(function (response) {
             $scope.khachHang = response.data;
@@ -83,7 +98,9 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         })
     }
 
+    //lấy khách hàng theo id
     $scope.getKhachHangByID = function (id){
+        var idDH = $scope.selectedId;
         $http.get("/don-hang/get-khach-hang/" +id).then(function (response) {
             $scope.khachHangById = response.data;
             $('#nameKH').val(response.data.hoTen);
@@ -92,27 +109,39 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         }).catch(function (errors) {
             console.error('Có lỗi xảy ra:', errors);
         })
+
+        $http.put("/don-hang/update-don-hang/" +idDH+"/"+ id ).then(function (response) {
+            console.log("update DH: ",response);
+        }).catch(function (errors) {
+            console.error('Có lỗi xảy ra:', errors);
+        })
     }
 
+    //tạo đon hàng
     $scope.addDonHang = function() {
-        console.log("$scope.khachHangById: ",$scope.khachHangById);
-        // var donHangData = angular.copy($scope.donHangAdd);
-        // $http({
-        //     method: 'POST',
-        //     url: '/don-hang/them-moi',
-        //     data: donHangData,
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     transformRequest: function(data) {
-        //         return JSON.stringify(data);  // Chuyển đối tượng thành chuỗi JSON
-        //     }
-        // }) .then(function(response) {
-        //         console.log('Đơn hàng đã được thêm:', response.data);
-        //         $scope.getDonHang();
-        // }).catch(function(error) {
-        //         console.error('Có lỗi xảy ra:', error);
-        // });
+        //console.log("$scope.khachHangById: ",$scope.khachHangById);
+        if ($scope.donHang.length >= 8) {
+            console.error('Đã có 8 đơn hàng, không thể thêm mới.');
+            //alert('Đã đạt đến giới hạn 8 đơn hàng, không thể thêm đơn hàng mới.');
+            return;  // Dừng function nếu đã có 8 item
+        }
+        var donHangData = angular.copy($scope.donHangAdd);
+        $http({
+            method: 'POST',
+            url: '/don-hang/them-moi',
+            data: donHangData,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            transformRequest: function(data) {
+                return JSON.stringify(data);  // Chuyển đối tượng thành chuỗi JSON
+            }
+        }) .then(function(response) {
+                console.log('Đơn hàng đã được thêm:', response.data);
+                $scope.getDonHang();
+        }).catch(function(error) {
+                console.error('Có lỗi xảy ra:', error);
+        });
     };
 
     //thêm/cập nhật sản phẩm vào đơn hàng chi tiết
@@ -133,6 +162,11 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         var sdt = $('#sdtKH').val();
         if(name === "" || sdt === "") {
             alert("Bạn Chưa Chọn Khách Hàng!");
+            return;
+        }
+
+        if($scope.selectedId === null || $scope.selectedId ===''){
+            alert("Chưa Chọn Đơn Hàng!");
             return;
         }
 
@@ -194,7 +228,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         var nameKH = $('#nameKH').val();
         var tongTien = $('.total-amount').text();
         var phieuGiamGia = $('#discountSelect').val();
-        //var khachThanhToan = $('#exampleFormControlInput1').val();
+        var khachThanhToan = $('#id-khach-thanh-toan').val();
         var phuongThucThanhToan = $('#paymentMethodSelect').val();
         var ghiChu = $('textarea').val();
 
@@ -212,6 +246,39 @@ app.controller("banhang-ctrl", function ($scope, $http) {
             ghiChu: ghiChu,
         }
 
+        if($scope.hoaDonData.idDonHang === null){
+            alert("Chưa Chọn đơn Hàng!");
+            return;
+        }
+
+        if(khachThanhToan === null || khachThanhToan ==0){
+            alert("Chưa Nhập tiền khách thanh toán!");
+            return;
+        }
+
+        if (isNaN(khachThanhToan) || khachThanhToan === "") {
+            alert("Giá trị thanh toán không hợp lệ. Vui lòng nhập số!");
+            return;
+        }
+
+        khachThanhToan = parseFloat(khachThanhToan);
+
+        if (khachThanhToan < $scope.getTienKhachPTra()) {
+            alert("Khách chưa thanh toán đủ tiền!");
+            return;
+        }
+
+        var sdt = $('#sdtKH').val();
+        if(nameKH === "" || sdt === "") {
+            alert("Chưa Chọn Khách Hàng!");
+            return;
+        }
+
+        if ($scope.productDetails && $scope.productDetails.length === 0) {
+            alert("Chưa chọn sản phẩm!");
+            return;
+        }
+
         var hoaDonData = angular.copy($scope.hoaDonData);
 
         $http({
@@ -222,14 +289,52 @@ app.controller("banhang-ctrl", function ($scope, $http) {
                 'Content-Type': 'application/json'
             },
             transformRequest: function(data) {
-                return JSON.stringify(data);  // Chuyển đối tượng thành chuỗi JSON
+                return JSON.stringify(data);
             }
         }) .then(function(response) {
                 console.log('Hoá Đơn DATA:', response.data);
-                //$scope.getDonHang();
+                $scope.getKhachHang();
         }).catch(function(error) {
-                console.error('Có lỗi xảy ra Hoá Đơn DATA:', error);
+                console.error('Có lỗi xảy ra khách hàng DATA:', error);
         });
+    }
+
+    //thêm khách hàng
+    $scope.addKhachHang = function (){
+        var sdt = $('#sdt-khach-hang').val();
+
+        if(sdt === null || sdt ===""){
+            $scope.showErrrorsMes("Chưa nhập số điện thoại");
+        }
+
+        $scope.dataKhachHang ={
+            maKhachHang: $scope.generateRandomString(8),
+            soDienThoai: sdt
+        }
+        var khachHangData = angular.copy($scope.dataKhachHang);
+        $http({
+            method: 'POST',
+            url: '/don-hang/them-khach-hang',
+            data: khachHangData,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            transformRequest: function(data) {
+                return JSON.stringify(data);  // Chuyển đối tượng thành chuỗi JSON
+            }
+        }) .then(function(response) {
+            console.log('Khách Hàng DATA:', response.data);
+            $scope.getKhachHang();
+        }).catch(function(error) {
+            console.error('Có lỗi xảy ra Khách Hàng DATA:', error);
+            if (error.data) {
+                $scope.showErrrorsMes(error.data);  // Sử dụng thông báo lỗi từ server
+            } else {
+                $scope.showErrrorsMes("Có lỗi xảy ra khi thêm khách hàng.");
+            }
+        });
+
+        $('#show-modal-khach').modal('show');
     }
 
     //xoá đơn hàng
@@ -247,21 +352,29 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         }
     }
 
-    $scope.deleteDonHangChiTiet = function (id){
+    //xoá đơn hàng chi tiết
+    $scope.deleteDonHangChiTiet = function (id, idSP){
         // alert("Show: "+id);
-        if(confirm("Bạn Có muốn Xoá sản phẩm khỏi dơn hàng không?")){
+        if(confirm("Bạn Có muốn Xoá sản phẩm khỏi đơn hàng không?")){
             $http.delete('/don-hang/don-hang-chi-tiet/xoa/' + id).then(function (response){
                 console.log('Đã xóa đơn hàng chi tiết thành công:', response);
                 $scope.selectOrder(selectedId);
-                var productInScope = $scope.products.find(item => item.idSanPhamChiTiet === id);
-                productInScope.soLuong++;
-                // if (productInScope && productInScope.soLuong > 1) {
-                //     productInScope.soLuong++;
-                // }
+                var productInScope = $scope.products.find(item => item.idSanPhamChiTiet === idSP);
+                if (productInScope) {
+                    productInScope.soLuong++;
+                } else {
+                    console.error('Không tìm thấy sản phẩm với id:', id);
+                }
             }).catch(function (errors){
                 console.error('Có lỗi xảy ra:', errors);
             })
         }
+    }
+
+    //tìm kiếm khách hàng
+    $scope.searchKhachHang = function (){
+        var sdt = $('#sdt-khach-hang').val();
+
     }
 
 
@@ -329,9 +442,32 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         return khachThanhToan - tongTien;
     };
 
+    //in hoá đơn
+    $scope.printer = function (){
+        $http.get("/hoa-don/invoice").then(function (response) {
+            console.error('thanh cong:', response);
+        }).catch(function (errors) {
+            console.error('Có lỗi xảy ra:', errors);
+        })
+    }
+    //ẩn thông báo
+    $scope.hideErrrorsMes = function (){
+        $('#erroresMessage').hide();
+    }
+    //hiện thông báo
+    $scope.showErrrorsMes = function (message){
+        $('#showMessage').text(message);
+        $('#erroresMessage').show();
+
+        setTimeout(() => {
+            $('#erroresMessage').hide();
+        }, 2000);
+    }
+
 
     //load data product when run
     $scope.getProducts();
     $scope.getDonHang();
     $scope.getKhachHang();
+    $scope.hideErrrorsMes();
 })

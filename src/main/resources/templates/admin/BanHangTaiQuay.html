@@ -9,6 +9,29 @@
 <body>
     <div class="main-content" layout:fragment="content">
         <style>
+            .table-responsive{
+                margin-top: 50px;
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .cart-header {
+                margin-bottom: 20px;
+                font-size: 24px;
+                font-weight: bold;
+            }
+
+            table.table-bordered {
+                border: 1px solid #ccc; /* Tạo đường viền bao quanh bảng */
+                max-height: 40%;
+            }
+
+            table.table-bordered th,
+            table.table-bordered td {
+                border: 1px solid #ccc; /* Tạo đường viền cho các ô */
+            }
             .table th, .table td {
                 vertical-align: middle;
             }
@@ -21,10 +44,6 @@
                 width: 70px;
                 text-align: center;
             }
-            .remove-btn {
-                color: red;
-                cursor: pointer;
-            }
 
             .table th,
             .table td {
@@ -35,7 +54,8 @@
             }
 
             .table th {
-                background-color: #f8f9fa;
+                /*background-color: #f8f9fa;*/
+                background-color: #9dc6f2;
                 /* Màu nền cho tiêu đề cột */
                 position: sticky;
                 /* Giữ tiêu đề cố định khi cuộn */
@@ -44,12 +64,15 @@
                 z-index: 1;
                 /* Đảm bảo tiêu đề nằm trên cùng */
             }
+            .table td{
+                background-color: #ece3cd;
+            }
 
             .payment-box {
                 border: 1px solid #ccc;
                 padding: 10px;
                 border-radius: 10px;
-                max-width: 350px;
+                max-width: 400px;
                 max-height: 4500px;
                 margin: 0 auto;
                 font-size: 16px;
@@ -84,9 +107,6 @@
                 position: relative; /* Đặt các phần tử con một cách chính xác */
             }
 
-            /*.item.active {*/
-            /*    background-color: #007bff;*/
-            /*}*/
 
             .item .count, .item .badge {
                 font-size: 10px;
@@ -129,11 +149,12 @@
             .selected {
                 background-color: blue; /* Màu nền khi được chọn */
             }
+
         </style>
         <div class="page-content">
             <div class="container-fluid" ng-app="banhang-app" ng-controller="banhang-ctrl">
 
-                <div class="row">
+                <div class="row mb-1">
                     <div class="item" ng-repeat="donHangs in donHang" ng-click="selectOrder(donHangs.idDonHang)" ng-class="{'selected': selectedId === donHangs.idDonHang}">
                         <div class="count" hidden>{{ donHangs.idDonHang }}</div>
                         <div class="count">Đơn</div>
@@ -146,38 +167,41 @@
                 <div class="row">
                     <div class="col-7">
                         <div class="row">
-                            <h2>Giỏ hàng</h2>
-                            <table class="table table-bordered">
-                                <thead>
-                                <tr>
-                                    <th scope="col"></th>
-                                    <th scope="col">Tên Sản phẩm</th>
-                                    <th scope="col" class="text-center">Số lượng</th>
-                                    <th scope="col">Đơn Giá</th>
-                                    <th scope="col">Giá bán</th>
-                                    <th scope="col">Tổng tiền</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="details in productDetails">
-                                    <td class="text-center">
-                                        <button ng-click="deleteDonHangChiTiet(details.idDonHangChiTiet)" type="button" class="btn btn-danger bi bi-trash3-fill"></button>
-                                    </td>
-                                    <td>{{ details.tenSanPham}}</td>
-                                    <td class="text-center">
-                                        <div class="quantity-input">
-                                            <button ng-click="soLuongReduce(details)" class="btn btn-outline-secondary">-</button>
-                                            <input ng-model="details.soLuong" ng-forcus="saveOriginalQuantity(details)"
-                                                   ng-blur="checkQuantity(details)" type="number" class="form-control" value="1" min="1">
-                                            <button ng-click="soLuongPlus(details)" class="btn btn-outline-secondary">+</button>
-                                        </div>
-                                    </td>
-                                    <td>{{ details.donGia}}</td>
-                                    <td>{{ details.donGia}}</td>
-                                    <td>{{details.soLuong*details.donGia}}</td>
-                                </tr>
-                                </tbody>
-                            </table>
+                            <div class="table-responsive">
+                                <div class="cart-header">Đơn Hàng Chi Tiết</div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">Tên Sản phẩm</th>
+                                        <th scope="col" class="text-center">Số lượng</th>
+                                        <th scope="col">Đơn Giá</th>
+                                        <th scope="col">Giá bán</th>
+                                        <th scope="col">Tổng tiền</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="details in productDetails">
+                                        <td class="text-center">
+                                            <button ng-click="deleteDonHangChiTiet(details.idDonHangChiTiet, details.idSanPham)" type="button" class="btn btn-danger bi bi-trash3-fill"></button>
+                                        </td>
+                                        <td>{{ details.tenSanPham}}</td>
+                                        <td class="text-center">
+                                            <div class="quantity-input">
+                                                <button ng-click="soLuongReduce(details)" class="btn btn-outline-secondary bi bi-dash-circle"></button>
+                                                <input ng-model="details.soLuong" ng-forcus="saveOriginalQuantity(details)"
+                                                       ng-blur="checkQuantity(details)" type="number" class="form-control" value="1" min="1">
+                                                <button ng-click="soLuongPlus(details)" class="btn btn-outline-secondary bi bi-plus-circle"></button>
+                                            </div>
+                                        </td>
+                                        <td>{{ details.donGia}}</td>
+                                        <td>{{ details.donGia}}</td>
+                                        <td>{{details.soLuong*details.donGia}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
                             <div class="row">
                                 <nav aria-label="Page navigation example">
                                     <ul class="pagination">
@@ -200,65 +224,69 @@
                         </div>
 
                         <div class="row">
-                            <h2>San Pham</h2>
-                            <table class="table table-bordered">
-                                <thead>
-                                <tr>
-                                    <th scope="col"></th>
-                                    <th scope="col">Tên Sản phẩm</th>
-                                    <th scope="col" class="text-center">Số lượng</th>
-                                    <th scope="col">Đơn Giá</th>
-                                    <th scope="col">Giá bán</th>
-                                    <th scope="col"></th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr ng-repeat="itemProducts in products">
-                                    <td>
-                                        <img ng-src="/assets/img/{{itemProducts.hinhAnh}}" alt="" class="img-fluid mx-auto d-block" style="max-height: 100px; max-width: 100px;">
-                                    </td>
-                                    <td>{{itemProducts.idSanPham.ten}}</td>
-                                    <td class="text-center">
-                                        {{itemProducts.soLuong}}
-                                    </td>
-                                    <td>{{itemProducts.donGia}}</td>
-                                    <td>{{itemProducts.donGia}}</td>
-                                    <td class="text-center">
-<!--                                        <span class="remove-btn">&times;</span> &lt;!&ndash; Nút remove &ndash;&gt;-->
-                                        <button ng-click="addProductsDetail(itemProducts.idSanPhamChiTiet)" class="btn btn-outline-secondary">+</button>
-                                    </td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <div class="row">
-                                <nav aria-label="Page navigation example">
-                                    <ul class="pagination">
-                                        <li class="page-item">
-                                            <a class="page-link" href="#" aria-label="Previous">
-                                                <span aria-hidden="true">&laquo;</span>
-                                            </a>
-                                        </li>
-                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#" aria-label="Next">
-                                                <span aria-hidden="true">&raquo;</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav>
+                            <div class="table-responsive">
+                                <div class="cart-header">Sản Phẩm</div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">Tên Sản phẩm</th>
+                                        <th scope="col" class="text-center">Số lượng</th>
+                                        <th scope="col">Đơn Giá</th>
+                                        <th scope="col">Giá bán</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="itemProducts in products">
+                                        <td>
+                                            <img ng-src="/assets/img/{{itemProducts.hinhAnh}}" alt="" class="img-fluid mx-auto d-block" style="max-height: 100px; max-width: 100px;">
+                                        </td>
+                                        <td>{{itemProducts.idSanPham.ten}}</td>
+                                        <td class="text-center">
+                                            {{itemProducts.soLuong}}
+                                        </td>
+                                        <td>{{itemProducts.donGia}}</td>
+                                        <td>{{itemProducts.donGia}}</td>
+                                        <td class="text-center">
+                                            <button ng-click="addProductsDetail(itemProducts.idSanPhamChiTiet)" class="btn btn-outline-secondary">
+                                                <i class="bi bi-cart-plus" style="font-size: 20px;"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="row">
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination">
+                                            <li class="page-item">
+                                                <a class="page-link" href="#" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+                                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="#" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+
                             </div>
                         </div>
                     </div>
 
                     <div class="col-5">
-                        <div class="row">
-                            <div class="col-4">
-                                <button ng-click="addDonHang()" type="button" class="btn btn-primary">Tạo Đơn Hàng</button>
+                        <div class="row ml-1">
+                            <div class="col-5">
+                                <button ng-click="addDonHang()" type="button" class="btn btn-primary" id="add-don-hang">Tạo Đơn Hàng</button>
                             </div>
                             <div class="col-5">
-                                <button ng-click="openModal()" type="button" class="btn btn-secondary">Chọn Khách Hàng</button>
+                                <button ng-click="openModal()" type="button" class="btn btn-secondary" id="chon-KH">Chọn Khách Hàng</button>
                             </div>
                         </div>
                         <div class="row">
@@ -272,7 +300,6 @@
                                 </div>
                                 <div class="mb-2">
                                     <label class="form-label">Tổng tiền:</label>
-<!--                                    <span class="total-amount">2,522,500</span>-->
                                     <span class="total-amount">{{getSum()}}</span>
                                 </div>
                                 <div class="mb-2">
@@ -284,7 +311,6 @@
                                 </div>
                                 <div class="mb-2">
                                     <label class="form-label">Tiền giảm:</label>
-<!--                                    <span>{{ getSum() * (parseFloat(discountRate.replace('%', '')) / 100)}}</span>-->
                                     <span>{{ getTienGiam() }}</span>
                                 </div>
                                 <div class="mb-2">
@@ -298,7 +324,7 @@
                                 <div class="mb-2">
                                     <label class="form-label">Khách thanh toán:</label>
 <!--                                    <button class="btn btn-success btn-sm"><i class="bi bi-calculator"></i></button>-->
-                                    <input type="text" class="form-control" ng-model="khachThanhToan" id="exampleFormControlInput1">
+                                    <input type="text" class="form-control" ng-model="khachThanhToan" id="id-khach-thanh-toan">
 
                                 </div>
                                 <div class="mb-2">
@@ -311,7 +337,6 @@
                                         <option value="2" selected>Tiền Mặt</option>
                                         <option value="3" >Thanh Toán Online</option>
                                     </select>
-                                    <span>200,000</span>
                                 </div>
                                 <div class="mb-2">
                                     <label class="form-label">Ghi chú:</label>
@@ -319,12 +344,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row mt-2 ml-1">
                             <div class="col-4">
                                 <button ng-click="createHoaDon()" type="button" class="btn btn-primary">Lưu Hoá Đơn</button>
                             </div>
                             <div class="col-4">
-                                <button  type="button" class="btn btn-secondary">In Hoá Đơn</button>
+                                <button ng-click="printer()" type="button" class="btn btn-secondary">In Hoá Đơn</button>
                             </div>
                         </div>
                     </div>
@@ -335,10 +360,22 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Danh Sách Khách Hàng</h1>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body">
+                                <div class="row mb-2">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Nhập số điện thoại" id="sdt-khach-hang">
+                                        <button ng-click="addKhachHang()" class="btn btn-outline-secondary" type="button">Thêm</button>
+                                        <button class="btn btn-outline-secondary" type="button">Tìm Kiếm</button>
+                                    </div>
+                                </div>
+                                <div class="row" id="erroresMessage">
+                                    <div class="alert alert-danger" role="alert">
+                                        <span id="showMessage"></span>
+                                    </div>
+                                </div>
                                 <table class="table">
                                     <thead>
                                     <tr>

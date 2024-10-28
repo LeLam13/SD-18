@@ -34,7 +34,7 @@ public class khachhang {
     private Date ngaySinh;
 
     @Column(name = "so_dien_thoai")
-    private int soDienThoai; // Thay đổi thành String để tránh vấn đề với số không đầu
+    private String soDienThoai; // Thay đổi thành String để tránh vấn đề với số không đầu
 
     @Column(name = "gioi_tinh")
     private boolean gioiTinh;

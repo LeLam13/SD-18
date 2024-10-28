@@ -90,7 +90,8 @@ public class SampleController {
 
         // Thiết lập các thuộc tính khác
         khachHang.setHoTen(dto.getHoTen());
-        khachHang.setSoDienThoai(Integer.parseInt(dto.getSoDienThoai()));
+        //khachHang.setSoDienThoai(Integer.parseInt(dto.getSoDienThoai()));
+        khachHang.setSoDienThoai(dto.getSoDienThoai());
         khachHang.setDiaChi(dto.getDiaChi());
         khachHang.setGioiTinh(dto.isGioiTinh());
         khachHang.setTaikhoan(taiKhoan); // Gán tài khoản cho khách hàng
