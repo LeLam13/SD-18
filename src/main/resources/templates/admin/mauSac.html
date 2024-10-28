@@ -68,7 +68,6 @@
                                         <th>Mã</th>
                                         <th>Tên Màu</th>
                                         <th>Ngày Tạo</th>
-                                        <th>Ngày Cập Nhật</th>
                                         <th>Trạng Thái</th>
                                         <th>Thao Tác</th>
                                     </tr>
@@ -80,20 +79,40 @@
                                         <td>{{m.ma}}</td>
                                         <td>{{m.ten}}</td>
                                         <td>{{m.createDate | date:'yyyy-MM-dd'}}</td>
-                                        <td>{{m.updateDate | date:'yyyy-MM-dd'}}</td>
-                                        <td>{{m.trangThai?"Đang hoạt động":"Không hoạt động"}}</td>
+                                        <td>{{m.trangThai ? "Đang hoạt động" : "Không hoạt động"}}</td>
                                         <td>
-                                            <button data-bs-toggle="modal"
-                                                    class="btn btn-primary"
-                                                    data-bs-target="#update"
-                                                    ng-click="getMauSac(m.ma)">Cập nhật
-                                            </button>
-                                            <button class="btn btn-danger" ng-click="updateTT(m.idMauSac)">Đổi trạng thái</button>
-                                            <button class="btn btn-danger" ng-click="delete(m.idMauSac)">Xóa</button>
+                                            <a href="" class="edit" data-bs-toggle="modal" data-bs-target="#view"
+                                               ng-click="getMauSac(m.ma)">
+                                                <i style='font-size:24px' class='fas'>&#xf06e;</i>
+                                            </a>
+                                            <a href="" class="edit" data-bs-toggle="modal" data-bs-target="#update"
+                                               ng-click="getMauSac(m.ma)">
+                                                <i class="material-icons" title="Edit">&#xE254;</i>
+                                            </a>
+                                            <a href="" class="edit" ng-click="updateTT(m.idMauSac)">
+                                                <i style="font-size:20px" class="fa">&#xf021;</i>
+                                            </a>
                                         </td>
                                     </tr>
                                     </tbody>
                                 </table>
+
+                                <!-- Điều hướng phân trang -->
+                                <nav aria-label="Page navigation" class="d-flex justify-content-center mt-3">
+                                    <ul class="pagination">
+                                        <li class="page-item" ng-class="{ 'disabled': page === 0 }">
+                                            <a class="page-link" href="#" ng-click="previousPage()">&#8592; Trang
+                                                trước</a>
+                                        </li>
+                                        <li class="page-item disabled">
+                                            <span class="page-link">Trang {{ page + 1 }} / {{ totalPages }}</span>
+                                        </li>
+                                        <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 }">
+                                            <a class="page-link" href="#" ng-click="nextPage()">Trang sau &#8594;</a>
+                                        </li>
+                                    </ul>
+                                </nav>
+
                                 <div class="row">
                                     <div class="col-6">
 
@@ -213,6 +232,66 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal" id="view">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Xem chi tiết</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form>
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label class="form-label">ID</label>
+                                <input type="text" ng-model="idMauSac" class="form-control">
+                                <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Mã</label>
+                                <input type="text" ng-model="ma" class="form-control" readonly>
+                                <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Tên Màu</label>
+                                <input type="text" ng-model="ten" class="form-control">
+                                <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Người Tạo</label>
+                                <input type="text" ng-model="createBy" class="form-control">
+                                <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Ngày Tạo</label>
+                                <input type="text" ng-model="createDate | date:'yyyy-MM-dd'" class="form-control">
+                                <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Người Cập Nhật</label>
+                                <input type="text" ng-model="updateBy" class="form-control">
+                                <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Ngày Cập Nhật</label>
+                                <input type="text" ng-model="updateDate | date:'yyyy-MM-dd'" class="form-control">
+                                <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Trạng Thái</label>
+                                <input type="text" ng-model="trangThai?'Đang hoạt động':'Ngưng họat động'" class="form-control">
+                                <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </div>
 <!-- end main content-->
