@@ -32,6 +32,7 @@ public class HoaDonController {
     @GetMapping("/api")
     @ResponseBody
     public List<HoaDon> getAllHoaDons() {
+
         return hoaDonRepo.findAll();
     }
 

@@ -105,6 +105,8 @@
                                         <th>Tổng Tiền Sau Khuyến Mãi</th>
                                         <th>Ghi Chú</th>
                                         <th>Trạng Thái</th>
+
+
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -115,6 +117,7 @@
                                         <td>{{ hoaDon.tongTienKhuyenMai | currency:'₫':0 }}</td>
                                         <td>{{ hoaDon.tongTienSauKhuyenMai | currency:'₫':0 }}</td>
                                         <td>{{ hoaDon.ghiChu }}</td>
+
                                         <td>
                                             <span ng-class="{'status-complete': hoaDon.trangThaiThanhToan === 1, 'status-canceled': hoaDon.trangThaiThanhToan !== 1}">
                                                 {{ hoaDon.trangThaiThanhToan === 1 ? 'Hoàn thành' : 'Hủy đơn' }}

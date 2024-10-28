@@ -9,7 +9,7 @@ public class HoaDonResquestDTO {
     private Integer idTrangThai;
     private Integer idPhuongThucThanhToan;
     private Integer idDonHang;
-    private Integer idKhachHang;
+    private Integer  idNhanVien;
     private String tenKhachHang;
     private Float tongTien;
     private Float tongTienKhuyenMai;
