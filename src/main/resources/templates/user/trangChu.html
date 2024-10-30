@@ -68,8 +68,7 @@
                         <form action="#" method="get">
                             <div class="header-search-wrapper">
                                 <label for="q" class="sr-only">Search</label>
-                                <input type="search" class="form-control" name="q" id="q" placeholder="Search in..."
-                                       required>
+                                <input type="search" class="form-control" name="q" id="q" placeholder="Search in..." required>
                             </div><!-- End .header-search-wrapper -->
                         </form>
                     </div><!-- End .header-search -->
@@ -79,8 +78,8 @@
                         <span class="wishlist-count">3</span>
                     </a>
                     <div class="dropdown cart-dropdown">
-                        <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
-                           aria-expanded="false" data-display="static">
+                        <a href="#" class="dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
+                           aria-expanded="false">
                             <i class="icon-shopping-cart"></i>
                             <span class="cart-count">2</span>
                         </a>
@@ -94,9 +93,9 @@
                                         </h4>
 
                                         <span class="cart-product-info">
-                                                <span class="cart-product-qty">1</span>
-                                                x $84.00
-                                            </span>
+                            <span class="cart-product-qty">1</span>
+                            x $84.00
+                        </span>
                                     </div><!-- End .product-cart-details -->
 
                                     <figure class="product-image-container">
@@ -114,9 +113,9 @@
                                         </h4>
 
                                         <span class="cart-product-info">
-                                                <span class="cart-product-qty">1</span>
-                                                x $76.00
-                                            </span>
+                            <span class="cart-product-qty">1</span>
+                            x $76.00
+                        </span>
                                     </div><!-- End .product-cart-details -->
 
                                     <figure class="product-image-container">
@@ -130,54 +129,57 @@
 
                             <div class="dropdown-cart-total">
                                 <span>Tổng tiền</span>
-
                                 <span class="cart-total-price">$160.00</span>
                             </div><!-- End .dropdown-cart-total -->
 
                             <div class="dropdown-cart-action">
                                 <a href="cart.html" class="btn btn-primary">View Cart</a>
-                                <a href="checkout.html" class="btn btn-outline-primary-2"><span>Checkout</span><i
-                                        class="icon-long-arrow-right"></i></a>
+                                <a href="checkout.html" class="btn btn-outline-primary-2">
+                                    <span>Checkout</span><i class="icon-long-arrow-right"></i>
+                                </a>
                             </div><!-- End .dropdown-cart-total -->
                         </div><!-- End .dropdown-menu -->
-
                     </div><!-- End .cart-dropdown -->
-                    <div class="dropdown d-inline-block">
-                        <button type="button" class="btn header-item bg-soft-light border-start border-end"
-                                id="page-header-user-dropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 
-                            <!-- Hiển thị "Xin Chào" và tên người dùng -->
+                    <div class="dropdown user-dropdown">
+                        <!-- Kiểm tra xem người dùng đã đăng nhập hay chưa -->
+                        <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static">
+
+                            <!-- Hiển thị "Xin Chào, [Tên Người Dùng]" khi người dùng đã đăng nhập -->
                             <span th:if="${#authentication.principal != 'anonymousUser'}">
-            <span class="m-0 d-inline">Xin Chào:&nbsp;</span>
-            <span class="d-none d-xl-inline-block ms-1 fw-medium" th:text="${#authentication.name}"></span>
+            <i class="icon-user"></i>
+            <span class="user-name">Xin Chào: <span th:text="${#authentication.name}"></span></span>
         </span>
 
-                            <!-- Hiển thị icon khi chưa đăng nhập -->
+                            <!-- Hiển thị icon người dùng khi chưa đăng nhập -->
                             <span th:if="${#authentication.principal == 'anonymousUser'}">
             <a href="/login" class="text-decoration-none">
-                <i class="mdi mdi-account-outline"></i>
+                <i class="icon-user"></i>
             </a>
         </span>
+                        </a>
 
-                            <i class="mdi mdi-chevron-down d-none d-xl-inline-block"></i>
-                        </button>
+                        <!-- Nội dung dropdown -->
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <!-- Thông tin cá nhân -->
+                            <a href="/profile" class="dropdown-item">
+                                <i class="icon-user"></i> Thông tin cá nhân
+                            </a>
 
-                        <div class="dropdown-menu dropdown-menu-end">
-                            <a class="dropdown-item" th:href="@{|/admin/nhan-vien/thong-tin-ca-nhan|}" sec:authorize="hasRole('ROLE_STAFF')">
-                                <i class="mdi mdi-face-profile font-size-16 align-middle me-1"></i> Thông tin cá nhân
+                            <!-- Đổi mật khẩu -->
+                            <a href="/user/doimatkhau" class="dropdown-item">
+                                <i class="icon-lock"></i> Đổi mật khẩu
                             </a>
-                            <a class="dropdown-item" href="/admin/doi-mat-khau">
-                                <i class="mdi mdi-lock font-size-16 align-middle me-1"></i> Đổi mật khẩu
-                            </a>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="/admin/logout">
-                                <i class="mdi mdi-logout font-size-16 align-middle me-1"></i> Đăng xuất
-                            </a>
-                        </div>
-                    </div>
 
+                            <!-- Đăng xuất -->
+                            <a href="/logout" class="dropdown-item">
+                                <i class="icon-logout"></i> Đăng xuất
+                            </a>
+                        </div><!-- Kết thúc .dropdown-menu -->
+                    </div><!-- Kết thúc .user-dropdown -->
 
                 </div><!-- End .header-right -->
+
 
             </div><!-- End .container -->
 
