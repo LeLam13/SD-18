@@ -32,6 +32,8 @@ public class SecurityConfig {
                 )
                 .formLogin(f -> f
                         .loginPage("/login")
+                        .failureUrl("/login?error=true") // Chuyển hướng đến trang login với tham số error=true khi đăng nhập thất bại
+                        .successHandler(customAuthenticationSuccessHandler)
                         .successHandler(customAuthenticationSuccessHandler)
                 )
                 .logout(l -> l
