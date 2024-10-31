@@ -15,14 +15,46 @@ app.controller("thuonghieu-ctrl", function ($scope, $http) {
         };
 
         $scope.itemss = [];
+        $scope.page = 0;  // Trang hiện tại
+        $scope.size = 4; // Số lượng bản ghi trên mỗi trang
+        $scope.totalPages = 0; // Tổng số trang
+        $scope.pageInput = 1; // Giá trị nhập từ ô input
+
+        $scope.findAll = function () {
+            var url = `/admin/thuong-hieu/find-all?page=${$scope.page}&size=${$scope.size}`;
+            $http.get(url).then(resp => {
+                $scope.itemss = resp.data.content;
+                $scope.totalPages = resp.data.totalPages; // Cập nhật tổng số trang
+            }).catch(error => {
+                console.log(error);
+            });
+        };
+
+
+        // Hàm chuyển tới trang trước
+        $scope.previousPage = function () {
+            if ($scope.page > 0) {
+                $scope.page--;
+                $scope.findAll();
+            }
+        };
+
+        // Hàm chuyển tới trang sau
+        $scope.nextPage = function () {
+            if ($scope.page < $scope.totalPages - 1) {
+                $scope.page++;
+                $scope.findAll();
+            }
+        };
+
         // get all
         $scope.getAll = function () {
-            $http.get("/admin/thuong-hieu/find-all").then(r => {
+            $http.get("/admin/thuong-hieu/get-all").then(r => {
                 console.log(r.data)
                 $scope.itemss = r.data;
             }).catch(e => console.log(e))
         }
-        $scope.getAll();
+        $scope.findAll();
 
         $scope.create = function () {
             if ($scope.ten == undefined || $scope.ten.length == 0) {
@@ -34,7 +66,7 @@ app.controller("thuonghieu-ctrl", function ($scope, $http) {
                 return;
             }
 
-            $http.get("/admin/thuong-hieu/find-all").then(function (response) {
+            $http.get("/admin/thuong-hieu/get-all").then(function (response) {
                 var existingThuongHieu = response.data;
                 var tenTonTai = false;
                 angular.forEach(existingThuongHieu, function (item) {
@@ -63,17 +95,26 @@ app.controller("thuonghieu-ctrl", function ($scope, $http) {
         }
 
         // chi tiết
-        $scope.findByMa = function (ma) {
-            var url = "/admin/thuong-hieu/chiTiet" + "/" + ma;
-            $http.get(url).then(function (res) {
-                const thuonghieu = res.data;
-                $scope.ma = thuonghieu.ma;
-                $scope.ten = thuonghieu.ten;
-            });
-        }
-        // add
+    $scope.getThuongHieu = function (ma) {
+        var url = "/admin/thuong-hieu/chiTiet" + "/" + ma;
+        console.log(url)
+        $http.get(url).then(function (r) {
+            console.log(r.data)
+            let ThuongHieu = r.data;
+            $scope.idThuongHieu=ThuongHieu.idThuongHieu;
+            $scope.ma = ThuongHieu.ma;
+            $scope.ten = ThuongHieu.ten;
+            $scope.createBy = ThuongHieu.createBy;
+            $scope.createDate = ThuongHieu.createDate;
+            $scope.updateDate = ThuongHieu.updateDate;
+            $scope.updateBy = ThuongHieu.updateBy;
+            $scope.trangThai = ThuongHieu.trangThai;
+        })
+    }
 
-        //update
+
+
+    //update
 
         $scope.update = function (ma) {
             if ($scope.ten == undefined || $scope.ten.length == 0) {
@@ -84,7 +125,7 @@ app.controller("thuonghieu-ctrl", function ($scope, $http) {
                 document.getElementById('erTenUd').innerText = "Tên thương hiệu tối đa 100 ký tự"
                 return;
             }
-            $http.get("/admin/thuong-hieu/find-all").then(function (response) {
+            $http.get("/admin/thuong-hieu/get-all").then(function (response) {
                 var existingThuongHieu = response.data;
                 var tenTonTai = false;
                 angular.forEach(existingThuongHieu, function (item) {
@@ -103,7 +144,7 @@ app.controller("thuonghieu-ctrl", function ($scope, $http) {
                         ten: $scope.ten
                     }
                     $http.post(url, thuonghieu).then(function (resp) {
-                        $scope.getAll();
+                        $scope.findAll();
                         alert("Cập Nhật Thành Công")
                     }).catch(function (err) {
                         console.log("Loi: ", err);

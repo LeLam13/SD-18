@@ -3,6 +3,10 @@ app.controller("kieudang-ctrl", function ($scope, $http) {
     const url = "http://localhost:8080/admin/kieu-dang"
 
     $scope.itemss = [];
+    $scope.page = 0;  // Trang hiện tại
+    $scope.size = 4; // Số lượng bản ghi trên mỗi trang
+    $scope.totalPages = 0; // Tổng số trang
+    $scope.pageInput = 1; // Giá trị nhập từ ô input
 
     $scope.generateRandomString = function (length) {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -16,15 +20,43 @@ app.controller("kieudang-ctrl", function ($scope, $http) {
         return result;
     };
 
+    $scope.findAll = function () {
+        var url = `/admin/kieu-dang/find-all?page=${$scope.page}&size=${$scope.size}`;
+        $http.get(url).then(resp => {
+            $scope.itemss = resp.data.content;
+            $scope.totalPages = resp.data.totalPages; // Cập nhật tổng số trang
+        }).catch(error => {
+            console.log(error);
+        });
+    };
+
+
+    // Hàm chuyển tới trang trước
+    $scope.previousPage = function () {
+        if ($scope.page > 0) {
+            $scope.page--;
+            $scope.findAll();
+        }
+    };
+
+    // Hàm chuyển tới trang sau
+    $scope.nextPage = function () {
+        if ($scope.page < $scope.totalPages - 1) {
+            $scope.page++;
+            $scope.findAll();
+        }
+    };
+
+
 
     $scope.getAll = function () {
-        $http.get("/admin/kieu-dang/find-all").then(r => {
+        $http.get("/admin/kieu-dang/get-all").then(r => {
             console.log(r.data)
             $scope.itemss = r.data;
         }).catch(e => console.log(e))
     }
 
-    $scope.getAll();
+    $scope.findAll();
 
 
     //add
@@ -37,7 +69,7 @@ app.controller("kieudang-ctrl", function ($scope, $http) {
             document.getElementById('erTen').innerText = "Tên kiểu dáng tối đa 100 ký tự"
             return;
         }
-        $http.get("/admin/kieu-dang/find-all").then(function (response) {
+        $http.get("/admin/kieu-dang/get-all").then(function (response) {
             var existingKieuDang = response.data;
             var tenTonTai = false;
             angular.forEach(existingKieuDang, function (item) {
@@ -67,13 +99,21 @@ app.controller("kieudang-ctrl", function ($scope, $http) {
     };
 
     //Chi tiet
-    $scope.findByMa = function (ma) {
+    $scope.getKieuDang = function (ma) {
         var url = "/admin/kieu-dang/chiTiet" + "/" + ma;
-        $http.get(url).then(function (res) {
-            const kieudang = res.data;
-            $scope.ma = kieudang.ma;
-            $scope.ten = kieudang.ten;
-        });
+        console.log(url)
+        $http.get(url).then(function (r) {
+            console.log(r.data)
+            let KieuDang = r.data;
+            $scope.idKieuDang=KieuDang.idKieuDang;
+            $scope.ma = KieuDang.ma;
+            $scope.ten = KieuDang.ten;
+            $scope.createBy = KieuDang.createBy;
+            $scope.createDate = KieuDang.createDate;
+            $scope.updateDate = KieuDang.updateDate;
+            $scope.updateBy = KieuDang.updateBy;
+            $scope.trangThai = KieuDang.trangThai;
+        })
     }
 
 
@@ -87,7 +127,7 @@ app.controller("kieudang-ctrl", function ($scope, $http) {
             document.getElementById('erTenUd').innerText = "Tên kiểu dáng tối đa 100 ký tự"
             return;
         }
-        $http.get("/admin/kieu-dang/find-all").then(function (response) {
+        $http.get("/admin/kieu-dang/get-all").then(function (response) {
             var existingKieuDang = response.data;
             var tenTonTai = false;
             angular.forEach(existingKieuDang, function (item) {
@@ -106,7 +146,7 @@ app.controller("kieudang-ctrl", function ($scope, $http) {
                     ten: $scope.ten
                 }
                 $http.post(url, kieudang).then(function (resp) {
-                    $scope.getAll();
+                    $scope.findAll();
                     alert("Cập nhật thành công");
                 }).catch(function (err) {
                     console.log("Loi: ", err);

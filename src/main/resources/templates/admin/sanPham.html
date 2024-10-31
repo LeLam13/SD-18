@@ -91,13 +91,10 @@
                                                             </select>
                                                         </div>
                                                         <div class="mb-3">
-                                                            <label>Dòng sản phẩm</label>
-                                                            <select class="form-control" ng-model="filterData.dongSanPham">
+                                                            <label>Thương Hiệu</label>
+                                                            <select class="form-control" ng-model="filterData.thuongHieu">
                                                                 <option value="" selected>Tất cả</option>
-                                                                <optgroup ng-repeat="t in thuongHieu" label="{{t.ten}}">
-                                                                    <option value="{{t.id}}">tất cả {{t.ten}}</option>
-                                                                    <option ng-repeat="d in t.dongSanPhamResponeseList" value="{{d.id}}">{{d.ten}}</option>
-                                                                </optgroup>
+                                                                <option ng-repeat="t in thuongHieu" value="{{t.ma}}">{{t.ten}}</option>
                                                             </select>
                                                         </div>
                                                         <div class="mb-3">
@@ -105,7 +102,6 @@
                                                             <select class="form-control" ng-model="filterData.kieuDang">
                                                                 <option value="" selected>Tất cả</option>
                                                                 <option ng-repeat="k in kieuDang" value="{{k.id}}">{{k.ten}}</option>
-                                                                <option value="khac">Khác</option>
                                                             </select>
                                                         </div>
                                                         <div class="mb-3">
@@ -172,8 +168,8 @@
                                              class="imgProduct" style="border-radius: 15px;">
                                     </td>
                                     <td ng-click="getChiTietSP(p.ma)" style="w: 25%"> {{p.ma}} - {{p.ten}}</td>
-                                    <td ng-click="getChiTietSP(p.ma)" style="width: 13%">{{p.ngayTao | date:'yyyy-MM-dd HH:mm:ss'}}</td>
-                                    <td ng-click="getChiTietSP(p.ma)" style="width: 13%">{{p.ngayCapNhat | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                    <td ng-click="getChiTietSP(p.ma)" style="width: 13%">{{p.ngayTao | date:'yyyy-MM-dd'}}</td>
+                                    <td ng-click="getChiTietSP(p.ma)" style="width: 13%">{{p.ngayCapNhat | date:'yyyy-MM-dd'}}</td>
                                     <td ng-click="getChiTietSP(p.ma)" style="width: 13%">{{p.giaBan | currency : "" : 1}}đ</td>
 <!--                                    <td ng-click="getChiTietSP(p.ma)">{{p.giaNiemYet}}</td>-->
                                     <td ng-click="getChiTietSP(p.ma)">{{p.soLuong}}</td>
