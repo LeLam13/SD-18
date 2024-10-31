@@ -6,10 +6,9 @@ import com.example.demo.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.security.SecureRandom;
-import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -38,6 +37,20 @@ public class HoaDonServiceImpl implements HoaDonService{
     PhuongThucThanhToanRepo phuongThucThanhToanRepo;
 
     @Override
+    public List<HoaDon> getAllHoaDons() {
+        return hoaDonRepo.findAll();  // Retrieve all invoices
+    }
+
+    @Override
+    public Page<HoaDon> getAllHoaDons(Pageable pageable) {
+        return hoaDonRepo.findAll(pageable);
+    }
+    @Override
+    public List<HoaDon> searchHoaDonsByMaHoaDon(String maHoaDon) {
+        return hoaDonRepo.findByMaHoaDonContaining(maHoaDon);
+    }
+
+    @Override
     public String generateRandomString(int length) {
         String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         SecureRandom random = new SecureRandom();
@@ -49,6 +62,7 @@ public class HoaDonServiceImpl implements HoaDonService{
         return sb.toString();
     }
 
+
     @Override
     @Transactional
     public HoaDon createHoaDon(HoaDonResquestDTO hoaDon, String username) {
@@ -57,7 +71,7 @@ public class HoaDonServiceImpl implements HoaDonService{
         //lấy nhân viên
         nhanvien getNV = nhanVienRepo.findById(oldTaiKoan.getNhanVien().getIdNhanVien()).get();
         //lấy khách hàng
-        khachhang khachhang = khachhangRePo.findById(hoaDon.getIdKhachHang()).get();
+//        khachhang khachhang = khachhangRePo.findById(hoaDon.getIdKhachHang()).get();
         //lấy khuyến mãi
         KhuyenMai khuyenMai = khuyenMaiRepo.findById(hoaDon.getIdKhuyenMai()).get();
         //lấy trạng thái
@@ -74,7 +88,7 @@ public class HoaDonServiceImpl implements HoaDonService{
         donHang.setGhiChu(hoaDon.getGhiChu());
         donHang.setTrangThaiThanhToan(true);
         donHang.setNhanVien(getNV);
-        donHang.setKhachHang(khachhang);
+//        donHang.setKhachHang(khachhang);
         donHang.setTrangThai(trangThai);
         donHang.setPhuongThucThanhToan(PTTT);
         donHang.setKhuyenMai(khuyenMai);
@@ -82,17 +96,17 @@ public class HoaDonServiceImpl implements HoaDonService{
 
         //tạo hoá đơn
         HoaDon newHoaDon = new HoaDon();
-
-        newHoaDon.setKhuyenMai(khuyenMai);
-        newHoaDon.setTrangThai(trangThai);
-        newHoaDon.setPhuongThucThanhToan(PTTT);
-        newHoaDon.setDonHang(donHang);
-        newHoaDon.setNhanVien(getNV);
-        newHoaDon.setKhachHang(khachhang);
-        newHoaDon.setMaHoaDon(hoaDon.getMaHoaDon());
-        LocalDate localDate = LocalDate.now(); // Hoặc bạn có thể sử dụng LocalDate.of(...)
-        newHoaDon.setCreateDate(localDate);
-        newHoaDon.setCreateBy(oldTaiKoan.getNhanVien().getHoTen());
+//
+//        newHoaDon.setKhuyenMai(khuyenMai);
+//        newHoaDon.setTrangThai(trangThai);
+//        newHoaDon.setPhuongThucThanhToan(PTTT);
+//        newHoaDon.setDonHang(donHang);
+//        newHoaDon.setNhanVien(getNV);
+//        newHoaDon.setKhachHang(khachhang);
+//        newHoaDon.setMaHoaDon(hoaDon.getMaHoaDon());
+//        LocalDate localDate = LocalDate.now(); // Hoặc bạn có thể sử dụng LocalDate.of(...)
+//        newHoaDon.setCreateDate(localDate);
+//        newHoaDon.setCreateBy(oldTaiKoan.getNhanVien().getHoTen());
         newHoaDon.setTongTien(hoaDon.getTongTien());
         newHoaDon.setTongTienKhuyenMai(hoaDon.getTongTienKhuyenMai());
         newHoaDon.setTongTienSauKhuyenMai(hoaDon.getTongTienSauKhuyenMai());
