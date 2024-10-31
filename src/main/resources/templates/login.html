@@ -70,10 +70,13 @@
 </head>
 <body>
 <div class="login">
-    <img src="assets/img/login-bg.png" alt="login image" class="login__img">
+    <img src="assets/img/anh3.png" alt="login image" class="login__img">
 
     <form action="" class="login__form" method="post">
         <h1 class="login__title">Login</h1>
+        <div th:if="${loginError}" class="error-message">
+            <p th:text="${loginError}" style="color: red; font-weight: bold;"></p>
+        </div>
 
         <div class="login__content">
             <div class="login__box">
@@ -95,20 +98,13 @@
         </div>
 
         <div class="login__check">
-            <div class="login__check-group">
-                <input type="checkbox" class="login__check-input" id="login-check">
-                <label for="login-check" class="login__check-label">Remember me</label>
-            </div>
-            <a href="/forgot-password" class="login__forgot">Forgot Password?</a>
+            <a href="/forgot-password" class="login__forgot">Quên Mật Khẩu?</a>
         </div>
 
         <button type="submit" class="login__button">Login</button>
 
         <p class="login__register">
-            Don't have an account? <a href="/signup">Register</a>
-        </p>
-        <p class="login__register">
-            <a href="/change-password">Đổi mk</a>
+            <a href="/signup">Đăng Kí Tài Khoản</a>
         </p>
 
         <div class="loader" id="loadingIndicator"></div> <!-- Hiệu ứng loading -->

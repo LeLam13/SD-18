@@ -140,6 +140,8 @@ public class SampleController {
             return "/Quenmk"; // Quay lại trang quên mật khẩu với thông báo lỗi
         }
     }
-
-
+    @GetMapping("/access-denied")
+    public String loi403() {
+        return "/access-denied";
+    }
 }

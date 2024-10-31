@@ -25,7 +25,7 @@ public class NhanVienRestController {
     public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") int page,
                                      @RequestParam(defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<nhanvien> nhanViens = nhanVienService.getAll(pageable); // Phân trang
+        Page<nhanvien> nhanViens = nhanVienService.getActiveNhanVien(pageable); // Lấy danh sách nhân viên có trạng thái true
         return ResponseEntity.ok(nhanViens); // Trả về trang hiện tại cùng dữ liệu
     }
 
@@ -40,6 +40,21 @@ public class NhanVienRestController {
     public ResponseEntity<?> updateNhanVien(@RequestBody NhanVienRequetsDTO nvDTO) {
         nhanVienService.updateNhanVien(nvDTO);
         return ResponseEntity.ok(nvDTO);
+    }
+    @PostMapping("/admin/nhan-vien/delete/{idNhanVien}")
+    public ResponseEntity<?> deleteNhanVien(@PathVariable("idNhanVien") Integer idNhanVien) {
+        nhanvien deletedNhanVien = nhanVienService.softDeleteNhanVien(idNhanVien);
+        return ResponseEntity.ok(deletedNhanVien); // Trả về nhân viên đã được xóa mềm
+    }
+
+
+    @GetMapping("/admin/nhan-vien/search")
+    public ResponseEntity<?> searchNhanVien(@RequestParam String keyword,
+                                            @RequestParam(defaultValue = "0") int page,
+                                            @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<nhanvien> nhanViens = nhanVienService.searchNhanVien(keyword, pageable);
+        return ResponseEntity.ok(nhanViens);
     }
 }
 
