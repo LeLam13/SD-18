@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/admin/index}">
-
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 <head>
     <title>ALLDY SNEAKER | Hóa Đơn Tại Quầy</title>
     <style>
@@ -85,6 +85,16 @@
     <div class="page-content" ng-app="hoaDon-app" ng-controller="hoaDon-ctrl">
         <div class="container-fluid">
             <div class="col-xl-12">
+
+                <div class="d-flex justify-content-end mb-3">
+                    <div class="input-group" style="width: 300px;"> <!-- Đặt chiều rộng của input group -->
+                        <input type="text" class="form-control" ng-model="searchMaHoaDon" placeholder="Tìm mã hóa đơn" />
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" ng-click="searchHoaDon()">Tìm kiếm</button>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="card">
                     <!-- Card Header -->
                     <div class="card-header">
@@ -125,6 +135,24 @@
                                         </td>
                                     </tr>
                                     </tbody>
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination">
+                                            <li class="page-item" ng-class="{'disabled': currentPage === 0}">
+                                                <a class="page-link" href="#" ng-click="getHoaDons(currentPage - 1)" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+                                            <li class="page-item" ng-repeat="page in [].constructor(totalPages) track by $index" ng-class="{'active': $index === currentPage}">
+                                                <a class="page-link" href="#" ng-click="getHoaDons($index)">{{$index + 1}}</a>
+                                            </li>
+                                            <li class="page-item" ng-class="{'disabled': currentPage >= totalPages - 1}">
+                                                <a class="page-link" href="#" ng-click="getHoaDons(currentPage + 1)" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+
                                 </table>
                             </div>
                         </div>

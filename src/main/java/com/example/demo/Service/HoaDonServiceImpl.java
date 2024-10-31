@@ -6,7 +6,8 @@ import com.example.demo.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.security.SecureRandom;
 import java.util.List;
 
@@ -40,6 +41,14 @@ public class HoaDonServiceImpl implements HoaDonService{
         return hoaDonRepo.findAll();  // Retrieve all invoices
     }
 
+    @Override
+    public Page<HoaDon> getAllHoaDons(Pageable pageable) {
+        return hoaDonRepo.findAll(pageable);
+    }
+    @Override
+    public List<HoaDon> searchHoaDonsByMaHoaDon(String maHoaDon) {
+        return hoaDonRepo.findByMaHoaDonContaining(maHoaDon);
+    }
 
     @Override
     public String generateRandomString(int length) {
