@@ -7,9 +7,10 @@ app.controller('ctrl', function ($scope, $http) {
     $scope.items =[];
     $scope.form ={};
     $scope.filterDto = {};
-    $scope.totalPage = 0;
-    $scope.pageNumbers = [];
-    $scope.pageNumber = 0;
+    $scope.page = 0;  // Trang hiện tại
+    $scope.size = 4; // Số lượng bản ghi trên mỗi trang
+    $scope.totalPages = 0; // Tổng số trang
+    $scope.pageInput = 1; // Giá trị nhập từ ô input
     var isfilter = false;
 
 
@@ -91,7 +92,7 @@ app.controller('ctrl', function ($scope, $http) {
     }
 
     $scope.getPropertiesInFilter = function (){
-        $http.get("/admin/mau-sac/find-all").then(r =>{
+        $http.get("/admin/mau-sac/get-all").then(r =>{
             $scope.mauSac = r.data;
         }).catch( e => console.log(e))
 
@@ -103,7 +104,7 @@ app.controller('ctrl', function ($scope, $http) {
             $scope.thuongHieu = r.data;
         }).catch( e => console.log(e))
 
-        $http.get("/admin/xuat-xu/find-all").then(r =>{
+        $http.get("/admin/xuat-xu/get-all").then(r =>{
             $scope.xuatXu = r.data;
         }).catch( e => console.log(e))
 

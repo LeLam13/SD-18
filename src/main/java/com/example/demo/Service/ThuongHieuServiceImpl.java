@@ -6,6 +6,8 @@ import com.example.demo.entity.MauSac;
 import com.example.demo.entity.ThuongHieu;
 import com.example.demo.repo.ThuongHieuRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -19,8 +21,13 @@ public class ThuongHieuServiceImpl implements ThuongHieuService {
     Date date=new Date();
 
     @Override
-    public List<ThuongHieu> findAll() {
+    public List<ThuongHieu> getAll() {
         return thuongHieuRepo.findAll();
+    }
+
+    @Override
+    public Page<ThuongHieu> findAll(Pageable pageable) {
+        return thuongHieuRepo.findAll(pageable);
     }
 
     @Override

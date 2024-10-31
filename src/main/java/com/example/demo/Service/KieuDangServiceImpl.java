@@ -2,8 +2,11 @@ package com.example.demo.Service;
 
 import com.example.demo.dto.request.KieuDangRequestDTO;
 import com.example.demo.entity.KieuDang;
+import com.example.demo.entity.MauSac;
 import com.example.demo.repo.KieuDangRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -20,6 +23,12 @@ public class KieuDangServiceImpl implements KieuDangService {
     public List<KieuDang> getAll() {
         return kieuDangRepo.findAll();
     }
+
+    @Override
+    public Page<KieuDang> findAll(Pageable pageable) {
+        return kieuDangRepo.findAll(pageable);
+    }
+
 
     @Override
     public KieuDang createKieuDang(KieuDangRequestDTO kieuDangRequestDTO) {

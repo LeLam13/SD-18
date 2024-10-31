@@ -2,6 +2,38 @@ var app = angular.module("mau-sac", [])
 app.controller("mau-sac-ctrl", function ($scope, $http) {
 
     $scope.items = []
+    $scope.page = 0;  // Trang hiện tại
+    $scope.size = 4; // Số lượng bản ghi trên mỗi trang
+    $scope.totalPages = 0; // Tổng số trang
+    $scope.pageInput = 1; // Giá trị nhập từ ô input
+
+
+    $scope.findAll = function () {
+        var url = `/admin/mau-sac/find-all?page=${$scope.page}&size=${$scope.size}`;
+        $http.get(url).then(resp => {
+            $scope.items = resp.data.content;
+            $scope.totalPages = resp.data.totalPages; // Cập nhật tổng số trang
+        }).catch(error => {
+            console.log(error);
+        });
+    };
+
+
+    // Hàm chuyển tới trang trước
+    $scope.previousPage = function () {
+        if ($scope.page > 0) {
+            $scope.page--;
+            $scope.findAll();
+        }
+    };
+
+    // Hàm chuyển tới trang sau
+    $scope.nextPage = function () {
+        if ($scope.page < $scope.totalPages - 1) {
+            $scope.page++;
+            $scope.findAll();
+        }
+    };
 
     $scope.generateRandomString = function (length) {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -15,8 +47,8 @@ app.controller("mau-sac-ctrl", function ($scope, $http) {
         return result;
     };
 
-    $scope.findAll = function () {
-        $http.get("/admin/mau-sac/find-all").then(resp => {
+    $scope.getAll = function () {
+        $http.get("/admin/mau-sac/get-all").then(resp => {
             console.log(resp.data)
             $scope.items = resp.data;
         }).catch(error => {
@@ -43,8 +75,8 @@ app.controller("mau-sac-ctrl", function ($scope, $http) {
             return;
         }
 
-        // Gọi findAll để kiểm tra xem tên đã tồn tại chưa
-        $http.get("/admin/mau-sac/find-all").then(function (response) {
+        // Gọi getAll để kiểm tra xem tên đã tồn tại chưa
+        $http.get("/admin/mau-sac/get-all").then(function (response) {
             var existingMauSac = response.data;
             var tenTonTai = false;
 
@@ -79,9 +111,14 @@ app.controller("mau-sac-ctrl", function ($scope, $http) {
         $http.get(url).then(function (r) {
             console.log(r.data)
             let mauSac = r.data;
+            $scope.idMauSac=mauSac.idMauSac;
             $scope.ma = mauSac.ma;
             $scope.ten = mauSac.ten;
+            $scope.createBy = mauSac.createBy;
+            $scope.createDate = mauSac.createDate;
             $scope.updateDate = mauSac.updateDate;
+            $scope.updateBy = mauSac.updateBy;
+            $scope.trangThai = mauSac.trangThai;
         })
     }
 
@@ -96,7 +133,7 @@ app.controller("mau-sac-ctrl", function ($scope, $http) {
             return
         }
 
-        $http.get("/admin/mau-sac/find-all").then(function (response) {
+        $http.get("/admin/mau-sac/get-all").then(function (response) {
             var existingMauSac = response.data;
             var tenTonTai = false;
             angular.forEach(existingMauSac, function (item) {
