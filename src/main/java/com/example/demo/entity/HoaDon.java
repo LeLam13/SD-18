@@ -52,13 +52,13 @@ public class HoaDon {
 //    @JoinColumn(name = "id_hoa_don_chi_tiet")
 //    private HoaDonChiTiet hoaDonChiTiet;
 //
-//    @ManyToOne
-//    @JoinColumn(name = "id_khach_hang")
-//    private khachhang khachHang;
-//
-//    @ManyToOne
-//    @JoinColumn(name = "id_nhan_vien")
-//    private nhanvien nhanvien;
+    @ManyToOne
+    @JoinColumn(name = "id_khach_hang")
+    private khachhang khachHang;
+
+    @ManyToOne
+    @JoinColumn(name = "id_nhan_vien")
+    private nhanvien nhanVien;
 }
 
 //=======

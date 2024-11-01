@@ -47,12 +47,12 @@ public class SanPhamChiTiet {
     @Column(name = "update_by")
     private String updateBy;
 
-    @Column(name = "chat_lieu")
-    private String chatLieu;
+//    @Column(name = "chat_lieu")
+//    private String chatLieu;
 
-    @Column(name = "size")
-    private String size;
-
+//    @Column(name = "size")
+//    private String size;
+//
     @Column(name = "so_luong")
     private Integer soLuong;
 
