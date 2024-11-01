@@ -7,9 +7,10 @@ public class HoaDonResquestDTO {
     private String maHoaDon;
     private Integer  idKhuyenMai;
     private Integer idTrangThai;
+    private Integer idKhachHang;
     private Integer idPhuongThucThanhToan;
     private Integer idDonHang;
-    private Integer idKhachHang;
+    private Integer  idNhanVien;
     private String tenKhachHang;
     private Float tongTien;
     private Float tongTienKhuyenMai;

@@ -4,14 +4,16 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Date;
 
+@Data
 @Entity
 @Table(name = "hoa_don")
-@Data
 public class HoaDon {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idHoaDon;
+    @Column(name = "id_hoa_don")
+    private Integer idHoaDon;
 
     @Column(name = "ma_hoa_don")
     private String maHoaDon;
@@ -61,7 +63,7 @@ public class HoaDon {
     private PhuongThucThanhToan phuongThucThanhToan;
 
     @ManyToOne
-    @JoinColumn(name  = "id_don_hang")
+    @JoinColumn(name = "id_don_hang")
     private DonHang donHang;
 
     @ManyToOne
@@ -71,5 +73,6 @@ public class HoaDon {
     @ManyToOne
     @JoinColumn(name = "id_khach_hang")
     private khachhang khachHang;
-
 }
+
+

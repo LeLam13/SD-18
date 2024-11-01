@@ -25,10 +25,10 @@ import com.lowagie.text.pdf.BaseFont;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import java.security.SecureRandom;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -57,6 +57,20 @@ public class HoaDonServiceImpl implements HoaDonService{
     PhuongThucThanhToanRepo phuongThucThanhToanRepo;
 
     @Override
+    public List<HoaDon> getAllHoaDons() {
+        return hoaDonRepo.findAll();  // Retrieve all invoices
+    }
+
+    @Override
+    public Page<HoaDon> getAllHoaDons(Pageable pageable) {
+        return hoaDonRepo.findAll(pageable);
+    }
+    @Override
+    public List<HoaDon> searchHoaDonsByMaHoaDon(String maHoaDon) {
+        return hoaDonRepo.findByMaHoaDonContaining(maHoaDon);
+    }
+
+    @Override
     public String generateRandomString(int length) {
         String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
         SecureRandom random = new SecureRandom();
@@ -67,6 +81,7 @@ public class HoaDonServiceImpl implements HoaDonService{
         }
         return sb.toString();
     }
+
 
     @Override
     @Transactional
@@ -96,10 +111,12 @@ public class HoaDonServiceImpl implements HoaDonService{
         donHang.setTrangThaiThanhToan(true);
         donHang.setNhanVien(getNV);
         donHang.setKhachHang(khachhang);
+
         donHang.setTrangThai(trangThaiDH2);//đã hoàn thành
         if(hoaDon.getPhuongThucNhan() ==2){
             donHang.setTrangThai(trangThaiDH1);//chờ giao hàng
         }
+
         donHang.setPhuongThucThanhToan(PTTT);
         donHang.setKhuyenMai(khuyenMai);
         donHang.setTenKhachNhan(hoaDon.getTenKhachNhan());
@@ -129,7 +146,7 @@ public class HoaDonServiceImpl implements HoaDonService{
         newHoaDon.setTrangThaiThanhToan(true);
         newHoaDon.setPhuongThucNhan(hoaDon.getPhuongThucNhan());
 
-        System.out.println("check ;log hoá đơn: "+newHoaDon);
+        //System.out.println("check ;log hoá đơn: "+newHoaDon);
         hoaDonRepo.save(newHoaDon);
 
         //lấy hoá đơn vừa tạo
@@ -335,7 +352,6 @@ public class HoaDonServiceImpl implements HoaDonService{
         Cell cell = new Cell().add(paragraph).setFontSize(10f).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.LEFT);
         return isBoolean ? cell.setBold() : cell;
     }
-
 
 
 }
