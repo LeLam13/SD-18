@@ -68,7 +68,7 @@ public class DonHangServiceImpl implements DonHangService{
     @Override
     public DonHangChiTiet updateDonHangChitiet(DonHangChiTietRequestDTO chitietRequestDTO) {
         DonHangChiTiet oldDonHangCT = donHangChiTietRepo.findBySanPhamID(chitietRequestDTO.getIdSanPhamChiTiet(),chitietRequestDTO.getIdĐonHang());
-        //System.out.println("oldDonHangCT: "+oldDonHangCT);
+
         //số lượng cập nhật > sô lượng có
         SanPhamChiTiet oldSacPhamCT = sanPhamChiTietRepo.findById(chitietRequestDTO.getIdSanPhamChiTiet()).get();
         if (oldSacPhamCT.getSoLuong() < chitietRequestDTO.getSoLuong()) {
@@ -214,6 +214,16 @@ public class DonHangServiceImpl implements DonHangService{
     @Override
     public DonHang getDonHangByID(Integer id) {
         return donHangRepo.findById(id).get();
+    }
+
+    @Override
+    public  List<khachhang> searchKhachHang(String sdt) {
+        return khachhangRePo.findBySoDienThoai(sdt);
+    }
+
+    @Override
+    public List<SanPhamChiTiet> searchSanPhamChiTiet(String tenSP) {
+        return sanPhamChiTietRepo.findBySanPhamTenContainingIgnoreCase(tenSP);
     }
 
 }

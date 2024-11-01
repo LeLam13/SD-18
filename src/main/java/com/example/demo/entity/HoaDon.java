@@ -45,6 +45,9 @@ public class HoaDon {
     @Column(name = "trang_thai_thanh_toan")
     private Boolean trangThaiThanhToan;
 
+    @Column(name = "phuong_thuc_nhan_hang")
+    private Integer phuongThucNhan;
+
     @ManyToOne
     @JoinColumn(name = "id_khuyen_mai")
     private KhuyenMai khuyenMai;

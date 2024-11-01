@@ -32,6 +32,9 @@
             table.table-bordered td {
                 border: 1px solid #ccc; /* Tạo đường viền cho các ô */
             }
+            /*.table-bordered tr{*/
+            /*    height: 80px;*/
+            /*}*/
             .table th, .table td {
                 vertical-align: middle;
             }
@@ -48,12 +51,9 @@
             .table th,
             .table td {
                 padding: 12px;
-                /* Điều chỉnh khoảng cách giữa các ô */
-                /*vertical-align: middle;*/
-                /* Căn giữa theo chiều dọc */
             }
 
-            .table th {
+            .table thead th {
                 /*background-color: #f8f9fa;*/
                 background-color: #9dc6f2;
                 /* Màu nền cho tiêu đề cột */
@@ -63,9 +63,6 @@
                 /* Vị trí của tiêu đề */
                 z-index: 1;
                 /* Đảm bảo tiêu đề nằm trên cùng */
-            }
-            .table td{
-                background-color: #ece3cd;
             }
 
             .payment-box {
@@ -91,6 +88,14 @@
                 background-color: #f9f9f9; /* Màu nền xám nhạt */
                 color: #a5a5a5;          /* Màu chữ xám nhạt */
                 font-size: 14px;         /* Giảm kích thước chữ */
+            }
+            .customer-box .input-group-text,
+            .customer-box .form-control {
+                height: 40px !important;
+                padding: 0 !important;
+                display: flex;
+                align-items: center;
+                font-size: 14px;
             }
             .item {
                 display: flex;
@@ -225,7 +230,24 @@
 
                         <div class="row">
                             <div class="table-responsive">
-                                <div class="cart-header">Sản Phẩm</div>
+                                <div class="cart-header">
+                                 <div class="row">
+                                     <div class="col-4">
+                                         Sản Phẩm
+                                     </div>
+                                     <div class="col-6">
+                                         <div class="input-group mb-3">
+                                             <input type="text" ng-model="inputData" ng-model-options="{ debounce: 500 }" ng-change="searchSanPham(inputData)" class="form-control" placeholder="Username" id="search-product">
+                                         </div>
+                                     </div>
+                                     <div class="col-2">
+                                         <button  class="btn btn-outline-secondary">
+                                             QR CODE
+                                         </button>
+                                         </td>
+                                     </div>
+                                 </div>
+                                </div>
                                 <table class="table table-bordered">
                                     <thead>
                                     <tr>
@@ -240,7 +262,7 @@
                                     <tbody>
                                     <tr ng-repeat="itemProducts in products">
                                         <td>
-                                            <img ng-src="/assets/img/{{itemProducts.hinhAnh}}" alt="" class="img-fluid mx-auto d-block" style="max-height: 100px; max-width: 100px;">
+                                            <img ng-src="/assets/img/{{itemProducts.hinhAnh}}" alt="" class="img-fluid mx-auto d-block" style="max-height: 80px; max-width: 80px;">
                                         </td>
                                         <td>{{itemProducts.idSanPham.ten}}</td>
                                         <td class="text-center">
@@ -307,7 +329,7 @@
                                     <select class="form-select" id="discountSelect">
                                         <option value="1" selected>Giảm giá mừng lễ</option>
                                     </select>
-                                    <span>200,000</span>
+<!--                                    <span>200,000</span>-->
                                 </div>
                                 <div class="mb-2">
                                     <label class="form-label">Tiền giảm:</label>
@@ -322,6 +344,13 @@
                                     <span>{{ getTienKhachPTra() }}</span>
                                 </div>
                                 <div class="mb-2">
+                                    <label class="form-label">Phương thức thanh toán:</label>
+                                    <select class="form-select" id="paymentMethodSelect">
+                                        <option value="2" selected>Tiền Mặt</option>
+                                        <option value="3" >Thanh Toán Online</option>
+                                    </select>
+                                </div>
+                                <div class="mb-2">
                                     <label class="form-label">Khách thanh toán:</label>
 <!--                                    <button class="btn btn-success btn-sm"><i class="bi bi-calculator"></i></button>-->
                                     <input type="text" class="form-control" ng-model="khachThanhToan" id="id-khach-thanh-toan">
@@ -331,12 +360,56 @@
                                     <label class="form-label">Số tiền thừa:</label>
                                     <span>{{ tinhTienThua()  }}</span>
                                 </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Phương thức thanh toán:</label>
-                                    <select class="form-select" id="paymentMethodSelect">
-                                        <option value="2" selected>Tiền Mặt</option>
-                                        <option value="3" >Thanh Toán Online</option>
-                                    </select>
+                                <div class="mb-2" id="hinh-thuc-van-chuyen">
+                                    <label class="form-label">Hình Thức Nhận Hàng:</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" ng-model="shippingMethod" id="hinh-thuc-van-chuyen1" value="1"  checked>
+                                        <label class="form-check-label" for="hinh-thuc-van-chuyen1">
+                                            Nhận hàng tại quầy
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" ng-model="shippingMethod" value="2" id="hinh-thuc-van-chuyen2" >
+                                        <label class="form-check-label" for="hinh-thuc-van-chuyen2">
+                                            Vận chuyển (Ship)
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="customer-box" ng-show="shippingMethod == '2'">
+                                    <div class="input-group">
+                                        <span class="input-group-text">Khách Hàng Nhận:</span>
+                                        <input type="text" id="nameKHNhan" aria-label="First name" class="form-control">
+                                        <input type="text" id="sdtKHNhan" aria-label="Last name" class="form-control">
+                                    </div>
+                                    <div class="mb-2" id="address-selection">
+                                        <label class="form-label">Địa Chỉ Giao Hàng:</label>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label class="form-label">Tỉnh/Thành Phố:</label>
+                                                <select class="form-select" id="tinh" name="tinh" title="Chọn Tỉnh Thành">
+                                                    <option value="0">Tỉnh Thành</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label">Quận/Huyện:</label>
+                                                <select class="form-select" id="quan" name="quan" title="Chọn Quận Huyện">
+                                                    <option value="0">Quận Huyện</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label class="form-label">Xã/Phường:</label>
+                                                <select class="form-select" id="phuong" name="phuong" title="Chọn Phường Xã">
+                                                    <option value="0">Phường Xã</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label">Số Nhà:</label>
+                                                <input type="text" id="soNha" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="mb-2">
                                     <label class="form-label">Ghi chú:</label>
@@ -368,7 +441,7 @@
                                     <div class="input-group">
                                         <input type="text" class="form-control" placeholder="Nhập số điện thoại" id="sdt-khach-hang">
                                         <button ng-click="addKhachHang()" class="btn btn-outline-secondary" type="button">Thêm</button>
-                                        <button class="btn btn-outline-secondary" type="button">Tìm Kiếm</button>
+                                        <button ng-click="searchKhachHang()" class="btn btn-outline-secondary" type="button">Tìm Kiếm</button>
                                     </div>
                                 </div>
                                 <div class="row" id="erroresMessage">
@@ -376,10 +449,11 @@
                                         <span id="showMessage"></span>
                                     </div>
                                 </div>
-                                <table class="table">
+                                <table class="table table-bordered">
                                     <thead>
                                     <tr>
                                         <th scope="col">STT</th>
+                                        <th scope="col">Mã Khách Hàng</th>
                                         <th scope="col">Tên Khách Hàng</th>
                                         <th scope="col">Số Điện Thoại</th>
                                         <th scope="col"></th>

@@ -39,4 +39,7 @@ public interface DonHangService {
     DonHang updateDonHangKH(Integer idDH, Integer id);
 
     DonHang getDonHangByID(Integer id);
+
+    List<khachhang> searchKhachHang(String sdt);
+    List<SanPhamChiTiet> searchSanPhamChiTiet(String tenSP);
 }

@@ -79,7 +79,7 @@ public class HoaDonServiceImpl implements HoaDonService{
         khachhang khachhang = khachhangRePo.findById(hoaDon.getIdKhachHang()).get();
         //lấy khuyến mãi
         KhuyenMai khuyenMai = khuyenMaiRepo.findById(hoaDon.getIdKhuyenMai()).get();
-        //lấy trạng thái
+        //lấy trạng thái hoá đơn
         TrangThai trangThai = trangThaiRepo.findById(hoaDon.getIdTrangThai()).get();
         //lấy phương thức thanh toán
         PhuongThucThanhToan PTTT = phuongThucThanhToanRepo.findById(hoaDon.getIdPhuongThucThanhToan()).get();
@@ -87,6 +87,8 @@ public class HoaDonServiceImpl implements HoaDonService{
         DonHang donHang = donHangRepo.findById(hoaDon.getIdDonHang()).get();
 
         //cập nhật dơn hàng
+        TrangThai trangThaiDH1 = trangThaiRepo.findById(2).get();
+        TrangThai trangThaiDH2= trangThaiRepo.findById(5).get();
         donHang.setTongTien(hoaDon.getTongTien());
         donHang.setTongTienKhuyenMai(hoaDon.getTongTienKhuyenMai());
         donHang.setTongTienSauKhuyenMai(hoaDon.getTongTienSauKhuyenMai());
@@ -94,16 +96,24 @@ public class HoaDonServiceImpl implements HoaDonService{
         donHang.setTrangThaiThanhToan(true);
         donHang.setNhanVien(getNV);
         donHang.setKhachHang(khachhang);
-        donHang.setTrangThai(trangThai);
+        donHang.setTrangThai(trangThaiDH2);//đã hoàn thành
+        if(hoaDon.getPhuongThucNhan() ==2){
+            donHang.setTrangThai(trangThaiDH1);//chờ giao hàng
+        }
         donHang.setPhuongThucThanhToan(PTTT);
         donHang.setKhuyenMai(khuyenMai);
+        donHang.setTenKhachNhan(hoaDon.getTenKhachNhan());
+        donHang.setSoDienThoaiKhachNhan(hoaDon.getSoDienThoaiKhachNhan());
+        donHang.setDiaChiNhan(hoaDon.getDiaChiKhachNhan());
+        donHang.setPhuongThucNhan(hoaDon.getPhuongThucNhan());
+        donHang.setLoaiDonHang(hoaDon.getLoaiDonHang());
         donHangRepo.save(donHang);
 
         //tạo hoá đơn
         HoaDon newHoaDon = new HoaDon();
 
         newHoaDon.setKhuyenMai(khuyenMai);
-        newHoaDon.setTrangThai(trangThai);
+        newHoaDon.setTrangThai(trangThai);//trạng thái hoá đơn hoàn thành
         newHoaDon.setPhuongThucThanhToan(PTTT);
         newHoaDon.setDonHang(donHang);
         newHoaDon.setNhanVien(getNV);
@@ -117,6 +127,8 @@ public class HoaDonServiceImpl implements HoaDonService{
         newHoaDon.setTongTienSauKhuyenMai(hoaDon.getTongTienSauKhuyenMai());
         newHoaDon.setGhiChu(hoaDon.getGhiChu());
         newHoaDon.setTrangThaiThanhToan(true);
+        newHoaDon.setPhuongThucNhan(hoaDon.getPhuongThucNhan());
+
         System.out.println("check ;log hoá đơn: "+newHoaDon);
         hoaDonRepo.save(newHoaDon);
 

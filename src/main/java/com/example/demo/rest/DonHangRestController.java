@@ -36,6 +36,12 @@ public class DonHangRestController {
         return ResponseEntity.ok(spct);
     }
 
+    @GetMapping("/don-hang/san-pham-chi-tiet/tim-kiem")
+    public ResponseEntity<?> searchSanPhamChiTietDH(@RequestParam("tenSanPham") String ten){
+        List<SanPhamChiTiet> ListSpct = donHangService.searchSanPhamChiTiet(ten);
+        return ResponseEntity.ok(ListSpct);
+    }
+
     //don hàng chi tiết
     @GetMapping("/don-hang/don-hang-chi-tiet/{id}")
     public ResponseEntity<?> getAllProductDonHang(@PathVariable("id") Integer id){
@@ -99,13 +105,14 @@ public class DonHangRestController {
     }
 
     //đơn hàng
-    @GetMapping("/don-hang/get-don-hang")
+    @GetMapping("/don-hang/get-don-hang")//lấy tất cả đơn hàng
     public ResponseEntity<?> getDonHang(){
         List<DonHangTongSoLuongResponseDTO> donHang = donHangService.getTongSoLuongDonHang();
         System.out.println("log check: "+donHang);
         return ResponseEntity.ok(donHang);
     }
 
+    //lấy chi tiết đơn hàng theo id
     @GetMapping("/don-hang/get-don-hang/{id}")
     public ResponseEntity<?> getDonHang(@PathVariable("id") Integer id){
         DonHang donHang = donHangService.getDonHangByID(id);
@@ -240,9 +247,25 @@ public class DonHangRestController {
     }
 
     @GetMapping("/don-hang/khach-hang/tim-kiem")
-    public ResponseEntity<?> searchKhachHang(@RequestBody String sdt){
+    public ResponseEntity<?> searchKhachHang(@RequestParam String sdt){
+        System.out.println("check Search KH: "+ sdt);
 
-        return ResponseEntity.ok("");
+        List<khachhang> listKH = donHangService.searchKhachHang(sdt);
+        List<KhachHangResponseDTO> responseKHDTOList = new ArrayList<>();
+
+        for(khachhang kh: listKH){
+            KhachHangResponseDTO khachHangResponseDTO = new KhachHangResponseDTO();
+
+            khachHangResponseDTO.setIdKhachHang(kh.getIdKhachHang());
+            khachHangResponseDTO.setMaKhachHang(kh.getMaKhachHang());
+            khachHangResponseDTO.setHoTen(kh.getHoTen());
+            khachHangResponseDTO.setDiaChi(kh.getDiaChi());
+            khachHangResponseDTO.setSoDienThoai(kh.getSoDienThoai());
+            responseKHDTOList.add(khachHangResponseDTO);
+        }
+
+        System.out.println("check Search KH11: "+ responseKHDTOList);
+        return ResponseEntity.ok(responseKHDTOList);
     }
 
     //hoá đơn

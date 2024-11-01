@@ -11,11 +11,15 @@ import lombok.NoArgsConstructor;
 public class DonHangResponseDTO {
     private Integer idDonHang;
     private String maDonHang;
+    private String tenKhachNhan;
+    private String soDienThoaiKhachNhan;
+    private String diaChiNhan;
     private Float tongTien;
     private Float tongTienKhuyenMai;
     private Float tongTienSauKhuyenMai;
     private String ghiChu;
     private Boolean trangThaiThanhToan;
+    private Integer loaiDonHang;
     private String nhanVien;
     private String khachHang;
     private Integer iDkhachHang;
