@@ -27,9 +27,6 @@ public class SanPhamChiTiet {
     @Column(name = "ma")
     private String ma;
 
-    @Column(name = "ten")
-    private String ten;
-
     @Column(name = "trang_thai")
     private Boolean trangThai;
 
@@ -50,9 +47,6 @@ public class SanPhamChiTiet {
     @Column(name = "chat_lieu")
     private String chatLieu;
 
-    @Column(name = "size")
-    private String size;
-
     @Column(name = "so_luong")
     private Integer soLuong;
 
@@ -61,9 +55,6 @@ public class SanPhamChiTiet {
 
     @Column(name = "mo_ta")
     private String moTa;
-
-    @Column(name = "hinh_anh")
-    private String hinhAnh;
 
     @ManyToOne
     @JoinColumn(name = "id_san_pham")
@@ -80,4 +71,21 @@ public class SanPhamChiTiet {
     @ManyToOne
     @JoinColumn(name = "id_kieu_dang")
     private KieuDang idKieuDang;
+
+    @ManyToOne
+    @JoinColumn(name = "id_chat_lieu")
+    private KieuDang idChatLieu;
+
+    @ManyToOne
+    @JoinColumn(name = "id_kich_co")
+    private KieuDang idKichCo;
+
+    @ManyToOne
+    @JoinColumn(name = "id_xuat_xu")
+    private KieuDang idXuatXu;
+
+    @ManyToOne
+    @JoinColumn(name = "id_hinh_anh")
+    private KieuDang idHinhAnh;
+
 }

@@ -96,11 +96,11 @@ app.controller('ctrl', function ($scope, $http) {
             $scope.mauSac = r.data;
         }).catch( e => console.log(e))
 
-        $http.get("/admin/chat-lieu/find-all").then(r =>{
+        $http.get("/admin/chat-lieu/get-all").then(r =>{
             $scope.chatLieu = r.data;
         }).catch( e => console.log(e))
 
-        $http.get("/admin/thuong-hieu/find-all").then(r =>{
+        $http.get("/admin/thuong-hieu/get-all").then(r =>{
             $scope.thuongHieu = r.data;
         }).catch( e => console.log(e))
 
@@ -108,10 +108,11 @@ app.controller('ctrl', function ($scope, $http) {
             $scope.xuatXu = r.data;
         }).catch( e => console.log(e))
 
-        $http.get("/admin/kieu-dang/find-all").then(r =>{
+        $http.get("/admin/kieu-dang/get-all").then(r =>{
             $scope.kieuDang = r.data;
         }).catch( e => console.log(e))
     }
+
     $scope.getPropertiesInFilter();
 
     $scope.filter = function (filterData){
@@ -167,6 +168,7 @@ app.controller('ctrl', function ($scope, $http) {
             isfilter = true;
         }).catch(e => console.log(e))
     }
+
     $scope.clearFilter = function (){
 
         $scope.pageNumber = 0
