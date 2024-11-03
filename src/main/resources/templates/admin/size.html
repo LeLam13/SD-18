@@ -39,7 +39,7 @@
                             <div class="card-header">
                                 <div class="row">
                                     <div class="col-6">
-                                        <button th:disabled="${!hasAdmin}" type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                        <button  type="button" class="btn btn-primary" data-bs-toggle="modal"
                                                 data-bs-target="#sizeModal">
                                             Thêm Size
                                         </button>
@@ -74,12 +74,12 @@
                                         <td>{{stu.ngayCapNhat | date:'yyyy-MM-dd HH:mm:ss'}}</td>
                                         <td>
 
-                                            <button class="btn btn-danger" th:disabled="${!hasAdmin}"
+                                            <button class="btn btn-danger"
                                                     ng-click="delete(stu.ma)"
                                             >Xóa</button>
                                         </td>
                                         <td>
-                                            <button class="btn btn-primary" th:disabled="${!hasAdmin}"
+                                            <button class="btn btn-primary"
                                                     data-bs-toggle="modal"
                                                     data-bs-target="#sizeUpdate"
                                                     ng-click="getSize(stu.ma)"
