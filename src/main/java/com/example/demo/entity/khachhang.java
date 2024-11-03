@@ -30,6 +30,9 @@ public class khachhang {
     @Column(name = "ho_ten", length = 100)
     private String hoTen;
 
+    @Column(name = "email")
+    private String email;
+
     @Column(name = "ngay_sinh")
     private Date ngaySinh;
 
