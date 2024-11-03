@@ -22,7 +22,8 @@ import java.util.Date;
 public class SanPhamChiTiet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idSanPhamChiTiet;
+    @Column(name = "id_san_pham_chi_tiet") // Khóa chính cho bảng sản phẩm chi tiết
+    private int idSanPhamChiTiet;
 
     @Column(name = "ma")
     private String ma;
@@ -59,6 +60,9 @@ public class SanPhamChiTiet {
     @Column(name = "don_gia")
     private Float donGia;
 
+    @Column(name = "so_tien_giam")
+    private Float soTienGiam;
+
     @Column(name = "mo_ta")
     private String moTa;
 
@@ -80,4 +84,6 @@ public class SanPhamChiTiet {
     @ManyToOne
     @JoinColumn(name = "id_kieu_dang")
     private KieuDang idKieuDang;
+
+
 }
