@@ -14,7 +14,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
-@Data
+
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -44,8 +46,6 @@ public class SanPhamChiTiet {
     @Column(name = "update_by")
     private String updateBy;
 
-    @Column(name = "chat_lieu")
-    private String chatLieu;
 
     @Column(name = "so_luong")
     private Integer soLuong;
@@ -56,9 +56,11 @@ public class SanPhamChiTiet {
     @Column(name = "mo_ta")
     private String moTa;
 
+
     @ManyToOne
     @JoinColumn(name = "id_san_pham")
     private SanPham idSanPham;
+
 
     @ManyToOne
     @JoinColumn(name = "id_mau_sac")
@@ -74,18 +76,18 @@ public class SanPhamChiTiet {
 
     @ManyToOne
     @JoinColumn(name = "id_chat_lieu")
-    private KieuDang idChatLieu;
+    private ChatLieu idChatLieu;
 
     @ManyToOne
     @JoinColumn(name = "id_kich_co")
-    private KieuDang idKichCo;
+    private KichCo idKichCo;
 
     @ManyToOne
     @JoinColumn(name = "id_xuat_xu")
-    private KieuDang idXuatXu;
+    private XuatXu idXuatXu;
 
     @ManyToOne
     @JoinColumn(name = "id_hinh_anh")
-    private KieuDang idHinhAnh;
+    private HinhAnh idHinhAnh;
 
 }
