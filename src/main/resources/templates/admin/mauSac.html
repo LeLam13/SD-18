@@ -77,11 +77,15 @@
 
                                     <tbody>
                                     <tr ng-repeat="m in items">
-                                        <td>{{ page * size  + $index + 1 }}</td>
+                                        <td>{{ page * size + $index + 1 }}</td>
                                         <td>{{m.ma}}</td>
                                         <td>{{m.ten}}</td>
                                         <td>{{m.createDate | date:'yyyy-MM-dd'}}</td>
-                                        <td>{{m.trangThai ? "Đang hoạt động" : "Không hoạt động"}}</td>
+                                        <td>
+        <span ng-class="{'text-success': m.trangThai, 'text-danger': !m.trangThai}">
+            {{m.trangThai ? "Đang hoạt động" : "Không hoạt động"}}
+        </span>
+                                        </td>
                                         <td>
                                             <a href="" class="edit" data-bs-toggle="modal" data-bs-target="#view"
                                                ng-click="getMauSac(m.ma)">
@@ -249,7 +253,7 @@
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label class="form-label">ID</label>
-                                <input type="text" ng-model="idMauSac" class="form-control">
+                                <input type="text" ng-model="idMauSac" class="form-control" readonly>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                             <div class="mb-3">
@@ -259,32 +263,35 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Tên Màu</label>
-                                <input type="text" ng-model="ten" class="form-control">
+                                <input type="text" ng-model="ten" class="form-control" readonly>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Người Tạo</label>
-                                <input type="text" ng-model="createBy" class="form-control">
+                                <input type="text" ng-model="createBy" class="form-control" readonly>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Ngày Tạo</label>
-                                <input type="text" ng-model="createDate | date:'yyyy-MM-dd'" class="form-control">
+                                <input type="text" ng-value="createDate | date:'yyyy-MM-dd'" class="form-control"
+                                       readonly>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Người Cập Nhật</label>
-                                <input type="text" ng-model="updateBy" class="form-control">
+                                <input type="text" ng-model="updateBy" class="form-control" readonly>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Ngày Cập Nhật</label>
-                                <input type="text" ng-model="updateDate | date:'yyyy-MM-dd'" class="form-control">
+                                <input type="text" ng-value="updateDate | date:'yyyy-MM-dd'" class="form-control"
+                                       readonly>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Trạng Thái</label>
-                                <input type="text" ng-model="trangThai?'Đang hoạt động':'Ngưng họat động'" class="form-control">
+                                <input type="text" ng-value="trangThai ? 'Đang hoạt động' : 'Ngưng hoạt động'"
+                                       class="form-control" readonly>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                         </div>
@@ -297,6 +304,7 @@
     </div>
 </div>
 <!-- end main content-->
+<script src="app.js"></script>
 </body>
 
 </html>

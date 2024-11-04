@@ -13,4 +13,5 @@ public class SanPhamController {
     public String viewAdd() {
         return "/admin/formSanPham";
     }
+
 }
