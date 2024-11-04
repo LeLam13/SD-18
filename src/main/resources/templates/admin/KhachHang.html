@@ -4,116 +4,127 @@
       layout:decorate="~{/admin/index}" ng-app="khachhangApp">
 <head>
     <style>
-        body {
-            font-family: Arial, sans-serif; /* Set a default font */
-            background-color: #f8f9fa; /* Light background color */
-            margin-top: 120px; /* Margin around the body */
+        .textDetail {
+            font-weight: bold;
+            font-size: 15px;
+            font-style: italic;
         }
 
-        h1 {
-            text-align: center; /* Center the heading */
-            color: #343a40; /* Darker heading color */
-        }
-
-        table {
-            width: 100%; /* Full-width table */
-            border-collapse: collapse; /* Collapse borders */
-            margin: 20px 0; /* Margin around the table */
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Add shadow */
-        }
-
-        th, td {
-            padding: 12px; /* Add padding to cells */
-            text-align: left; /* Align text to the left */
-            border-bottom: 1px solid #dee2e6; /* Light bottom border */
-        }
-
-        th {
-            background-color: #007bff; /* Primary color for header */
-            color: white; /* White text in header */
-        }
-
-        tr:nth-child(even) {
-            background-color: #f2f2f2; /* Light grey for even rows */
-        }
-
-        tr:hover {
-            background-color: #e9ecef; /* Light grey on hover */
-        }
-
-        @media (max-width: 768px) {
-            table {
-                width: 100%; /* Full-width on small screens */
-                display: block; /* Make it block to enable scrolling */
-                overflow-x: auto; /* Enable horizontal scrolling */
-            }
+        .er {
+            color: red;
+            font-size: 13px;
         }
     </style>
 </head>
 <body data-topbar="dark">
 <div class="main-content" layout:fragment="content" ng-controller="KhachHangController">
-    <div class="container">
-        <h1>Thông Tin Khách Hàng</h1>
+    <div class="page-content">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-6"></div>
+                <div class="col-md-6 d-flex justify-content-end">
+                    <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3 me-2">
+                        <div>
+                            <input class="form-control" ng-model="searchQuery" placeholder="Nhập mã, tên hoặc sđt">
+                        </div>
+                    </div>
+                    <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
+                        <div>
+                            <button class="btn btn-secondary" ng-click="showAddForm()">
+                                <i class="bx bx-plus me-1"></i> Thêm mới khách hàng
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-        <!-- Search Bar and Add Button -->
-        <div class="d-flex justify-content-between mb-3">
-            <input type="text" class="form-control w-50" ng-model="searchQuery" placeholder="Search Khach Hang...">
-            <button class="btn btn-primary" ng-click="addKhachHang()">Add Khach Hang</button>
+            <h2>Thông Tin Khách Hàng</h2>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Mã Khách Hàng</th>
+                    <th>Họ Tên</th>
+                    <th>Ngày Sinh</th>
+                    <th>Số Điện Thoại</th>
+                    <th>Giới Tính</th>
+                    <th>Địa Chỉ</th>
+                    <th>Tên Tài Khoản</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="khach in khachhangList | filter: { ma_khach_hang: searchQuery }">
+                    <td>{{ khach.id_khach_hang }}</td>
+                    <td>{{ khach.ma_khach_hang }}</td>
+                    <td>{{ khach.ho_ten }}</td>
+                    <td>{{ khach.ngay_sinh | date:'yyyy-MM-dd' }}</td>
+                    <td>{{ khach.so_dien_thoai }}</td>
+                    <td>{{ khach.gioi_tinh ? 'Nam' : 'Nữ' }}</td>
+                    <td>{{ khach.dia_chi }}</td>
+                    <td>{{ khach.username_tai_khoan }}</td>
+                </tr>
+                </tbody>
+            </table>
         </div>
 
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Mã Khách Hàng</th>
-                <th>Họ Tên</th>
-                <th>Ngày Sinh</th>
-                <th>Số Điện Thoại</th>
-                <th>Giới Tính</th>
-                <th>Địa Chỉ</th>
-                <th>Tên Tài Khoản</th>
-            </tr>
-            </thead>
-            <tbody ng-cloak>
-            <tr ng-repeat="khach in khachhangList | filter:searchQuery">
-                <td>{{ khach.id_khach_hang }}</td>
-                <td>{{ khach.ma_khach_hang }}</td>
-                <td>{{ khach.ho_ten }}</td>
-                <td>{{ khach.ngay_sinh | date:'yyyy-MM-dd' }}</td>
-                <td>{{ khach.so_dien_thoai }}</td>
-                <td>{{ khach.gioi_tinh ? 'Nam' : 'Nữ' }}</td>
-                <td>{{ khach.dia_chi }}</td>
-                <td>{{ khach.username_tai_khoan }}</td>
-            </tr>
-            </tbody>
-        </table>
+        <!-- Modal for Adding Customer -->
+        <div class="modal fade" id="viewAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Thêm Khách Hàng Mới</h5>
+                        <button type="button" class="close" ng-click="closeAddForm()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="maKhachHang">Mã Khách Hàng</label>
+                                <input type="text" id="maKhachHang" class="form-control" ng-model="newKhachHang.ma_khach_hang">
+                            </div>
+                            <div class="mb-3">
+                                <label for="hoTen">Họ Tên</label>
+                                <input type="text" id="hoTen" class="form-control" ng-model="newKhachHang.ho_ten">
+                            </div>
+                            <div class="mb-3">
+                                <label for="ngaySinh">Ngày Sinh</label>
+                                <input type="date" id="ngaySinh" class="form-control" ng-model="newKhachHang.ngay_sinh">
+                            </div>
+                            <div class="mb-3">
+                                <label for="soDienThoai">Số Điện Thoại</label>
+                                <input type="text" id="soDienThoai" class="form-control" ng-model="newKhachHang.so_dien_thoai">
+                            </div>
+                            <div class="mb-3">
+                                <label for="gioiTinh">Giới Tính</label>
+                                <select id="gioiTinh" class="form-control" ng-model="newKhachHang.gioi_tinh">
+                                    <option value="true">Nam</option>
+                                    <option value="false">Nữ</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="diaChi">Địa Chỉ</label>
+                                <input type="text" id="diaChi" class="form-control" ng-model="newKhachHang.dia_chi">
+                            </div>
+                            <div class="mb-3">
+                                <label for="usernameTaiKhoan">Tên Tài Khoản</label>
+                                <input type="text" id="usernameTaiKhoan" class="form-control" ng-model="newKhachHang.username_tai_khoan">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" ng-click="closeAddForm()">Đóng</button>
+                        <button type="button" class="btn btn-primary" ng-click="addKhachHang()">Thêm Khách Hàng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Phân trang -->
+    <div class="pagination">
+        <button class="btn btn-primary" ng-click="previousPage()" ng-disabled="currentPage === 1">Trang trước</button>
+        <span>Trang {{currentPage}} / {{totalPages}}</span>
+        <button class="btn btn-primary" ng-click="nextPage()" ng-disabled="currentPage === totalPages">Trang kế tiếp</button>
     </div>
 </div>
 
-<script>
-    var app = angular.module('khachhangApp', []);
-
-    app.controller('KhachHangController', function($scope, $http) {
-        $scope.khachhangList = [];
-        $scope.searchQuery = "";
-
-        $scope.fetchKhachHang = function() {
-            $http.get('/admin/khach-hang/api')
-                .then(function(response) {
-                    console.log("Data fetched:", response.data);
-                    $scope.khachhangList = response.data;
-                }, function(error) {
-                    console.error("Error fetching khach hang data:", error);
-                });
-        };
-
-        $scope.addKhachHang = function() {
-            // Implement the logic for adding a new Khach Hang
-            alert("Functionality to add Khach Hang will be implemented here.");
-        };
-
-        $scope.fetchKhachHang();
-    });
-</script>
 </body>
 </html>
