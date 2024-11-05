@@ -6,4 +6,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface KieuDangRepo extends JpaRepository<KieuDang,Integer> {
+    KieuDang findByMa(String ma);
+
+    KieuDang findByIdKieuDang(Integer idKieuDang);
 }

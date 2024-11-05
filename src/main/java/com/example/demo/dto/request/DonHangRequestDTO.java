@@ -12,6 +12,12 @@ import lombok.*;
 public class DonHangRequestDTO {
     private Integer idDonHang;
 
+    private String tenKhachNhan;
+
+    private String soDienThoaiKhachNhan;
+
+    private String diaChiKhachNhan;
+
     private String maDonHang;
 
     private Float tongTien;
@@ -23,6 +29,9 @@ public class DonHangRequestDTO {
     private String ghiChu;
 
     private Boolean trangThaiThanhToan;
+
+    private Integer loaiDonHang;
+    private Integer phuongThucNhan;
 
     private Integer idNhanVien;
 

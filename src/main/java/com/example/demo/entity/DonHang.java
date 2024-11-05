@@ -19,6 +19,15 @@ public class DonHang {
     @Column(name = "ma_don_hang", nullable = false, length = 50)
     private String maDonHang;
 
+    @Column(name = "ten_khach_hang_nhan")
+    private String tenKhachNhan;
+
+    @Column(name = "so_dien_thoai")
+    private String soDienThoaiKhachNhan;
+
+    @Column(name = "dia_chi_nhan")
+    private String diaChiNhan;
+
     @Column(name = "tong_tien")
     private Float tongTien;
 
@@ -34,6 +43,11 @@ public class DonHang {
     @Column(name = "trang_thai_thanh_toan")
     private Boolean trangThaiThanhToan;
 
+    @Column(name = "phuong_thuc_nhan_hang")
+    private Integer phuongThucNhan;
+
+    @Column(name = "loai_don_hang")
+    private Integer loaiDonHang;
     @ManyToOne
     @JoinColumn(name = "id_nhan_vien")
     private nhanvien nhanVien;
