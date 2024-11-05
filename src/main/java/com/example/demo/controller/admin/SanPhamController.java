@@ -9,7 +9,7 @@ public class SanPhamController {
     public String hienThi() {
         return "/admin/sanPham";
     }
-    @GetMapping("add")
+    @GetMapping("/formAdd")
     public String viewAdd() {
         return "/admin/formSanPham";
     }

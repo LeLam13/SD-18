@@ -152,6 +152,78 @@ app.controller('ctrl', function ($scope, $http) {
     }
 
 
+    $scope.getSanPham = function (ma) {
+        var url = "/admin/san-pham/chiTiet" + "/" + ma;
+        console.log(url)
+        $http.get(url).then(function (r) {
+            console.log(r.data)
+            let SanPham = r.data;
+            $scope.idSanPham=SanPham.idSanPham;
+            $scope.ma = SanPham.ma;
+            $scope.ten = SanPham.ten;
+            $scope.createBy = SanPham.createBy;
+            $scope.createDate = SanPham.createDate;
+            $scope.updateDate = SanPham.updateDate;
+            $scope.updateBy = SanPham.updateBy;
+            $scope.trangThai = SanPham.trangThai;
+        })
+    }
+
+    $scope.update = function (ma) {
+        if ($scope.ten == undefined || $scope.ten.length == 0) {
+            document.getElementById("eTenMauUd").innerText = "Vui lòng nhập tên!!!";
+            return
+        }
+        if ($scope.ten.length > 100) {
+            document.getElementById("eTenMauUd").innerText = "Tên tối đa 100 ký tự!!!";
+            return
+        }
+
+        $http.get("/admin/san-pham/get-all").then(function (response) {
+            var existingSanPham = response.data;
+            var tenTonTai = false;
+            angular.forEach(existingSanPham, function (item) {
+                if (item.ten.toLowerCase() === $scope.ten.toLowerCase() && item.ma !== ma) {
+                    tenTonTai = true;
+                }
+            });
+
+            if (tenTonTai) {
+                document.getElementById("eTenMauUd").innerText = "Tên đã tồn tại";
+                return;
+            } else {
+                var url = "/admin/san-pham/update" + "/" + ma;
+                var updateSanPham = {
+                    ma: ma,
+                    ten: $scope.ten
+                }
+
+                $http.post(url, updateSanPham).then(function (r) {
+                    $scope.findAll();
+                    alert("Update thành công")
+                }).catch(function (err) {
+                    console.log("Update khong thanh cong", err);
+                })
+            }
+        }).catch(function (err) {
+            console.log("Lỗi khi lấy dữ liệu", err);
+        });
+    }
+
+    $scope.updateTT = function (idSanPham) {
+        if (confirm("Xác nhận đổi?")) {
+            var url = "/admin/san-pham/updateTT" + "/" + idSanPham;
+            $http.post(url).then(function (r) {
+                alert("Doi thành công!!!")
+                $scope.findAll();
+            }).catch(function (err) {
+                console.log("Loi: ", err);
+            })
+        }
+    }
+
+
+
     $scope.delete = function (ma) {
 
 

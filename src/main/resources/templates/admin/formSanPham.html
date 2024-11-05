@@ -161,7 +161,7 @@
                         </div>
                     </div>
                 </form>
-                <form th:if="${hasAdmin == true}" th:action="@{|/admin/san-pham/${action}|}" th:object="${sanPham}" th:method="${method}"
+                <form  th:action="@{|/admin/san-pham/${action}|}" th:object="${sanPham}" th:method="${method}"
                       enctype="multipart/form-data">
 
                     <div class="card">
