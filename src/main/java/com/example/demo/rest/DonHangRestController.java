@@ -54,7 +54,7 @@ public class DonHangRestController {
             responseDTO.setSoLuong(donHangChiTiet.getSoLuong());
             responseDTO.setDonGia(donHangChiTiet.getDonGia());
             responseDTO.setIdSanPham(donHangChiTiet.getSanPhamChiTiet().getIdSanPhamChiTiet());
-            responseDTO.setTenSanPham(donHangChiTiet.getSanPhamChiTiet().getTen());
+//            responseDTO.setTenSanPham(donHangChiTiet.getSanPhamChiTiet().getTen());
 
             responseDTOList.add(responseDTO);
         }
@@ -71,7 +71,10 @@ public class DonHangRestController {
         responseDTO1.setMaDonHangChiTiet(dhct.getMaDonHangChiTiet());
         responseDTO1.setSoLuong(dhct.getSoLuong());
         responseDTO1.setDonGia(dhct.getDonGia());
+
 //        responseDTO1.setTenSanPham(dhct.getSanPhamChiTiet().getIdSanPham().getTen());
+//        responseDTO1.setTenSanPham(dhct.getSanPhamChiTiet().getTen());
+
         responseDTO1.setIdSanPham(dhct.getSanPhamChiTiet().getIdSanPhamChiTiet());
 
         return ResponseEntity.ok(responseDTO1);
@@ -88,7 +91,7 @@ public class DonHangRestController {
         responseDTO.setMaDonHangChiTiet(donHangChiTiet.getMaDonHangChiTiet());
         responseDTO.setSoLuong(donHangChiTiet.getSoLuong());
         responseDTO.setDonGia(donHangChiTiet.getDonGia());
-        responseDTO.setTenSanPham(donHangChiTiet.getSanPhamChiTiet().getTen());
+//        responseDTO.setTenSanPham(donHangChiTiet.getSanPhamChiTiet().getTen());
         responseDTO.setIdSanPham(donHangChiTiet.getSanPhamChiTiet().getIdSanPhamChiTiet());
         System.out.println("donHangChiTiet: "+donHangChiTiet);
         return ResponseEntity.ok(responseDTO);

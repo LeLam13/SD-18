@@ -14,7 +14,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
 
-@Data
+
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -26,9 +28,6 @@ public class SanPhamChiTiet {
 
     @Column(name = "ma")
     private String ma;
-
-    @Column(name = "ten")
-    private String ten;
 
     @Column(name = "trang_thai")
     private Boolean trangThai;
@@ -47,11 +46,6 @@ public class SanPhamChiTiet {
     @Column(name = "update_by")
     private String updateBy;
 
-    @Column(name = "chat_lieu")
-    private String chatLieu;
-
-    @Column(name = "size")
-    private String size;
 
     @Column(name = "so_luong")
     private Integer soLuong;
@@ -62,12 +56,11 @@ public class SanPhamChiTiet {
     @Column(name = "mo_ta")
     private String moTa;
 
-    @Column(name = "hinh_anh")
-    private String hinhAnh;
 
     @ManyToOne
     @JoinColumn(name = "id_san_pham")
     private SanPham idSanPham;
+
 
     @ManyToOne
     @JoinColumn(name = "id_mau_sac")
@@ -80,4 +73,21 @@ public class SanPhamChiTiet {
     @ManyToOne
     @JoinColumn(name = "id_kieu_dang")
     private KieuDang idKieuDang;
+
+    @ManyToOne
+    @JoinColumn(name = "id_chat_lieu")
+    private ChatLieu idChatLieu;
+
+    @ManyToOne
+    @JoinColumn(name = "id_kich_co")
+    private KichCo idKichCo;
+
+    @ManyToOne
+    @JoinColumn(name = "id_xuat_xu")
+    private XuatXu idXuatXu;
+
+    @ManyToOne
+    @JoinColumn(name = "id_hinh_anh")
+    private HinhAnh idHinhAnh;
+
 }
