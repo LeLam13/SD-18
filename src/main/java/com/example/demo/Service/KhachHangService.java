@@ -11,4 +11,9 @@ import java.util.Optional;
 public interface KhachHangService {
     List<khachhang> findAll();
     List<KhachHangResponseDTO> getAllKhachHang();
+    // Add a new customer
+    KhachHangResponseDTO addKhachHang(KhachHangResponseDTO khachHangRequestDTO);
+
+    // Get all customers with pagination
+    Page<KhachHangResponseDTO> getAllKhachHangPaged(Pageable pageable);
 }

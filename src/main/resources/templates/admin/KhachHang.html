@@ -119,11 +119,12 @@
         </div>
     </div>
     <!-- Phân trang -->
-    <div class="pagination">
+    <div class="d-flex justify-content-center my-3">
         <button class="btn btn-primary" ng-click="previousPage()" ng-disabled="currentPage === 1">Trang trước</button>
-        <span>Trang {{currentPage}} / {{totalPages}}</span>
+        <span class="mx-2">Trang {{currentPage}} / {{totalPages}}</span>
         <button class="btn btn-primary" ng-click="nextPage()" ng-disabled="currentPage === totalPages">Trang kế tiếp</button>
     </div>
+
 </div>
 
 </body>

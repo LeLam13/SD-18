@@ -40,4 +40,14 @@ public class KhachHangServiceImpl implements KhachHangService{
         }).collect(Collectors.toList());
     }
 
+    @Override
+    public KhachHangResponseDTO addKhachHang(KhachHangResponseDTO khachHangRequestDTO) {
+        return null;
+    }
+
+    @Override
+    public Page<KhachHangResponseDTO> getAllKhachHangPaged(Pageable pageable) {
+        return null;
+    }
+
 }
