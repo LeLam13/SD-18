@@ -41,21 +41,6 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
     }
 
     $scope.count = function (){
-        console.log("check1");
-        var idSanPham = 1;
-        var page =0;
-        var size =1;
-        var url = "/san-pham/"+idSanPham+"/find-all?page="+page+"&size="+size;
-        $http.get(url).then(resp => {
-            console.log("check: ",resp);
-            $scope.items = resp.data.content;
-            $scope.totalPages = resp.data.totalPages; // Cập nhật tổng số trang
-            console.log("$scope.totalPages: ",$scope.totalPages);
-            console.log("$scope.items: ",$scope.items);
-        }).catch(error => {
-            console.log(error);
-        });
-
     }
 
     $scope.clearLocalStorage = function (){
@@ -87,10 +72,10 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
 
 app.controller("don-hang-online-ctrl", function ($scope, $http) {
     $scope.mess = "hello";
-    $scope.items = [];
+    $scope.itemsOrder = [];
     $scope.loadFromLocalStorage = function (){
         var json = localStorage.getItem("cart");
-        $scope.items = json ? JSON.parse(json) : [];
+        $scope.itemsOrder = json ? JSON.parse(json) : [];
     }
 
     //load dữ liệu
