@@ -75,12 +75,11 @@ public class NhanVienServiceImpl implements NhanVienService {
     }
     @Override
     public Page<nhanvien> getActiveNhanVien(Pageable pageable) {
-        return nhanVienRepository.findByTrangThaiTrue(pageable); // Lấy danh sách nhân viên có trạng thái true
+        return nhanVienRepository.findAllWithTrangThaiOrder(pageable); // Lấy danh sách nhân viên có trạng thái true
     }
     @Override
     public Page<nhanvien> searchNhanVien(String keyword, Pageable pageable) {
-        return nhanVienRepository.findByMaNhanVienContainingAndTrangThaiTrueOrHoTenContainingAndTrangThaiTrueOrSoDienThoaiContainingAndTrangThaiTrue(
+        return nhanVienRepository.findByMaNhanVienContainingOrHoTenContainingOrSoDienThoaiContainingOrderByTrangThai(
                 keyword, keyword, keyword, pageable);
     }
-
 }

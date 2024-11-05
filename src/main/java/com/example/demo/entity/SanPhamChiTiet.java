@@ -1,6 +1,7 @@
 package com.example.demo.entity;
 
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -8,11 +9,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Date;
+import java.util.List;
 
 
 @Getter
@@ -24,7 +27,8 @@ import java.util.Date;
 public class SanPhamChiTiet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idSanPhamChiTiet;
+    @Column(name = "id_san_pham_chi_tiet") // Khóa chính cho bảng sản phẩm chi tiết
+    private int idSanPhamChiTiet;
 
     @Column(name = "ma")
     private String ma;
@@ -53,6 +57,9 @@ public class SanPhamChiTiet {
     @Column(name = "don_gia")
     private Float donGia;
 
+    @Column(name = "so_tien_giam")
+    private Float soTienGiam;
+
     @Column(name = "mo_ta")
     private String moTa;
 
@@ -74,6 +81,7 @@ public class SanPhamChiTiet {
     @JoinColumn(name = "id_kieu_dang")
     private KieuDang idKieuDang;
 
+<<<<<<< HEAD
     @ManyToOne
     @JoinColumn(name = "id_chat_lieu")
     private ChatLieu idChatLieu;
@@ -89,5 +97,9 @@ public class SanPhamChiTiet {
     @ManyToOne
     @JoinColumn(name = "id_hinh_anh")
     private HinhAnh idHinhAnh;
+=======
+    @OneToMany(mappedBy = "sanPhamChiTiet")
+    private List<DotGiamGiaSanPhamChiTiet> dotGiamGiaList; // Liên kết với bảng trung gian
+>>>>>>> feature/login
 
 }

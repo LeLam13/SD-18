@@ -39,7 +39,11 @@
                             <div class="card-header">
                                 <div class="row">
                                     <div class="col-6">
+<<<<<<< HEAD
                                         <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+=======
+                                        <button  type="button" class="btn btn-primary" data-bs-toggle="modal"
+>>>>>>> feature/login
                                                 data-bs-target="#sizeModal">
                                             Thêm Size
                                         </button>
@@ -69,6 +73,7 @@
 
 
                                     <tbody>
+<<<<<<< HEAD
                                     <tr ng-repeat="kc in items">
                                         <td>{{ page * size + $index + 1 }}</td>
                                         <td>{{kc.ma}}</td>
@@ -89,6 +94,25 @@
                                             <a href="" class="edit" ng-click="updateTT(kc.idKichCo)">
                                                 <i style="font-size:20px" class="fa">&#xf021;</i>
                                             </a>
+=======
+                                    <tr ng-repeat="stu in items">
+                                        <td>{{stu.ma}}</td>
+                                        <td>{{stu.chieuDai}}</td>
+                                        <td>{{stu.ngayTao | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                        <td>{{stu.ngayCapNhat | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+                                        <td>
+
+                                            <button class="btn btn-danger"
+                                                    ng-click="delete(stu.ma)"
+                                            >Xóa</button>
+                                        </td>
+                                        <td>
+                                            <button class="btn btn-primary"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#sizeUpdate"
+                                                    ng-click="getSize(stu.ma)"
+                                            >Cập nhật</button>
+>>>>>>> feature/login
                                         </td>
                                     </tr>
                                     </tbody>
