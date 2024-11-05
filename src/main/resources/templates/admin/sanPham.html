@@ -225,16 +225,19 @@
                                     <td><span
                                             ng-class="{'text-success': p.trangThai, 'text-danger': !p.trangThai}">{{p.trangThai ? "Đang hoạt động" : "Không hoạt động"}}</span>
                                     </td>
-                                    <td>
-                                        <a  href="" class="edit" ng-click="viewChiTiet(p.idSanPham)">
+                                    <td style="display: flex; gap: 10px; align-items: center;">
+                                        <a href="" class="edit" ng-click="viewChiTiet(p.idSanPham)">
                                             <i style='font-size:24px' class='fas'>&#xf06e;</i>
                                         </a>
                                         <a href="" class="edit" data-bs-toggle="modal" data-bs-target="#update"
-                                           ng-click="getMauSac(p.ma)">
+                                           ng-click="getSanPham(p.ma)">
                                             <i class="material-icons" title="Edit">&#xE254;</i>
                                         </a>
-                                        <a href="" class="edit" ng-click="updateTT(p.idMauSac)">
+                                        <a href="" class="edit" ng-click="updateTT(p.idSanPham)">
                                             <i style="font-size:20px" class="fa">&#xf021;</i>
+                                        </a>
+                                        <a href="/admin/san-pham/formAdd" class="edit">
+                                            <i style="font-size:24px;color: green;" class="fa">&#xf0fe;</i>
                                         </a>
                                     </td>
                                 </tr>
@@ -243,14 +246,15 @@
                             <nav aria-label="Page navigation" class="d-flex justify-content-center mt-3">
                                 <ul class="pagination">
                                     <li class="page-item" ng-class="{ 'disabled': page === 0 }">
-                                        <a class="page-link" href="#" ng-click="previousPage()">&#8592; Trang
+                                        <a class="page-link" href="" ng-click="previousPage()">&#8592; Trang
                                             trước</a>
                                     </li>
                                     <li class="page-item disabled">
                                         <span class="page-link">Trang {{ page + 1 }} / {{ totalPages }}</span>
                                     </li>
-                                    <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 }">
-                                        <a class="page-link" href="#" ng-click="nextPage()">Trang sau &#8594;</a>
+                                    <li class="page-item"
+                                        ng-class="{ 'disabled': page === totalPages - 1 || page + 1 === totalPages + 1 }">
+                                        <a class="page-link" href="" ng-click="nextPage()">Trang sau &#8594;</a>
                                     </li>
                                 </ul>
                             </nav>
@@ -299,6 +303,43 @@
                         <!--                        </div>-->
 
                     </div>
+
+                    <div class="modal" id="update">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Cập nhật</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <form>
+                                    <!-- Modal body -->
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label class="form-label">Mã</label>
+                                            <input type="text" ng-model="ma" class="form-control" readonly>
+                                            <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Tên Sản Phẩm</label>
+                                            <input type="text" ng-model="ten" class="form-control"
+                                                   onfocus="document.getElementById('eTenMauUd').innerText = ''">
+                                            <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+                                            <i id="eTenMauUd" class="er"></i>
+                                        </div>
+
+                                    </div>
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-danger" ng-click="update(ma)">Cập nhật
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="modal" id="spModal">
                         <div class="modal-dialog">
                             <div class="modal-content">

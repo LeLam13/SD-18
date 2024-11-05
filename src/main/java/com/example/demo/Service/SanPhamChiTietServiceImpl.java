@@ -26,11 +26,11 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService{
     @Override
     public Page<SanPhamChiTiet> findBySanPham(Integer idSanPham,Pageable pageable) {
 //        Pageable pageable = PageRequest.of(0, 1);
-        Page<SanPhamChiTiet> spct = sanPhamChiTietRepo.findByIdSanPham_IdSanPham(2,pageable);
-        System.out.println("check log page1: "+spct);
-        System.out.println("Total elements: " + spct.getTotalElements());
-        System.out.println("Total pages: " + spct.getTotalPages());
-        System.out.println("Content: " + spct.getContent());
+//        Page<SanPhamChiTiet> spct = sanPhamChiTietRepo.findByIdSanPham_IdSanPham(2,pageable);
+//        System.out.println("check log page1: "+spct);
+//        System.out.println("Total elements: " + spct.getTotalElements());
+//        System.out.println("Total pages: " + spct.getTotalPages());
+//        System.out.println("Content: " + spct.getContent());
         return sanPhamChiTietRepo.getByID(idSanPham, pageable);
     }
 

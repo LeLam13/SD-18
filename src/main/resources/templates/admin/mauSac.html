@@ -107,14 +107,14 @@
                                 <nav aria-label="Page navigation" class="d-flex justify-content-center mt-3">
                                     <ul class="pagination">
                                         <li class="page-item" ng-class="{ 'disabled': page === 0 }">
-                                            <a class="page-link" href="#" ng-click="previousPage()">&#8592; Trang
+                                            <a class="page-link" href="" ng-click="previousPage()">&#8592; Trang
                                                 trước</a>
                                         </li>
                                         <li class="page-item disabled">
                                             <span class="page-link">Trang {{ page + 1 }} / {{ totalPages }}</span>
                                         </li>
-                                        <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 }">
-                                            <a class="page-link" href="#" ng-click="nextPage()">Trang sau &#8594;</a>
+                                        <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1|| page + 1 === totalPages + 1 }">
+                                            <a class="page-link" href="" ng-click="nextPage()">Trang sau &#8594;</a>
                                         </li>
                                     </ul>
                                 </nav>

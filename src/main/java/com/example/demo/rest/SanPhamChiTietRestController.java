@@ -28,7 +28,7 @@ public class SanPhamChiTietRestController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "5") int size) {
         System.out.println("idSanPham"+idSanPham);
-        Pageable pageable = PageRequest.of(page, size, Sort.by("idSanPham").descending());
+        Pageable pageable = PageRequest.of(page, size, Sort.by("idSanPhamChiTiet").descending());
         Page<SanPhamChiTiet> sp = sanPhamChiTietService.findBySanPham(idSanPham, pageable); // Assuming this is your service method
 //        PagedModel<SanPham> pagedModel = assembler.toModel(sp);
         System.out.println("sp:" +sp);
