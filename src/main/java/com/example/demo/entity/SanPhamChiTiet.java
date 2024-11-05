@@ -81,7 +81,6 @@ public class SanPhamChiTiet {
     @JoinColumn(name = "id_kieu_dang")
     private KieuDang idKieuDang;
 
-<<<<<<< HEAD
     @ManyToOne
     @JoinColumn(name = "id_chat_lieu")
     private ChatLieu idChatLieu;
@@ -97,9 +96,9 @@ public class SanPhamChiTiet {
     @ManyToOne
     @JoinColumn(name = "id_hinh_anh")
     private HinhAnh idHinhAnh;
-=======
+
     @OneToMany(mappedBy = "sanPhamChiTiet")
     private List<DotGiamGiaSanPhamChiTiet> dotGiamGiaList; // Liên kết với bảng trung gian
->>>>>>> feature/login
+
 
 }
