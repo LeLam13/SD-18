@@ -1,11 +1,13 @@
 package com.example.demo.entity;
 
+import com.example.demo.entity.DotGiamGiaSanPhamChiTiet;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -14,32 +16,33 @@ public class DotGiamGia {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_giam_gia") // Khóa chính cho bảng giảm giá
+    @Column(name = "id_giam_gia")
     private int idGiamGia;
 
-    @Column(name = "giam_gia") // Trường này có thể là số tiền giảm hoặc tỷ lệ giảm
+    @Column(name = "giam_gia")
     private float giamGia;
 
-    @Column(name = "thoi_gian_bat_dau") // Thời gian bắt đầu của chương trình giảm giá
+    @Column(name = "thoi_gian_bat_dau")
     private LocalDateTime thoiGianBatDau;
 
-    @Column(name = "thoi_gian_ket_thuc") // Thời gian kết thúc của chương trình giảm giá
+    @Column(name = "thoi_gian_ket_thuc")
     private LocalDateTime thoiGianKetThuc;
 
-    @Column(name = "trang_thai") // 0: sắp diễn ra, 1: đang diễn ra, 2: đã kết thúc
+    @Column(name = "trang_thai")
     private int trangThai;
 
-
     @Column(name = "loai_giam_gia")
-    private int  loaiGiamGia; // hoặc boolean nếu bạn không cần giá trị null
+    private int loaiGiamGia;
 
     @CreationTimestamp
-    @Column(name = "create_date") // Thời gian tạo, tự động được gán khi bản ghi được tạo
+    @Column(name = "create_date")
     private LocalDateTime createDate;
 
     @UpdateTimestamp
-    @Column(name = "update_date") // Thời gian cập nhật, tự động được gán khi bản ghi được cập nhật
+    @Column(name = "update_date")
     private LocalDateTime updateDate;
 
-
+    // Thiết lập mối quan hệ với bảng trung gian
+    @OneToMany(mappedBy = "dotGiamGia")
+    private List<DotGiamGiaSanPhamChiTiet> sanPhamChiTietList; // Liên kết với bảng trung gian
 }

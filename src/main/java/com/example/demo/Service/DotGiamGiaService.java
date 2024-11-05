@@ -40,6 +40,9 @@ public class DotGiamGiaService {
         updateStatus(dotGiamGia);
         return dotGiamGiaRepository.save(dotGiamGia);
     }
+    public DotGiamGia getDotGiamGiaById(int id) {
+        return dotGiamGiaRepository.findById(id).orElse(null);
+    }
 
     public DotGiamGia getLastActiveDotGiamGia() {
         return dotGiamGiaRepository.findFirstByTrangThaiInOrderByThoiGianKetThucDesc(List.of(0, 1)).orElse(null);

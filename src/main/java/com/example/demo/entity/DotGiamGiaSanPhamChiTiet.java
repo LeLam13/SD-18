@@ -14,7 +14,8 @@ public class DotGiamGiaSanPhamChiTiet {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id; // Khóa chính cho bảng trung gian
+    @Column(name = "id") // Khóa chính cho bảng trung gian
+    private int id;
 
     @ManyToOne
     @JoinColumn(name = "id_giam_gia", referencedColumnName = "id_giam_gia", nullable = false)
@@ -25,8 +26,12 @@ public class DotGiamGiaSanPhamChiTiet {
     private SanPhamChiTiet sanPhamChiTiet; // Liên kết với thực thể SanPhamChiTiet
 
     @CreationTimestamp
-    private LocalDateTime createDate; // Thời gian tạo, tự động được gán khi bản ghi được tạo
+    @Column(name = "create_date") // Thời gian tạo, tự động được gán khi bản ghi được tạo
+    private LocalDateTime createDate;
 
     @UpdateTimestamp
-    private LocalDateTime updateDate; // Thời gian cập nhật, tự động được gán khi bản ghi được cập nhật
+    @Column(name = "update_date") // Thời gian cập nhật, tự động được gán khi bản ghi được cập nhật
+    private LocalDateTime updateDate;
+
+    // Có thể thêm các trường khác nếu cần
 }

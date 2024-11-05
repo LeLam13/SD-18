@@ -9,10 +9,6 @@ import lombok.*;
 @Entity
 @Table(name="vai_tro")
 @Data
-//@Getter
-//@Setter
-//@NoArgsConstructor
-//@AllArgsConstructor
 public class vaitro {
     @Id String ma;
     String ten;
