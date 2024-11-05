@@ -30,7 +30,7 @@ public class DonHangServiceImpl implements DonHangService{
     @Autowired
     TrangThaiRepo trangThaiRepo;
     @Autowired
-    khachhangRePo khachhangRePo;
+    KhachHangRepo khachhangRePo;
 
     @Override
     public List<SanPhamChiTiet> getAllProducts() {

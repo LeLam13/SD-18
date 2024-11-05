@@ -30,11 +30,9 @@ public class khachhang {
     private LocalDate ngaySinh; // Use LocalDate
 
     @Column(name = "so_dien_thoai")
-<<<<<<< HEAD
+
     private String soDienThoai; // Thay đổi thành String để tránh vấn đề với số không đầu
-=======
-    private String soDienThoai; // Change to String
->>>>>>> feature/khachhang
+
 
     @Column(name = "gioi_tinh")
     private boolean gioiTinh; // This is fine as boolean

@@ -1,29 +1,31 @@
 package com.example.demo.dto.reponse;
 
-<<<<<<< HEAD
 
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+//
+//@Data
+//@NoArgsConstructor
+//@AllArgsConstructor
+//public class KhachHangResponseDTO {
+//    private int idKhachHang;
+//
+//    private String maKhachHang;
+//
+//    private String hoTen;
+//
+//    private String soDienThoai;
+//
+//    private String diaChi;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class KhachHangResponseDTO {
-    private int idKhachHang;
-
-    private String maKhachHang;
-
-    private String hoTen;
-
-    private String soDienThoai;
-
-    private String diaChi;
-=======
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+@Data
 @Getter
 @Setter
 public class KhachHangResponseDTO {
@@ -53,5 +55,5 @@ public class KhachHangResponseDTO {
     private String usernameTaiKhoan;
 
 
->>>>>>> feature/khachhang
+
 }

@@ -50,7 +50,7 @@ public class HoaDonServiceImpl implements HoaDonService{
     @Autowired
     TrangThaiRepo trangThaiRepo;
     @Autowired
-    khachhangRePo khachhangRePo;
+    KhachHangRepo khachhangRePo;
     @Autowired
     KhuyenMaiRepo khuyenMaiRepo;
     @Autowired

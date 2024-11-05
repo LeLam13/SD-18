@@ -184,7 +184,7 @@ public class DonHangRestController {
         responseDTO.setTongTienSauKhuyenMai(donHang.getTongTienSauKhuyenMai());
         responseDTO.setGhiChu(donHang.getGhiChu());
         responseDTO.setTrangThaiThanhToan(donHang.getTrangThaiThanhToan());
-        responseDTO.setIDkhachHang(donHang.getKhachHang().getIdKhachHang());
+//        responseDTO.setIDkhachHang(donHang.getKhachHang().getIdKhachHang());
         responseDTO.setKhachHang(donHang.getKhachHang().getHoTen());
         responseDTO.setOldKhachHang(donHang.getKhachHang());
 

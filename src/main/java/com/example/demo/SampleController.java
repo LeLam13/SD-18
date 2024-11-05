@@ -89,10 +89,10 @@ public class SampleController {
 
         // Thiết lập các thuộc tính khác
         khachHang.setHoTen(dto.getHoTen());
-<<<<<<< HEAD
+
         //khachHang.setSoDienThoai(Integer.parseInt(dto.getSoDienThoai()));
-=======
->>>>>>> feature/khachhang
+
+
         khachHang.setSoDienThoai(dto.getSoDienThoai());
         khachHang.setDiaChi(dto.getDiaChi());
         khachHang.setGioiTinh(dto.isGioiTinh());
