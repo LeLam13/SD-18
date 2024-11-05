@@ -8,10 +8,10 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
     $scope.pageInput = 1; // Giá trị nhập từ ô input
 
     const pathName = window.location.pathname.split('/');
-    $scope.idSanPham = pathName[pathName.length - 1];
+    var idSanPham = pathName[pathName.length - 1];
 
     $scope.findAll = function () {
-        var url = `/admin/san-pham/${$scope.idSanPham}/find-all?page=${$scope.page}&size=${$scope.size}`;
+        var url = `/admin/san-pham/` + idSanPham + `/find-all?page=${$scope.page}&size=${$scope.size}`;
         $http.get(url).then(resp => {
             $scope.items = resp.data.content;
             $scope.totalPages = resp.data.totalPages; // Cập nhật tổng số trang
