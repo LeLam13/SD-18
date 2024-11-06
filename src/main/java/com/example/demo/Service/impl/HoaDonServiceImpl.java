@@ -68,6 +68,8 @@ public class HoaDonServiceImpl implements HoaDonService {
         return hoaDonRepo.findByMaHoaDonContaining(maHoaDon);
     }
 
+
+
     @Override
     public String generateRandomString(int length) {
         String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";

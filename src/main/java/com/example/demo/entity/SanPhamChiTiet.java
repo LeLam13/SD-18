@@ -54,6 +54,13 @@ public class SanPhamChiTiet {
     private String updateBy;
 
 
+//    @Column(name = "chat_lieu")
+//    private String chatLieu;
+
+
+//    @Column(name = "size")
+//    private String size;
+//
     @Column(name = "so_luong")
     private Integer soLuong;
 

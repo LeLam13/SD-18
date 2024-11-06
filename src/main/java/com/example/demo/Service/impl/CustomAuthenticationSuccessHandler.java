@@ -1,13 +1,18 @@
 package com.example.demo.Service.impl;
 
+import com.example.demo.entity.HoaDonChiTiet;
+import com.example.demo.repo.HoaDonChiTietRepo;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
 
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
@@ -30,4 +35,5 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
         response.sendRedirect(redirectUrl);
     }
+
 }
