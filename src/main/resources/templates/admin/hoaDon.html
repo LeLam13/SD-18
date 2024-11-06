@@ -76,6 +76,23 @@
             color: #dc3545;
             font-weight: bold;
         }
+
+        /* Hiệu ứng khi hover dòng */
+        .table-hover tbody tr:hover {
+            background-color: #f5f5f5;
+            cursor: pointer;
+        }
+
+        /* Căn giữa nội dung trong các ô */
+        .table td, .table th {
+            vertical-align: middle;
+        }
+
+        /* Điều chỉnh nút đóng ở phần header */
+        .modal-header .close {
+            padding: 0;
+            margin: 0;
+        }
     </style>
 </head>
 
@@ -83,12 +100,13 @@
 
 <div class="main-content" layout:fragment="content">
     <div class="page-content" ng-app="hoaDon-app" ng-controller="hoaDon-ctrl">
+
         <div class="container-fluid">
             <div class="col-xl-12">
 
                 <div class="d-flex justify-content-end mb-3">
                     <div class="input-group" style="width: 300px;"> <!-- Đặt chiều rộng của input group -->
-                        <input type="text" class="form-control" ng-model="searchMaHoaDon" placeholder="Tìm mã hóa đơn" />
+                        <input type="text" class="form-control" ng-model="searchMaHoaDon" placeholder="Tìm mã hóa đơn"/>
                         <div class="input-group-append">
                             <button class="btn btn-primary" ng-click="searchHoaDon()">Tìm kiếm</button>
                         </div>
@@ -110,12 +128,15 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Mã Hóa Đơn</th>
+                                        <th>Ngày Tạo</th>
+                                        <td>Mã Nhân Viên</td>
+                                        <td>Tên Khách Hàng</td>
                                         <th>Tổng Tiền</th>
                                         <th>Tổng Tiền Khuyến Mãi</th>
                                         <th>Tổng Tiền Sau Khuyến Mãi</th>
                                         <th>Ghi Chú</th>
                                         <th>Trạng Thái</th>
-
+                                        <th>Hành Động</th>
 
                                     </tr>
                                     </thead>
@@ -123,30 +144,44 @@
                                     <tr ng-repeat="hoaDon in hoaDons">
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ hoaDon.maHoaDon }}</td>
+                                        <td>{{ hoaDon.createBy}}</td>
+                                        <td>{{hoaDon.nhanVien.maNhanVien}}</td>
+                                        <td>{{hoaDon.khachHang.hoTen}}</td>
                                         <td>{{ hoaDon.tongTien | currency:'₫':0 }}</td>
                                         <td>{{ hoaDon.tongTienKhuyenMai | currency:'₫':0 }}</td>
                                         <td>{{ hoaDon.tongTienSauKhuyenMai | currency:'₫':0 }}</td>
                                         <td>{{ hoaDon.ghiChu }}</td>
-
                                         <td>
-                                            <span ng-class="{'status-complete': hoaDon.trangThaiThanhToan === 1, 'status-canceled': hoaDon.trangThaiThanhToan !== 1}">
-                                                {{ hoaDon.trangThaiThanhToan === 1 ? 'Hoàn thành' : 'Hủy đơn' }}
+                                            <span ng-class="{'status-complete': hoaDon.trangThaiThanhToan, 'status-canceled': !hoaDon.trangThaiThanhToan}">
+                                  {{ hoaDon.trangThaiThanhToan ? 'Hoàn thành' : 'Hủy đơn' }}
                                             </span>
                                         </td>
+                                        <td>
+                                            <button ng-click="viewDetails(hoaDon.idHoaDon)" class="btn btn-info">Xem Chi
+                                                Tiết
+                                            </button>
+                                        </td>
+
                                     </tr>
                                     </tbody>
                                     <nav aria-label="Page navigation">
                                         <ul class="pagination">
                                             <li class="page-item" ng-class="{'disabled': currentPage === 0}">
-                                                <a class="page-link" href="#" ng-click="getHoaDons(currentPage - 1)" aria-label="Previous">
+                                                <a class="page-link" href="#" ng-click="getHoaDons(currentPage - 1)"
+                                                   aria-label="Previous">
                                                     <span aria-hidden="true">&laquo;</span>
                                                 </a>
                                             </li>
-                                            <li class="page-item" ng-repeat="page in [].constructor(totalPages) track by $index" ng-class="{'active': $index === currentPage}">
-                                                <a class="page-link" href="#" ng-click="getHoaDons($index)">{{$index + 1}}</a>
+                                            <li class="page-item"
+                                                ng-repeat="page in [].constructor(totalPages) track by $index"
+                                                ng-class="{'active': $index === currentPage}">
+                                                <a class="page-link" href="#"
+                                                   ng-click="getHoaDons($index)">{{$index + 1}}</a>
                                             </li>
-                                            <li class="page-item" ng-class="{'disabled': currentPage >= totalPages - 1}">
-                                                <a class="page-link" href="#" ng-click="getHoaDons(currentPage + 1)" aria-label="Next">
+                                            <li class="page-item"
+                                                ng-class="{'disabled': currentPage >= totalPages - 1}">
+                                                <a class="page-link" href="#" ng-click="getHoaDons(currentPage + 1)"
+                                                   aria-label="Next">
                                                     <span aria-hidden="true">&raquo;</span>
                                                 </a>
                                             </li>
@@ -160,7 +195,56 @@
 
                 </div>
             </div>
+
         </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <div class="w-100 text-center">
+                            <h5 class="modal-title" id="detailsModalLabel">Chi Tiết Hóa Đơn</h5>
+                        </div>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-hover table-bordered text-center">
+                            <thead class="thead-dark">
+                            <tr>
+                                <th>Mã Hóa Đơn Chi Tiết</th>
+                                <th>Mã Sản Phẩm Chi Tiết</th>
+                                <th>Tên Sản Phẩm</th>
+                                <th>Số lượng</th>
+                                <th>Hình Ảnh</th>
+                                <th>Create Date</th>
+                                <th>Mô tả</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="items in detail" class="table-row">
+                                <td>{{ items.maHoaDonChiTiet }}</td>
+                                <td>{{ items.sanPhamChiTiet.ma }}</td>
+                                <td>{{ items.sanPhamChiTiet.ten }}</td>
+                                <td>{{ items.soLuong }}</td>
+                                <td>
+                                    <img ng-src="{{ items.sanPhamChiTiet.hinhAnh }}" alt="Hình ảnh"
+                                         style="width: 50px; height: auto;">
+                                </td>
+                                <td>{{ items.sanPhamChiTiet.createDate }}</td>
+                                <td>{{ items.sanPhamChiTiet.moTa }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" ng-click="closeModal()">Đóng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </div>
 

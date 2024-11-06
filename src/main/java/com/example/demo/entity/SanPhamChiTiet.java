@@ -50,7 +50,15 @@ public class SanPhamChiTiet {
     @Column(name = "update_by")
     private String updateBy;
 
+<<<<<<< HEAD
+=======
+//    @Column(name = "chat_lieu")
+//    private String chatLieu;
+>>>>>>> feature/hoadon
 
+//    @Column(name = "size")
+//    private String size;
+//
     @Column(name = "so_luong")
     private Integer soLuong;
 
