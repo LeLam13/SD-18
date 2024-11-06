@@ -100,7 +100,7 @@
                         <a href="#" class="dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
                            aria-expanded="false">
                             <i class="icon-shopping-cart"></i>
-                            <span class="cart-count">2</span>
+                            <span class="cart-count">{{ count() }}</span>
                         </a>
 
                         <div class="dropdown-menu dropdown-menu-right">
@@ -114,7 +114,7 @@
 
                                         <span class="cart-product-info">
                                             <span class="cart-product-qty">{{item.qty}}</span>
-<!--                                            x $84.00-->x ${{item.donGia}}
+<!--                                            x $84.00-->x {{item.donGia}}
                                         </span>
                                     </div><!-- End .product-cart-details -->
 
@@ -410,7 +410,7 @@
 
             <div class="products-container" data-layout="fitRows">
                 <div class="product-item furniture col-6 col-md-4 col-lg-3" ng-repeat="products in listProducts">
-                    <div class="product product-4">
+                    <div class="product product-4" >
                         <figure class="product-media">
                             <a href="product.html">
                                 <img src="assets/img/anh3.png" alt="Product image" class="product-image">
@@ -432,7 +432,7 @@
                             <!-- End .product-title -->
 
                             <div class="product-action">
-                                <button ng-click="count()" class="btn-product btn-cart"><span>add to cart</span><i
+                                <button ng-click="addProductIntocart(products.idSanPhamChiTiet)" class="btn-product btn-cart"><span>add to cart</span><i
                                         class="icon-long-arrow-right"></i></button>
                             </div><!-- End .product-action -->
                         </div><!-- End .product-body -->

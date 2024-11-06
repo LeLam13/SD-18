@@ -24,7 +24,7 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
 
     $scope.addProductIntocart= function (id){
         //alert("add OK");
-        var item = $scope.items.find(item=>item.id == id);
+        var item = $scope.items.find(item=>item.idSanPhamChiTiet == id);
         if(item){
             item.qty++;
             item.soLuong++;
@@ -40,7 +40,9 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
         }
     }
 
+
     $scope.count = function (){
+        return $scope.items.map(item => item.qty).reduce((total, qty) => total + qty, 0);
     }
 
     $scope.clearLocalStorage = function (){

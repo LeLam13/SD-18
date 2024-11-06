@@ -82,10 +82,10 @@
                             <tbody>
                             <tr ng-repeat="orderProduct in itemsOrder">
                                 <th scope="row">${index+1}</th>
-                                <td>{{mess}}</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                                <td>@mdo</td>
+                                <td>{{orderProduct.idSanPham.ten}}</td>
+                                <td>{{orderProduct.soLuong}}</td>
+                                <td>{{orderProduct.donGia}}</td>
+                                <td>{{orderProduct.donGia * orderProduct.soLuong}}</td>
                                 <td>
                                     <button type="button" class="btn btn-danger" style="width: 5px;">
                                         <i class="bi bi-trash3" style="font-size: 12px"></i>

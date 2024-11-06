@@ -74,7 +74,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
     //lấy sản phẩm
     $scope.getProducts = function (){
         $http.get("/don-hang/san-pham-chi-tiet").then(function (response){
-            console.log("check log: ",response)
+            console.log("check log get products: ",response)
             $scope.products = response.data;
         }).catch(function (errors){
             console.log(errors)
