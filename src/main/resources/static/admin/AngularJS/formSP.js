@@ -43,36 +43,43 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
     $scope.tables = []; // Mảng chứa các bảng màu với các kích thước tương ứng
 
 // Khi chọn màu
-    $scope.selectMauSac = function () {
-        $scope.currentMauSac.forEach(function(mau) {
-            // Kiểm tra màu đã có trong tables hay chưa
+    $scope.selectColor = function () {
+        $scope.selectedMauSac.forEach(function(mau) {
+            // Kiểm tra xem màu đã có trong tables chưa
             let existingTable = $scope.tables.find(t => t.mau.ten === mau.ten);
 
-            // Nếu chưa, thêm màu mới vào tables
+            // Nếu chưa tồn tại, thêm màu mới với tất cả kích cỡ hiện có từ các bảng trong tables
             if (!existingTable) {
-                $scope.tables.push({ mau: mau, sizes: [] });
+                // Tạo một danh sách kích cỡ mới bằng cách hợp nhất tất cả các kích cỡ hiện có trong các bảng
+                let allSizes = [];
+                $scope.tables.forEach(table => {
+                    table.size.forEach(size => {
+                        if (!allSizes.some(s => s.ten === size.ten)) {
+                            allSizes.push(size); // Thêm kích cỡ nếu chưa tồn tại trong allSizes
+                        }
+                    });
+                });
+
+                // Thêm màu mới với tất cả kích cỡ hiện có vào tables
+                $scope.tables.push({ mau: mau, size: allSizes });
             }
         });
     };
 
-// Thêm kích cỡ vào tất cả các màu hiện có
-    $scope.addSizeToAllMau = function () {
-        // Kiểm tra xem có màu nào trong tables hay chưa
-        if ($scope.tables.length === 0) {
-            alert("Vui lòng chọn màu trước khi chọn kích cỡ.");
-            return;
-        }
 
-        // Nếu đã có màu, tiếp tục thêm kích cỡ
+// Khi chọn kích cỡ
+    $scope.selectSize = function () {
         $scope.selectedKichCo.forEach(function(size) {
+            // Duyệt qua từng bảng màu hiện có và thêm kích cỡ vào từng bảng
             $scope.tables.forEach(function(table) {
-                // Thêm kích cỡ vào tất cả các màu, nếu kích cỡ chưa tồn tại
-                if (!table.sizes.some(s => s.ten === size.ten)) {
-                    table.sizes.push(size);
+                // Kiểm tra kích cỡ đã tồn tại trong bảng màu hiện tại chưa
+                if (!table.size.some(s => s.ten === size.ten)) {
+                    table.size.push(size); // Thêm kích cỡ nếu chưa có
                 }
             });
         });
     };
+
 
 
     // var httpThuocTinh = "";

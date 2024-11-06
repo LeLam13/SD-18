@@ -14,28 +14,34 @@
 <!-- ============================================================== -->
 <div class="main-content" layout:fragment="content">
     <div class="page-content" ng-app="formSP-app" ng-controller="san-pham-ctrl">
-<!--        <style>-->
-<!--            .er {-->
-<!--                color: red;-->
-<!--                font-size: 13px;-->
-<!--            }-->
-<!--        </style>-->
-<!--        <link th:href="@{/admin/css/fileupload.css}" rel="stylesheet" type="text/css"/>-->
-<!--        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">-->
+        <!--        <style>-->
+        <!--            .er {-->
+        <!--                color: red;-->
+        <!--                font-size: 13px;-->
+        <!--            }-->
+        <!--        </style>-->
+        <!--        <link th:href="@{/admin/css/fileupload.css}" rel="stylesheet" type="text/css"/>-->
+        <!--        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">-->
+        <div class="row">
+            <div class="col-sm-6">
+                <!-- Chọn màu sắc -->
+                <div class="mb-3">
+                    <label>Chọn Màu:</label>
+                    <select class="form-control" ng-model="selectedMauSac" multiple ng-change="selectColor()">
+                        <option ng-repeat="mau in mauSac" ng-value="mau">{{ mau.ten }}</option>
+                    </select>
+                </div>
 
-        <!-- Chọn màu sắc -->
-        <div>
-            <label>Chọn Màu:</label>
-            <select ng-options="mau as mau.ten for mau in mauSac" ng-model="currentMauSac" multiple ng-change="selectMauSac()">
-            </select>
+                <!-- Chọn kích cỡ -->
+                <div class="mb-3">
+                    <label>Chọn Kích Cỡ:</label>
+                    <select class="form-control" ng-model="selectedKichCo" multiple ng-change="selectSize()">
+                        <option ng-repeat="size in kichCo" ng-value="size">{{ size.ten }}</option>
+                    </select>
+                </div>
+            </div>
         </div>
 
-        <!-- Chọn kích cỡ -->
-        <div>
-            <label>Chọn Kích Cỡ:</label>
-            <select ng-options="size as size.ten for size in kichCo" ng-model="selectedKichCo" multiple ng-change="addSizeToAllMau()">
-            </select>
-        </div>
 
         <!-- Hiển thị bảng theo từng màu -->
         <div ng-repeat="table in tables" style="margin-top: 20px;">
@@ -43,35 +49,39 @@
             <table border="1">
                 <tr>
                     <th>Kích Cỡ</th>
+                    <th>Số lượng</th>
+                    <th>Đơn giá</th>
                 </tr>
-                <tr ng-repeat="size in table.sizes">
+                <tr ng-repeat="size in table.size">
                     <td>{{size.ten}}</td>
+                    <td><input type="number"></td>
+                    <td><input type="number"></td>
                 </tr>
             </table>
         </div>
 
     </div>
 
-<!-- End Page-content -->
+    <!-- End Page-content -->
 
-<footer class="footer">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-6">
-                <script>document.write(new Date().getFullYear())</script>
-                © ALLDY STORE.
-            </div>
-            <div class="col-sm-6">
-                <div class="text-sm-end d-none d-sm-block">
-                    Design & Develop by <a href="#!" class="text-decoration-underline">Themesbrand</a>
+    <footer class="footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+                    <script>document.write(new Date().getFullYear())</script>
+                    © ALLDY STORE.
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end d-none d-sm-block">
+                        Design & Develop by <a href="#!" class="text-decoration-underline">Themesbrand</a>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</footer>
-<script>
+    </footer>
+    <script>
 
-</script>
+    </script>
 </div>
 
 </body>
