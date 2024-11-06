@@ -62,5 +62,4 @@ public class SanPhamRestController {
         sanPhamService.updateTrangThai(idSanPham);
         return ResponseEntity.ok("");
     }
-
 }

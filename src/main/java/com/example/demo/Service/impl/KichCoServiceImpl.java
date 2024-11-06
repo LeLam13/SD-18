@@ -1,11 +1,9 @@
-package com.example.demo.Service;
+package com.example.demo.Service.impl;
 
+import com.example.demo.Service.KichCoService;
 import com.example.demo.dto.request.KichCoRequestDTO;
-import com.example.demo.dto.request.MauSacRequestDTO;
 import com.example.demo.entity.KichCo;
-import com.example.demo.entity.MauSac;
 import com.example.demo.repo.KichCoRepo;
-import com.example.demo.repo.MauSacRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

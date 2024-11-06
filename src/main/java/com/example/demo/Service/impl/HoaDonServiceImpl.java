@@ -1,9 +1,9 @@
-package com.example.demo.Service;
+package com.example.demo.Service.impl;
 
+import com.example.demo.Service.HoaDonService;
 import com.example.demo.dto.request.HoaDonResquestDTO;
 import com.example.demo.entity.*;
 import com.example.demo.repo.*;
-import com.itextpdf.io.font.FontConstants;
 import com.itextpdf.io.font.PdfEncodings;
 import com.itextpdf.io.image.ImageData;
 import com.itextpdf.io.image.ImageDataFactory;
@@ -20,8 +20,6 @@ import com.itextpdf.layout.border.DashedBorder;
 import com.itextpdf.layout.border.SolidBorder;
 import com.itextpdf.layout.element.*;
 import com.itextpdf.layout.property.TextAlignment;
-import com.itextpdf.layout.property.UnitValue;
-import com.lowagie.text.pdf.BaseFont;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,7 +30,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class HoaDonServiceImpl implements HoaDonService{
+public class HoaDonServiceImpl implements HoaDonService {
     @Autowired
     HoaDonRepo hoaDonRepo;
     @Autowired

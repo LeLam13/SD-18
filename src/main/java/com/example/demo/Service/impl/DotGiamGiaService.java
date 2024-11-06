@@ -1,4 +1,4 @@
-package com.example.demo.Service;
+package com.example.demo.Service.impl;
 
 import com.example.demo.entity.DotGiamGia;
 import com.example.demo.repo.DotGiamGiaRepository;
@@ -40,6 +40,16 @@ public class DotGiamGiaService {
         updateStatus(dotGiamGia);
         return dotGiamGiaRepository.save(dotGiamGia);
     }
+
+    public DotGiamGia getDotGiamGiaById(Integer id) {
+        return dotGiamGiaRepository.findById(id).orElse(null);
+
+
+
+    }
+
+
+
     public DotGiamGia getDotGiamGiaById(int id) {
         return dotGiamGiaRepository.findById(id).orElse(null);
     }
@@ -64,7 +74,7 @@ public class DotGiamGiaService {
     }
 
     // Scheduled method to automatically update discount statuses
-    @Scheduled(fixedRate = 10000) // Chạy mỗi 60 giây
+    @Scheduled(fixedRate = 10000) // Chạy mỗi 10 giây
     public void updateAllDiscountStatuses() {
         List<DotGiamGia> allDiscounts = dotGiamGiaRepository.findAll();
         LocalDateTime now = LocalDateTime.now();

@@ -1,5 +1,5 @@
 package com.example.demo;
-import com.example.demo.Service.EmailService;
+import com.example.demo.Service.impl.EmailService;
 import com.example.demo.dto.request.UserSignupRequestDTO;
 import com.example.demo.entity.khachhang;
 import com.example.demo.entity.taikhoan;

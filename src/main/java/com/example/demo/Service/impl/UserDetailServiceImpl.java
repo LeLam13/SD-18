@@ -1,8 +1,7 @@
-package com.example.demo.Service;
+package com.example.demo.Service.impl;
 
 import com.example.demo.entity.taikhoan;
 import com.example.demo.entity.vaitro;
-import com.example.demo.repo.taikhoanRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;

@@ -1,18 +1,15 @@
-package com.example.demo.Service;
+package com.example.demo.Service.impl;
 
-import com.example.demo.entity.SanPham;
+import com.example.demo.Service.DonHangOnlineService;
 import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.repo.SanPhamChiTietRepo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class DonHangOnlineServiceImpl implements DonHangOnlineService{
+public class DonHangOnlineServiceImpl implements DonHangOnlineService {
     @Autowired
     SanPhamChiTietRepo sanPhamChiTietRepo;
 

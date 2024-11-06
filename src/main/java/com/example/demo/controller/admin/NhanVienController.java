@@ -1,6 +1,6 @@
 package com.example.demo.controller.admin;
 
-import com.example.demo.Service.EmailService;
+import com.example.demo.Service.impl.EmailService;
 import com.example.demo.dto.request.NhanVienRequetsDTO;
 import com.example.demo.entity.nhanvien;
 import com.example.demo.entity.taikhoan;

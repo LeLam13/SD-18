@@ -1,8 +1,7 @@
-package com.example.demo.Service;
+package com.example.demo.Service.impl;
 
-import com.example.demo.dto.request.MauSacRequestDTO;
+import com.example.demo.Service.SanPhamService;
 import com.example.demo.dto.request.SanPhamRequestDTO;
-import com.example.demo.entity.MauSac;
 import com.example.demo.entity.SanPham;
 import com.example.demo.repo.SanPhamRepo;
 import org.springframework.beans.factory.annotation.Autowired;

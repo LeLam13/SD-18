@@ -143,6 +143,9 @@
     </span>
                 </td>
                 <td th:text="${dotGiamGia.loaiGiamGia == 0 ? 'Giảm theo phần trăm' : 'Giảm theo tiền'}"></td>
+                <td>
+                    <a th:href="@{/admin/dot-giam-gia/detail/{id}(id=${dotGiamGia.idGiamGia})}" class="btn btn-info">Detail</a>
+                </td>
             </tr>
             </tbody>
         </table>

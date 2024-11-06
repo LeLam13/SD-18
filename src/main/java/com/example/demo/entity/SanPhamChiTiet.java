@@ -1,13 +1,16 @@
 package com.example.demo.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -27,7 +30,7 @@ import java.util.List;
 public class SanPhamChiTiet {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_san_pham_chi_tiet") // Khóa chính cho bảng sản phẩm chi tiết
+    @Column(name = "id_san_pham_chi_tiet")
     private int idSanPhamChiTiet;
 
     @Column(name = "ma")
@@ -97,8 +100,7 @@ public class SanPhamChiTiet {
     @JoinColumn(name = "id_hinh_anh")
     private HinhAnh idHinhAnh;
 
-    @OneToMany(mappedBy = "sanPhamChiTiet")
-    private List<DotGiamGiaSanPhamChiTiet> dotGiamGiaList; // Liên kết với bảng trung gian
-
-
+    @ManyToMany(mappedBy = "sanPhamChiTietList",fetch = FetchType.LAZY)
+    @JsonBackReference
+    private List<DotGiamGia> dotGiamGiaList; // Liên kết với bảng trung gian
 }

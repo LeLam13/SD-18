@@ -1,5 +1,6 @@
-package com.example.demo.Service;
+package com.example.demo.Service.impl;
 
+import com.example.demo.Service.KhachHangService;
 import com.example.demo.dto.reponse.KhachHangResponseDTO;
 import com.example.demo.entity.khachhang;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,11 +9,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.example.demo.repo.*;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class KhachHangServiceImpl implements KhachHangService{
+public class KhachHangServiceImpl implements KhachHangService {
 
     @Autowired
     KhachHangRepo khachHangRepo; // Use the repository for data access

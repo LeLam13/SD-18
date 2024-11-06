@@ -1,7 +1,7 @@
 package com.example.demo.controller.admin;
 
 
-import com.example.demo.Service.DotGiamGiaService;
+import com.example.demo.Service.impl.DotGiamGiaService;
 import com.example.demo.dto.request.DotGiamGiaDTO;
 import com.example.demo.entity.DotGiamGia;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +23,8 @@ public class DotGiamGiaController {
 
     @PostMapping("/create")
     public String createDotGiamGia(@RequestParam("discountType") String discountType,
-                                   @RequestParam(value = "giamGiaPercent", required = false) Float giamGiaPercent,
-                                   @RequestParam(value = "giamGiaAmount", required = false) Float giamGiaAmount,
+                                   @RequestParam(value = "giamGiaPercent", required = false) Double giamGiaPercent,
+                                   @RequestParam(value = "giamGiaAmount", required = false) Double giamGiaAmount,
                                    @RequestParam("thoiGianBatDau") LocalDateTime thoiGianBatDau,
                                    @RequestParam("thoiGianKetThuc") LocalDateTime thoiGianKetThuc,
                                    Model model) {
@@ -71,6 +71,7 @@ public class DotGiamGiaController {
         List<DotGiamGiaDTO> dotGiamGiaDTOs = dotGiamGias.stream()
                 .map(dotGiamGia -> {
                     DotGiamGiaDTO dto = new DotGiamGiaDTO();
+                    dto.setIdGiamGia(dotGiamGia.getIdGiamGia());
                     dto.setGiamGia(dotGiamGia.getGiamGia());
                     dto.setThoiGianBatDau(dotGiamGia.getThoiGianBatDau().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
                     dto.setThoiGianKetThuc(dotGiamGia.getThoiGianKetThuc().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
@@ -83,6 +84,26 @@ public class DotGiamGiaController {
         model.addAttribute("dotGiamGias", dotGiamGiaDTOs);
         return "admin/create_dot_giam_gia";
     }
+
+    @GetMapping("/detail/{id}")
+    public String viewDotGiamGiaDetail(@PathVariable("id") Integer id, Model model) {
+        DotGiamGia dotGiamGia = dotGiamGiaService.getDotGiamGiaById(id);
+        if (dotGiamGia == null) {
+            model.addAttribute("error", "Đợt giảm giá không tồn tại.");
+            return "redirect:/admin/dot-giam-gia";
+        }
+        DotGiamGiaDTO dto = new DotGiamGiaDTO();
+        dto.setGiamGia(dotGiamGia.getGiamGia());
+        dto.setIdGiamGia(dotGiamGia.getIdGiamGia());
+        dto.setThoiGianBatDau(dotGiamGia.getThoiGianBatDau().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+        dto.setThoiGianKetThuc(dotGiamGia.getThoiGianKetThuc().format(DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm")));
+        dto.setTrangThai(dotGiamGia.getTrangThai());
+        dto.setLoaiGiamGia(dotGiamGia.getLoaiGiamGia());
+
+        model.addAttribute("dotGiamGia", dto);
+        return "admin/detail_dot_giam_gia"; // Trang hiển thị chi tiết đợt giảm giá
+    }
+
 
 
 }
