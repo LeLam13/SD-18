@@ -32,7 +32,7 @@ public class SampleController {
     private taikhoanRepo taikhoanRepo;
 
     @Autowired
-    KhachHangRepo khachHangRepo;
+    khachhangRePo khachHangRepo;
 
     @Autowired
     private vaitroRepo vaitroRepo;

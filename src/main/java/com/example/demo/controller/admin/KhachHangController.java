@@ -4,7 +4,7 @@ import com.example.demo.Service.KhachHangService;
 import com.example.demo.dto.reponse.KhachHangResponseDTO;
 import com.example.demo.dto.request.KhachHangRequestDTO;
 import com.example.demo.entity.khachhang;
-import com.example.demo.repo.KhachHangRepo;
+import com.example.demo.repo.khachhangRePo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,7 +22,7 @@ import java.util.List;
 public class KhachHangController {
 
     @Autowired
-    private KhachHangRepo khachHangRepo;
+    private khachhangRePo khachHangRepo;
 
     @Autowired
     private KhachHangService khachHangService;

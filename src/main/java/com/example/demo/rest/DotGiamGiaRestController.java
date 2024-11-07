@@ -34,10 +34,14 @@ public class DotGiamGiaRestController {
                     return dto;
                 })
                 .collect(Collectors.toList());
-
         // Trả về danh sách DTO dưới dạng JSON
         return ResponseEntity.ok(dotGiamGia1);
     }
+
+
+
+
+
 
 
 

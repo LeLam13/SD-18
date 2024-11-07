@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class KhachHangServiceImpl implements KhachHangService {
 
     @Autowired
-    KhachHangRepo khachHangRepo; // Use the repository for data access
+    khachhangRePo khachHangRepo; // Use the repository for data access
 
 
     @Override

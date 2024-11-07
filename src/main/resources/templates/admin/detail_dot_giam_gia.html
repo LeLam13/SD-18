@@ -1,13 +1,152 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!doctype html>
+<html lang="en" xmlns:th="http:/www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/admin/index}">
 <head>
-    <title>Chi Tiết Đợt Giảm Giá</title>
+    <title>ALLDY SNEAKER | Thêm sản phẩm vào đợt giảm giá</title>
 </head>
-<body>
-<h2>Chi Tiết Đợt Giảm Giá</h2>
-<div>Id:</strong> <span th:text="${dotGiamGia.idGiamGia}" ></span></p>
+<body data-topbar="dark">
+<div class="main-content" layout:fragment="content">
+
+    <style>
+        .imgProduct {
+            width: 100px;
+            height: 70px;
+        }
+    </style>
+
+    <div class="page-content">
+        <div class="container-fluid">
+
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <h4 class="mb-sm-0 font-size-18">Sản Phẩm</h4>
+                    </div>
+                </div>
+            </div>
+            <!-- end page title -->
+
+            <div class="row" ng-app="dot-giam-gia-admin" ng-controller="ctrl">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body" style="min-height: 450px">
+                            <!-- Bảng sản phẩm -->
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" ng-click="toggleSelectAll()" ng-model="selectAll" />
+                                    </th>
+                                    <th>STT</th>
+                                    <th>id sản phẩm</th>
+                                    <th>Mã</th>
+                                    <th>Tên Áo</th>
+                                    <th>Ngày Tạo</th>
+                                    <th>Trạng Thái</th>
+                                    <th>Thao Tác</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-if="items.length == 0">
+                                    <td colspan="7">
+                                        <h3 class="text-center col-12 mt-5">Không có sản phẩm liên quan</h3>
+                                    </td>
+                                </tr>
+                                <tr ng-repeat="p in items">
+                                    <td>
+                                        <input type="checkbox" ng-model="p.selected" ng-change="toggleSelection(p)" />
+                                    </td>
+                                    <td>{{ page * size + $index + 1 }}</td>
+                                    <td>{{ p.idSanPham }}</td>
+                                    <td>{{ p.ma }}</td>
+                                    <td>{{ p.ten }}</td>
+                                    <td>{{ p.createDate | date:'yyyy-MM-dd' }}</td>
+                                    <td>
+                                        <span ng-class="{'text-success': p.trangThai, 'text-danger': !p.trangThai}">
+                                            {{ p.trangThai ? "Đang hoạt động" : "Không hoạt động" }}
+                                        </span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <nav aria-label="Page navigation" class="d-flex justify-content-center mt-3">
+                                <ul class="pagination">
+                                    <li class="page-item" ng-class="{ 'disabled': page === 0 }">
+                                        <a class="page-link" href="" ng-click="previousPage()">&#8592; Trang trước</a>
+                                    </li>
+                                    <li class="page-item disabled">
+                                        <span class="page-link">Trang {{ page + 1 }} / {{ totalPages }}</span>
+                                    </li>
+                                    <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 || page + 1 === totalPages + 1 }">
+                                        <a class="page-link" href="" ng-click="nextPage()">Trang sau &#8594;</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                            <!-- Bảng chi tiết sản phẩm -->
+                            <!-- Bảng chi tiết sản phẩm -->
+                            <div ng-if="selectedProducts.length > 0">
+                                <h5>Chi tiết sản phẩm đã chọn:</h5>
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th><input type="checkbox"></th> <!-- Chọn tất cả -->
+                                        <th>STT</th>
+                                        <th>Tên</th>
+                                        <th>Số lượng</th>
+                                        <th>Giá bán</th>
+                                        <th>Màu sắc</th>
+                                        <th>Kích cỡ</th>
+                                        <th>Ngày Tạo</th>
+                                        <th>Trạng Thái</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="product in selectedProducts">
+                                        <td><input type="checkbox"></td>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ product.idSanPham.ten }}</td>
+                                        <td>{{ product.soLuong }}</td>
+                                        <td>{{ product.donGia }}</td>
+                                        <td>{{ product.idMauSac.ten }}</td>
+                                        <td>{{ product.idKichCo.ten }}</td>
+                                        <td>{{ product.createDate | date:'yyyy-MM-dd' }}</td>
+                                        <td>
+                    <span ng-class="{'text-success': product.trangThai, 'text-danger': !product.trangThai}">
+                        {{ product.trangThai ? "Đang hoạt động" : "Không hoạt động" }}
+                    </span>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+
+
+
+
+                        </div>
+                    </div>
+                </div> <!-- end col -->
+            </div> <!-- end row -->
+        </div>
+        <!-- container-fluid -->
+    </div>
+    <!-- End Page-content -->
+
+    <footer class="footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+                    <script>document.write(new Date().getFullYear())</script>
+                    © ALLDY STORE.
+                </div>
+            </div>
+        </div>
+    </footer>
 
 </div>
-<a href="/admin/dot-giam-gia" class="btn btn-secondary">Quay Lại</a>
+<!-- end main content-->
 </body>
 </html>

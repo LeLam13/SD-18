@@ -47,12 +47,12 @@ public class DotGiamGia {
     // Thiết lập mối quan hệ với bảng trung gian
 
     @ManyToMany( cascade = {CascadeType.PERSIST,CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "giam_gia_san_pham_chi_tiet",
-            joinColumns = @JoinColumn(name = "id_giam_gia"),
-            inverseJoinColumns = @JoinColumn(name = "id_san_pham_chi_tiet")
-    )
-    @Fetch(FetchMode.JOIN)
-    @JsonManagedReference
-    private List<SanPhamChiTiet> sanPhamChiTietList; // Liên kết với bảng trung gian
+@JoinTable(
+        name = "giam_gia_san_pham_chi_tiet",
+        joinColumns = @JoinColumn(name = "id_giam_gia"),
+        inverseJoinColumns = @JoinColumn(name = "id_san_pham_chi_tiet")
+)
+@Fetch(FetchMode.JOIN)
+@JsonManagedReference
+private List<SanPhamChiTiet> sanPhamChiTietList; // Liên kết với bảng trung gian
 }
