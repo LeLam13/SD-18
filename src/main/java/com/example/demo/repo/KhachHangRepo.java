@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface KhachHangRepo extends JpaRepository<khachhang, Integer> {
+public interface khachhangRePo extends JpaRepository<khachhang, Integer> {
     @Query("SELECT k FROM khachhang k WHERE k.soDienThoai = :soDienThoai")
     List<khachhang> findBySoDienThoai(String soDienThoai);
 
