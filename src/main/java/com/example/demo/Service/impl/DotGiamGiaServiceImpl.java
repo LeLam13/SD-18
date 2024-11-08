@@ -1,19 +1,26 @@
 package com.example.demo.Service.impl;
+
+import com.example.demo.dto.reponse.DotGiamGiaResponse;
 import com.example.demo.entity.DotGiamGia;
+import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.repo.DotGiamGiaRepository;
+import com.example.demo.repo.SanPhamChiTietRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class DotGiamGiaService {
+public class DotGiamGiaServiceImpl {
 
     @Autowired
     private DotGiamGiaRepository dotGiamGiaRepository;
 
+    @Autowired
+    private SanPhamChiTietRepo sanPhamChiTietRepository;
     public DotGiamGia createDotGiamGia(DotGiamGia dotGiamGia) {
         LocalDateTime now = LocalDateTime.now();
 
@@ -41,13 +48,7 @@ public class DotGiamGiaService {
 
     public DotGiamGia getDotGiamGiaById(Integer id) {
         return dotGiamGiaRepository.findById(id).orElse(null);
-
-
-
     }
-
-
-
     public DotGiamGia getDotGiamGiaById(int id) {
         return dotGiamGiaRepository.findById(id).orElse(null);
     }
@@ -81,5 +82,48 @@ public class DotGiamGiaService {
             updateStatus(discount); // Cập nhật trạng thái cho từng đợt giảm giá
             dotGiamGiaRepository.save(discount); // Lưu lại trạng thái đã cập nhật
         }
+    }
+
+    public DotGiamGia findById(Integer id) {
+        return dotGiamGiaRepository.findById(id).orElse(null);  // Trả về null nếu không tìm thấy
+    }
+
+    // Phương thức lưu đợt giảm giá
+    public DotGiamGia save(DotGiamGia dotGiamGia) {
+        return dotGiamGiaRepository.save(dotGiamGia);
+    }
+
+    public DotGiamGia addProductDetailToPromotion(Integer promotionId, List<Integer> productDetailIds){
+        DotGiamGia dotGiamGia = dotGiamGiaRepository.findById(promotionId).orElseThrow(() ->
+                new RuntimeException("Dot giảm giá không tồn tại")
+        );
+        if(productDetailIds.isEmpty()){
+            dotGiamGia.getSanPhamChiTietList().clear();
+            dotGiamGiaRepository.save(dotGiamGia);
+            return dotGiamGia;
+        }
+        List<SanPhamChiTiet> productDetails = sanPhamChiTietRepository.findAllByIdSanPhamChiTietIn(productDetailIds);
+
+        List<SanPhamChiTiet> productDetailList = sanPhamChiTietRepository.findAll();
+
+        List<Integer> foundIds = productDetails.stream()
+                .map(SanPhamChiTiet::getIdSanPhamChiTiet)
+                .toList();
+        List<Integer> notFoundIds = productDetailIds.stream()
+                .filter(id -> !foundIds.contains(id))
+                .toList();
+        if (!notFoundIds.isEmpty()) {
+            throw new RuntimeException("San pham chi tiet khong ton tai");
+        }
+        productDetailList.forEach(productDetail -> {
+            if (productDetail.getSoTienGiam() != null) {
+                productDetail.setDonGia(productDetail.getSoTienGiam());
+                productDetail.setSoTienGiam(null);
+            }
+        });
+        dotGiamGia.getSanPhamChiTietList().clear();
+        dotGiamGia.getSanPhamChiTietList().addAll(productDetails);
+        dotGiamGiaRepository.save(dotGiamGia);
+        return dotGiamGia;
     }
 }

@@ -35,6 +35,9 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     public List<SanPhamChiTiet> getAll() {
         return sanPhamChiTietRepo.findAll();
     }
-
+    // Phương thức để tìm danh sách chi tiết sản phẩm từ các ID
+    public List<SanPhamChiTiet> findByIds(List<Integer> sanPhamChiTietIds) {
+        return sanPhamChiTietRepo.findAllByIdSanPhamChiTietIn(sanPhamChiTietIds);
+    }
 
 }

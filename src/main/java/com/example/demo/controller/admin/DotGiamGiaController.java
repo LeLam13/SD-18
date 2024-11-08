@@ -1,7 +1,7 @@
 package com.example.demo.controller.admin;
 
 
-import com.example.demo.Service.impl.DotGiamGiaService;
+import com.example.demo.Service.impl.DotGiamGiaServiceImpl;
 import com.example.demo.dto.request.DotGiamGiaDTO;
 import com.example.demo.entity.DotGiamGia;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,8 @@ import java.util.stream.Collectors;
 public class DotGiamGiaController {
 
     @Autowired
-    private DotGiamGiaService dotGiamGiaService;
+    private DotGiamGiaServiceImpl dotGiamGiaService;
+
 
     @PostMapping("/create")
     public String createDotGiamGia(@RequestParam("discountType") String discountType,

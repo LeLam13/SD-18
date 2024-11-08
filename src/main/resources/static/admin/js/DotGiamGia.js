@@ -26,18 +26,18 @@ app.controller('ctrl', function ($scope, $http) {
             console.log("productId không hợp lệ:", productId);
             return;
         }
-
         $http.get(`/admin/san-pham/${productId}/find-all`).then(response => {
             console.log("Chi tiết sản phẩm:", response.data);
 
             if (response.data.content && response.data.content.length > 0) {
-                response.data.content.forEach(productDetail => {
-                    // Kiểm tra và thêm sản phẩm nếu chưa có trong danh sách
-                    if (!$scope.selectedProducts.some(p => p.idSanPham === productDetail.idSanPham && p.idCTSP === productDetail.idCTSP)) {
+                const productDetails = response.data.content;  // Lấy tất cả chi tiết sản phẩm
+
+                // Thêm từng chi tiết sản phẩm vào selectedProducts nếu chưa có
+                productDetails.forEach(productDetail => {
+                    const existingProduct = $scope.selectedProducts.some(p => p.idSanPham === productDetail.idSanPham);
+                    if (!existingProduct) {
                         $scope.selectedProducts.push(angular.copy(productDetail));
-                        console.log("Đã thêm sản phẩm chi tiết:", productDetail.idSanPham, "với CTSP:", productDetail.idCTSP);
-                    } else {
-                        console.log("Sản phẩm chi tiết đã có trong selectedProducts:", productDetail.idSanPham, "với CTSP:", productDetail.idCTSP);
+                        console.log("Đã thêm sản phẩm chi tiết:", productDetail.idSanPham);
                     }
                 });
             } else {
@@ -49,29 +49,36 @@ app.controller('ctrl', function ($scope, $http) {
     };
 
 
-    // Hàm chọn hoặc bỏ chọn một sản phẩm
+
     $scope.toggleSelection = function (product) {
         if (product.selected) {
+            // Khi chọn sản phẩm, gọi chi tiết sản phẩm
             if (product.idSanPham) {
                 console.log("Gọi chi tiết sản phẩm với ID:", product.idSanPham);
                 $scope.getProductDetail(product.idSanPham);
             }
         } else {
-            // Xóa tất cả các bản sao sản phẩm khỏi selectedProducts khi bỏ chọn
-            $scope.selectedProducts = $scope.selectedProducts.filter(p => p.idSanPham !== product.idSanPham);
-            console.log("Đã bỏ chọn sản phẩm ID:", product.idSanPham);
+            // Khi bỏ chọn sản phẩm, xóa chi tiết sản phẩm khỏi selectedProducts
+            const removedProduct = $scope.selectedProducts.find(p => p.idSanPham === product.idSanPham);
 
-            // Log danh sách ID sản phẩm hiện tại trong selectedProducts
-            console.log("Danh sách ID sản phẩm còn lại trong selectedProducts:",
-                $scope.selectedProducts.map(p => p.idSanPham));
+            // Nếu tìm thấy sản phẩm chi tiết trong selectedProducts thì xóa nó
+            if (removedProduct) {
+                $scope.selectedProducts = $scope.selectedProducts.filter(p => p.idSanPham !== product.idSanPham);
+                console.log("Đã bỏ chọn và xóa chi tiết sản phẩm ID:", product.idSanPham);
+            }
 
             // Cập nhật lại trạng thái của sản phẩm trong items
             const itemToUpdate = $scope.items.find(item => item.idSanPham === product.idSanPham);
             if (itemToUpdate) {
                 itemToUpdate.selected = false;
             }
+
+            // Cập nhật giao diện
+            $scope.$apply();  // Đảm bảo đồng bộ hóa giao diện
         }
     };
+
+
 
     // Hàm chọn tất cả sản phẩm
     $scope.toggleSelectAll = function () {
@@ -106,4 +113,41 @@ app.controller('ctrl', function ($scope, $http) {
 
     // Lấy dữ liệu khi trang được tải
     $scope.findAll();
+
+
+
+
+    $scope.selectedProductIds = []; // Mảng để lưu các id chi tiết sản phẩm đã chọn
+
+// Cập nhật mảng các ID chi tiết sản phẩm khi checkbox thay đổi
+    $scope.updateSelectedProducts = function(product) {
+        if (product.selected) {
+            // Thêm ID vào mảng nếu checkbox được chọn
+            $scope.selectedProductIds.push(product.idSanPhamChiTiet);
+        } else {
+            // Loại bỏ ID khỏi mảng nếu checkbox bị bỏ chọn
+            const index = $scope.selectedProductIds.indexOf(product.idSanPhamChiTiet);
+            if (index > -1) {
+                $scope.selectedProductIds.splice(index, 1);
+            }
+        }
+
+        // In mảng các ID chi tiết sản phẩm ra console để kiểm tra
+        console.log("Danh sách ID chi tiết sản phẩm đã chọn: ", $scope.selectedProductIds);
+    };
+
+// Chức năng chọn tất cả checkbox
+    $scope.toggleSelectAll = function(selectAll) {
+        // Nếu chọn tất cả, đánh dấu tất cả checkbox là true
+        angular.forEach($scope.selectedProducts, function(product) {
+            product.selected = selectAll;
+            $scope.updateSelectedProducts(product); // Cập nhật mảng khi chọn tất cả
+        });
+    };
+
+
+
+
+
+
 });

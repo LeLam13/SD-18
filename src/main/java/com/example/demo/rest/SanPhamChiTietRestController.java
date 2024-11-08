@@ -40,4 +40,10 @@ public class SanPhamChiTietRestController {
         List<SanPhamChiTiet> ms = sanPhamChiTietService.getAll();
         return ResponseEntity.ok(ms);
     }
+
+    @GetMapping("/admin/chitietsanpham/{idSanPhamChiTiet}")
+    public ResponseEntity<Integer> getSanPhamChiTietId(@PathVariable Integer idSanPhamChiTiet) {
+        // Trả về ID của sản phẩm chi tiết
+        return ResponseEntity.ok(idSanPhamChiTiet);
+    }
 }
