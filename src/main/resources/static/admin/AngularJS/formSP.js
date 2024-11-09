@@ -1,12 +1,12 @@
 var app = angular.module("formSP-app", [])
 app.controller("san-pham-ctrl", function ($scope, $http) {
 
-    $scope.mauSac=[];
-    $scope.chatLieu=[];
-    $scope.thuongHieu=[];
-    $scope.xuatXu=[];
-    $scope.kieuDang=[];
-    $scope.kichCo=[];
+    $scope.mauSac = [];
+    $scope.chatLieu = [];
+    $scope.thuongHieu = [];
+    $scope.xuatXu = [];
+    $scope.kieuDang = [];
+    $scope.kichCo = [];
     $scope.selectedMauSac = [];
     $scope.selectedKichCo = [];
 
@@ -39,12 +39,24 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
     $scope.getThuocTinh();
 
 
+    $scope.generateRandomString = function (length) {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let result = '';
+
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            result += characters[randomIndex];
+        }
+
+        return result;
+    };
+
 
     $scope.tables = []; // Mảng chứa các bảng màu với các kích thước tương ứng
 
 // Khi chọn màu
     $scope.selectColor = function () {
-        $scope.selectedMauSac.forEach(function(mau) {
+        $scope.selectedMauSac.forEach(function (mau) {
             // Kiểm tra xem màu đã có trong tables chưa
             let existingTable = $scope.tables.find(t => t.mau.ten === mau.ten);
 
@@ -61,7 +73,7 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
                 });
 
                 // Thêm màu mới với tất cả kích cỡ hiện có vào tables
-                $scope.tables.push({ mau: mau, size: allSizes });
+                $scope.tables.push({mau: mau, size: allSizes});
             }
         });
     };
@@ -69,9 +81,9 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
 
 // Khi chọn kích cỡ
     $scope.selectSize = function () {
-        $scope.selectedKichCo.forEach(function(size) {
+        $scope.selectedKichCo.forEach(function (size) {
             // Duyệt qua từng bảng màu hiện có và thêm kích cỡ vào từng bảng
-            $scope.tables.forEach(function(table) {
+            $scope.tables.forEach(function (table) {
                 // Kiểm tra kích cỡ đã tồn tại trong bảng màu hiện tại chưa
                 if (!table.size.some(s => s.ten === size.ten)) {
                     table.size.push(size); // Thêm kích cỡ nếu chưa có
@@ -80,7 +92,81 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
         });
     };
 
+// Hàm để loại bỏ dấu tiếng Việt
+    function removeVietnameseTones(str) {
+        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D');
+    }
 
+// Bộ lọc tùy chỉnh cho màu sắc
+    $scope.colorFilterFunction = function (mau) {
+        if (!$scope.colorSearch) return true;
+        let searchText = removeVietnameseTones($scope.colorSearch.toLowerCase());
+        let colorName = removeVietnameseTones(mau.ten.toLowerCase());
+        return colorName.includes(searchText);
+    };
+
+// Bộ lọc tùy chỉnh cho kích cỡ
+    $scope.sizeFilterFunction = function (size) {
+        if (!$scope.sizeSearch) return true;
+        let searchText = removeVietnameseTones($scope.sizeSearch.toLowerCase());
+        let sizeName = removeVietnameseTones(size.ten.toLowerCase());
+        return sizeName.includes(searchText);
+    };
+
+// Chọn màu phù hợp nhất tự động khi nhập
+    $scope.autoSelectColor = function () {
+        let filteredColors = $scope.mauSac.filter(mau => $scope.colorFilterFunction(mau));
+
+        if (filteredColors.length > 0) {
+            $scope.selectedMauSac = filteredColors[0];
+            $scope.selectColor();  // Cập nhật màu sắc đã chọn
+        }
+    };
+
+// Chọn kích cỡ phù hợp nhất tự động khi nhập
+    $scope.autoSelectSize = function () {
+        let filteredSizes = $scope.kichCo.filter(size => $scope.sizeFilterFunction(size));
+
+        if (filteredSizes.length > 0) {
+            $scope.selectedKichCo = filteredSizes[0];
+            $scope.selectSize();  // Cập nhật kích cỡ đã chọn
+        }
+    };
+
+
+    // Hàm xóa kích cỡ trong bảng màu
+    $scope.removeSize = function (table, size) {
+        let index = table.size.indexOf(size);
+        if (index > -1) {
+            table.size.splice(index, 1);  // Xóa kích cỡ khỏi bảng
+        }
+    };
+
+    $scope.form = {};
+    // Hàm thêm sản phẩm chi tiết với nhiều màu và nhiều kích cỡ
+    $scope.create = function () {
+        console.log("", $scope.tables);
+        $scope.tables.forEach(function (table) {
+            table.size.forEach(function (size) {
+                var sizeForm = $scope.form[table.mau.idMauSac] && $scope.form[table.mau.idMauSac][size.idKichCo];
+
+                var SanPhamChiTiet = {
+                    ma: $scope.generateRandomString(8), // Tạo mã ngẫu nhiên
+                    idMauSac: table.mau.idMauSac,  // ID màu sắc từ table
+                    idKichCo: size.idKichCo,       // ID kích cỡ từ size
+                    soLuong: sizeForm.soLuong,   // Số lượng từ input size
+                    giaNhap: sizeForm.giaNhap,   // Giá nhập từ input size
+                    giaBan: sizeForm.giaBan      // Giá bán từ input size
+                };
+                // Gửi dữ liệu lên server
+                $http.post("/admin/san-pham/chi-tiet/add", SanPhamChiTiet).then(function (r) {
+                    alert("Thêm sản phẩm chi tiết thành công!");
+                }).catch(function (err) {
+                    console.log("Thêm sản phẩm không thành công", err);
+                });
+            });
+        });
+    };
 
     // var httpThuocTinh = "";
     // var thuocTinhSL = undefined;
