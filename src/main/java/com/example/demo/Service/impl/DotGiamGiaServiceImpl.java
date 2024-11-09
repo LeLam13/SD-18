@@ -126,4 +126,52 @@ public class DotGiamGiaServiceImpl {
         dotGiamGiaRepository.save(dotGiamGia);
         return dotGiamGia;
     }
+
+
+
+
+
+    // Áp dụng giảm giá
+    public void applyDiscount(SanPhamChiTiet sanPhamChiTiet, DotGiamGia dotGiamGia) {
+        if (sanPhamChiTiet.getSoTienGiam() == null) { // Chỉ áp dụng nếu chưa có giảm giá
+            sanPhamChiTiet.setSoTienGiam(sanPhamChiTiet.getDonGia()); // Lưu giá gốc
+
+            if (dotGiamGia.getLoaiGiamGia() == 0) { // Giảm giá theo phần trăm
+                float discountAmount = sanPhamChiTiet.getDonGia() * (dotGiamGia.getGiamGia().floatValue() / 100);
+                sanPhamChiTiet.setDonGia(sanPhamChiTiet.getDonGia() - discountAmount);
+            } else if (dotGiamGia.getLoaiGiamGia() == 1) { // Giảm giá theo số tiền cụ thể
+                sanPhamChiTiet.setDonGia(sanPhamChiTiet.getDonGia() - dotGiamGia.getGiamGia().floatValue());
+            }
+        }
+    }
+
+    // Hoàn lại giá gốc sau khi kết thúc đợt giảm giá
+    public void revertDiscount(SanPhamChiTiet sanPhamChiTiet) {
+        if (sanPhamChiTiet.getSoTienGiam() != null) { // Chỉ hoàn lại nếu đã áp dụng giảm giá
+            sanPhamChiTiet.setDonGia(sanPhamChiTiet.getSoTienGiam()); // Khôi phục giá gốc
+            sanPhamChiTiet.setSoTienGiam(null); // Đặt lại soTienGiam thành null
+        }
+    }
+
+    // Tác vụ kiểm tra giảm giá định kỳ
+    @Scheduled(fixedRate = 10000) // Chạy mỗi phút
+    public void updateDiscounts() {
+        LocalDateTime now = LocalDateTime.now();
+
+        List<DotGiamGia> discountEvents = dotGiamGiaRepository.findAll();
+        for (DotGiamGia discountEvent : discountEvents) {
+            for (SanPhamChiTiet sanPhamChiTiet : discountEvent.getSanPhamChiTietList()) {
+                if (now.isAfter(discountEvent.getThoiGianBatDau()) && now.isBefore(discountEvent.getThoiGianKetThuc())) {
+                    // Đợt giảm giá đang diễn ra
+                    applyDiscount(sanPhamChiTiet, discountEvent);
+                } else if (now.isAfter(discountEvent.getThoiGianKetThuc())) {
+                    // Đợt giảm giá đã kết thúc
+                    revertDiscount(sanPhamChiTiet);
+                }
+                sanPhamChiTietRepository.save(sanPhamChiTiet); // Lưu cập nhật vào DB
+            }
+        }
+    }
+
+
 }
