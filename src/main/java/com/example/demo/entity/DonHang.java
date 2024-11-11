@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 @Data
 @Entity
 //@NoArgsConstructor
@@ -48,6 +50,21 @@ public class DonHang {
 
     @Column(name = "loai_don_hang")
     private Integer loaiDonHang;
+
+    @Column(name = "create_date")
+    @Temporal(TemporalType.DATE)
+    private LocalDate createDate;
+
+    @Column(name = "create_by")
+    private String createBy;
+
+    @Column(name = "update_date")
+    @Temporal(TemporalType.DATE)
+    private LocalDate updateDate;
+
+    @Column(name = "update_by")
+    private String updateBy;
+
     @ManyToOne
     @JoinColumn(name = "id_nhan_vien")
     private nhanvien nhanVien;

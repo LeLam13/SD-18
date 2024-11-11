@@ -10,4 +10,7 @@ import java.util.List;
 public interface khachhangRePo extends JpaRepository<khachhang, Integer> {
     @Query("SELECT k FROM khachhang k WHERE k.soDienThoai = :soDienThoai")
     List<khachhang> findBySoDienThoai( String soDienThoai);
+
+    @Query("SELECT k FROM khachhang k WHERE k.taikhoan.username = :username")
+    khachhang findByUsername(@Param("username") String username);
 }
