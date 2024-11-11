@@ -1,8 +1,7 @@
 package com.example.demo.Service.impl;
 
-<<<<<<< HEAD:src/main/java/com/example/demo/Service/impl/SanPhamChiTietServiceImpl.java
 import com.example.demo.Service.SanPhamChiTietService;
-=======
+
 import com.example.demo.dto.request.MauSacRequestDTO;
 import com.example.demo.dto.request.SanPhamChiTietRequestDTO;
 import com.example.demo.dto.request.SanPhamRequestDTO;
@@ -11,7 +10,6 @@ import com.example.demo.entity.KichCo;
 import com.example.demo.entity.KieuDang;
 import com.example.demo.entity.MauSac;
 import com.example.demo.entity.SanPham;
->>>>>>> feature/sanpham:src/main/java/com/example/demo/Service/SanPhamChiTietServiceImpl.java
 import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.entity.ThuongHieu;
 import com.example.demo.entity.XuatXu;
@@ -76,17 +74,17 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     public List<SanPhamChiTiet> getAll() {
         return sanPhamChiTietRepo.findAll();
     }
-<<<<<<< HEAD:src/main/java/com/example/demo/Service/impl/SanPhamChiTietServiceImpl.java
+
     // Phương thức để tìm danh sách chi tiết sản phẩm từ các ID
     public List<SanPhamChiTiet> findByIds(List<Integer> sanPhamChiTietIds) {
         return sanPhamChiTietRepo.findAllByIdSanPhamChiTietIn(sanPhamChiTietIds);
     }
-=======
+
 
     @Override
     public List<SanPhamChiTiet> createSanPhamChiTietList(List<SanPhamChiTietRequestDTO> sanPhamChiTietRequestDTOList) {
         List<SanPhamChiTiet> sanPhamChiTietList = new ArrayList<>();
->>>>>>> feature/sanpham:src/main/java/com/example/demo/Service/SanPhamChiTietServiceImpl.java
+
 
         for (SanPhamChiTietRequestDTO dto : sanPhamChiTietRequestDTOList) {
             SanPhamChiTiet chiTiet = new SanPhamChiTiet();

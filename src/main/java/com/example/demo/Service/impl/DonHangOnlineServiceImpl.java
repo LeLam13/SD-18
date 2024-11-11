@@ -1,17 +1,17 @@
 package com.example.demo.Service.impl;
 
-<<<<<<< HEAD:src/main/java/com/example/demo/Service/impl/DonHangOnlineServiceImpl.java
+
 import com.example.demo.Service.DonHangOnlineService;
 import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.repo.SanPhamChiTietRepo;
-=======
+
 import com.example.demo.dto.request.DonHangChiTietRequestDTO;
 import com.example.demo.dto.request.DonHangOnlineRequestDTO;
 import com.example.demo.dto.request.GioHAngChiTietRequestDTO;
 import com.example.demo.dto.request.GioHangRequestDTO;
 import com.example.demo.entity.*;
 import com.example.demo.repo.*;
->>>>>>> feature/banhang:src/main/java/com/example/demo/Service/DonHangOnlineServiceImpl.java
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
