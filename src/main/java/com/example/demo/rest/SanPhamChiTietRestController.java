@@ -46,9 +46,8 @@ public class SanPhamChiTietRestController {
     }
 
     @PostMapping("/admin/san-pham/chi-tiet/add")
-    public ResponseEntity<?> addSanPhamChiTiet(@RequestBody SanPhamChiTietRequestDTO sanPhamChiTietRequestDTO) {
-        System.out.println("data: " + sanPhamChiTietRequestDTO);
-        sanPhamChiTietService.createSanPhamChiTiet(sanPhamChiTietRequestDTO);
+    public ResponseEntity<?> addSanPhamChiTiet(@RequestBody List<SanPhamChiTietRequestDTO> sanPhamChiTietRequestDTO) {
+        sanPhamChiTietService.createSanPhamChiTietList(sanPhamChiTietRequestDTO);
         return ResponseEntity.ok(sanPhamChiTietRequestDTO);
     }
 }

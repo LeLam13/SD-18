@@ -17,5 +17,5 @@ public interface SanPhamChiTietService {
 
     public List<SanPhamChiTiet> getAll();
 
-    public SanPhamChiTiet createSanPhamChiTiet(SanPhamChiTietRequestDTO sanPhamChiTietRequestDTO);
+    public List<SanPhamChiTiet> createSanPhamChiTietList(List<SanPhamChiTietRequestDTO> sanPhamChiTietRequestDTOList);
 }

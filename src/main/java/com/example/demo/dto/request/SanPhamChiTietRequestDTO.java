@@ -26,14 +26,15 @@ public class SanPhamChiTietRequestDTO {
     private Date createDate;
     private Date updateDate;
     private Integer soLuong;
-    private Float donGia;
+    private Float giaNhap;
+    private Float giaBan;
     private String moTa;
-    private SanPham idSanPham;
-    private MauSac idMauSac;
-    private ThuongHieu idThuongHieu;
-    private KieuDang idKieuDang;
-    private ChatLieu idChatLieu;
-    private KichCo idKichCo;
-    private XuatXu idXuatXu;
-    private HinhAnh idHinhAnh;
+    private Integer idSanPham;
+    private Integer idMauSac;
+    private Integer idThuongHieu;
+    private Integer idKieuDang;
+    private Integer idChatLieu;
+    private Integer idKichCo;
+    private Integer idXuatXu;
+    private Integer idHinhAnh;
 }

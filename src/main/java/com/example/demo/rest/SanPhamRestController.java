@@ -51,6 +51,13 @@ public class SanPhamRestController {
         return ResponseEntity.ok(ms);
     }
 
+    @GetMapping("/admin/san-pham/get/{idSanPham}")
+    public ResponseEntity<?> getByIDSanPham(@PathVariable("idSanPham") Integer idSanPham) {
+        SanPham ms = sanPhamService.getByIdSanPham(idSanPham);
+        return ResponseEntity.ok(ms);
+    }
+
+
     @PostMapping("/admin/san-pham/update/{ma}")
     public ResponseEntity<?> updateSanPham(@RequestBody SanPhamRequestDTO sanPhamRequestDTO) {
         sanPhamService.updateSanPham(sanPhamRequestDTO);

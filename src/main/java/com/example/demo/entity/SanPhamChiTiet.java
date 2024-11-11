@@ -50,8 +50,11 @@ public class SanPhamChiTiet {
     @Column(name = "so_luong")
     private Integer soLuong;
 
-    @Column(name = "don_gia")
-    private Float donGia;
+    @Column(name = "gia_nhap")
+    private Float giaNhap;
+
+    @Column(name = "gia_ban")
+    private Float giaBan;
 
     @Column(name = "mo_ta")
     private String moTa;

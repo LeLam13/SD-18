@@ -7,8 +7,28 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
     $scope.xuatXu = [];
     $scope.kieuDang = [];
     $scope.kichCo = [];
-    $scope.selectedMauSac = [];
-    $scope.selectedKichCo = [];
+    $scope.selectedMauSac = "";
+    $scope.selectedKichCo = "";
+    $scope.selectedChatLieu = "";
+    $scope.selectedKieuDang = "";
+    $scope.selectedThuongHieu = "";
+    $scope.selectedXuatXu = "";
+
+    const pathName = window.location.pathname.split('/');
+    var idSanPham = pathName[pathName.length - 1];
+    if (idSanPham) {
+        $http.get("/admin/san-pham/get/" + idSanPham).then(response => {
+           let sanPham = response.data;
+           $scope.tenSP=sanPham.ten;
+            console.log("san pham: ", $scope.sanPham);
+        }).catch(error => {
+            console.error("Failed to fetch product details:", error);
+            alert("Could not load product details. Please try again later.");
+        });
+    } else {
+        console.error("Product ID is missing from the URL.");
+        alert("Invalid product ID. Please check the URL and try again.");
+    }
 
     $scope.getThuocTinh = function () {
         $http.get("/admin/mau-sac/get-all").then(r => {
@@ -134,39 +154,216 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
     };
 
 
-    // Hàm xóa kích cỡ trong bảng màu
+    // Hàm xóa hàng dựa trên trạng thái của checkbox
     $scope.removeSize = function (table, size) {
-        let index = table.size.indexOf(size);
-        if (index > -1) {
-            table.size.splice(index, 1);  // Xóa kích cỡ khỏi bảng
+        // Kiểm tra và khởi tạo đối tượng nếu chưa có trong $scope.form
+        if (!$scope.form[table.mau.idMauSac]) {
+            $scope.form[table.mau.idMauSac] = {allSelected: false};
+        }
+
+
+        if (!$scope.form[table.mau.idMauSac][size.idKichCo]) {
+            $scope.form[table.mau.idMauSac][size.idKichCo] = {selected: false};
+        }
+
+        // Nếu checkbox chính được chọn, xóa tất cả các hàng trong bảng
+        if ($scope.form[table.mau.idMauSac].allSelected) {
+            table.size = []; // Xóa tất cả các kích cỡ
+        } else {
+            // Nếu checkbox chính không được chọn, kiểm tra checkbox con
+            // Nếu checkbox con của kích cỡ không được chọn, vẫn có thể xóa
+            if (!$scope.form[table.mau.idMauSac][size.idKichCo].selected) {
+                // Xóa kích cỡ riêng lẻ nếu checkbox con không được chọn
+                let index = table.size.indexOf(size);
+                if (index > -1) {
+                    table.size.splice(index, 1); // Xóa kích cỡ khỏi bảng
+                }
+            } else {
+                // Nếu checkbox con được chọn, chỉ xóa hàng đó
+                if ($scope.form[table.mau.idMauSac][size.idKichCo].selected) {
+                    table.size = table.size.filter(function (sizeItem) {
+// Kiểm tra và khởi tạo selected nếu chưa tồn tại cho kích cỡ cụ thể
+                        if (!$scope.form[table.mau.idMauSac][sizeItem.idKichCo]) {
+                            $scope.form[table.mau.idMauSac][sizeItem.idKichCo] = {selected: false};
+                        }
+                        return !$scope.form[table.mau.idMauSac][sizeItem.idKichCo].selected;
+                    });
+                }
+            }
         }
     };
 
-    $scope.form = {};
-    // Hàm thêm sản phẩm chi tiết với nhiều màu và nhiều kích cỡ
+    $scope.form = {}; // Lưu thông tin nhập liệu và thông báo lỗi cho từng ô input
+
     $scope.create = function () {
-        console.log("", $scope.tables);
+        // Xóa các thông báo lỗi trước khi kiểm tra
         $scope.tables.forEach(function (table) {
             table.size.forEach(function (size) {
-                var sizeForm = $scope.form[table.mau.idMauSac] && $scope.form[table.mau.idMauSac][size.idKichCo];
-
-                var SanPhamChiTiet = {
-                    ma: $scope.generateRandomString(8), // Tạo mã ngẫu nhiên
-                    idMauSac: table.mau.idMauSac,  // ID màu sắc từ table
-                    idKichCo: size.idKichCo,       // ID kích cỡ từ size
-                    soLuong: sizeForm.soLuong,   // Số lượng từ input size
-                    giaNhap: sizeForm.giaNhap,   // Giá nhập từ input size
-                    giaBan: sizeForm.giaBan      // Giá bán từ input size
-                };
-                // Gửi dữ liệu lên server
-                $http.post("/admin/san-pham/chi-tiet/add", SanPhamChiTiet).then(function (r) {
-                    alert("Thêm sản phẩm chi tiết thành công!");
-                }).catch(function (err) {
-                    console.log("Thêm sản phẩm không thành công", err);
-                });
+                if (!$scope.form[table.mau.idMauSac]) $scope.form[table.mau.idMauSac] = {};
+                if (!$scope.form[table.mau.idMauSac][size.idKichCo]) $scope.form[table.mau.idMauSac][size.idKichCo] = {};
+                $scope.form[table.mau.idMauSac][size.idKichCo].errorMessages = {}; // Reset lỗi cho mỗi ô input
             });
         });
+
+        var hasError = false;
+        $scope.tables.forEach(function (table) {
+            table.size.forEach(function (size) {
+                var sizeForm = $scope.form[table.mau.idMauSac][size.idKichCo];
+
+                if (sizeForm) {
+                    // Kiểm tra số lượng
+                    if (sizeForm.soLuong <= 0) {
+                        sizeForm.errorMessages.soLuong = "Số lượng phải lớn hơn 0";
+                        hasError = true;
+                    }
+                    if (sizeForm.soLuong == null) {
+                        sizeForm.errorMessages.soLuong = "Số lượng không được để trống";
+                        hasError = true;
+                    }
+                    // Kiểm tra giá nhập
+                    if (sizeForm.giaNhap <= 0) {
+                        sizeForm.errorMessages.giaNhap = "Giá nhập phải lớn hơn 0";
+                        hasError = true;
+                    }
+                    if (sizeForm.giaNhap == null) { // Sửa lỗi thiếu dấu ngoặc tròn
+                        sizeForm.errorMessages.giaNhap = "Giá nhập không được để trống";
+                        hasError = true;
+                    }
+                    // Kiểm tra giá bán
+                    if (sizeForm.giaBan <= 0) {
+                        sizeForm.errorMessages.giaBan = "Giá bán phải lớn hơn 0";
+                        hasError = true;
+                    }
+                    if (sizeForm.giaBan == null) {
+                        sizeForm.errorMessages.giaBan = "Giá bán không được để trống";
+                        hasError = true;
+                    }
+                    // Kiểm tra giá nhập < giá bán
+                    if (sizeForm.giaNhap >= sizeForm.giaBan) {
+                        sizeForm.errorMessages.giaNhap = "Giá nhập phải nhỏ hơn giá bán";
+                        sizeForm.errorMessages.giaBan = "Giá bán phải lớn hơn giá nhập";
+                        hasError = true;
+                    }
+                }
+            });
+        });
+
+        // Nếu có lỗi, dừng lại và hiển thị thông báo lỗi, ngược lại tiếp tục thêm
+        if (hasError) {
+            return;
+        }
+        // Xử lý thêm sản phẩm chi tiết nếu không có lỗi
+        var SanPhamChiTietList = [];
+        $scope.tables.forEach(function (table) {
+            table.size.forEach(function (size) {
+                var sizeForm = $scope.form[table.mau.idMauSac][size.idKichCo];
+                var SanPhamChiTiet = {
+                    ma: $scope.generateRandomString(8),
+                    idMauSac: table.mau.idMauSac,
+                    idKichCo: size.idKichCo,
+                    idChatLieu: $scope.selectedChatLieu,
+                    idXuatXu: $scope.selectedXuatXu,
+                    idSanPham: idSanPham,
+                    idThuongHieu: $scope.selectedThuongHieu,
+                    idKieuDang: $scope.selectedKieuDang,
+                    soLuong: sizeForm.soLuong,
+                    giaNhap: sizeForm.giaNhap,
+                    giaBan: sizeForm.giaBan
+                };
+                SanPhamChiTietList.push(SanPhamChiTiet);
+            });
+        });
+
+        // Gửi dữ liệu lên server
+        $http.post("/admin/san-pham/chi-tiet/add", SanPhamChiTietList).then(function (r) {
+            alert("Thêm sản phẩm chi tiết thành công!");
+            location.href = `/admin/san-pham/` + idSanPham;
+        }).catch(function (err) {
+            console.log("Thêm sản phẩm không thành công", err);
+        });
+
     };
+
+
+// Hàm chọn tất cả checkbox con khi chọn checkbox chính
+    $scope.toggleAllCheckboxes = function (table) {
+        const colorId = table.mau.idMauSac;
+        const allSelected = $scope.form[colorId].allSelected;
+
+        table.size.forEach(function (size) {
+            // Đảm bảo rằng đối tượng form cho từng size tồn tại
+            if (!$scope.form[colorId][size.idKichCo]) {
+                $scope.form[colorId][size.idKichCo] = {};
+            }
+            $scope.form[colorId][size.idKichCo].selected = allSelected;
+        });
+    };
+
+// Hàm cập nhật giá trị cho tất cả các hàng được chọn khi nhập vào một trường bất kỳ
+    $scope.updateAllSelectedValues = function (field, value, table) {
+        const colorId = table.mau.idMauSac;
+
+        table.size.forEach(function (size) {
+            const sizeForm = $scope.form[colorId][size.idKichCo];
+
+            // Chỉ cập nhật các hàng được chọn
+            if (sizeForm && sizeForm.selected) {
+                sizeForm[field] = value;
+            }
+        });
+    };
+
+// Hàm để đồng bộ khi thay đổi giá trị ở checkbox con
+    $scope.syncSelectedValues = function (table, size) {
+        const colorId = table.mau.idMauSac;
+        const sizeForm = $scope.form[colorId][size.idKichCo];
+
+        // Nếu tất cả checkbox con đều được chọn, đánh dấu checkbox chính
+        $scope.form[colorId].allSelected = table.size.every(size =>
+            $scope.form[colorId][size.idKichCo] && $scope.form[colorId][size.idKichCo].selected
+        );
+    };
+
+
+// Hàm toggle cho màu sắc
+    $scope.toggleColorSelection = function (mau) {
+        if (mau.isSelected) {
+            $scope.selectedMauSac.push(mau);
+        } else {
+            const index = $scope.selectedMauSac.indexOf(mau);
+            if (index > -1) $scope.selectedMauSac.splice(index, 1);
+        }
+    };
+
+// Hàm toggle cho kích cỡ
+    $scope.toggleSizeSelection = function (size) {
+        if (size.isSelected) {
+            $scope.selectedKichCo.push(size);
+        } else {
+            const index = $scope.selectedKichCo.indexOf(size);
+            if (index > -1) $scope.selectedKichCo.splice(index, 1);
+        }
+    };
+
+
+    $scope.handleFileSelect = function(event, colorId, sizeId) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                // Create image data URL for preview
+                if (!$scope.form[colorId][sizeId]) {
+                    $scope.form[colorId][sizeId] = {};
+                }
+                $scope.form[colorId][sizeId].imageSrc = e.target.result;
+                $scope.form[colorId][sizeId].imageFile = file; // Store the file if you want to upload it later
+                $scope.$apply();
+            };
+            reader.readAsDataURL(file);
+        }
+    };
+
+
 
     // var httpThuocTinh = "";
     // var thuocTinhSL = undefined;
