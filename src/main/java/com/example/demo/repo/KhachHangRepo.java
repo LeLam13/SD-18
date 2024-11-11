@@ -9,6 +9,13 @@ import java.util.List;
 @Repository
 public interface khachhangRePo extends JpaRepository<khachhang, Integer> {
     @Query("SELECT k FROM khachhang k WHERE k.soDienThoai = :soDienThoai")
+<<<<<<< HEAD:src/main/java/com/example/demo/repo/KhachHangRepo.java
     List<khachhang> findBySoDienThoai(String soDienThoai);
 
+=======
+    List<khachhang> findBySoDienThoai( String soDienThoai);
+
+    @Query("SELECT k FROM khachhang k WHERE k.taikhoan.username = :username")
+    khachhang findByUsername(@Param("username") String username);
+>>>>>>> feature/banhang:src/main/java/com/example/demo/repo/khachhangRePo.java
 }

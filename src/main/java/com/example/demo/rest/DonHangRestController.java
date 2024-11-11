@@ -72,9 +72,8 @@ public class DonHangRestController {
         responseDTO1.setSoLuong(dhct.getSoLuong());
         responseDTO1.setDonGia(dhct.getDonGia());
 
-//        responseDTO1.setTenSanPham(dhct.getSanPhamChiTiet().getIdSanPham().getTen());
+        responseDTO1.setTenSanPham(dhct.getSanPhamChiTiet().getIdSanPham().getTen());
 //        responseDTO1.setTenSanPham(dhct.getSanPhamChiTiet().getTen());
-
         responseDTO1.setIdSanPham(dhct.getSanPhamChiTiet().getIdSanPhamChiTiet());
 
         return ResponseEntity.ok(responseDTO1);

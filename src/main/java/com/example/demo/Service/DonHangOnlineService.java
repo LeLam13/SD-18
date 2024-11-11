@@ -1,7 +1,9 @@
 package com.example.demo.Service;
 
-import com.example.demo.entity.SanPham;
-import com.example.demo.entity.SanPhamChiTiet;
+import com.example.demo.dto.request.DonHangOnlineRequestDTO;
+import com.example.demo.dto.request.GioHAngChiTietRequestDTO;
+import com.example.demo.dto.request.GioHangRequestDTO;
+import com.example.demo.entity.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -12,5 +14,19 @@ public interface DonHangOnlineService {
 
     SanPhamChiTiet getProductsByID(Integer id);
 
-//    Page<SanPhamChiTiet> findByIdSanPham(Integer idSanPham, Pageable pageable);
+    DonHang createOrder(DonHangOnlineRequestDTO donHangOnlineRequestDTO);
+    String generateRandomString(int length);
+
+
+    khachhang getUserLogin(String username);
+
+    GioHang createCart(GioHangRequestDTO gioHangRequestDTO);
+
+    GioHangChiTiet createDetailCart(GioHAngChiTietRequestDTO gioHAngChiTietRequestDTO);
+
+    GioHang getCart(String username);
+
+    List<GioHangChiTiet> getDetailCart(Integer idGioHang);
+
+    GioHangChiTiet updateCartDetail(GioHAngChiTietRequestDTO gioHAngChiTietRequestDTO);
 }
