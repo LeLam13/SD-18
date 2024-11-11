@@ -53,6 +53,12 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
+    public SanPham getByIdSanPham(Integer idSanPham) {
+        return sanPhamRepo.findByIdSanPham(idSanPham);
+    }
+
+
+    @Override
     public SanPham updateTrangThai(Integer idSanPham) {
         SanPham ms = sanPhamRepo.findByIdSanPham(idSanPham);
         if(ms.getTrangThai()==true){

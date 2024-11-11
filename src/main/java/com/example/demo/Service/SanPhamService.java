@@ -21,4 +21,6 @@ public interface SanPhamService {
     public SanPham updateSanPham(SanPhamRequestDTO sanPhamRequestDTO);
 
     public SanPham updateTrangThai(Integer idSanPham);
+
+    public SanPham getByIdSanPham(Integer idSanPham);
 }
