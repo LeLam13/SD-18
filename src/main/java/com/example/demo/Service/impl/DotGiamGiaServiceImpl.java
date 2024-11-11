@@ -47,11 +47,11 @@ public class DotGiamGiaServiceImpl {
     }
 
     public DotGiamGia getDotGiamGiaById(Integer id) {
-        return dotGiamGiaRepository.findById(id).orElse(null);
+        return dotGiamGiaRepository.findById(id).orElseThrow(()->{
+            throw new RuntimeException("Không tìm thấy id");
+        });
     }
-    public DotGiamGia getDotGiamGiaById(int id) {
-        return dotGiamGiaRepository.findById(id).orElse(null);
-    }
+
 
     public DotGiamGia getLastActiveDotGiamGia() {
         return dotGiamGiaRepository.findFirstByTrangThaiInOrderByThoiGianKetThucDesc(List.of(0, 1)).orElse(null);

@@ -58,6 +58,7 @@
                                     <td>
                                         <input type="checkbox" ng-model="p.selected" ng-change="toggleSelection(p)" />
                                     </td>
+
                                     <td>{{ page * size + $index + 1 }}</td>
                                     <td>{{ p.idSanPham }}</td>
                                     <td>{{ p.ma }}</td>
@@ -90,8 +91,10 @@
                                 <table class="table table-bordered">
                                     <thead>
                                     <tr>
-                                        <th><input type="checkbox" ng-model="selectAll" ng-change="toggleSelectAll(selectAll)"></th> <!-- Chọn tất cả -->
-                                        </th> <!-- Chọn tất cả -->
+                                        <th>
+                                            <!-- Checkbox 'Chọn tất cả' -->
+                                            <input type="checkbox" ng-model="selectAll2" ng-change="toggleSelectAll2(selectAll2)">
+                                        </th>
                                         <th>STT</th>
                                         <th>Id chi tiết sản phẩm</th>
                                         <th>Tên</th>
@@ -106,7 +109,7 @@
                                     <tbody>
                                     <tr ng-repeat="product in selectedProducts">
                                         <td>
-                                            <!-- Checkbox with data-product-id attribute -->
+                                            <!-- Checkbox của mỗi sản phẩm -->
                                             <input type="checkbox" ng-model="product.selected" ng-change="updateSelectedProducts(product)"
                                                    data-product-id="{{ product.idSanPhamChiTiet }}">
                                         </td>

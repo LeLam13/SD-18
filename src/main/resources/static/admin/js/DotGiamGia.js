@@ -136,14 +136,20 @@ app.controller('ctrl', function ($scope, $http) {
         console.log("Danh sách ID chi tiết sản phẩm đã chọn: ", $scope.selectedProductIds);
     };
 
-// Chức năng chọn tất cả checkbox
-    $scope.toggleSelectAll = function(selectAll) {
+    $scope.toggleSelectAll2 = function(selectAll2) {
         // Nếu chọn tất cả, đánh dấu tất cả checkbox là true
         angular.forEach($scope.selectedProducts, function(product) {
-            product.selected = selectAll;
-            $scope.updateSelectedProducts(product); // Cập nhật mảng khi chọn tất cả
+            product.selected = selectAll2; // Cập nhật trạng thái chọn/tích cho mỗi sản phẩm
         });
     };
+
+    $scope.updateSelectedProducts = function(product) {
+        // Cập nhật trạng thái của sản phẩm khi checkbox được thay đổi
+        // Thực hiện các thao tác bạn muốn với các sản phẩm đã chọn, ví dụ lưu vào mảng hoặc gọi API
+        console.log("Cập nhật sản phẩm:", product);
+    };
+
+
 
 
 

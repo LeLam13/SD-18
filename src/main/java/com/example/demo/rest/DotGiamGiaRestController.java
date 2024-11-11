@@ -27,7 +27,6 @@ public class DotGiamGiaRestController {
     public ResponseEntity<List<DotGiamGia>> listDotGiamGia() {
         // Lấy tất cả các đợt giảm giá từ service
         List<DotGiamGia> dotGiamGias = dotGiamGiaService.getAllDotGiamGia();
-
         // Chuyển đổi các đối tượng DotGiamGia thành DotGiamGiaDTO
         List<DotGiamGia> dotGiamGia1 = dotGiamGias.stream()
                 .map(dotGiamGia -> {
@@ -46,6 +45,10 @@ public class DotGiamGiaRestController {
         return ResponseEntity.ok(dotGiamGia1);
     }
 
+    @GetMapping("/api/v1/dotgiamgia/{idGiamGia}")
+    public DotGiamGia getidDotGiamGia(@PathVariable Integer idGiamGia){
+        return dotGiamGiaService.getDotGiamGiaById(idGiamGia);
+    }
     // API để thêm chi tiết sản phẩm vào đợt giảm giá
     // API xử lý thêm chi tiết sản phẩm vào đợt giảm giá
     @PostMapping("/admin/dot-giam-gia/{dotGiamGiaId}/add-san-pham")
