@@ -188,4 +188,13 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService{
         return oldGioHAngChiTiet;
     }
 
+    @Override
+    public GioHangChiTiet deleteAndReturnBySanPhamChiTietId(Integer idSanPhamChiTiet) {
+        GioHangChiTiet gioHangChiTiet = gioHangchiTietRepo.findBySanPhamChiTiet_IdSanPhamChiTiet(idSanPhamChiTiet);
+        if (gioHangChiTiet != null) {
+            gioHangchiTietRepo.delete(gioHangChiTiet);
+        }
+        return gioHangChiTiet;
+    }
+
 }
