@@ -206,7 +206,8 @@ public class restDonHangOnlineController {
         GioHangChiTietResponseDTO responseDTO = new GioHangChiTietResponseDTO();
 
         responseDTO.setIdGioHangChiTiet(gioHangChiTiet.getIdGioHangChiTiet());
-        responseDTO.setDonGia(gioHangChiTiet.getDonGia());
+//        responseDTO.setDonGia(gioHangChiTiet.getDonGia());
+        responseDTO.setGiaBan(gioHangChiTiet.getDonGia());
         responseDTO.setSoLuong(gioHangChiTiet.getSoLuong());
         responseDTO.setIdSanPham(gioHangChiTiet.getSanPhamChiTiet());
         responseDTO.setMaGioHangChiTiet(gioHangChiTiet.getMaGioHangChiTiet());
@@ -223,6 +224,18 @@ public class restDonHangOnlineController {
             return ResponseEntity.ok(gioHangChiTiet);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());  // Trả về lỗi với thông báo
+        }
+
+    }
+
+    @DeleteMapping("/gio-hang-chi-tiet/xoa-theo-id-san-pham/{id}")
+    public ResponseEntity<?> deleteCartdetail(@PathVariable("id")Integer id){
+        System.out.println("check id delete: "+id);
+        GioHangChiTiet deletedGioHangChiTiet = donHangOnlineService.deleteAndReturnBySanPhamChiTietId(id);
+        if (deletedGioHangChiTiet != null) {
+            return ResponseEntity.ok(deletedGioHangChiTiet); // Trả về đối tượng đã xóa
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy sản phẩm trong giỏ hàng với ID sản phẩm: " + id);
         }
 
     }

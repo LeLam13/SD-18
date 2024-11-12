@@ -31,7 +31,7 @@ import lombok.Setter;
 public class KhachHangResponseDTO {
 
     @JsonProperty("id_khach_hang")
-    private Long idKhachHang; // Match the type with entity
+    private Long id_khach_hang; // Match the type with entity
 
     @JsonProperty("ma_khach_hang")
     private String maKhachHang;

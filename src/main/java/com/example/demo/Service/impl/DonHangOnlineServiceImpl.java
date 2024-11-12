@@ -94,7 +94,7 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
 
             donHangChiTiet.setMaDonHangChiTiet(generateRandomString(8));
             donHangChiTiet.setSoLuong(dto.getSoLuong());
-            donHangChiTiet.setDonGia(dto.getDonGia());
+            donHangChiTiet.setDonGia(dto.getGiaBan());
             donHangChiTiet.setDonHang(donHang1);
 
             // Giả sử bạn có phương thức để tìm SanPhamChiTiet từ id
@@ -150,7 +150,7 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
         gioHangChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
         gioHangChiTiet.setMaGioHangChiTiet(gioHAngChiTietRequestDTO.getMaGioHangChiTiet());
         gioHangChiTiet.setSoLuong(1);
-        gioHangChiTiet.setDonGia(sanPhamChiTiet.getDonGia());
+        gioHangChiTiet.setDonGia(sanPhamChiTiet.getGiaBan());
         gioHangChiTiet.setTrangThai(true);
 
         gioHangchiTietRepo.save(gioHangChiTiet);
@@ -189,6 +189,15 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
         oldGioHAngChiTiet.setSoLuong(soLuong);
         gioHangchiTietRepo.save(oldGioHAngChiTiet);
         return oldGioHAngChiTiet;
+    }
+
+    @Override
+    public GioHangChiTiet deleteAndReturnBySanPhamChiTietId(Integer idSanPhamChiTiet) {
+        GioHangChiTiet gioHangChiTiet = gioHangchiTietRepo.findBySanPhamChiTiet_IdSanPhamChiTiet(idSanPhamChiTiet);
+        if (gioHangChiTiet != null) {
+            gioHangchiTietRepo.delete(gioHangChiTiet);
+        }
+        return gioHangChiTiet;
     }
 
 }

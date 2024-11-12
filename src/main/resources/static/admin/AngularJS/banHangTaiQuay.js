@@ -64,8 +64,9 @@ app.controller("banhang-ctrl", function ($scope, $http) {
                 $('#nameKH').val('');
                 $('#sdtKH').val('');
             }
-            $scope.khachHangById = response.data.oldKhachHang;
+            $scope.khachHangById = response.data;
             // $scope.productDetails = response.data;
+            console.log("check don hàng kh: ",$scope.khachHangById);
         }).catch(function (err){
             console.log("err: ", err);
         })
@@ -96,6 +97,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
     $scope.getKhachHang = function (){
         $http.get("/don-hang/get-khach-hang").then(function (response) {
             $scope.khachHang = response.data;
+            console.log("check get All khach hàng: ",$scope.khachHang);
         }).catch(function (errors) {
             console.error('Có lỗi xảy ra:', errors);
         })
@@ -106,9 +108,10 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         var idDH = $scope.selectedId;
         $http.get("/don-hang/get-khach-hang/" +id).then(function (response) {
             $scope.khachHangById = response.data;
-            $('#nameKH').val(response.data.hoTen);
-            $('#sdtKH').val(response.data.soDienThoai);
+            $('#nameKH').val(response.data.ho_ten);
+            $('#sdtKH').val(response.data.so_dien_thoai);
             $('#show-modal-khach').modal('hide');
+            console.log("$scope.khachHangById: ",$scope.khachHangById);
         }).catch(function (errors) {
             console.error('Có lỗi xảy ra:', errors);
         })
@@ -238,13 +241,14 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         var sdtKhachNhan = $('#sdtKHNhan').val();
         var diaChiKhachNhan = $('#soNha').val() +"-"+ $('#phuong option:selected').text() +"-"+$('#quan option:selected').text() +"-"+ $("#tinh option:selected").text();
 
+        console.log("check id khach hàng: ",$scope.khachHangById);
         $scope.hoaDonData ={
             maHoaDon: $scope.generateRandomString(8),
             idKhuyenMai: phieuGiamGia,
             idTrangThai: 5,//trạng thái của hoá đơn hoàn thành
             idPhuongThucThanhToan: phuongThucThanhToan,
             idDonHang: $scope.selectedId,
-            idKhachHang: $scope.khachHangById.idKhachHang,
+            idKhachHang: $scope.khachHangById.id_khach_hang,
             tenKhachHang: nameKH,
             tongTien: tongTien,
             tongTienKhuyenMai: $scope.getTienGiam(),
@@ -256,7 +260,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
             phuongThucNhan: $scope.shippingMethod,
             loaiDonHang: '1'
         }
-
+        console.log("check data hoa đon: ",$scope.hoaDonData);
         if($scope.hoaDonData.idDonHang === null){
             alert("Chưa Chọn đơn Hàng!");
             return;
@@ -449,7 +453,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         $scope.getProducts();
         console.log("Số Lượng Reduce: ",details);
         console.log("Số Lượng Reduce: ",details.soLuong);
-        console.log("Số Lượng Reduce: ",details.soLuong * details.donGia);
+        console.log("Số Lượng Reduce: ",details.soLuong * details.giaBan);
     }
     //Giảm Số Lượng
     $scope.soLuongReduce = function(details){
@@ -457,7 +461,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
             details.soLuong -=1;
             $scope.getProducts();
             console.log("Số Lượng plus: ",details.soLuong);
-            console.log("Số Lượng plus: ",details.soLuong * details.donGia);
+            console.log("Số Lượng plus: ",details.soLuong * details.giaBan);
         }
     }
     //lưu só lượng ban đầu
@@ -481,7 +485,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         }
         let sumMoney =0;
         $scope.productDetails.forEach(function (details){
-            sumMoney += details.soLuong * details.donGia;
+            sumMoney += details.soLuong * details.giaBan;
         });
         return sumMoney;
     }

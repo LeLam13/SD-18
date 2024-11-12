@@ -12,7 +12,7 @@ public class DonHangChiTietResponseDTO {
     private Integer idDonHangChiTiet;
     private String maDonHangChiTiet;
     private Integer soLuong;
-    private Float donGia;
+    private Float giaBan;
     private String  tenSanPham;
     private Integer idSanPham;
 }

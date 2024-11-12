@@ -15,4 +15,8 @@ public interface GioHangchiTietRepo extends JpaRepository<GioHangChiTiet, Intege
 
     @Query("SELECT g FROM GioHangChiTiet g WHERE g.sanPhamChiTiet.idSanPhamChiTiet = :idSanPhamChiTiet AND g.gioHang.idGioHang = :idGioHang")
     GioHangChiTiet findBySanPhamIdAndGioHangId(@Param("idSanPhamChiTiet") Integer idSanPhamChiTiet, @Param("idGioHang") Integer idGioHang);
+
+    GioHangChiTiet findBySanPhamChiTiet_IdSanPhamChiTiet(Integer idSanPhamChiTiet);
+
+    void deleteBySanPhamChiTiet_IdSanPhamChiTiet(Integer idSanPhamChiTiet);
 }

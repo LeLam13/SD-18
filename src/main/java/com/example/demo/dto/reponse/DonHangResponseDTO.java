@@ -22,7 +22,7 @@ public class DonHangResponseDTO {
     private Integer loaiDonHang;
     private String nhanVien;
     private String khachHang;
-    private Integer iDkhachHang;
+    private Long id_khach_hang;
     private khachhang oldKhachHang;
 
 }

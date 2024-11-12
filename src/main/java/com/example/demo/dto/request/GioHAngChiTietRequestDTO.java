@@ -9,5 +9,5 @@ public class GioHAngChiTietRequestDTO {
     private String maGioHangChiTiet;
     private Integer idSanPhamChiTiet;
     private Integer soLuong;
-    private Float donGia;
+    private Float giaBan;
 }

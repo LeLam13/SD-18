@@ -29,4 +29,5 @@ public interface DonHangOnlineService {
     List<GioHangChiTiet> getDetailCart(Integer idGioHang);
 
     GioHangChiTiet updateCartDetail(GioHAngChiTietRequestDTO gioHAngChiTietRequestDTO);
+    GioHangChiTiet  deleteAndReturnBySanPhamChiTietId(Integer idSanPhamChiTiet);
 }

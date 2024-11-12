@@ -52,7 +52,8 @@ public class DonHangRestController {
             responseDTO.setIdDonHangChiTiet(donHangChiTiet.getIdDonHangChiTiet());
             responseDTO.setMaDonHangChiTiet(donHangChiTiet.getMaDonHangChiTiet());
             responseDTO.setSoLuong(donHangChiTiet.getSoLuong());
-            responseDTO.setDonGia(donHangChiTiet.getDonGia());
+//            responseDTO.setDonGia(donHangChiTiet.getDonGia());
+            responseDTO.setGiaBan(donHangChiTiet.getDonGia());
             responseDTO.setIdSanPham(donHangChiTiet.getSanPhamChiTiet().getIdSanPhamChiTiet());
 //            responseDTO.setTenSanPham(donHangChiTiet.getSanPhamChiTiet().getTen());
 
@@ -70,7 +71,8 @@ public class DonHangRestController {
         responseDTO1.setIdDonHangChiTiet(dhct.getIdDonHangChiTiet());
         responseDTO1.setMaDonHangChiTiet(dhct.getMaDonHangChiTiet());
         responseDTO1.setSoLuong(dhct.getSoLuong());
-        responseDTO1.setDonGia(dhct.getDonGia());
+//        responseDTO1.setDonGia(dhct.getDonGia());
+        responseDTO1.setGiaBan(dhct.getDonGia());
 
         responseDTO1.setTenSanPham(dhct.getSanPhamChiTiet().getIdSanPham().getTen());
 //        responseDTO1.setTenSanPham(dhct.getSanPhamChiTiet().getTen());
@@ -89,7 +91,8 @@ public class DonHangRestController {
         responseDTO.setIdDonHangChiTiet(donHangChiTiet.getIdDonHangChiTiet());
         responseDTO.setMaDonHangChiTiet(donHangChiTiet.getMaDonHangChiTiet());
         responseDTO.setSoLuong(donHangChiTiet.getSoLuong());
-        responseDTO.setDonGia(donHangChiTiet.getDonGia());
+//        responseDTO.setDonGia(donHangChiTiet.getDonGia());
+        responseDTO.setGiaBan(donHangChiTiet.getDonGia());
 //        responseDTO.setTenSanPham(donHangChiTiet.getSanPhamChiTiet().getTen());
         responseDTO.setIdSanPham(donHangChiTiet.getSanPhamChiTiet().getIdSanPhamChiTiet());
         System.out.println("donHangChiTiet: "+donHangChiTiet);
@@ -129,6 +132,7 @@ public class DonHangRestController {
         donHangResponse.setGhiChu(donHang.getGhiChu());
         donHangResponse.setTrangThaiThanhToan(donHang.getTrangThaiThanhToan());
         donHangResponse.setOldKhachHang(donHang.getKhachHang());
+        donHangResponse.setId_khach_hang(donHang.getKhachHang().getIdKhachHang());
         //System.out.println("log check: "+donHang);
         return ResponseEntity.ok(donHangResponse);
     }
@@ -208,7 +212,7 @@ public class DonHangRestController {
         List<KhachHangResponseDTO> responseKHDTOList = new ArrayList<>();
         for (khachhang khachhang : listKhachHang) {
             KhachHangResponseDTO responseDTO = new KhachHangResponseDTO();
-            responseDTO.setIdKhachHang(khachhang.getIdKhachHang());
+            responseDTO.setId_khach_hang(khachhang.getIdKhachHang());
             responseDTO.setMaKhachHang(khachhang.getMaKhachHang());
             responseDTO.setHoTen(khachhang.getHoTen());
             responseDTO.setSoDienThoai(khachhang.getSoDienThoai());
@@ -258,7 +262,7 @@ public class DonHangRestController {
         for(khachhang kh: listKH){
             KhachHangResponseDTO khachHangResponseDTO = new KhachHangResponseDTO();
 
-            khachHangResponseDTO.setIdKhachHang(kh.getIdKhachHang());
+            khachHangResponseDTO.setId_khach_hang(kh.getIdKhachHang());
             khachHangResponseDTO.setMaKhachHang(kh.getMaKhachHang());
             khachHangResponseDTO.setHoTen(kh.getHoTen());
             khachHangResponseDTO.setDiaChi(kh.getDiaChi());
@@ -287,9 +291,10 @@ public class DonHangRestController {
             }
         }
 
-        HoaDon newHoaDon = hoaDonService.createHoaDon(hoaDon,username);
+       HoaDon newHoaDon = hoaDonService.createHoaDon(hoaDon,username);
 
-        System.out.println("hoa don: "+hoaDon);
+        System.out.println("hoa don checkll: "+hoaDon);
+//        return ResponseEntity.ok("");
         return ResponseEntity.ok(newHoaDon);
     }
     @GetMapping("/hoa-don/invoice")

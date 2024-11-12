@@ -165,8 +165,8 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
             maGioHangChiTiet: $scope.generateRandomString(8),
             idSanPhamChiTiet: idSanPhamChiTiet,
             soLuong: 1,
-            donGia:1
-            // donGia: $scope.cartDetaiPro.donGia
+            giaBan:1
+            // donGia:1
         }
 
         var dataCartDetail = angular.copy($scope.cartDetailData);
@@ -240,9 +240,27 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
     }
 
     $scope.removeLocalStorage = function (id){
-        var index = this.items.findIndex(item => item.id == id);
-        $scope.items.splice(index,1);
-        this.saveToLocalStorage();
+        console.log('check delete: ',id)
+        console.log('check delete: ',$scope.items)
+        if (!$scope.username){
+            var index = this.items.findIndex(item => item.sanPhamChiTiet.idSanPhamChiTiet == id);
+            $scope.items.splice(index,1);
+            this.saveToLocalStorage();
+        }else {
+            var item = this.items.find(item=>item.sanPhamChiTiet.idSanPhamChiTiet === id);
+            console.log('check delete index: ',item)
+            $http({
+                method: 'DELETE',
+                url: '/gio-hang-chi-tiet/xoa-theo-id-san-pham/' + item.sanPhamChiTiet.idSanPhamChiTiet
+            }).then(function(response) {
+                console.log("Đã xóa sản phẩm khỏi giỏ hàng:", response.data);
+                $scope.getDetailCart(response.data.gioHang.idGioHang);
+            }, function(error) {
+                // Xử lý lỗi
+                console.error("Lỗi khi xóa sản phẩm:", error.data);
+                alert("Không tìm thấy sản phẩm hoặc có lỗi khi xóa!");
+            });
+        }
     }
 
     $scope.saveToLocalStorage = function (){
@@ -307,16 +325,57 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
         icon: ''
     };
 
-    $scope.username = [];
+    $scope.username = null;
+    $scope.cart = [];
 
     //user
     $scope.getUser = function (){
         $http.get("/lay-tai-khoan").then(function (response){
-            console.log("check user: ",response);
+            //console.log("check user: ",response);
+            // $scope.username = response.data;
             $scope.username = response.data;
+            console.log("check user after setting: ", $scope.username);
+            if(!$scope.username){
+                console.log("check user: null");
+                $('#hoVaTen').val('');
+                $('#email').val('');
+                $('#soDienThoai').val('');
+                $scope.loadFromLocalStorage();
+            }else {
+                console.log("check user view gio hang: not null",$scope.username);
+                //hiển thị thông tin khách hàng khi đăng nhập
+                $('#hoVaTen').val(response.data.hoTen);
+                $('#email').val(response.data.email);
+                $('#soDienThoai').val(response.data.soDienThoai);
+
+                //lấy giỏ hàng chi tiết
+                $scope.itemsOrder =[];
+                $scope.getCart();
+            }
         }).catch(function (errors) {
             console.error("có lỗi xảy ra: ",errors)
         })
+    }
+    //lấy giỏ hàng
+    $scope.getCart = function (){
+        $http.get("/gio-hang/lay-theo-user").then(function (response){
+            console.log("check gio hang: ",response.data);
+            $scope.cart = response.data;
+            $scope.getDetailCart($scope.cart.idGioHang);
+        }).catch(function (errors) {
+            console.error("có lỗi xảy ra: ",errors)
+        })
+    }
+    //lấy giỏ hàng chi tiết
+    $scope.getDetailCart = function(idGioHang){
+        $http.get(`/gio-hang-chi-tiet/${idGioHang}`).then(response =>{
+            response.data.qty = response.data.soLuong;
+            // response.data.soLuong = 1;
+            console.log("check cart detail get id: ",response.data)
+            $scope.itemsOrder  = response.data;
+        }).catch(function(error) {
+            console.error('Có lỗi xảy ra:', error);
+        });
     }
 
     $scope.hideNotification = function (){
@@ -459,7 +518,7 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
         }
         let sumMoney = 0;
         $scope.itemsOrder.forEach(function (details){
-            sumMoney += details.soLuong * details.donGia;
+            sumMoney += details.soLuong * details.giaBan;
         });
         return sumMoney;
         //return  sumMoney;
@@ -578,45 +637,45 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
         }
 
 
-        // $scope.orderData ={
-        //     maDonHang: $scope.generateRandomString(8),
-        //     tenKhachHang: $('#hoVaTen').val(),
-        //     soDienThoaiKhachHang: $('#soDienThoai').val(),
-        //     diaChiKhachHang: diaChiNhan,
-        //     emailKhachHang: $('#email').val(),
-        //     tongTien: $scope.getSum(),
-        //     tongTienKhuyenMai: $scope.promotionAmount(),
-        //     tongTienSauKhuyenMai: $scope.totalPromotionAmountAfter(),
-        //     tongTienThanhToan: $scope.sumAmount(),
-        //     phiVanChuyen: $scope.getFeeShip(),
-        //     ghiChu: $('#ghi-chu').val(),
-        //     trangThaiThanhToan: false,
-        //     idTrangThai: 1,
-        //     idPhuongThucThanhToan: $scope.paymentMethod,
-        //     idKhuyenMai: 1,
-        //     orderDetail: $scope.itemsOrder
-        // };
-        // //console.log("check createOrederOnline: ",$scope.orderData);
-        // var dataOrder = angular.copy($scope.orderData);
-        // $http({
-        //     method: 'POST',
-        //     url: '/don-hang-online/them-moi',
-        //     data: dataOrder,
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     },
-        //     transformRequest: function(data) {
-        //         return JSON.stringify(data);
-        //     }
-        // }) .then(function(response) {
-        //     console.log("check fee order when create: ",response);
-        //     alert("Đặt hàng Thành công!")
-        // }).catch(function(error) {
-        //     alert("Đặt Hàng Thất Bại!")
-        //     console.error('Có lỗi xảy ra:', error);
-        // });
+        $scope.orderData ={
+            maDonHang: $scope.generateRandomString(8),
+            tenKhachHang: $('#hoVaTen').val(),
+            soDienThoaiKhachHang: $('#soDienThoai').val(),
+            diaChiKhachHang: diaChiNhan,
+            emailKhachHang: $('#email').val(),
+            tongTien: $scope.getSum(),
+            tongTienKhuyenMai: $scope.promotionAmount(),
+            tongTienSauKhuyenMai: $scope.totalPromotionAmountAfter(),
+            tongTienThanhToan: $scope.sumAmount(),
+            phiVanChuyen: $scope.getFeeShip(),
+            ghiChu: $('#ghi-chu').val(),
+            trangThaiThanhToan: false,
+            idTrangThai: 1,
+            idPhuongThucThanhToan: $scope.paymentMethod,
+            idKhuyenMai: 1,
+            orderDetail: $scope.itemsOrder
+        };
+        //console.log("check createOrederOnline: ",$scope.orderData);
+        var dataOrder = angular.copy($scope.orderData);
+        $http({
+            method: 'POST',
+            url: '/don-hang-online/them-moi',
+            data: dataOrder,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            transformRequest: function(data) {
+                return JSON.stringify(data);
+            }
+        }) .then(function(response) {
+            console.log("check fee order when create: ",response);
+            $scope.showNotification('Đặt hàng Thành công!','success')
+        }).catch(function(error) {
+            $scope.showNotification('Đặt Hàng Thất Bại!','error')
+            console.error('Có lỗi xảy ra:', error);
+        });
     }
-    //
+    //tăng số lượng
     $scope.soLuongPlus = function (orderProduct){
         // var cart = JSON.parse(localStorage.getItem("cart")) || [];
         var product = $scope.itemsOrder.find(item=>item.idSanPhamChiTiet === orderProduct.idSanPhamChiTiet);
@@ -635,6 +694,31 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
             product.soLuong = parseInt(product.soLuong) - 1;
             product.qty = parseInt(product.qty) - 1;
             this.saveToLocalStorage();
+        }
+    }
+
+    //giỏ hàng chi tiết
+    $scope.removeLocalStorage = function (id){
+        console.log('check delete: ',id)
+        console.log('check delete: ',$scope.items)
+        if (!$scope.username){
+            var index = this.items.findIndex(item => item.sanPhamChiTiet.idSanPhamChiTiet == id);
+            $scope.items.splice(index,1);
+            this.saveToLocalStorage();
+        }else {
+            var item = this.items.find(item=>item.sanPhamChiTiet.idSanPhamChiTiet === id);
+            console.log('check delete index: ',item)
+            $http({
+                method: 'DELETE',
+                url: '/gio-hang-chi-tiet/xoa-theo-id-san-pham/' + item.sanPhamChiTiet.idSanPhamChiTiet
+            }).then(function(response) {
+                console.log("Đã xóa sản phẩm khỏi giỏ hàng:", response.data);
+                $scope.getDetailCart(response.data.gioHang.idGioHang);
+            }, function(error) {
+                // Xử lý lỗi
+                console.error("Lỗi khi xóa sản phẩm:", error.data);
+                alert("Không tìm thấy sản phẩm hoặc có lỗi khi xóa!");
+            });
         }
     }
 

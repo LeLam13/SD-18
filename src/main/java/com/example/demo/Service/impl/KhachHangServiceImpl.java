@@ -28,7 +28,7 @@ public class KhachHangServiceImpl implements KhachHangService {
         List<khachhang> khachhangList = khachHangRepo.findAll();
         return khachhangList.stream().map(kh -> {
             KhachHangResponseDTO dto = new KhachHangResponseDTO();
-            dto.setIdKhachHang(kh.getIdKhachHang());
+            dto.setId_khach_hang(kh.getIdKhachHang());
             dto.setMaKhachHang(kh.getMaKhachHang());
             dto.setHoTen(kh.getHoTen());
             dto.setNgaySinh(kh.getNgaySinh().toString()); // Convert LocalDate to String
