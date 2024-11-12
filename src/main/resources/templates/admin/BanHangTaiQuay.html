@@ -199,9 +199,9 @@
                                                 <button ng-click="soLuongPlus(details)" class="btn btn-outline-secondary bi bi-plus-circle"></button>
                                             </div>
                                         </td>
-                                        <td>{{ details.donGia}}</td>
-                                        <td>{{ details.donGia}}</td>
-                                        <td>{{details.soLuong*details.donGia}}</td>
+                                        <td>{{ details.giaBan}}</td>
+                                        <td>{{ details.giaBan}}</td>
+                                        <td>{{details.soLuong*details.giaBan}}</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -267,8 +267,8 @@
                                         <td class="text-center">
                                             {{itemProducts.soLuong}}
                                         </td>
-                                        <td>{{itemProducts.donGia}}</td>
-                                        <td>{{itemProducts.donGia}}</td>
+                                        <td>{{itemProducts.giaBan}}</td>
+                                        <td>{{itemProducts.giaBan}}</td>
                                         <td class="text-center">
                                             <button ng-click="addProductsDetail(itemProducts.idSanPhamChiTiet)" class="btn btn-outline-secondary">
                                                 <i class="bi bi-cart-plus" style="font-size: 20px;"></i>
@@ -461,11 +461,11 @@
                                     <tbody>
                                     <tr ng-repeat="kh in khachHang">
                                         <th scope="row">{{ $index + 1 }}</th>
-                                        <td>{{ kh.maKhachHang }}</td>
-                                        <td>{{ kh.hoTen }}</td>
-                                        <td>{{ kh.soDienThoai }}</td>
+                                        <td>{{ kh.ma_khach_hang}}</td>
+                                        <td>{{ kh.ho_ten }}</td>
+                                        <td>{{ kh.so_dien_thoai }}</td>
                                         <td>
-                                            <button ng-click="getKhachHangByID(kh.idKhachHang)" type="button" class="btn btn-primary bi bi-box-fill"></button>
+                                            <button ng-click="getKhachHangByID(kh.id_khach_hang)" type="button" class="btn btn-primary bi bi-box-fill"></button>
                                         </td>
                                     </tr>
                                     </tbody>

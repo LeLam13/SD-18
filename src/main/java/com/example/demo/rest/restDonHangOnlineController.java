@@ -206,7 +206,8 @@ public class restDonHangOnlineController {
         GioHangChiTietResponseDTO responseDTO = new GioHangChiTietResponseDTO();
 
         responseDTO.setIdGioHangChiTiet(gioHangChiTiet.getIdGioHangChiTiet());
-        responseDTO.setDonGia(gioHangChiTiet.getDonGia());
+//        responseDTO.setDonGia(gioHangChiTiet.getDonGia());
+        responseDTO.setGiaBan(gioHangChiTiet.getDonGia());
         responseDTO.setSoLuong(gioHangChiTiet.getSoLuong());
         responseDTO.setIdSanPham(gioHangChiTiet.getSanPhamChiTiet());
         responseDTO.setMaGioHangChiTiet(gioHangChiTiet.getMaGioHangChiTiet());

@@ -165,8 +165,8 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
             maGioHangChiTiet: $scope.generateRandomString(8),
             idSanPhamChiTiet: idSanPhamChiTiet,
             soLuong: 1,
-            donGia:1
-            // donGia: $scope.cartDetaiPro.donGia
+            giaBan:1
+            // donGia:1
         }
 
         var dataCartDetail = angular.copy($scope.cartDetailData);
@@ -518,7 +518,7 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
         }
         let sumMoney = 0;
         $scope.itemsOrder.forEach(function (details){
-            sumMoney += details.soLuong * details.donGia;
+            sumMoney += details.soLuong * details.giaBan;
         });
         return sumMoney;
         //return  sumMoney;

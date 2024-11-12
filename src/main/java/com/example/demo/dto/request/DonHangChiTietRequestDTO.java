@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class DonHangChiTietRequestDTO {
     private String maDonHangChiTiet;
     private Integer soLuong;
-    private Float donGia;
+    private Float giaBan;
     private Integer idĐonHang;
     private Integer idSanPhamChiTiet;
 }

@@ -105,7 +105,7 @@ public class DonHangServiceImpl implements DonHangService {
 
         newDonHangCT.setMaDonHangChiTiet(chitietRequestDTO.getMaDonHangChiTiet());
         newDonHangCT.setSoLuong(chitietRequestDTO.getSoLuong());
-        newDonHangCT.setDonGia(oldSanPhamCT.getDonGia());
+        newDonHangCT.setDonGia(oldSanPhamCT.getGiaBan());
 
         DonHang oldDonHang = donHangRepo.findById(chitietRequestDTO.getIdĐonHang()).get();
         newDonHangCT.setDonHang(oldDonHang);
@@ -167,7 +167,7 @@ public class DonHangServiceImpl implements DonHangService {
     public KhachHangResponseDTO getKhachHangById(Integer id) {
         khachhang kh = khachhangRePo.findById(id).get();
         KhachHangResponseDTO  responseDTO = new KhachHangResponseDTO();
-        responseDTO.setIdKhachHang(kh.getIdKhachHang());
+        responseDTO.setId_khach_hang(kh.getIdKhachHang());
         responseDTO.setMaKhachHang(kh.getMaKhachHang());
         responseDTO.setDiaChi(kh.getDiaChi());
         responseDTO.setHoTen(kh.getHoTen());

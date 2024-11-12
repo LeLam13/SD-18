@@ -281,11 +281,11 @@ public class HoaDonServiceImpl implements HoaDonService {
             Table threeColTable2 = new Table(threeColumnWidth);
             float totalSum =0;
             for(SanPhamChiTiet spct:listSanPham){
-                float total = spct.getDonGia()* spct.getSoLuong();
+                float total = spct.getGiaBan()* spct.getSoLuong();
                 totalSum +=total;
                 threeColTable2.addCell(new Cell().add(spct.getIdSanPham().getTen()).setFont(pdfFont).setBorder(Border.NO_BORDER).setMarginLeft(10f));
                 threeColTable2.addCell(new Cell().add(String.valueOf(spct.getSoLuong())).setFont(pdfFont).setTextAlignment(TextAlignment.CENTER).setBorder(Border.NO_BORDER));
-                threeColTable2.addCell(new Cell().add(String.valueOf(spct.getDonGia())).setFont(pdfFont).setTextAlignment(TextAlignment.RIGHT).setBorder(Border.NO_BORDER).setMarginRight(15f));
+                threeColTable2.addCell(new Cell().add(String.valueOf(spct.getGiaBan())).setFont(pdfFont).setTextAlignment(TextAlignment.RIGHT).setBorder(Border.NO_BORDER).setMarginRight(15f));
             }
             document.add(threeColTable2.setMarginBottom(20f));
             float oneCol[] ={threecol+125f,threecol*2};
