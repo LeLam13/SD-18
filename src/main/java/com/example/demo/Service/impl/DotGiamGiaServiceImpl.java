@@ -117,10 +117,9 @@ public class DotGiamGiaServiceImpl {
         }
         productDetailList.forEach(productDetail -> {
             if (productDetail.getSoTienGiam() != null) {
-<<<<<<< HEAD
-=======
+
 //                productDetail.setDonGia(productDetail.getSoTienGiam());
->>>>>>> feature/banhang
+
                 productDetail.setGiaBan(productDetail.getSoTienGiam());
                 productDetail.setSoTienGiam(null);
             }
@@ -138,10 +137,10 @@ public class DotGiamGiaServiceImpl {
     // Áp dụng giảm giá
     public void applyDiscount(SanPhamChiTiet sanPhamChiTiet, DotGiamGia dotGiamGia) {
         if (sanPhamChiTiet.getSoTienGiam() == null) { // Chỉ áp dụng nếu chưa có giảm giá
-<<<<<<< HEAD
-=======
+
+
 //            sanPhamChiTiet.setSoTienGiam(sanPhamChiTiet.getDonGia()); // Lưu giá gốc
->>>>>>> feature/banhang
+
             sanPhamChiTiet.setSoTienGiam(sanPhamChiTiet.getGiaBan()); // Lưu giá gốc
 
 //            if (dotGiamGia.getLoaiGiamGia() == 0) { // Giảm giá theo phần trăm
@@ -162,10 +161,10 @@ public class DotGiamGiaServiceImpl {
     // Hoàn lại giá gốc sau khi kết thúc đợt giảm giá
     public void revertDiscount(SanPhamChiTiet sanPhamChiTiet) {
         if (sanPhamChiTiet.getSoTienGiam() != null) { // Chỉ hoàn lại nếu đã áp dụng giảm giá
-<<<<<<< HEAD
-=======
+
+
 //            sanPhamChiTiet.setDonGia(sanPhamChiTiet.getSoTienGiam()); // Khôi phục giá gốc
->>>>>>> feature/banhang
+
             sanPhamChiTiet.setGiaBan(sanPhamChiTiet.getSoTienGiam()); // Khôi phục giá gốc
             sanPhamChiTiet.setSoTienGiam(null); // Đặt lại soTienGiam thành null
         }
