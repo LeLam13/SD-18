@@ -128,9 +128,10 @@
                                     <tr>
                                         <th>ID</th>
                                         <th>Mã Hóa Đơn</th>
-                                        <th>Ngày Tạo</th>
-                                        <td>Mã Nhân Viên</td>
-                                        <td>Tên Khách Hàng</td>
+                                        <th>Người tạo</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Mã Nhân Viên</th>
+                                        <th>Tên Khách Hàng</th>
                                         <th>Tổng Tiền</th>
                                         <th>Tổng Tiền Khuyến Mãi</th>
                                         <th>Tổng Tiền Sau Khuyến Mãi</th>
@@ -145,6 +146,7 @@
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ hoaDon.maHoaDon }}</td>
                                         <td>{{ hoaDon.createBy}}</td>
+                                        <td>{{hoaDon.createDate}}</td>
                                         <td>{{hoaDon.nhanVien.maNhanVien}}</td>
                                         <td>{{hoaDon.khachHang.hoTen}}</td>
                                         <td>{{ hoaDon.tongTien | currency:'₫':0 }}</td>
@@ -203,46 +205,60 @@
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <!-- Modal Header -->
+                    <div class="modal-header" style="background-color: white; color: #000;">
                         <div class="w-100 text-center">
-                            <h5 class="modal-title" id="detailsModalLabel">Chi Tiết Hóa Đơn</h5>
+                            <h5 class="modal-title" id="detailsModalLabel" style="font-weight: bold; font-size: 24px;">Chi Tiết Hóa Đơn</h5>
                         </div>
                     </div>
-                    <div class="modal-body">
-                        <table class="table table-hover table-bordered text-center">
-                            <thead class="thead-dark">
-                            <tr>
-                                <th>Mã Hóa Đơn Chi Tiết</th>
-                                <th>Mã Sản Phẩm Chi Tiết</th>
-                                <th>Tên Sản Phẩm</th>
-                                <th>Số lượng</th>
-                                <th>Hình Ảnh</th>
-                                <th>Create Date</th>
-                                <th>Mô tả</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="items in detail" class="table-row">
-                                <td>{{ items.maHoaDonChiTiet }}</td>
-                                <td>{{ items.sanPhamChiTiet.ma }}</td>
-                                <td>{{ items.sanPhamChiTiet.ten }}</td>
-                                <td>{{ items.soLuong }}</td>
-                                <td>
-                                    <img ng-src="{{ items.sanPhamChiTiet.hinhAnh }}" alt="Hình ảnh"
-                                         style="width: 50px; height: auto;">
-                                </td>
-                                <td>{{ items.sanPhamChiTiet.createDate }}</td>
-                                <td>{{ items.sanPhamChiTiet.moTa }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
+                    <!-- Modal Body -->
+                    <div class="modal-body" style="padding: 0;">
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered text-center" style="background-color: #f9f9f9;">
+                                <thead style="background-color: #007bff; color: white;">
+                                <tr>
+                                    <th>Mã Hóa Đơn Chi Tiết</th>
+                                    <th>Mã Sản Phẩm Chi Tiết</th>
+                                    <th>Mã Sản Phẩm</th>
+                                    <th>Tên Sản Phẩm</th>
+                                    <th>Chất Liệu</th>
+                                    <th>Kích cỡ</th>
+                                    <th>Kiểu dáng</th>
+                                    <th>Số lượng</th>
+                                    <th>Hình Ảnh</th>
+                                    <th>Create Date</th>
+                                    <th>Mô tả</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="items in detail" class="table-row">
+                                    <td>{{ items.maHoaDonChiTiet }}</td>
+                                    <td>{{ items.sanPhamChiTiet.ma }}</td>
+                                    <td>{{items.sanPhamChiTiet.idSanPham.ma}}</td>
+                                    <td>{{items.sanPhamChiTiet.idSanPham.ten}}</td>
+                                    <td>{{items.sanPhamChiTiet.idChatLieu.ten}}</td>
+                                    <td>{{items.sanPhamChiTiet.idKichCo.ten}}</td>
+                                    <td>{{items.sanPhamChiTiet.idKieuDang.ten}}</td>
+                                    <td>{{ items.soLuong }}</td>
+                                    <td>
+                                        <img ng-src="{{ items.sanPhamChiTiet.idHinhAnh.ten }}" alt="Hình ảnh"
+                                             style="width: 50px; height: auto;">
+                                    </td>
+                                    <td>{{ items.sanPhamChiTiet.createDate }}</td>
+                                    <td>{{ items.sanPhamChiTiet.moTa }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class="modal-footer">
+                    <!-- Modal Footer -->
+                    <div class="modal-footer" style="background-color: #f8f9fa;">
                         <button type="button" class="btn btn-secondary" ng-click="closeModal()">Đóng</button>
                     </div>
                 </div>
             </div>
         </div>
+
 
 
     </div>
