@@ -117,7 +117,7 @@ public class DotGiamGiaServiceImpl {
         }
         productDetailList.forEach(productDetail -> {
             if (productDetail.getSoTienGiam() != null) {
-                productDetail.setDonGia(productDetail.getSoTienGiam());
+                productDetail.setGiaBan(productDetail.getSoTienGiam());
                 productDetail.setSoTienGiam(null);
             }
         });
@@ -134,13 +134,13 @@ public class DotGiamGiaServiceImpl {
     // Áp dụng giảm giá
     public void applyDiscount(SanPhamChiTiet sanPhamChiTiet, DotGiamGia dotGiamGia) {
         if (sanPhamChiTiet.getSoTienGiam() == null) { // Chỉ áp dụng nếu chưa có giảm giá
-            sanPhamChiTiet.setSoTienGiam(sanPhamChiTiet.getDonGia()); // Lưu giá gốc
+            sanPhamChiTiet.setSoTienGiam(sanPhamChiTiet.getGiaBan()); // Lưu giá gốc
 
             if (dotGiamGia.getLoaiGiamGia() == 0) { // Giảm giá theo phần trăm
-                float discountAmount = sanPhamChiTiet.getDonGia() * (dotGiamGia.getGiamGia().floatValue() / 100);
-                sanPhamChiTiet.setDonGia(sanPhamChiTiet.getDonGia() - discountAmount);
+                float discountAmount = sanPhamChiTiet.getGiaBan() * (dotGiamGia.getGiamGia().floatValue() / 100);
+                sanPhamChiTiet.setGiaBan(sanPhamChiTiet.getGiaBan() - discountAmount);
             } else if (dotGiamGia.getLoaiGiamGia() == 1) { // Giảm giá theo số tiền cụ thể
-                sanPhamChiTiet.setDonGia(sanPhamChiTiet.getDonGia() - dotGiamGia.getGiamGia().floatValue());
+                sanPhamChiTiet.setGiaBan(sanPhamChiTiet.getGiaBan() - dotGiamGia.getGiamGia().floatValue());
             }
         }
     }
@@ -148,7 +148,7 @@ public class DotGiamGiaServiceImpl {
     // Hoàn lại giá gốc sau khi kết thúc đợt giảm giá
     public void revertDiscount(SanPhamChiTiet sanPhamChiTiet) {
         if (sanPhamChiTiet.getSoTienGiam() != null) { // Chỉ hoàn lại nếu đã áp dụng giảm giá
-            sanPhamChiTiet.setDonGia(sanPhamChiTiet.getSoTienGiam()); // Khôi phục giá gốc
+            sanPhamChiTiet.setGiaBan(sanPhamChiTiet.getSoTienGiam()); // Khôi phục giá gốc
             sanPhamChiTiet.setSoTienGiam(null); // Đặt lại soTienGiam thành null
         }
     }
