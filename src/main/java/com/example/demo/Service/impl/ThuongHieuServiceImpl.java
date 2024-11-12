@@ -1,8 +1,7 @@
-package com.example.demo.Service;
+package com.example.demo.Service.impl;
 
-import com.example.demo.dto.request.MauSacRequestDTO;
+import com.example.demo.Service.ThuongHieuService;
 import com.example.demo.dto.request.ThuongHieuRequestDTO;
-import com.example.demo.entity.MauSac;
 import com.example.demo.entity.ThuongHieu;
 import com.example.demo.repo.ThuongHieuRepo;
 import org.springframework.beans.factory.annotation.Autowired;

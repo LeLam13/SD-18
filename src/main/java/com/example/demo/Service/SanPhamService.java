@@ -15,4 +15,12 @@ public interface SanPhamService {
     public Page<SanPham> findAll(Pageable pageable);
 
     public SanPham createSanPham(SanPhamRequestDTO sanPhamRequestDTO);
+
+    public SanPham getSanPham(String ma);
+
+    public SanPham updateSanPham(SanPhamRequestDTO sanPhamRequestDTO);
+
+    public SanPham updateTrangThai(Integer idSanPham);
+
+    public SanPham getByIdSanPham(Integer idSanPham);
 }

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -42,5 +43,30 @@ public class SanPhamRestController {
     public ResponseEntity<?> createSanPham(@RequestBody SanPhamRequestDTO sanPhamRequestDTO) {
         sanPhamService.createSanPham(sanPhamRequestDTO);
         return ResponseEntity.ok(sanPhamRequestDTO);
+    }
+
+    @GetMapping("/admin/san-pham/chiTiet/{ma}")
+    public ResponseEntity<?> getSanPham(@PathVariable("ma") String ma) {
+        SanPham ms = sanPhamService.getSanPham(ma);
+        return ResponseEntity.ok(ms);
+    }
+
+    @GetMapping("/admin/san-pham/get/{idSanPham}")
+    public ResponseEntity<?> getByIDSanPham(@PathVariable("idSanPham") Integer idSanPham) {
+        SanPham ms = sanPhamService.getByIdSanPham(idSanPham);
+        return ResponseEntity.ok(ms);
+    }
+
+
+    @PostMapping("/admin/san-pham/update/{ma}")
+    public ResponseEntity<?> updateSanPham(@RequestBody SanPhamRequestDTO sanPhamRequestDTO) {
+        sanPhamService.updateSanPham(sanPhamRequestDTO);
+        return ResponseEntity.ok(sanPhamRequestDTO);
+    }
+
+    @PostMapping("/admin/san-pham/updateTT/{idSanPham}")
+    public ResponseEntity<?> updateTrangThai(@PathVariable("idSanPham") Integer idSanPham) {
+        sanPhamService.updateTrangThai(idSanPham);
+        return ResponseEntity.ok("");
     }
 }

@@ -1,8 +1,7 @@
-package com.example.demo.Service;
+package com.example.demo.Service.impl;
 
-import com.example.demo.dto.request.MauSacRequestDTO;
+import com.example.demo.Service.SanPhamService;
 import com.example.demo.dto.request.SanPhamRequestDTO;
-import com.example.demo.entity.MauSac;
 import com.example.demo.entity.SanPham;
 import com.example.demo.repo.SanPhamRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,4 +38,36 @@ public class SanPhamServiceImpl implements SanPhamService {
         sp.setTrangThai(true);
         return sanPhamRepo.save(sp);
     }
+
+    @Override
+    public SanPham updateSanPham(SanPhamRequestDTO sanPhamRequestDTO) {
+        SanPham ms = sanPhamRepo.findByMa(sanPhamRequestDTO.getMa());
+        ms.setTen(sanPhamRequestDTO.getTen());
+        ms.setUpdateDate(date);
+        return sanPhamRepo.save(ms);
+    }
+
+    @Override
+    public SanPham getSanPham(String ma) {
+        return sanPhamRepo.findByMa(ma);
+    }
+
+    @Override
+    public SanPham getByIdSanPham(Integer idSanPham) {
+        return sanPhamRepo.findByIdSanPham(idSanPham);
+    }
+
+
+    @Override
+    public SanPham updateTrangThai(Integer idSanPham) {
+        SanPham ms = sanPhamRepo.findByIdSanPham(idSanPham);
+        if(ms.getTrangThai()==true){
+            ms.setTrangThai(false);
+        }
+        else{
+            ms.setTrangThai(true);
+        }
+        return sanPhamRepo.save(ms);
+    }
+
 }

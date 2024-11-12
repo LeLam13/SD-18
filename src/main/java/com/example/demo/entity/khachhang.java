@@ -1,18 +1,11 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDate;
 
-//@Data
+@Data
 @Entity
 @Table(name = "khach_hang")
 @Getter
@@ -22,7 +15,7 @@ import java.util.Date;
 public class khachhang {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int idKhachHang;
+    private Long idKhachHang; // Change to Long to match DTO
 
     @Column(name = "ma_khach_hang", length = 100)
     private String maKhachHang;
@@ -34,18 +27,22 @@ public class khachhang {
     private String email;
 
     @Column(name = "ngay_sinh")
-    private Date ngaySinh;
+    private LocalDate ngaySinh; // Use LocalDate
 
     @Column(name = "so_dien_thoai")
+
     private String soDienThoai; // Thay đổi thành String để tránh vấn đề với số không đầu
 
+
     @Column(name = "gioi_tinh")
-    private boolean gioiTinh;
+    private boolean gioiTinh; // This is fine as boolean
 
     @Column(name = "dia_chi", length = 300)
     private String diaChi;
 
     @OneToOne
     @JoinColumn(name = "username_tai_khoan", referencedColumnName = "username", unique = true)
-    private taikhoan taikhoan; // Tham chiếu đến tài khoản
+    private taikhoan taikhoan; // Reference to the account
+
+
 }

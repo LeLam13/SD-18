@@ -78,7 +78,7 @@
                         <td>{{ nv.soDienThoai }}</td>
                         <td>{{ nv.ngaySinh | date:'dd-MM-yyyy' }}</td>
                         <td>{{ nv.gioiTinh }}</td>
-                        <td>{{ nv.trangThai }}</td>
+                        <td>{{ nv.trangThai ? 'Đang làm việc' : 'Đã nghỉ việc' }}</td>
                         <td>{{ nv.taikhoan.email }}</td>
                         <td>
                             <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#updateModal" ng-click="getNhanVien(nv.idNhanVien)">Cập nhật</button>

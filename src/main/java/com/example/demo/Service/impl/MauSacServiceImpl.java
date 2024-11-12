@@ -1,5 +1,6 @@
-package com.example.demo.Service;
+package com.example.demo.Service.impl;
 
+import com.example.demo.Service.MauSacService;
 import com.example.demo.dto.request.MauSacRequestDTO;
 import com.example.demo.entity.MauSac;
 import com.example.demo.repo.MauSacRepo;

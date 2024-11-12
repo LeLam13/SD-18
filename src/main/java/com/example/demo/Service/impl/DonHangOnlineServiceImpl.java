@@ -1,4 +1,9 @@
-package com.example.demo.Service;
+package com.example.demo.Service.impl;
+
+
+import com.example.demo.Service.DonHangOnlineService;
+import com.example.demo.entity.SanPhamChiTiet;
+import com.example.demo.repo.SanPhamChiTietRepo;
 
 import com.example.demo.dto.request.DonHangChiTietRequestDTO;
 import com.example.demo.dto.request.DonHangOnlineRequestDTO;
@@ -6,10 +11,8 @@ import com.example.demo.dto.request.GioHAngChiTietRequestDTO;
 import com.example.demo.dto.request.GioHangRequestDTO;
 import com.example.demo.entity.*;
 import com.example.demo.repo.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.security.SecureRandom;
@@ -17,7 +20,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Service
-public class DonHangOnlineServiceImpl implements DonHangOnlineService{
+public class DonHangOnlineServiceImpl implements DonHangOnlineService {
     @Autowired
     SanPhamChiTietRepo sanPhamChiTietRepo;
     @Autowired

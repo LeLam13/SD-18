@@ -1,5 +1,6 @@
-package com.example.demo.Service;
+package com.example.demo.Service.impl;
 
+import com.example.demo.Service.DonHangTaiQuayService;
 import com.example.demo.dto.request.DonHangTaiQuayStatusRequestDTO;
 import com.example.demo.entity.DonHang;
 import com.example.demo.entity.DonHangChiTiet;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class DonHangTaiQuayImpl implements DonHangTaiQuayService{
+public class DonHangTaiQuayImpl implements DonHangTaiQuayService {
     @Autowired
     DonHangRepo donHangRepo;
     @Autowired

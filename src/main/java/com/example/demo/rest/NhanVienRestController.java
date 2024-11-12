@@ -25,7 +25,7 @@ public class NhanVienRestController {
     public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") int page,
                                      @RequestParam(defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<nhanvien> nhanViens = nhanVienService.getActiveNhanVien(pageable); // Lấy danh sách nhân viên có trạng thái true
+        Page<nhanvien> nhanViens = nhanVienService.getActiveNhanVien(pageable);
         return ResponseEntity.ok(nhanViens); // Trả về trang hiện tại cùng dữ liệu
     }
 

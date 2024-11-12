@@ -1,6 +1,6 @@
-package com.example.demo.Service;
+package com.example.demo.Service.impl;
 
-import com.example.demo.dto.request.MauSacRequestDTO;
+import com.example.demo.Service.XuatXuService;
 import com.example.demo.dto.request.XuatXuRequestDTO;
 import com.example.demo.entity.XuatXu;
 import com.example.demo.repo.XuatXuRepo;

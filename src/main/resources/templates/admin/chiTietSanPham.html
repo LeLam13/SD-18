@@ -67,6 +67,10 @@
                                     <tr>
                                         <th>STT</th>
                                         <th>Mã</th>
+                                        <th>Số lượng</th>
+                                        <th>Giá bán</th>
+                                        <th>Màu sắc</th>
+                                        <th>Kích cỡ</th>
                                         <th>Ngày Tạo</th>
                                         <th>Trạng Thái</th>
                                         <th>Thao Tác</th>
@@ -75,9 +79,18 @@
 
 
                                     <tbody>
+                                    <tr ng-if="items.length == 0">
+                                        <td colspan="8">
+                                            <h3 class="text-center col-12 mt-5">Không có sản phẩm chi tiết</h3>
+                                        </td>
+                                    </tr>
                                     <tr ng-repeat="m in items">
                                         <td>{{ page * size + $index + 1 }}</td>
                                         <td>{{m.ma}}</td>
+                                        <td>{{m.soLuong}}</td>
+                                        <td>{{m.giaBan}}</td>
+                                        <td>{{m.idMauSac.ten}}</td>
+                                        <td>{{m.idKichCo.ten}}</td>
                                         <td>{{m.createDate | date:'yyyy-MM-dd'}}</td>
                                         <td>
         <span ng-class="{'text-success': m.trangThai, 'text-danger': !m.trangThai}">
@@ -105,14 +118,14 @@
                                 <nav aria-label="Page navigation" class="d-flex justify-content-center mt-3">
                                     <ul class="pagination">
                                         <li class="page-item" ng-class="{ 'disabled': page === 0 }">
-                                            <a class="page-link" href="#" ng-click="previousPage()">&#8592; Trang
+                                            <a class="page-link" href="" ng-click="previousPage()">&#8592; Trang
                                                 trước</a>
                                         </li>
                                         <li class="page-item disabled">
                                             <span class="page-link">Trang {{ page + 1 }} / {{ totalPages }}</span>
                                         </li>
-                                        <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 }">
-                                            <a class="page-link" href="#" ng-click="nextPage()">Trang sau &#8594;</a>
+                                        <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 || page + 1 === totalPages + 1}">
+                                            <a class="page-link" href="" ng-click="nextPage()">Trang sau &#8594;</a>
                                         </li>
                                     </ul>
                                 </nav>

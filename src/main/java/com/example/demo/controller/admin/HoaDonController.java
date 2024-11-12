@@ -1,7 +1,7 @@
 package com.example.demo.controller.admin;
 
 import com.example.demo.Service.HoaDonService;
-import com.example.demo.Service.HoaDonServiceImpl;
+import com.example.demo.Service.impl.HoaDonServiceImpl;
 
 import com.example.demo.entity.HoaDon;
 import com.example.demo.repo.HoaDonRepo;

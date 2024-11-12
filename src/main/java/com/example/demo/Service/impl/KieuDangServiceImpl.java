@@ -1,8 +1,8 @@
-package com.example.demo.Service;
+package com.example.demo.Service.impl;
 
+import com.example.demo.Service.KieuDangService;
 import com.example.demo.dto.request.KieuDangRequestDTO;
 import com.example.demo.entity.KieuDang;
-import com.example.demo.entity.MauSac;
 import com.example.demo.repo.KieuDangRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

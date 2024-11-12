@@ -13,9 +13,6 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("${admin.domain}/khuyen-mai")
 public class KhuyenMaiController {
-
-
-
     @GetMapping("")
     public String hienThi() {
 

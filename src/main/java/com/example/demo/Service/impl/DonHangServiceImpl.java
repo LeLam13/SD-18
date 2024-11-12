@@ -1,5 +1,6 @@
-package com.example.demo.Service;
+package com.example.demo.Service.impl;
 
+import com.example.demo.Service.DonHangService;
 import com.example.demo.dto.reponse.DonHangTongSoLuongResponseDTO;
 import com.example.demo.dto.reponse.KhachHangResponseDTO;
 import com.example.demo.dto.request.DonHangChiTietRequestDTO;
@@ -16,7 +17,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public class DonHangServiceImpl implements DonHangService{
+public class DonHangServiceImpl implements DonHangService {
     @Autowired
     SanPhamChiTietRepo sanPhamChiTietRepo;
     @Autowired

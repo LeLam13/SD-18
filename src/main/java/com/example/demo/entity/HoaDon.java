@@ -47,6 +47,7 @@ public class HoaDon {
     @Column(name = "trang_thai_thanh_toan")
     private Boolean trangThaiThanhToan;
 
+
     @Column(name = "phuong_thuc_nhan_hang")
     private Integer phuongThucNhan;
 
@@ -66,13 +67,24 @@ public class HoaDon {
     @JoinColumn(name = "id_don_hang")
     private DonHang donHang;
 
+//    @ManyToOne
+//    @JoinColumn(name = "id_hoa_don_chi_tiet")
+//    private HoaDonChiTiet hoaDonChiTiet;
+//
+    @ManyToOne
+    @JoinColumn(name = "id_khach_hang")
+    private khachhang khachHang;
+
+
     @ManyToOne
     @JoinColumn(name = "id_nhan_vien")
     private nhanvien nhanVien;
 
-    @ManyToOne
-    @JoinColumn(name = "id_khach_hang")
-    private khachhang khachHang;
+
+//    @ManyToOne
+//    @JoinColumn(name = "id_khach_hang")
+//    private khachhang khachHang;
+
 }
 
 

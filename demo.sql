@@ -386,7 +386,7 @@ VALUES
 ('DHCT002', 1, 350000, N'Màu đen', 2, 2);
 
 
-
+select * from hoa_don
 INSERT INTO hoa_don (id_khuyen_mai, id_trang_thai, id_phuong_thuc_thanh_toan, id_don_hang, id_nhan_vien, id_khach_hang, ma_hoa_don, create_by, tong_tien, tong_tien_khuyen_mai, tong_tien_sau_khuyen_mai, ghi_chu, trang_thai_thanh_toan)
 VALUES 
 (1, 1, 1, 1, 1, 1, 'HD001', '2023-01-10', 750000, 50000, 700000, N'Hóa đơn 1', 1),

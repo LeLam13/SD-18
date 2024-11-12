@@ -1,6 +1,5 @@
 package com.example.demo.Config;
-
-import com.example.demo.Service.CustomAuthenticationSuccessHandler;
+import com.example.demo.Service.impl.CustomAuthenticationSuccessHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
