@@ -1,5 +1,6 @@
 package com.example.demo.dto.request;
 
+import com.example.demo.entity.GioHangChiTiet;
 import lombok.Data;
 
 import java.util.List;
@@ -25,4 +26,5 @@ public class DonHangOnlineRequestDTO {
     private Integer idKhuyenMai;
 //    private List<OrderDetailDTO> orderDetail;
     private List<DonHangChiTietRequestDTO> orderDetail;
+//    private List<GioHangChiTiet> orderDetail;
 }

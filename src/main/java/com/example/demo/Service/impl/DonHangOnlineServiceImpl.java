@@ -86,9 +86,11 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
 
         donHangRepo.save(donHang);
 
-        //tạo đơn hàng chi tiết
+        //tạo đơn hàng chi tiết GioHangChiTiet
         DonHang donHang1 = donHangRepo.findByMaDonHang(donHangOnlineRequestDTO.getMaDonHang());
         List<DonHangChiTietRequestDTO> donHangChiTietList = donHangOnlineRequestDTO.getOrderDetail();
+//        List<GioHangChiTiet> donHangChiTietList = donHangOnlineRequestDTO.getOrderDetail();
+        System.out.println("check getOrderDetail: "+donHangOnlineRequestDTO.getOrderDetail());
         for (DonHangChiTietRequestDTO dto : donHangChiTietList) {
             DonHangChiTiet donHangChiTiet = new DonHangChiTiet();
 
@@ -150,7 +152,8 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
         gioHangChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
         gioHangChiTiet.setMaGioHangChiTiet(gioHAngChiTietRequestDTO.getMaGioHangChiTiet());
         gioHangChiTiet.setSoLuong(1);
-        gioHangChiTiet.setDonGia(sanPhamChiTiet.getGiaBan());
+//        gioHangChiTiet.setDonGia(sanPhamChiTiet.getGiaBan());
+        gioHangChiTiet.setGiaBan(sanPhamChiTiet.getGiaBan());
         gioHangChiTiet.setTrangThai(true);
 
         gioHangchiTietRepo.save(gioHangChiTiet);
