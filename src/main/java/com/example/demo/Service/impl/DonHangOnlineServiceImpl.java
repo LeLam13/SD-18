@@ -67,6 +67,10 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
         donHang.setTongTien(donHangOnlineRequestDTO.getTongTien());
         donHang.setTongTienKhuyenMai(donHangOnlineRequestDTO.getTongTienKhuyenMai());
         donHang.setTongTienSauKhuyenMai(donHangOnlineRequestDTO.getTongTienSauKhuyenMai());
+
+        donHang.setTongTienThanhToan(donHangOnlineRequestDTO.getTongTienThanhToan());
+        donHang.setPhiVanChuyen(donHangOnlineRequestDTO.getPhiVanChuyen());
+
         donHang.setGhiChu(donHangOnlineRequestDTO.getGhiChu());
         donHang.setTrangThaiThanhToan(donHangOnlineRequestDTO.getTrangThaiThanhToan());
         donHang.setLoaiDonHang(2);

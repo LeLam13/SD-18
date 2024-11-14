@@ -36,6 +36,12 @@ public class DonHang {
     @Column(name = "tong_tien_khuyen_mai")
     private Float tongTienKhuyenMai;
 
+    @Column(name = "tong_tien_phai_thanh_toan")
+    private Float tongTienThanhToan;
+
+    @Column(name = "phi_van_chuyen")
+    private Float phiVanChuyen;
+
     @Column(name = "tong_tien_sau_khuyen_mai")
     private Float tongTienSauKhuyenMai;
 

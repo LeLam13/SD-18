@@ -41,6 +41,12 @@ public class HoaDon {
     @Column(name = "tong_tien_sau_khuyen_mai")
     private Float tongTienSauKhuyenMai;
 
+    @Column(name = "tong_tien_phai_thanh_toan")
+    private Float tongTienThanhToan;
+
+    @Column(name = "phi_van_chuyen")
+    private Float phiVanChuyen;
+
     @Column(name = "ghi_chu")
     private String ghiChu;
 
@@ -70,7 +76,7 @@ public class HoaDon {
 //    @ManyToOne
 //    @JoinColumn(name = "id_hoa_don_chi_tiet")
 //    private HoaDonChiTiet hoaDonChiTiet;
-//
+
     @ManyToOne
     @JoinColumn(name = "id_khach_hang")
     private khachhang khachHang;
