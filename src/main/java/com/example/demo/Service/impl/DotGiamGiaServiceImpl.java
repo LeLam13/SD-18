@@ -137,26 +137,24 @@ public class DotGiamGiaServiceImpl {
     // Áp dụng giảm giá
     public void applyDiscount(SanPhamChiTiet sanPhamChiTiet, DotGiamGia dotGiamGia) {
         if (sanPhamChiTiet.getSoTienGiam() == null) { // Chỉ áp dụng nếu chưa có giảm giá
-
-
-//            sanPhamChiTiet.setSoTienGiam(sanPhamChiTiet.getDonGia()); // Lưu giá gốc
-
             sanPhamChiTiet.setSoTienGiam(sanPhamChiTiet.getGiaBan()); // Lưu giá gốc
 
-//            if (dotGiamGia.getLoaiGiamGia() == 0) { // Giảm giá theo phần trăm
-//                float discountAmount = sanPhamChiTiet.getDonGia() * (dotGiamGia.getGiamGia().floatValue() / 100);
-//                sanPhamChiTiet.setDonGia(sanPhamChiTiet.getDonGia() - discountAmount);
-//            } else if (dotGiamGia.getLoaiGiamGia() == 1) { // Giảm giá theo số tiền cụ thể
-//                sanPhamChiTiet.setDonGia(sanPhamChiTiet.getDonGia() - dotGiamGia.getGiamGia().floatValue());
-//            }
+            float discountAmount;
+
             if (dotGiamGia.getLoaiGiamGia() == 0) { // Giảm giá theo phần trăm
-                float discountAmount = sanPhamChiTiet.getGiaBan() * (dotGiamGia.getGiamGia().floatValue() / 100);
-                sanPhamChiTiet.setGiaBan(sanPhamChiTiet.getGiaBan() - discountAmount);
+                discountAmount = sanPhamChiTiet.getGiaBan() * (dotGiamGia.getGiamGia().floatValue() / 100);
             } else if (dotGiamGia.getLoaiGiamGia() == 1) { // Giảm giá theo số tiền cụ thể
-                sanPhamChiTiet.setGiaBan(sanPhamChiTiet.getGiaBan() - dotGiamGia.getGiamGia().floatValue());
+                discountAmount = dotGiamGia.getGiamGia().floatValue();
+            } else {
+                return; // Trường hợp loại giảm giá không hợp lệ, thoát mà không thay đổi
             }
+
+            // Đảm bảo giá bán không âm
+            float newGiaBan = sanPhamChiTiet.getGiaBan() - discountAmount;
+            sanPhamChiTiet.setGiaBan(Math.max(newGiaBan, 0));
         }
     }
+
 
     // Hoàn lại giá gốc sau khi kết thúc đợt giảm giá
     public void revertDiscount(SanPhamChiTiet sanPhamChiTiet) {
