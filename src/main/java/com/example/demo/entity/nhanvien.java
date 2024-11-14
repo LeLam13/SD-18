@@ -67,15 +67,5 @@ public class nhanvien {
 
     @Column(name = "create_by")
     private String createBy;
-
-    @Column(name = "update_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private LocalDateTime updateDate;
-
-    @Column(name = "update_by")
-    private String updateBy;
-
-    @Column(name = "delete_by")
-    private String deleteBy;
-
+    
 }
