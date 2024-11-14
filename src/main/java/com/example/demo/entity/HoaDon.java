@@ -18,6 +18,18 @@ public class HoaDon {
     @Column(name = "ma_hoa_don")
     private String maHoaDon;
 
+    @Column(name = "ten_khach_hang_nhan")
+    private String tenKhachNhan;
+
+    @Column(name = "email_khach_hang")
+    private String emailKhachNhan;
+
+    @Column(name = "so_dien_thoai")
+    private String soDienThoaiKhachNhan;
+
+    @Column(name = "dia_chi_nhan")
+    private String diaChiNhan;
+
     @Column(name = "create_date")
     @Temporal(TemporalType.DATE)
     private LocalDate createDate;

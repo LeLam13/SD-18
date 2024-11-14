@@ -57,13 +57,14 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
     }
 
     @Override
-    public DonHang createOrder(DonHangOnlineRequestDTO donHangOnlineRequestDTO) {
+    public DonHang createOrder(DonHangOnlineRequestDTO donHangOnlineRequestDTO, String username) {
         DonHang donHang = new DonHang();
+
         donHang.setMaDonHang(donHangOnlineRequestDTO.getMaDonHang());
         donHang.setTenKhachNhan(donHangOnlineRequestDTO.getTenKhachHang());
         donHang.setSoDienThoaiKhachNhan(donHangOnlineRequestDTO.getSoDienThoaiKhachHang());
         donHang.setDiaChiNhan(donHangOnlineRequestDTO.getDiaChiKhachHang());
-        //donHang.setEmailChiNhan(donHangOnlineRequestDTO.getEmailKhachHang());
+        donHang.setEmailKhachNhan(donHangOnlineRequestDTO.getEmailKhachHang());
         donHang.setTongTien(donHangOnlineRequestDTO.getTongTien());
         donHang.setTongTienKhuyenMai(donHangOnlineRequestDTO.getTongTienKhuyenMai());
         donHang.setTongTienSauKhuyenMai(donHangOnlineRequestDTO.getTongTienSauKhuyenMai());
@@ -82,6 +83,14 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
         donHang.setPhuongThucThanhToan(phuongThucThanhToan);
         KhuyenMai khuyenMai = khuyenMaiRepo.findById(donHangOnlineRequestDTO.getIdKhuyenMai()).get();
         donHang.setKhuyenMai(khuyenMai);
+
+        taikhoan oldTaiKoan = taikhoanRepo.findByUsername(username);
+        if(username!= null || username.length()>0){
+            System.out.println("check TK: "+oldTaiKoan.toString());
+            System.out.println("check TK: "+oldTaiKoan.getKhachHang().getIdKhachHang());
+            khachhang getKH = khachhangRePo.findByIdKhachHang(oldTaiKoan.getKhachHang().getIdKhachHang());
+            donHang.setKhachHang(getKH);
+        }
 
         //ngày
         LocalDate localDate = LocalDate.now();

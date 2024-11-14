@@ -1,5 +1,18 @@
 var app = angular.module("donhang-app", [])
 app.controller("donhang-ctrl", function ($scope, $http) {
+    $scope.generateRandomString = function(length) {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let result = '';
+
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            result += characters[randomIndex];
+        }
+
+        return result;
+    };
+
+
     $scope.message ="hello";
     $scope.listOrderOnline = [];
     $scope.listOrderDetail =[];
@@ -60,6 +73,35 @@ app.controller("donhang-ctrl", function ($scope, $http) {
         }).catch(function(error) {
             console.error('Có lỗi xảy ra:', error);
         });
+    }
+
+    //tạo hoá đơn và hoá đơn chi tiết
+    $scope.createInvoice = function (){
+        $scope.dataInvoice ={
+            idDonHang: $scope.idDonHang,
+            maHoaDon: $scope.generateRandomString(8)
+        }
+
+        var invoiceData = angular.copy($scope.dataInvoice);
+        $http({
+            method: 'PUT',
+            url: '/don-hang-online/cap-nhat-trang-thai',
+            data: invoiceData,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            transformRequest: function(data) {
+                return JSON.stringify(data);  // Chuyển đối tượng thành chuỗi JSON
+            }
+        }) .then(function(response) {
+            console.log("check order after update: ",response.data);
+            $scope.getAllOrderOnline();
+            $('#modal-status').modal('hide');
+            $scope.showStepUpdate(response);
+        }).catch(function(error) {
+            console.error('Có lỗi xảy ra:', error);
+        });
+
     }
 
     //show step
@@ -151,6 +193,45 @@ app.controller("donhang-ctrl", function ($scope, $http) {
     $scope.hideStep = function (){
         $('#step-1, #step-2, #step-3, #step-4, #step-5').hide();
     }
+
+    $scope.tables = [
+        {
+            mau: { idMauSac: 1, ten: 'Đỏ' },
+            img: { imageSrc: '' }
+        },
+        {
+            mau: { idMauSac: 2, ten: 'Xanh' },
+            img: { imageSrc: '' }
+        }
+    ];
+
+// Hàm xử lý thay đổi file
+    $scope.handleFileChange = function(idMauSac, table) {
+        // Tìm input file theo id
+        var fileInput = document.getElementById('formFile-' + idMauSac);
+        var file = fileInput.files[0];
+
+        // Kiểm tra nếu file hợp lệ
+        if (file) {
+            table.img.imageSrc = file.name;  // Cập nhật tên file vào table.img.imageSrc
+            console.log("Tên file đã chọn:", table.img.imageSrc);  // Debug: In tên file
+
+            // In ra danh sách bảng sau khi cập nhật
+            console.log("Danh sách bảng:", $scope.tables);
+
+            // Cập nhật giao diện AngularJS
+            $scope.$apply();  // Cập nhật UI nếu cần
+        }
+    };
+
+    angular.element(document).ready(function () {
+        angular.forEach($scope.tables, function (table) {
+            var fileInput = document.getElementById('formFile-' + table.mau.idMauSac);
+            fileInput.addEventListener('change', function () {
+                $scope.handleFileChange(table.mau.idMauSac, table);
+            });
+        });
+    });
 
     //load data
     $scope.getAllOrderOnline();

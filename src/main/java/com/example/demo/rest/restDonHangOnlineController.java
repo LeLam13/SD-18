@@ -145,7 +145,21 @@ public class restDonHangOnlineController {
     @PostMapping("/don-hang-online/them-moi")
     public ResponseEntity<?> createOrderOnline(@RequestBody DonHangOnlineRequestDTO donHangOnlineRequestDTO){
         System.out.println("check order online create: "+donHangOnlineRequestDTO);
-        DonHang donHang = donHangOnlineService.createOrder(donHangOnlineRequestDTO);
+        String username =null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetails) {
+                //return ((UserDetails) principal).getUsername();
+                System.out.println("test get user1: "+((UserDetails) principal).getUsername());
+                username = ((UserDetails) principal).getUsername();
+            } else {
+                System.out.println("test get user2: "+principal.toString());
+                //return principal.toString();
+            }
+        }
+
+        DonHang donHang = donHangOnlineService.createOrder(donHangOnlineRequestDTO,username);
 
         DonHangOnlineResponseDTO donHangOnlineResponseDTO = new DonHangOnlineResponseDTO();
 

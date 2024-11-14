@@ -189,6 +189,7 @@
                     <div class="buttons">
                         <button class="button">Quay Lại</button>
                         <button ng-click="showModalUpdateStatus()" class="btn btn-warning">Cập Nhật</button>
+                        <button ng-click="" class="btn btn-warning">In Hoá Đơn</button>
                         <button class="button cancel">Hủy đơn hàng</button>
                     </div>
                 </div>
@@ -251,7 +252,18 @@
                 </div>
                 <div class="row">
                     <div class="responsive">
-
+                        <div ng-repeat="table in tables">
+                            <div class="mb-3">
+                                <label for="formFile-{{table.mau.idMauSac}}" class="form-label">
+                                    Chọn file ảnh cho màu {{table.mau.ten}}
+                                </label>
+                                <input class="form-control" type="file"
+                                       id="formFile-{{table.mau.idMauSac}}"
+                                       ng-change="handleFileChange(table.mau.idMauSac, $event.target)">
+                            </div>
+                            <p><strong>Tên ảnh:</strong> {{table.img.imageSrc}}</p>
+                            <img ng-if="table.img.imageSrc" ng-src="{{table.mau.idMauSac}}" alt="Ảnh đã chọn" width="100" />
+                        </div>
                     </div>
                 </div>
 

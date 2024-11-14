@@ -2,6 +2,7 @@ package com.example.demo.Service.impl;
 
 import com.example.demo.Service.QuanLyDonHangOnlineService;
 import com.example.demo.dto.request.DonHangOnlineStatusRequestDTO;
+import com.example.demo.dto.request.HoaDonOnlineRequestDTO;
 import com.example.demo.entity.*;
 import com.example.demo.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +22,11 @@ public class QuanLyDonHangOnlineServiceImpl implements QuanLyDonHangOnlineServic
     taikhoanRepo taikhoanRepo;
     @Autowired
     NhanVienRepo nhanVienRepo;
+    @Autowired
+    KhuyenMaiRepo khuyenMaiRepo;
+    @Autowired
+    HoaDonRepo hoaDonRepo;
+
 
     @Override
     public List<DonHang> getAllOrderByOrderType() {
@@ -76,5 +82,64 @@ public class QuanLyDonHangOnlineServiceImpl implements QuanLyDonHangOnlineServic
         donHang.setGhiChu(donHangOnlineStatusRequestDTO.getGhiChu());
         donHangRepo.save(donHang);
         return donHang;
+    }
+
+    @Override
+    public HoaDon createInvoice(HoaDonOnlineRequestDTO hoaDonOnlineRequestDTO, String username) {
+        HoaDon hoaDon = new HoaDon();
+        taikhoan oldTaiKoan = taikhoanRepo.findByUsername(username);
+        if(oldTaiKoan!= null){
+            System.out.println("check TK: "+oldTaiKoan.toString());
+            System.out.println("check TK: "+oldTaiKoan.getNhanVien().getIdNhanVien());
+            nhanvien getNV = nhanVienRepo.findById(oldTaiKoan.getNhanVien().getIdNhanVien()).get();
+            hoaDon.setNhanVien(getNV);
+
+        }
+
+        DonHang donHang = donHangRepo.findById(hoaDonOnlineRequestDTO.getIdDonHang()).get();
+        if(donHang == null){
+            throw new RuntimeException("Không tìm thấy đơn hàng!");
+        }
+        //set khuyến mãi
+        hoaDon.setKhuyenMai(donHang.getKhuyenMai());
+        //set trang Thai
+        hoaDon.setTrangThai(donHang.getTrangThai());
+        //set phương thuc thanh toan
+        hoaDon.setPhuongThucThanhToan(donHang.getPhuongThucThanhToan());
+        //set don hàng
+        hoaDon.setDonHang(donHang);
+        //set khach hàng
+        hoaDon.setKhachHang(donHang.getKhachHang());
+        //set ma hd
+        hoaDon.setMaHoaDon(hoaDonOnlineRequestDTO.getMaHoaDon());
+        //set ten kn
+        hoaDon.setTenKhachNhan(donHang.getTenKhachNhan());
+        //set email kn
+        hoaDon.setEmailKhachNhan(donHang.getEmailKhachNhan());
+        //set sdt kn
+        hoaDon.setSoDienThoaiKhachNhan(donHang.getSoDienThoaiKhachNhan());
+        //set dia chỉ kn
+        hoaDon.setDiaChiNhan(donHang.getDiaChiNhan());
+        //tổng tiên
+        hoaDon.setTongTien(donHang.getTongTien());
+        //tong tiền km
+        hoaDon.setTongTienKhuyenMai(donHang.getTongTienKhuyenMai());
+        //tong tien sau km
+        hoaDon.setTongTienSauKhuyenMai(donHang.getTongTienSauKhuyenMai());
+        //tong tien phai thanh toan
+        hoaDon.setTongTienThanhToan(donHang.getTongTienThanhToan());
+        //phi van chuyen
+        hoaDon.setPhiVanChuyen(donHang.getPhiVanChuyen());
+        //ghi chu
+        hoaDon.setGhiChu(donHang.getGhiChu());
+        //trang thai thanh toan
+        hoaDon.setTrangThaiThanhToan(donHang.getTrangThaiThanhToan());
+        //phuong thuc nhan
+        hoaDon.setPhuongThucNhan(donHang.getPhuongThucNhan());
+
+        hoaDonRepo.save(hoaDon);
+
+
+        return null;
     }
 }

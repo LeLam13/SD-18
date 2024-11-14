@@ -24,6 +24,9 @@ public class DonHang {
     @Column(name = "ten_khach_hang_nhan")
     private String tenKhachNhan;
 
+    @Column(name = "email_khach_hang")
+    private String emailKhachNhan;
+
     @Column(name = "so_dien_thoai")
     private String soDienThoaiKhachNhan;
 
