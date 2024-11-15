@@ -6,6 +6,7 @@ import com.example.demo.dto.request.MauSacRequestDTO;
 import com.example.demo.dto.request.SanPhamChiTietRequestDTO;
 import com.example.demo.dto.request.SanPhamRequestDTO;
 import com.example.demo.entity.ChatLieu;
+import com.example.demo.entity.HinhAnh;
 import com.example.demo.entity.KichCo;
 import com.example.demo.entity.KieuDang;
 import com.example.demo.entity.MauSac;
@@ -14,6 +15,7 @@ import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.entity.ThuongHieu;
 import com.example.demo.entity.XuatXu;
 import com.example.demo.repo.ChatLieuRepo;
+import com.example.demo.repo.HinhAnhRepo;
 import com.example.demo.repo.KichCoRepo;
 import com.example.demo.repo.KieuDangRepo;
 import com.example.demo.repo.MauSacRepo;
@@ -56,6 +58,9 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
     @Autowired
     private KieuDangRepo kieuDangRepo;
+
+    @Autowired
+    private HinhAnhRepo hinhAnhRepo;
 
     Date date = new Date();
 
@@ -118,6 +123,9 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
             SanPham sanPham = sanPhamRepo.findByIdSanPham(dto.getIdSanPham());
             chiTiet.setIdSanPham(sanPham);
+
+            HinhAnh hinhAnh=hinhAnhRepo.findByIdHinhAnh(dto.getIdHinhAnh());
+            chiTiet.setIdHinhAnh(hinhAnh);
 
             sanPhamChiTietList.add(chiTiet);
         }
