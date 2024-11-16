@@ -16,4 +16,5 @@ public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer>
     List<DotGiamGia> findByThoiGianBatDauBeforeAndThoiGianKetThucAfter(LocalDateTime startTime, LocalDateTime endTime);
 
     List<DotGiamGia> findByThoiGianKetThucBefore(LocalDateTime endTime);
+
 }

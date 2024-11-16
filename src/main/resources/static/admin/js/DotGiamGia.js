@@ -113,10 +113,6 @@ app.controller('ctrl', function ($scope, $http) {
 
     // Lấy dữ liệu khi trang được tải
     $scope.findAll();
-
-
-
-
     $scope.selectedProductIds = []; // Mảng để lưu các id chi tiết sản phẩm đã chọn
 
 // Cập nhật mảng các ID chi tiết sản phẩm khi checkbox thay đổi
@@ -135,6 +131,9 @@ app.controller('ctrl', function ($scope, $http) {
         // In mảng các ID chi tiết sản phẩm ra console để kiểm tra
         console.log("Danh sách ID chi tiết sản phẩm đã chọn: ", $scope.selectedProductIds);
     };
+
+
+
 
     $scope.toggleSelectAll2 = function(selectAll2) {
         // Nếu chọn tất cả, đánh dấu tất cả checkbox là true

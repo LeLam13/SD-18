@@ -117,7 +117,7 @@
                                         <td>{{ product.idSanPhamChiTiet}}</td>
                                         <td>{{ product.idSanPham.ten }}</td>
                                         <td>{{ product.soLuong }}</td>
-                                        <td>{{ product.donGia }}</td>
+                                        <td>{{ product.giaBan }}</td>
                                         <td>{{ product.idMauSac.ten }}</td>
                                         <td>{{ product.idKichCo.ten }}</td>
                                         <td>{{ product.createDate | date:'yyyy-MM-dd' }}</td>
@@ -132,8 +132,17 @@
                                 <!-- Nút Add để thêm các id chi tiết sản phẩm vào đợt giảm giá -->
                                 <button type="button" onclick="addSanPhamToDotGiamGia()">Thêm Chi tiết sản phẩm vào đợt giảm giá</button>
 
-                                <!-- Thay "3" bằng id đợt giảm giá -->
                             </div>
+
+
+
+
+
+
+
+
+
+
 
                             <script>
                                 // Function to extract ID from the current URL
