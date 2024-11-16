@@ -170,6 +170,16 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
         gioHangChiTiet.setTrangThai(true);
 
         gioHangchiTietRepo.save(gioHangChiTiet);
+
+        SanPhamChiTiet oldSanPhamCT = sanPhamChiTietRepo.findById(gioHAngChiTietRequestDTO.getIdSanPhamChiTiet())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm chi tiết!"));
+        //cập nhật lại số lượng sản phẩm
+        if (oldSanPhamCT.getSoLuong() < gioHAngChiTietRequestDTO.getSoLuong()) {
+            throw new RuntimeException("Số lượng sản phẩm không đủ!");
+        }
+        // Cập nhật lại số lượng tồn kho của sản phẩm
+        oldSanPhamCT.setSoLuong(oldSanPhamCT.getSoLuong() - gioHAngChiTietRequestDTO.getSoLuong());
+        sanPhamChiTietRepo.save(oldSanPhamCT);
         return gioHangChiTiet;
     }
 
