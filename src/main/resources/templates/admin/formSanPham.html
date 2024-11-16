@@ -209,10 +209,9 @@
                                 <span>{{ nameFile }}</span>
                                 <!-- Hiển thị ảnh đã chọn -->
                                 <img ng-if="table.img.imageSrc"
-                                     ng-src="/path-to-your-upload-directory/{{table.img.imageSrc}}"
+                                     ng-src="/assets/img/{{table.img.imageSrc}}"
                                      alt="Ảnh xem trước"
-                                     style="width: 100%; height: 100%; object-fit: cover; cursor: pointer;"
-                                     ng-click="triggerFileInput(table.mau.idMauSac)">
+                                     style="width: 100px; height: 100px; object-fit: cover; cursor: pointer;">
                             </div>
                         </div>
                     </div>

@@ -58,4 +58,16 @@ public class SanPhamChiTietRestController {
         return ResponseEntity.ok(sanPhamChiTietRequestDTO);
 
     }
+
+    @GetMapping("/admin/san-pham/chi-tiet/view/{ma}")
+    public ResponseEntity<?> getSanPhamChiTiet(@PathVariable("ma") String ma) {
+        SanPhamChiTiet ms = sanPhamChiTietService.getSanPhamChiTiet(ma);
+        return ResponseEntity.ok(ms);
+    }
+
+    @PostMapping("/admin/san-pham/chi-tiet/updateTT/{idSanPhamChiTiet}")
+    public ResponseEntity<?> updateTrangThai(@PathVariable("idSanPhamChiTiet") Integer idSanPhamChiTiet) {
+        sanPhamChiTietService.updateTrangThai(idSanPhamChiTiet);
+        return ResponseEntity.ok("");
+    }
 }

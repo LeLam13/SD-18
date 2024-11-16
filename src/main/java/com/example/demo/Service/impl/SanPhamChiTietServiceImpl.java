@@ -132,4 +132,21 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
         return sanPhamChiTietRepo.saveAll(sanPhamChiTietList); // Lưu tất cả sản phẩm chi tiết
     }
+
+    @Override
+    public SanPhamChiTiet getSanPhamChiTiet(String ma) {
+        return sanPhamChiTietRepo.findByMa(ma);
+    }
+
+    @Override
+    public SanPhamChiTiet updateTrangThai(Integer idSanPhamChiTiet) {
+        SanPhamChiTiet ms = sanPhamChiTietRepo.findByIdSanPhamChiTiet(idSanPhamChiTiet);
+        if(ms.getTrangThai()==true){
+            ms.setTrangThai(false);
+        }
+        else{
+            ms.setTrangThai(true);
+        }
+        return sanPhamChiTietRepo.save(ms);
+    }
 }

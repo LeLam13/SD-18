@@ -18,4 +18,8 @@ public interface SanPhamChiTietService {
     public List<SanPhamChiTiet> getAll();
 
     public List<SanPhamChiTiet> createSanPhamChiTietList(List<SanPhamChiTietRequestDTO> sanPhamChiTietRequestDTOList);
+
+    public SanPhamChiTiet getSanPhamChiTiet(String ma);
+
+    public SanPhamChiTiet updateTrangThai(Integer idSanPhamChiTiet);
 }

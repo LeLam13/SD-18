@@ -34,6 +34,34 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
     //
     // };
 
+    $scope.getThuocTinh = function () {
+        $http.get("/admin/mau-sac/get-all").then(r => {
+            $scope.mauSac = r.data;
+        }).catch(e => console.log(e))
+
+        $http.get("/admin/chat-lieu/get-all").then(r => {
+            $scope.chatLieu = r.data;
+        }).catch(e => console.log(e))
+
+        $http.get("/admin/thuong-hieu/get-all").then(r => {
+            $scope.thuongHieu = r.data;
+        }).catch(e => console.log(e))
+
+        $http.get("/admin/xuat-xu/get-all").then(r => {
+            $scope.xuatXu = r.data;
+        }).catch(e => console.log(e))
+
+        $http.get("/admin/kieu-dang/get-all").then(r => {
+            $scope.kieuDang = r.data;
+        }).catch(e => console.log(e))
+
+        $http.get("/admin/size/get-all").then(r => {
+            $scope.kichCo = r.data;
+        }).catch(e => console.log(e))
+    }
+
+    $scope.getThuocTinh();
+
     $scope.getAll = function () {
         var url = `/admin/san-pham/{idSanPham}/get-all`;
         $http.get(url).then(resp => {
@@ -60,6 +88,63 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
         }
     };
 
+    $scope.getSanPhamChiTiet = function (ma) {
+        var url = "/admin/san-pham/chi-tiet/view" + "/" + ma;
+        console.log(url)
+        $http.get(url).then(function (r) {
+            console.log(r.data)
+            $scope.spct = r.data;
+            // $scope.idSanPhamChiTiet=SanPhamChiTiet.idSanPhamChiTiet;
+            // $scope.ma = SanPhamChiTiet.ma;
+            // $scope.ten = SanPhamChiTiet.ten;
+            // $scope.idMauSac=SanPhamChiTiet.idMauSac;
+            // $scope.idSanPham=SanPhamChiTiet.idSanPham;
+            // $scope.idThuongHieu=SanPhamChiTiet.idThuongHieu;
+            // $scope.idKieuDang=SanPhamChiTiet.idKieuDang;
+            // $scope.idChatLieu=SanPhamChiTiet.idChatLieu;
+            // $scope.idKichCo=SanPhamChiTiet.idKichCo;
+            // $scope.idXuatXu=SanPhamChiTiet.idXuatXu;
+            // $scope.idHinhAnh=SanPhamChiTiet.idHinhAnh;
+            // $scope.createBy = SanPhamChiTiet.createBy;
+            // $scope.createDate = SanPhamChiTiet.createDate;
+            // $scope.updateDate = SanPhamChiTiet.updateDate;
+            // $scope.updateBy = SanPhamChiTiet.updateBy;
+            // $scope.trangThai = SanPhamChiTiet.trangThai;
+        })
+    }
+
+    $scope.update = function (ma) {
+        var url = "/admin/san-pham/chi-tiet/update" + "/" + ma;
+        var updateSPCT = {
+            ma: ma,
+            ten: $scope.spct.ten,
+            soLuong: $scope.spct.soLuong
+        }
+        $http.post(url, updateSPCT).then(function (r) {
+            $scope.findAll();
+            alert("Update thành công")
+        }).catch(function (err) {
+            console.log("Update khong thanh cong", err);
+        })
+    }
+
+    $scope.updateTT = function (idSanPhamChiTiet) {
+        if (confirm("Xác nhận đổi?")) {
+            var url = "/admin/san-pham/chi-tiet/updateTT" + "/" + idSanPhamChiTiet;
+            $http.post(url).then(function (r) {
+                alert("Doi thành công!!!")
+                $scope.findAll();
+            }).catch(function (err) {
+                console.log("Loi: ", err);
+            })
+        }
+    }
+
+
+
+    $scope.navigateToForm = function () {
+        window.location.href = '/admin/san-pham/formAdd/' + idSanPham;
+    };
 
 //     const pathName = window.location.pathname.split('/');
 //     const idSP = pathName[pathName.length - 1]

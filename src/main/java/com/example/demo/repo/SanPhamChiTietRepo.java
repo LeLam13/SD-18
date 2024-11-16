@@ -34,5 +34,8 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
     Page<SanPhamChiTiet> findByIdSanPham_IdSanPham(Integer idSanPham, Pageable pageable);
     List<SanPhamChiTiet> findAllByIdSanPhamChiTietIn(List<Integer> idSanPhamChiTietList);
 
+    SanPhamChiTiet findByMa(String ma);
+
+    SanPhamChiTiet findByIdSanPhamChiTiet(Integer idSanPhamChiTiet);
 }
 
