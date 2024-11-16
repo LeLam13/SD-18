@@ -102,9 +102,7 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
 
         }else {
             //items đã có sản phẩm
-            //console.log("items:", $scope.items);
             var itemCartDetail = $scope.items.find(item=>item.sanPhamChiTiet.idSanPhamChiTiet === id);
-            //console.log("itemCartDetail: ",itemCartDetail);
             if(itemCartDetail){
                 //đã có cập nhật số lượng
                 console.log("update so luong.......");
@@ -132,6 +130,7 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
     }
 
     $scope.createCartDetail = function (){
+        console.log("checkoi$scope.cart.idGioHang: ",$scope.cart)
         $scope.cartDetailData={
             idGioHang: $scope.cart.idGioHang,
             maGioHangChiTiet: $scope.generateRandomString(8),
@@ -271,6 +270,7 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
     $scope.loadFromLocalStorage = function (){
         var json = localStorage.getItem("cart");
         $scope.items = json ? JSON.parse(json) : [];
+        console.log("$scope.items: ",$scope.items)
     }
 
 
@@ -325,8 +325,18 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
         icon: ''
     };
 
+    $scope.listProducts = [];
     $scope.username = null;
     $scope.cart = [];
+
+    $scope.getAllProduct = function (){
+        $http.get("/danh-sach-san-pham").then(function (response){
+            $scope.listProducts = response.data;
+            console.log("check log Products: ",response.data)
+        }).catch(function (errors){
+            console.error("có lỗi xảy ra: ",errors)
+        })
+    }
 
     //user
     $scope.getUser = function (){
@@ -653,9 +663,15 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
             idTrangThai: 1,
             idPhuongThucThanhToan: $scope.paymentMethod,
             idKhuyenMai: 1,
-            orderDetail: $scope.itemsOrder
+            // orderDetail: $scope.itemsOrder
+            orderDetail: $scope.username ? $scope.itemsOrder.map(item => ({
+                soLuong: item.soLuong,
+                giaBan: item.giaBan,
+                idDonHang: "", // Đảm bảo truyền đúng id đơn hàng nếu cần
+                idSanPhamChiTiet: item.sanPhamChiTiet.idSanPhamChiTiet
+            })) : $scope.itemsOrder
         };
-        //console.log("check createOrederOnline: ",$scope.orderData);
+        console.log("check createOrederOnline: ",$scope.orderData);
         var dataOrder = angular.copy($scope.orderData);
         $http({
             method: 'POST',
@@ -670,10 +686,13 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
         }) .then(function(response) {
             console.log("check fee order when create: ",response);
             $scope.showNotification('Đặt hàng Thành công!','success')
+            //xoá giỏ hàng chi tiết
+
         }).catch(function(error) {
             $scope.showNotification('Đặt Hàng Thất Bại!','error')
             console.error('Có lỗi xảy ra:', error);
         });
+
     }
     //tăng số lượng
     $scope.soLuongPlus = function (orderProduct){
@@ -722,10 +741,28 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
         }
     }
 
+    //kiểm tra số lượng
+    $scope.validateQuantity = function(orderProduct) {
+        // Tìm sản phẩm tương ứng trong listProducts để lấy số lượng có sẵn
+        let availableProduct = $scope.listProducts.find(product => product.idSanPhamChiTiet === orderProduct.idSanPhamChiTiet);
+
+        // Kiểm tra nếu số lượng yêu cầu lớn hơn số lượng có sẵn
+        if (availableProduct && orderProduct.soLuong > availableProduct.soLuong) {
+            orderProduct.invalidQuantity = true;
+        } else {
+            orderProduct.invalidQuantity = false;
+        }
+    };
+
+    //hiển thị modal
+    $scope.shoModalKhachHang = function (){
+        $('#modal-khuyen-mai').modal('show');
+    }
 
 
     //load dữ liệu
     $scope.hideNotification();
     $scope.getProvinces();
     $scope.getUser();
+    $scope.getAllProduct();
 })

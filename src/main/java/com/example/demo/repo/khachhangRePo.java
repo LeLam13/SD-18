@@ -16,4 +16,7 @@ public interface khachhangRePo extends JpaRepository<khachhang,Integer> {
 
     @Query("SELECT k FROM khachhang k WHERE k.taikhoan.username = :username")
     khachhang findByUsername(@Param("username") String username);
+
+    @Query("SELECT k FROM khachhang  k WHERE k.idKhachHang = :idKhachHang")
+    khachhang findByIdKhachHang(@Param("idKhachHang") Long idKhachHang);
 }

@@ -154,13 +154,16 @@
                             </thead>
                             <tbody>
                             <tr ng-repeat="orderProduct in itemsOrder">
-                                <th scope="row">${index+1}</th>
-                                <td>{{ username ? orderProduct.idSanPham.ten : orderProduct.idSanPham.ten }}</td>
+                                <th scope="row">{{$index+1}}</th>
+                                <td>{{ username ? orderProduct.sanPhamChiTiet.idSanPham.ten : orderProduct.idSanPham.ten }}</td>
                                 <!--{{orderProduct.soLuong}}-->
                                 <td class="text-center">
                                     <div class="quantity-input">
                                         <button ng-click="soLuongReduce(orderProduct)" class="btn btn-outline-secondary bi bi-dash-circle" ></button>
-                                        <input  ng-model="orderProduct.soLuong" type="text" class="form-control"  min="1">
+                                        <input  ng-model="orderProduct.soLuong" ng-change="validateQuantity(orderProduct)" type="text" class="form-control"  min="1">
+                                        <div ng-show="orderProduct.invalidQuantity" class="error-message" style="color: red;">
+                                            Số lượng nhập vượt quá số lượng có sẵn!
+                                        </div>
                                         <button ng-click="soLuongPlus(orderProduct)" class="btn btn-outline-secondary bi bi-plus-circle" ></button>
                                     </div>
                                 </td>
@@ -263,7 +266,7 @@
                                     <input type="Text" id="maKhuyenMai" class="form-control" >
                                 </div>
                                 <div class="mb-2 col-1">
-                                    <button type="button" id="action-khuyenMai" class="btn btn-primary">
+                                    <button type="button" ng-click="shoModalKhachHang()" id="action-khuyenMai" class="btn btn-primary">
                                         <i class="bi bi-trash3" style="font-size: 12px"></i>
                                     </button>
                                 </div>
@@ -344,6 +347,53 @@
 
             </div>
         </div>
+
+<!--            modal-->
+            <div class="modal fade" id="modal-khuyen-mai" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">First</th>
+                                    <th scope="col">Last</th>
+                                    <th scope="col">Handle</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>Mark</td>
+                                    <td>Otto</td>
+                                    <td>@mdo</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td>Jacob</td>
+                                    <td>Thornton</td>
+                                    <td>@fat</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">3</th>
+                                    <td colspan="2">Larry the Bird</td>
+                                    <td>@twitter</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 <!--            thông báo-->
             <<div ng-if="notification.show" class="notification-container">
             <div class="notification-content">

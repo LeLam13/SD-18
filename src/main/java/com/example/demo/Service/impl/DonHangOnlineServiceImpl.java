@@ -57,16 +57,21 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
     }
 
     @Override
-    public DonHang createOrder(DonHangOnlineRequestDTO donHangOnlineRequestDTO) {
+    public DonHang createOrder(DonHangOnlineRequestDTO donHangOnlineRequestDTO, String username) {
         DonHang donHang = new DonHang();
+
         donHang.setMaDonHang(donHangOnlineRequestDTO.getMaDonHang());
         donHang.setTenKhachNhan(donHangOnlineRequestDTO.getTenKhachHang());
         donHang.setSoDienThoaiKhachNhan(donHangOnlineRequestDTO.getSoDienThoaiKhachHang());
         donHang.setDiaChiNhan(donHangOnlineRequestDTO.getDiaChiKhachHang());
-        //donHang.setEmailChiNhan(donHangOnlineRequestDTO.getEmailKhachHang());
+        donHang.setEmailKhachNhan(donHangOnlineRequestDTO.getEmailKhachHang());
         donHang.setTongTien(donHangOnlineRequestDTO.getTongTien());
         donHang.setTongTienKhuyenMai(donHangOnlineRequestDTO.getTongTienKhuyenMai());
         donHang.setTongTienSauKhuyenMai(donHangOnlineRequestDTO.getTongTienSauKhuyenMai());
+
+        donHang.setTongTienThanhToan(donHangOnlineRequestDTO.getTongTienThanhToan());
+        donHang.setPhiVanChuyen(donHangOnlineRequestDTO.getPhiVanChuyen());
+
         donHang.setGhiChu(donHangOnlineRequestDTO.getGhiChu());
         donHang.setTrangThaiThanhToan(donHangOnlineRequestDTO.getTrangThaiThanhToan());
         donHang.setLoaiDonHang(2);
@@ -79,6 +84,14 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
         KhuyenMai khuyenMai = khuyenMaiRepo.findById(donHangOnlineRequestDTO.getIdKhuyenMai()).get();
         donHang.setKhuyenMai(khuyenMai);
 
+        taikhoan oldTaiKoan = taikhoanRepo.findByUsername(username);
+        if(username!= null || username.length()>0){
+            System.out.println("check TK: "+oldTaiKoan.toString());
+            System.out.println("check TK: "+oldTaiKoan.getKhachHang().getIdKhachHang());
+            khachhang getKH = khachhangRePo.findByIdKhachHang(oldTaiKoan.getKhachHang().getIdKhachHang());
+            donHang.setKhachHang(getKH);
+        }
+
         //ngày
         LocalDate localDate = LocalDate.now();
         donHang.setCreateDate(localDate);
@@ -86,9 +99,11 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
 
         donHangRepo.save(donHang);
 
-        //tạo đơn hàng chi tiết
+        //tạo đơn hàng chi tiết GioHangChiTiet
         DonHang donHang1 = donHangRepo.findByMaDonHang(donHangOnlineRequestDTO.getMaDonHang());
         List<DonHangChiTietRequestDTO> donHangChiTietList = donHangOnlineRequestDTO.getOrderDetail();
+//        List<GioHangChiTiet> donHangChiTietList = donHangOnlineRequestDTO.getOrderDetail();
+        System.out.println("check getOrderDetail: "+donHangOnlineRequestDTO.getOrderDetail());
         for (DonHangChiTietRequestDTO dto : donHangChiTietList) {
             DonHangChiTiet donHangChiTiet = new DonHangChiTiet();
 
@@ -150,7 +165,8 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
         gioHangChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
         gioHangChiTiet.setMaGioHangChiTiet(gioHAngChiTietRequestDTO.getMaGioHangChiTiet());
         gioHangChiTiet.setSoLuong(1);
-        gioHangChiTiet.setDonGia(sanPhamChiTiet.getGiaBan());
+//        gioHangChiTiet.setDonGia(sanPhamChiTiet.getGiaBan());
+        gioHangChiTiet.setGiaBan(sanPhamChiTiet.getGiaBan());
         gioHangChiTiet.setTrangThai(true);
 
         gioHangchiTietRepo.save(gioHangChiTiet);

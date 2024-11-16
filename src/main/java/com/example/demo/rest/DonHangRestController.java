@@ -293,8 +293,8 @@ public class DonHangRestController {
 
        HoaDon newHoaDon = hoaDonService.createHoaDon(hoaDon,username);
 
-        System.out.println("hoa don checkll: "+hoaDon);
-//        return ResponseEntity.ok("");
+        System.out.println("hoa don checkll hd: "+hoaDon);
+        //return ResponseEntity.ok("");
         return ResponseEntity.ok(newHoaDon);
     }
     @GetMapping("/hoa-don/invoice")

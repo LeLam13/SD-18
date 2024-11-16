@@ -24,6 +24,9 @@ public class DonHang {
     @Column(name = "ten_khach_hang_nhan")
     private String tenKhachNhan;
 
+    @Column(name = "email_khach_hang")
+    private String emailKhachNhan;
+
     @Column(name = "so_dien_thoai")
     private String soDienThoaiKhachNhan;
 
@@ -35,6 +38,12 @@ public class DonHang {
 
     @Column(name = "tong_tien_khuyen_mai")
     private Float tongTienKhuyenMai;
+
+    @Column(name = "tong_tien_phai_thanh_toan")
+    private Float tongTienThanhToan;
+
+    @Column(name = "phi_van_chuyen")
+    private Float phiVanChuyen;
 
     @Column(name = "tong_tien_sau_khuyen_mai")
     private Float tongTienSauKhuyenMai;

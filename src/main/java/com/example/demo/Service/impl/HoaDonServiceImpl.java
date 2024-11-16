@@ -125,7 +125,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         donHang.setPhuongThucNhan(hoaDon.getPhuongThucNhan());
         donHang.setLoaiDonHang(hoaDon.getLoaiDonHang());
         donHangRepo.save(donHang);
-
+        //System.out.println("check đơn hàng update: "+donHang);
         //tạo hoá đơn
         HoaDon newHoaDon = new HoaDon();
 
@@ -172,6 +172,7 @@ public class HoaDonServiceImpl implements HoaDonService {
         }
 
         return newHoaDon;
+        //return null;
     }
 
     @Override

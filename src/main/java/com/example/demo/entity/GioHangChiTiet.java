@@ -19,7 +19,7 @@ public class GioHangChiTiet {
     private Integer soLuong;
 
     @Column(name = "don_gia")
-    private Float donGia;
+    private Float  giaBan;
 
     @Column(name = "trang_thai")
     private Boolean trangThai;

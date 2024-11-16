@@ -14,7 +14,7 @@ public interface DonHangOnlineService {
 
     SanPhamChiTiet getProductsByID(Integer id);
 
-    DonHang createOrder(DonHangOnlineRequestDTO donHangOnlineRequestDTO);
+    DonHang createOrder(DonHangOnlineRequestDTO donHangOnlineRequestDTO,String username);
     String generateRandomString(int length);
 
 
