@@ -139,6 +139,15 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     }
 
     @Override
+    public SanPhamChiTiet updateSanPhamChiTiet(SanPhamChiTietRequestDTO sanPhamChiTietRequestDTO) {
+        SanPhamChiTiet ms = sanPhamChiTietRepo.findByMa(sanPhamChiTietRequestDTO.getMa());
+        ms.setIdKieuDang(sanPhamChiTietRequestDTO.getIdKieuDang2());
+        ms.setIdChatLieu(sanPhamChiTietRequestDTO.getIdChatLieu2());
+        ms.setUpdateDate(date);
+        return sanPhamChiTietRepo.save(ms);
+    }
+
+    @Override
     public SanPhamChiTiet updateTrangThai(Integer idSanPhamChiTiet) {
         SanPhamChiTiet ms = sanPhamChiTietRepo.findByIdSanPhamChiTiet(idSanPhamChiTiet);
         if(ms.getTrangThai()==true){

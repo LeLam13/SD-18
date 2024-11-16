@@ -21,5 +21,7 @@ public interface SanPhamChiTietService {
 
     public SanPhamChiTiet getSanPhamChiTiet(String ma);
 
+    public SanPhamChiTiet updateSanPhamChiTiet(SanPhamChiTietRequestDTO sanPhamChiTietRequestDTO);
+
     public SanPhamChiTiet updateTrangThai(Integer idSanPhamChiTiet);
 }

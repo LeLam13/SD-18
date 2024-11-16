@@ -335,40 +335,51 @@
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Thương Hiệu</label>
-                                        <!--                                        <input type="text" ng-model="spct.idThuongHieu.ten" class="form-control">-->
-                                        <select id="thuongHieu" class="form-control" ng-model="spct.idThuongHieu">
-                                            <option ng-repeat="t in thuongHieu" value="{{t.idThuongHieu}}">
-                                                {{t.ten}}
-                                            </option>
+                                        <select id="thuongHieu" class="form-control"
+                                                ng-model="spct.idThuongHieu"
+                                                ng-options="thuongHieu as thuongHieu.ten for thuongHieu in thuongHieu track by thuongHieu.idThuongHieu">
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="mb-3">
                                         <label class="form-label">Màu Sắc</label>
-                                        <select id="mauSac" class="form-control" ng-model="spct.idMauSac">
-                                            <option ng-repeat="t in mauSac" value="{{t.idMauSac}}" ng-selected="spct.idMauSac === t.idMauSac">
-                                                {{t.ten}}
-                                            </option>
+                                        <select id="mauSac" class="form-control"
+                                                ng-model="spct.idMauSac"
+                                                ng-options="mauSac as mauSac.ten for mauSac in mauSac track by mauSac.idMauSac">
                                         </select>
+
+
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Size</label>
-                                        <input type="text" ng-model="spct.idKichCo.ten" class="form-control">
+                                        <select id="kichCo" class="form-control"
+                                                ng-model="spct.idKichCo"
+                                                ng-options="kichCo as kichCo.ten for kichCo in kichCo track by kichCo.idKichCo">
+                                        </select>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Chất Liệu</label>
-                                        <input type="text" ng-model="spct.idChatLieu.ten" class="form-control">
+                                        <select id="chatLieu" class="form-control"
+                                                ng-model="spct.idChatLieu"
+                                                ng-options="chatLieu.idChatLieu as chatLieu.ten for chatLieu in chatLieu track by chatLieu.idChatLieu">
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="mb-3">
                                         <label class="form-label">Kiểu Dáng</label>
-                                        <input type="text" ng-model="spct.idKieuDang.ten" class="form-control">
+                                        <select id="kieuDang" class="form-control"
+                                                ng-model="spct.idKieuDang"
+                                                ng-options="kieuDang.idKieuDang as kieuDang.ten for kieuDang in kieuDang track by kieuDang.idKieuDang">
+                                        </select>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Xuất Xứ</label>
-                                        <input type="text" ng-model="spct.idXuatXu.ten" class="form-control">
+                                        <select id="xuatXu" class="form-control"
+                                                ng-model="spct.idXuatXu"
+                                                ng-options="xuatXu as xuatXu.ten for xuatXu in xuatXu track by xuatXu.idXuatXu">
+                                        </select>
                                     </div>
                                 </div>
                                 <!-- Hàng thứ hai: Người cập nhật, Trạng thái -->

@@ -37,4 +37,11 @@ public class SanPhamChiTietRequestDTO {
     private Integer idKichCo;
     private Integer idXuatXu;
     private Integer idHinhAnh;
+    private MauSac idMauSac2;
+    private ThuongHieu idThuongHieu2;
+    private KieuDang idKieuDang2;
+    private ChatLieu idChatLieu2;
+    private KichCo idKichCo2;
+    private XuatXu idXuatXu2;
+    private HinhAnh idHinhAnh2;
 }

@@ -94,22 +94,7 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
         $http.get(url).then(function (r) {
             console.log(r.data)
             $scope.spct = r.data;
-            // $scope.idSanPhamChiTiet=SanPhamChiTiet.idSanPhamChiTiet;
-            // $scope.ma = SanPhamChiTiet.ma;
-            // $scope.ten = SanPhamChiTiet.ten;
-            // $scope.idMauSac=SanPhamChiTiet.idMauSac;
-            // $scope.idSanPham=SanPhamChiTiet.idSanPham;
-            // $scope.idThuongHieu=SanPhamChiTiet.idThuongHieu;
-            // $scope.idKieuDang=SanPhamChiTiet.idKieuDang;
-            // $scope.idChatLieu=SanPhamChiTiet.idChatLieu;
-            // $scope.idKichCo=SanPhamChiTiet.idKichCo;
-            // $scope.idXuatXu=SanPhamChiTiet.idXuatXu;
-            // $scope.idHinhAnh=SanPhamChiTiet.idHinhAnh;
-            // $scope.createBy = SanPhamChiTiet.createBy;
-            // $scope.createDate = SanPhamChiTiet.createDate;
-            // $scope.updateDate = SanPhamChiTiet.updateDate;
-            // $scope.updateBy = SanPhamChiTiet.updateBy;
-            // $scope.trangThai = SanPhamChiTiet.trangThai;
+            // console.log("check:",$scope.spct.idMauSac);
         })
     }
 
@@ -117,8 +102,15 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
         var url = "/admin/san-pham/chi-tiet/update" + "/" + ma;
         var updateSPCT = {
             ma: ma,
-            ten: $scope.spct.ten,
-            soLuong: $scope.spct.soLuong
+            soLuong: $scope.spct.soLuong,
+            giaBan:$scope.spct.giaBan,
+            idMauSac:$scope.idMauSac,
+            idThuongHieu:$scope.idThuongHieu,
+            idKieuDang:$scope.idKieuDang,
+            idChatLieu:$scope.idChatLieu,
+            idKichCo:$scope.idKichCo,
+            idXuatXu:$scope.idXuatXu,
+            // idMauSac: $scope.idHinhAnh
         }
         $http.post(url, updateSPCT).then(function (r) {
             $scope.findAll();

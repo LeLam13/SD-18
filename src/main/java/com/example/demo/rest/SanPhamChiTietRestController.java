@@ -1,6 +1,7 @@
 package com.example.demo.rest;
 
 import com.example.demo.Service.SanPhamChiTietService;
+import com.example.demo.dto.request.MauSacRequestDTO;
 import com.example.demo.dto.request.SanPhamChiTietRequestDTO;
 import com.example.demo.dto.request.SanPhamRequestDTO;
 import com.example.demo.entity.MauSac;
@@ -63,6 +64,12 @@ public class SanPhamChiTietRestController {
     public ResponseEntity<?> getSanPhamChiTiet(@PathVariable("ma") String ma) {
         SanPhamChiTiet ms = sanPhamChiTietService.getSanPhamChiTiet(ma);
         return ResponseEntity.ok(ms);
+    }
+
+    @PostMapping("/admin/san-pham/chi-tiet/update/{ma}")
+    public ResponseEntity<?> updateMauSac(@RequestBody SanPhamChiTietRequestDTO sanPhamChiTietRequestDTO) {
+        sanPhamChiTietService.updateSanPhamChiTiet(sanPhamChiTietRequestDTO);
+        return ResponseEntity.ok(sanPhamChiTietRequestDTO);
     }
 
     @PostMapping("/admin/san-pham/chi-tiet/updateTT/{idSanPhamChiTiet}")
