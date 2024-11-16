@@ -686,6 +686,8 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
         }) .then(function(response) {
             console.log("check fee order when create: ",response);
             $scope.showNotification('Đặt hàng Thành công!','success')
+            //xoá giỏ hàng chi tiết
+
         }).catch(function(error) {
             $scope.showNotification('Đặt Hàng Thất Bại!','error')
             console.error('Có lỗi xảy ra:', error);

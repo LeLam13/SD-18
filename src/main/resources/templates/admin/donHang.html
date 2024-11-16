@@ -141,6 +141,38 @@
             .button.cancel:hover {
                 background-color: #e53935;
             }
+
+            .notification-container {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%); /* Canh giữa màn hình */
+                background-color: rgba(0, 0, 0, 0.7); /* Màu nền trong suốt */
+                color: white;
+                padding: 15px;
+                border-radius: 10px;
+                z-index: 9999; /* Đảm bảo thông báo hiển thị trên cùng */
+                text-align: center; /* Canh chữ ở giữa */
+                max-width: 300px;
+                width: 100%;
+            }
+
+            .notification-content {
+                display: flex;
+                flex-direction: column; /* Chia icon và message theo chiều dọc */
+                align-items: center; /* Canh giữa icon và message */
+            }
+
+            .notification-icon {
+                font-size: 40px; /* Kích thước của icon */
+                margin-bottom: 10px; /* Khoảng cách giữa icon và message */
+            }
+
+            .notification-message {
+                font-size: 16px; /* Kích thước của message */
+                line-height: 1.5;
+                color: white; /* Màu chữ trắng cho message */
+            }
         </style>
         <div class="page-content" ng-app="donhang-app" ng-controller="donhang-ctrl">
             <div class="container-fluid">
@@ -183,14 +215,21 @@
                                 <div class="text">Giao hàng thành công</div>
                                 <div class="date">18:00 23-12-2023</div>
                             </div>
+
+                            <div class="step active" id="step-6">
+                                <div class="arrow">Huỷ Đơn</div>
+                                <div class="icon">✔️</div>
+                                <div class="text">Đã huỷ đơn</div>
+                                <div class="date">18:00 23-12-2023</div>
+                            </div>
                         </div>
                     </div>
 
                     <div class="buttons">
-                        <button class="button">Quay Lại</button>
+<!--                        <button class="button">Quay Lại</button>-->
                         <button ng-click="showModalUpdateStatus()" class="btn btn-warning">Cập Nhật</button>
                         <button ng-click="" class="btn btn-warning">In Hoá Đơn</button>
-                        <button class="button cancel">Hủy đơn hàng</button>
+                        <button class="button cancel" ng-click="cancelOrderStatus()" ng-disabled="isCancelDisabled">Hủy đơn hàng</button>
                     </div>
                 </div>
                 <div class="row">
@@ -256,38 +295,57 @@
                             <h3>Thông tin đơn Hàng</h3>
                             <div class="row">
                                 <div class="col-6">
-                                    <div class="col-3">Trạng Thái:</div>
-                                    <div class="col-3"></div>
+                                    <div class="row">
+                                        <div class="col-8">Trạng Thái:</div>
+                                        <div class="col-4" id="trang-thai"></div>
+                                    </div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="col-3">Phí Vận Chuyển:</div>
-                                    <div class="col-3"></div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="col-3">Mã Đơn Hàng:</div>
-                                    <div class="col-3"></div>
-                                </div>
-                                <div class="col-6">
-                                    <div class="col-3">Tổng Tiền:</div>
-                                    <div class="col-3"></div>
+                                    <div class="row">
+                                        <div class="col-8">Phí Vận Chuyển:</div>
+                                        <div class="col-4" id="phi-van-chuyen"></div>
+                                    </div>
+
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-6">
-                                    <div class="col-3">Loại Đơn Hàng:</div>
-                                    <div class="col-3"></div>
+                                    <div class="row">
+                                        <div class="col-8">Mã Đơn Hàng:</div>
+                                        <div class="col-4" id="ma-don-hang"></div>
+                                    </div>
                                 </div>
                                 <div class="col-6">
-                                    <div class="col-3">Phải Thanh Toán:</div>
-                                    <div class="col-3"></div>
+                                    <div class="row">
+                                        <div class="col-8">Tổng Tiền:</div>
+                                        <div class="col-4" id="tong-tien"></div>
+                                    </div>
+
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-6">
-                                    <div class="col-4">TRạng Thái Thanh Toán:</div>
-                                    <div class="col-2"></div>
+                                    <div class="row">
+                                        <div class="col-8">Loại Đơn Hàng:</div>
+                                        <div class="col-4" id="loai-don-hang"></div>
+                                    </div>
+
+                                </div>
+                                <div class="col-6">
+                                    <div class="row">
+                                        <div class="col-8">Phải Thanh Toán:</div>
+                                        <div class="col-4" id="tong-tien-thanh-toan"></div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="row">
+                                        <div class="col-8">TRạng Thái Thanh Toán:</div>
+                                        <div class="col-4" id="trang-thai-thanh-toan"></div>
+                                    </div>
+
                                 </div>
 <!--                                <div class="col-6">-->
 <!--                                    <div class="col-3">Phải Thanh Toán:</div>-->
@@ -300,22 +358,33 @@
                             <h3>Thông tin Khách Hàng</h3>
                             <div class="row">
                                 <div class="col-6">
-                                    <div class="col-3">Tên Khách Hàng:</div>
-                                    <div class="col-3"></div>
+                                    <div class="row">
+                                        <div class="col-8">Tên Khách Hàng:</div>
+                                        <div class="col-4" id="ten-khach-hang"></div>
+                                    </div>
+
                                 </div>
                                 <div class="col-6">
-                                    <div class="col-3">Email:</div>
-                                    <div class="col-3"></div>
+                                    <div class="row">
+                                        <div class="col-8">Email:</div>
+                                        <div class="col-4" id="email-khach-hang"></div>
+                                    </div>
+
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-6">
-                                    <div class="col-3">Số Điện Thoại:</div>
-                                    <div class="col-3"></div>
+                                    <div class="row">
+                                        <div class="col-4">Số Điện Thoại:</div>
+                                        <div class="col-8" id="sdt-khach-hang"></div>
+                                    </div>
+
                                 </div>
                                 <div class="col-6">
-                                    <div class="col-3">Địa Chỉ:</div>
-                                    <div class="col-3"></div>
+                                    <div class="col-4">Địa Chỉ:</div>
+                                    <div class="col-8" id="dia-chi-khach-hang"></div>
+                                </div>
+
                                 </div>
                             </div>
                         </div>
@@ -333,7 +402,13 @@
                 </div>
             </footer>
 
-        </div>
+            <div ng-if="notification.show" class="notification-container">
+                <div class="notification-content">
+                    <div class="notification-icon" ng-bind-html="notification.icon"></div>
+                    <div class="notification-message">{{ notification.message }}</div>
+                </div>
+            </div>
+
             <!-- Modal cập nhật trạng thái đơn hàng -->
             <div class="modal fade" id="modal-status" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
@@ -366,8 +441,11 @@
                     </div>
                 </div>
             </div>
-            </div>
+
+
+        </div>
     </div>
+<!--    </div>-->
         <!-- end main content-->
 </body>
 

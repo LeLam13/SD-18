@@ -57,6 +57,30 @@ public class DonHangOnlineRestController {
         }
     }
 
+    @PutMapping("/don-hang-online/huy-don")
+    public ResponseEntity<?> cancelOrder(@RequestBody DonHangOnlineStatusRequestDTO donHangOnlineStatusRequestDTO){
+        String username =null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetails) {
+                //return ((UserDetails) principal).getUsername();
+                System.out.println("test get user1: "+((UserDetails) principal).getUsername());
+                username = ((UserDetails) principal).getUsername();
+            } else {
+                System.out.println("test get user2: "+principal.toString());
+                //return principal.toString();
+            }
+        }
+        try {
+            System.out.println("check status calcel: "+donHangOnlineStatusRequestDTO);
+            DonHang donHang = quanLyDonHangOnlineService.cancelStatusOrder(donHangOnlineStatusRequestDTO,username);
+            return ResponseEntity.ok(donHang);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());  // Trả về lỗi với thông báo
+        }
+    }
+
     @PostMapping("/don-hang-online/tao-hoa-don")
     public ResponseEntity<?> createInvoice(@RequestBody HoaDonOnlineRequestDTO hoaDonOnlineRequestDTO){
         String username =null;
