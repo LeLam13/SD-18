@@ -132,7 +132,13 @@ public class DonHangRestController {
         donHangResponse.setGhiChu(donHang.getGhiChu());
         donHangResponse.setTrangThaiThanhToan(donHang.getTrangThaiThanhToan());
         donHangResponse.setOldKhachHang(donHang.getKhachHang());
-        donHangResponse.setId_khach_hang(donHang.getKhachHang().getIdKhachHang());
+        if (donHang.getKhachHang() != null) {
+            //donHangResponse.setOldKhachHang(donHang.getKhachHang());
+            donHangResponse.setId_khach_hang(donHang.getKhachHang().getIdKhachHang());
+        } else {
+            //donHangResponse.setOldKhachHang(null);
+            donHangResponse.setId_khach_hang(null); // Hoặc giá trị mặc định nào đó, nếu cần
+        }
         //System.out.println("log check: "+donHang);
         return ResponseEntity.ok(donHangResponse);
     }

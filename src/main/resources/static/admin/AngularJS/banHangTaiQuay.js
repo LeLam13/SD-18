@@ -460,10 +460,21 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         if(details.soLuong >1){
             details.soLuong -=1;
             $scope.getProducts();
+            $scope.updateQuantity(details);
             console.log("Số Lượng plus: ",details.soLuong);
             console.log("Số Lượng plus: ",details.soLuong * details.giaBan);
         }
     }
+    //cập nhật số lượng khi reduce hoặc plus
+    $scope.updateQuantity = function (details){
+        console.log("check Quantity: ",details);
+        // $http.put("").then(function (response) {
+        //     console.log("update số lượng khi plus: ",response.data);
+        // }).catch(function (errors) {
+        //     console.error('Có lỗi xảy ra:', errors);
+        // })
+    }
+
     //lưu só lượng ban đầu
     $scope.saveOriginalQuantity = function (details){
         details.saveOriginalQuantity = details.soLuong;
