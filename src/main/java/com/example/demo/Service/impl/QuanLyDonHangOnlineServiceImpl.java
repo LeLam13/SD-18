@@ -8,6 +8,7 @@ import com.example.demo.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.SecureRandom;
 import java.util.List;
 
 @Service
@@ -26,6 +27,8 @@ public class QuanLyDonHangOnlineServiceImpl implements QuanLyDonHangOnlineServic
     KhuyenMaiRepo khuyenMaiRepo;
     @Autowired
     HoaDonRepo hoaDonRepo;
+    @Autowired
+    HoaDonChiTietRepo hoaDonChiTietRepo;
 
 
     @Override
@@ -140,6 +143,37 @@ public class QuanLyDonHangOnlineServiceImpl implements QuanLyDonHangOnlineServic
         hoaDonRepo.save(hoaDon);
 
 
-        return null;
+        //tạo háo đơn chi tiết
+        HoaDon findHoaDon = hoaDonRepo.findByMaHoaDon(hoaDonOnlineRequestDTO.getMaHoaDon());
+        List<DonHangChiTiet> donHangChiTietLits = donHangChiTietRepo.findByDonHangId(donHang.getIdDonHang());
+        for(DonHangChiTiet donHangChiTiet: donHangChiTietLits){
+
+            HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
+
+            hoaDonChiTiet.setMaHoaDonChiTiet(generateRandomString(8));
+            hoaDonChiTiet.setHoaDon(findHoaDon);
+            hoaDonChiTiet.setSanPhamChiTiet(donHangChiTiet.getSanPhamChiTiet());
+            hoaDonChiTiet.setSoLuong(donHangChiTiet.getSoLuong());
+            hoaDonChiTiet.setDonGia(donHangChiTiet.getDonGia());
+            hoaDonChiTiet.setTrangThai(true);
+            hoaDonChiTiet.setGhiChu(donHangChiTiet.getGhiChu());
+
+            hoaDonChiTietRepo.save(hoaDonChiTiet);
+        }
+
+
+        return hoaDon;
+    }
+
+    @Override
+    public String generateRandomString(int length) {
+        String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        SecureRandom random = new SecureRandom();
+        StringBuilder sb = new StringBuilder(length);
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(CHARACTERS.length());
+            sb.append(CHARACTERS.charAt(index));
+        }
+        return sb.toString();
     }
 }

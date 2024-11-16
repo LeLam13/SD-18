@@ -84,8 +84,8 @@ app.controller("donhang-ctrl", function ($scope, $http) {
 
         var invoiceData = angular.copy($scope.dataInvoice);
         $http({
-            method: 'PUT',
-            url: '/don-hang-online/cap-nhat-trang-thai',
+            method: 'POST',
+            url: '/don-hang-online/tao-hoa-don',
             data: invoiceData,
             headers: {
                 'Content-Type': 'application/json'
@@ -94,14 +94,21 @@ app.controller("donhang-ctrl", function ($scope, $http) {
                 return JSON.stringify(data);  // Chuyển đối tượng thành chuỗi JSON
             }
         }) .then(function(response) {
-            console.log("check order after update: ",response.data);
-            $scope.getAllOrderOnline();
-            $('#modal-status').modal('hide');
-            $scope.showStepUpdate(response);
+            console.log("check invoice create: ",response.data);
+
         }).catch(function(error) {
             console.error('Có lỗi xảy ra:', error);
         });
 
+    }
+
+    //test send email
+    $scope.sendEmailOrder = function(){
+        $http.get("").then(function (){
+
+        }).catch(function (error){
+            console.error('Có lỗi xảy ra:', error);
+        })
     }
 
     //show step
@@ -194,44 +201,7 @@ app.controller("donhang-ctrl", function ($scope, $http) {
         $('#step-1, #step-2, #step-3, #step-4, #step-5').hide();
     }
 
-    $scope.tables = [
-        {
-            mau: { idMauSac: 1, ten: 'Đỏ' },
-            img: { imageSrc: '' }
-        },
-        {
-            mau: { idMauSac: 2, ten: 'Xanh' },
-            img: { imageSrc: '' }
-        }
-    ];
 
-// Hàm xử lý thay đổi file
-    $scope.handleFileChange = function(idMauSac, table) {
-        // Tìm input file theo id
-        var fileInput = document.getElementById('formFile-' + idMauSac);
-        var file = fileInput.files[0];
-
-        // Kiểm tra nếu file hợp lệ
-        if (file) {
-            table.img.imageSrc = file.name;  // Cập nhật tên file vào table.img.imageSrc
-            console.log("Tên file đã chọn:", table.img.imageSrc);  // Debug: In tên file
-
-            // In ra danh sách bảng sau khi cập nhật
-            console.log("Danh sách bảng:", $scope.tables);
-
-            // Cập nhật giao diện AngularJS
-            $scope.$apply();  // Cập nhật UI nếu cần
-        }
-    };
-
-    angular.element(document).ready(function () {
-        angular.forEach($scope.tables, function (table) {
-            var fileInput = document.getElementById('formFile-' + table.mau.idMauSac);
-            fileInput.addEventListener('change', function () {
-                $scope.handleFileChange(table.mau.idMauSac, table);
-            });
-        });
-    });
 
     //load data
     $scope.getAllOrderOnline();

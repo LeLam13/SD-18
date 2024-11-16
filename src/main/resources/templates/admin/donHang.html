@@ -252,17 +252,72 @@
                 </div>
                 <div class="row">
                     <div class="responsive">
-                        <div ng-repeat="table in tables">
-                            <div class="mb-3">
-                                <label for="formFile-{{table.mau.idMauSac}}" class="form-label">
-                                    Chọn file ảnh cho màu {{table.mau.ten}}
-                                </label>
-                                <input class="form-control" type="file"
-                                       id="formFile-{{table.mau.idMauSac}}"
-                                       ng-change="handleFileChange(table.mau.idMauSac, $event.target)">
+                        <div class="row">
+                            <h3>Thông tin đơn Hàng</h3>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="col-3">Trạng Thái:</div>
+                                    <div class="col-3"></div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="col-3">Phí Vận Chuyển:</div>
+                                    <div class="col-3"></div>
+                                </div>
                             </div>
-                            <p><strong>Tên ảnh:</strong> {{table.img.imageSrc}}</p>
-                            <img ng-if="table.img.imageSrc" ng-src="{{table.mau.idMauSac}}" alt="Ảnh đã chọn" width="100" />
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="col-3">Mã Đơn Hàng:</div>
+                                    <div class="col-3"></div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="col-3">Tổng Tiền:</div>
+                                    <div class="col-3"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="col-3">Loại Đơn Hàng:</div>
+                                    <div class="col-3"></div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="col-3">Phải Thanh Toán:</div>
+                                    <div class="col-3"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="col-4">TRạng Thái Thanh Toán:</div>
+                                    <div class="col-2"></div>
+                                </div>
+<!--                                <div class="col-6">-->
+<!--                                    <div class="col-3">Phải Thanh Toán:</div>-->
+<!--                                    <div class="col-3"></div>-->
+<!--                                </div>-->
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="row">
+                            <h3>Thông tin Khách Hàng</h3>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="col-3">Tên Khách Hàng:</div>
+                                    <div class="col-3"></div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="col-3">Email:</div>
+                                    <div class="col-3"></div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="col-3">Số Điện Thoại:</div>
+                                    <div class="col-3"></div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="col-3">Địa Chỉ:</div>
+                                    <div class="col-3"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

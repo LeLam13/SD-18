@@ -16,4 +16,5 @@ public interface QuanLyDonHangOnlineService {
     DonHang updateStatusOrder(DonHangOnlineStatusRequestDTO donHangOnlineStatusRequestDTO,String username);
 
     HoaDon createInvoice(HoaDonOnlineRequestDTO hoaDonOnlineRequestDTO, String username);
+    String generateRandomString(int length);
 }
