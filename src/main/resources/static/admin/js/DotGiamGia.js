@@ -1,101 +1,186 @@
 var app = angular.module('dot-giam-gia-admin', []);
 app.controller('ctrl', function ($scope, $http) {
+    $scope.selectedProductId = 0;
     $scope.items = [];
     $scope.selectedProducts = []; // Mảng chứa các sản phẩm đã chọn
     $scope.page = 0;
     $scope.size = 4;
     $scope.totalPages = 0;
+    $scope.selectedProductIds = []; // Mảng để lưu các id chi tiết sản phẩm đã chọn
 
-    // Hàm tải dữ liệu
+    // Hàm tải danh sách sản phẩm
     $scope.findAll = function () {
-        var url = `/admin/san-pham/find-all?page=${$scope.page}&size=${$scope.size}`;
+        const discountId = getDiscountIdFromUrl(); // Hàm lấy ID đợt giảm giá từ URL
+
+        const url = `/admin/san-pham/find-all-not-in/${discountId}?page=${$scope.page}&size=${$scope.size}`;
         $http.get(url).then(resp => {
             $scope.items = resp.data.content;
             $scope.totalPages = resp.data.totalPages;
-            // Cập nhật lại trạng thái chọn sản phẩm khi chuyển trang
-            $scope.items.forEach(item => {
-                item.selected = $scope.selectedProducts.some(p => p.idSanPham === item.idSanPham);
-            });
-        }).catch(error => {
-            console.log(error);
+
+            $scope.syncCheckboxState();
+            $scope.selectAll = $scope.items.every(item => item.selected);
+
+        }).catch(error => console.error('Lỗi khi tải dữ liệu:', error));
+    };
+
+    $scope.syncCheckboxState = function () {
+        $scope.items.forEach(item => {
+            item.selected = $scope.selectedProducts.some(p => p.idSanPham.idSanPham === item.idSanPham);
         });
     };
 
+    $scope.discountProducts = [];
+
+    $scope.loadDiscountProducts = function () {
+        const discountId = getDiscountIdFromUrl(); // Hàm lấy ID đợt giảm giá từ URL
+        if (!discountId) {
+            alert('Không tìm thấy ID đợt giảm giá!');
+            return;
+        }
+
+        $http.get(`/admin/san-pham/dot-giam-gia/${discountId}`)
+            .then(response => {
+                $scope.discountProducts = response.data;
+                console.log("Danh sách sản phẩm trong đợt giảm giá:", $scope.discountProducts);
+            })
+            .catch(error => {
+                console.error("Lỗi khi tải sản phẩm trong đợt giảm giá:", error);
+            });
+    };
+
+    $scope.removeFromDiscount = function (productId) {
+        const discountId = getDiscountIdFromUrl(); // Hàm lấy ID đợt giảm giá từ URL
+        if (!discountId) {
+            alert('Không tìm thấy ID đợt giảm giá!');
+            return;
+        }
+
+        if (confirm("Bạn có chắc muốn xóa sản phẩm này khỏi đợt giảm giá?")) {
+            console.log(`/admin/delete/${productId}/dot-giam-gia/${discountId}`);
+            $http.get(`/admin/delete/${productId}/dot-giam-gia/${discountId}`)
+                .then(() => {
+                    alert('Xóa sản phẩm khỏi đợt giảm giá thành công!');
+                    $scope.loadDiscountProducts(); // Cập nhật danh sách sau khi xóa
+                    $scope.findAll();
+                })
+                .catch(error => {
+                    alert("Lỗi khi xóa sản phẩm khỏi đợt giảm giá!");
+                    console.error(error);
+                });
+        }
+    };
+
+// Hàm hiển thị danh sách chi tiết sản phẩm
+    $scope.showProductDetails = function (productId) {
+        $scope.selectedProductId = productId;
+        const discountId = getDiscountIdFromUrl(); // Lấy ID đợt giảm giá
+        if (!discountId) {
+            alert('Không tìm thấy ID đợt giảm giá!');
+            return;
+        }
+
+        $http.get(`/admin/san-pham/dot-giam-gia/${discountId}/chi-tiet/${productId}`)
+            .then(response => {
+                $scope.productDetails = response.data; // Lưu danh sách chi tiết sản phẩm
+                $('#productDetailsModal').modal('show'); // Hiển thị modal
+            })
+            .catch(error => {
+                console.error("Lỗi khi tải chi tiết sản phẩm:", error);
+                alert("Không thể tải danh sách chi tiết sản phẩm!");
+            });
+    };
+
+// Hàm xóa chi tiết sản phẩm
+    $scope.removeProductDetail = function (productDetailId) {
+        const discountId = getDiscountIdFromUrl(); // Lấy ID đợt giảm giá
+        if (!discountId) {
+            alert('Không tìm thấy ID đợt giảm giá!');
+            return;
+        }
+
+        if (confirm("Bạn có chắc muốn xóa chi tiết sản phẩm này khỏi đợt giảm giá?")) {
+            $http.delete(`/admin/delete/chi-tiet/${productDetailId}/dot-giam-gia/${discountId}`)
+                .then(() => {
+                    alert("Xóa chi tiết sản phẩm thành công!");
+                    // Tải lại danh sách chi tiết sản phẩm sau khi xóa
+                    $scope.showProductDetails($scope.selectedProductId);
+                })
+                .catch(error => {
+                    console.error("Lỗi khi xóa chi tiết sản phẩm:", error);
+                    alert("Không thể xóa chi tiết sản phẩm!");
+                });
+        }
+    };
+
+
+
+
+    // Lấy chi tiết sản phẩm và thêm vào mảng selectedProducts
     $scope.getProductDetail = function (productId) {
+        const discountId = getDiscountIdFromUrl(); // Lấy ID đợt giảm giá
+        if (!discountId) {
+            alert('Không tìm thấy ID đợt giảm giá!');
+            return;
+        }
+
         if (!productId) {
             console.log("productId không hợp lệ:", productId);
             return;
         }
-        $http.get(`/admin/san-pham/${productId}/find-all`).then(response => {
-            console.log("Chi tiết sản phẩm:", response.data);
+        $http.get(`/admin/san-pham/${productId}/find-all/${discountId}`).then(response => {
+            const productDetails = response.data.content;
 
-            if (response.data.content && response.data.content.length > 0) {
-                const productDetails = response.data.content;  // Lấy tất cả chi tiết sản phẩm
+            // Thêm từng chi tiết sản phẩm nếu chưa tồn tại
+            productDetails.forEach(productDetail => {
+                const existingProduct = $scope.selectedProducts.some(p => p.idSanPhamChiTiet === productDetail.idSanPhamChiTiet);
+                if (!existingProduct) {
+                    $scope.selectedProducts.push(angular.copy(productDetail));
+                }
+            });
 
-                // Thêm từng chi tiết sản phẩm vào selectedProducts nếu chưa có
-                productDetails.forEach(productDetail => {
-                    const existingProduct = $scope.selectedProducts.some(p => p.idSanPham === productDetail.idSanPham);
-                    if (!existingProduct) {
-                        $scope.selectedProducts.push(angular.copy(productDetail));
-                        console.log("Đã thêm sản phẩm chi tiết:", productDetail.idSanPham);
-                    }
-                });
-            } else {
-                console.log("Không có chi tiết sản phẩm nào được tìm thấy.");
-            }
+            console.log("Chi tiết sản phẩm đã tải:", productDetails);
         }).catch(error => {
-            console.log("Lỗi khi lấy chi tiết sản phẩm: ", error);
+            console.log("Lỗi khi lấy chi tiết sản phẩm:", error);
         });
     };
 
 
-
+    // Thay đổi trạng thái chọn của một sản phẩm
     $scope.toggleSelection = function (product) {
         if (product.selected) {
-            // Khi chọn sản phẩm, gọi chi tiết sản phẩm
-            if (product.idSanPham) {
-                console.log("Gọi chi tiết sản phẩm với ID:", product.idSanPham);
-                $scope.getProductDetail(product.idSanPham);
-            }
+            // Gọi chi tiết sản phẩm
+            $scope.getProductDetail(product.idSanPham);
         } else {
-            // Khi bỏ chọn sản phẩm, xóa chi tiết sản phẩm khỏi selectedProducts
-            const removedProduct = $scope.selectedProducts.find(p => p.idSanPham === product.idSanPham);
-
-            // Nếu tìm thấy sản phẩm chi tiết trong selectedProducts thì xóa nó
-            if (removedProduct) {
-                $scope.selectedProducts = $scope.selectedProducts.filter(p => p.idSanPham !== product.idSanPham);
-                console.log("Đã bỏ chọn và xóa chi tiết sản phẩm ID:", product.idSanPham);
-            }
-
-            // Cập nhật lại trạng thái của sản phẩm trong items
-            const itemToUpdate = $scope.items.find(item => item.idSanPham === product.idSanPham);
-            if (itemToUpdate) {
-                itemToUpdate.selected = false;
-            }
-
-            // Cập nhật giao diện
-            $scope.$apply();  // Đảm bảo đồng bộ hóa giao diện
+            // Xóa chi tiết sản phẩm liên quan
+            $scope.selectedProducts = $scope.selectedProducts.filter(p => p.idSanPham.idSanPham !== product.idSanPham);
+            // Cập nhật trạng thái và giao diện
+            // product.selected = false;
+            // $scope.$apply(); // Buộc giao diện đồng bộ lại
         }
+        $scope.selectAll = $scope.items.every(item => item.selected);
     };
 
 
-
-    // Hàm chọn tất cả sản phẩm
+    // Chọn tất cả sản phẩm từ tất cả các trang
     $scope.toggleSelectAll = function () {
-        $scope.selectedProducts = []; // Reset mảng đã chọn
-        angular.forEach($scope.items, function (item) {
-            item.selected = $scope.selectAll; // Đánh dấu tất cả là đã chọn hoặc bỏ chọn
+
+        $scope.items.forEach(item => {
+            item.selected = $scope.selectAll; // Cập nhật trạng thái của từng sản phẩm
             if ($scope.selectAll) {
-                $scope.getProductDetail(item.idSanPham);
+                $scope.getProductDetail(item.idSanPham); // Lấy chi tiết sản phẩm nếu cần
+            } else {
+                $scope.items.forEach(item => {
+                    item.selected = false;
+                    $scope.selectedProducts = $scope.selectedProducts.filter(p => p.idSanPham.idSanPham !== item.idSanPham);
+
+                });
             }
         });
 
-        if (!$scope.selectAll) {
-            $scope.selectedProducts = []; // Reset mảng đã chọn nếu bỏ chọn tất cả
-        }
     };
 
-    // Hàm chuyển tới trang trước
+
+    // Chuyển trang trước
     $scope.previousPage = function () {
         if ($scope.page > 0) {
             $scope.page--;
@@ -103,7 +188,7 @@ app.controller('ctrl', function ($scope, $http) {
         }
     };
 
-    // Hàm chuyển tới trang sau
+    // Chuyển trang sau
     $scope.nextPage = function () {
         if ($scope.page < $scope.totalPages - 1) {
             $scope.page++;
@@ -111,48 +196,72 @@ app.controller('ctrl', function ($scope, $http) {
         }
     };
 
-    // Lấy dữ liệu khi trang được tải
-    $scope.findAll();
-    $scope.selectedProductIds = []; // Mảng để lưu các id chi tiết sản phẩm đã chọn
-
-// Cập nhật mảng các ID chi tiết sản phẩm khi checkbox thay đổi
-    $scope.updateSelectedProducts = function(product) {
+    // Cập nhật danh sách ID chi tiết sản phẩm khi trạng thái checkbox thay đổi
+    $scope.updateSelectedProducts = function (product) {
         if (product.selected) {
-            // Thêm ID vào mảng nếu checkbox được chọn
             $scope.selectedProductIds.push(product.idSanPhamChiTiet);
         } else {
-            // Loại bỏ ID khỏi mảng nếu checkbox bị bỏ chọn
-            const index = $scope.selectedProductIds.indexOf(product.idSanPhamChiTiet);
-            if (index > -1) {
-                $scope.selectedProductIds.splice(index, 1);
-            }
+            $scope.selectedProductIds = $scope.selectedProductIds.filter(id => id !== product.idSanPhamChiTiet);
         }
-
-        // In mảng các ID chi tiết sản phẩm ra console để kiểm tra
-        console.log("Danh sách ID chi tiết sản phẩm đã chọn: ", $scope.selectedProductIds);
+        console.log("Danh sách ID chi tiết sản phẩm đã chọn:", $scope.selectedProductIds);
     };
 
-
-
-
-    $scope.toggleSelectAll2 = function(selectAll2) {
-        // Nếu chọn tất cả, đánh dấu tất cả checkbox là true
-        angular.forEach($scope.selectedProducts, function(product) {
-            product.selected = selectAll2; // Cập nhật trạng thái chọn/tích cho mỗi sản phẩm
+    // Chọn hoặc bỏ chọn tất cả chi tiết sản phẩm
+    $scope.toggleSelectAll2 = function (selectAll2) {
+        $scope.selectedProducts.forEach(product => {
+            product.selected = selectAll2;
         });
     };
 
-    $scope.updateSelectedProducts = function(product) {
-        // Cập nhật trạng thái của sản phẩm khi checkbox được thay đổi
-        // Thực hiện các thao tác bạn muốn với các sản phẩm đã chọn, ví dụ lưu vào mảng hoặc gọi API
-        console.log("Cập nhật sản phẩm:", product);
+    $scope.removeSelectedProducts = function () {
+        // Lọc danh sách chi tiết sản phẩm để chỉ giữ lại các sản phẩm chưa được chọn
+        const removedProductIds = $scope.selectedProducts
+            .filter(product => product.selected)
+            .map(product => product.idSanPham.idSanPham);
+
+        // Xóa các sản phẩm được chọn
+        $scope.selectedProducts = $scope.selectedProducts.filter(product => !product.selected);
+
+        // Cập nhật trạng thái của các sản phẩm trong items
+        $scope.items.forEach(item => {
+            if (removedProductIds.includes(item.idSanPham)) {
+                const hasRemainingDetails = $scope.selectedProducts.some(p => p.idSanPham.idSanPham === item.idSanPham);
+                item.selected = hasRemainingDetails; // Nếu không còn chi tiết nào, bỏ tích
+            }
+        });
+
+        // Cập nhật trạng thái "Tích tất cả"
+        $scope.selectAll2 = $scope.selectedProducts.every(product => product.selected);
+        $scope.selectAll = $scope.items.every(item => item.selected);
+
+        console.log("Danh sách sản phẩm sau khi xóa:", $scope.selectedProducts);
     };
 
 
 
 
+    // Gọi API thêm sản phẩm vào đợt giảm giá
+    $scope.addProductsToDiscount = function () {
+        const discountId = getDiscountIdFromUrl();
+        if (!discountId) return alert('Không tìm thấy ID đợt giảm giá!');
+
+        const selectedIds = $scope.selectedProductIds;
+        if (!selectedIds.length) return alert('Vui lòng chọn ít nhất một sản phẩm!');
+
+        $http.post(`/admin/dot-giam-gia/${discountId}/add-san-pham`, selectedIds)
+            .then(() => alert('Thêm sản phẩm thành công!'))
+            .catch(err => alert(`Lỗi khi thêm sản phẩm: ${err.message}`));
+    };
+
+    // Lấy ID đợt giảm giá từ URL
+    function getDiscountIdFromUrl() {
+        const url = window.location.href;
+        const match = url.match(/\/dot-giam-gia\/detail\/(\d+)/);
+        return match ? match[1] : null;
+    }
 
 
-
-
+    // Khởi tạo
+    $scope.findAll();
+    $scope.loadDiscountProducts();
 });

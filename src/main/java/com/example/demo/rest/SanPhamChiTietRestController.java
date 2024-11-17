@@ -7,6 +7,7 @@ import com.example.demo.dto.request.SanPhamRequestDTO;
 import com.example.demo.entity.MauSac;
 import com.example.demo.entity.SanPham;
 import com.example.demo.entity.SanPhamChiTiet;
+import com.example.demo.repo.SanPhamChiTietRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +28,9 @@ public class SanPhamChiTietRestController {
     @Autowired
     private SanPhamChiTietService sanPhamChiTietService;
 
+    @Autowired
+    private SanPhamChiTietRepo sanPhamChiTietRepo;
+
     @GetMapping("admin/san-pham/{idSanPham}/find-all")
     public ResponseEntity<?> findAllChiTiet(
             @PathVariable Integer idSanPham,
@@ -38,6 +42,18 @@ public class SanPhamChiTietRestController {
 //        PagedModel<SanPham> pagedModel = assembler.toModel(sp);
         System.out.println("sp:" + sp);
         return ResponseEntity.ok(sp); // Return the PagedModel
+    }
+
+    @GetMapping("admin/san-pham/{idSanPham}/find-all/{idGG}")
+    public ResponseEntity<?> findSanPhamChiTietNotInDotGiamGia(
+            @PathVariable Integer idSanPham,
+            @PathVariable Integer idGG,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<SanPhamChiTiet> sp = sanPhamChiTietRepo.findSanPhamChiTietNotInDotGiamGia(idSanPham,idGG, pageable); // Assuming this is your service method
+        System.out.println("sp:" + sp);
+        return ResponseEntity.ok(sp);
     }
 
     @GetMapping("/admin/san-pham/chi-tiet/get-all")
@@ -59,6 +75,7 @@ public class SanPhamChiTietRestController {
         return ResponseEntity.ok(sanPhamChiTietRequestDTO);
 
     }
+<<<<<<< HEAD
 
     @GetMapping("/admin/san-pham/chi-tiet/view/{ma}")
     public ResponseEntity<?> getSanPhamChiTiet(@PathVariable("ma") String ma) {
@@ -78,3 +95,6 @@ public class SanPhamChiTietRestController {
         return ResponseEntity.ok("");
     }
 }
+=======
+}
+>>>>>>> feature/login
