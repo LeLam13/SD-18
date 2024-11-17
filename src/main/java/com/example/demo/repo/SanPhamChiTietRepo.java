@@ -73,12 +73,11 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
 
     List<SanPhamChiTiet> findAllByIdSanPhamChiTietIn(List<Integer> idSanPhamChiTietList);
 
-<<<<<<< HEAD
+
     SanPhamChiTiet findByMa(String ma);
 
     SanPhamChiTiet findByIdSanPhamChiTiet(Integer idSanPhamChiTiet);
 }
 
-=======
-}
->>>>>>> feature/login
+
+

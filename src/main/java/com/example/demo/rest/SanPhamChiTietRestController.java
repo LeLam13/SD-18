@@ -75,7 +75,7 @@ public class SanPhamChiTietRestController {
         return ResponseEntity.ok(sanPhamChiTietRequestDTO);
 
     }
-<<<<<<< HEAD
+
 
     @GetMapping("/admin/san-pham/chi-tiet/view/{ma}")
     public ResponseEntity<?> getSanPhamChiTiet(@PathVariable("ma") String ma) {
@@ -95,6 +95,5 @@ public class SanPhamChiTietRestController {
         return ResponseEntity.ok("");
     }
 }
-=======
-}
->>>>>>> feature/login
+
+
