@@ -362,7 +362,7 @@
                                         <label class="form-label">Chất Liệu</label>
                                         <select id="chatLieu" class="form-control"
                                                 ng-model="spct.idChatLieu"
-                                                ng-options="chatLieu.idChatLieu as chatLieu.ten for chatLieu in chatLieu track by chatLieu.idChatLieu">
+                                                ng-options="chatLieu as chatLieu.ten for chatLieu in chatLieu track by chatLieu.idChatLieu">
                                         </select>
                                     </div>
                                 </div>
@@ -371,7 +371,7 @@
                                         <label class="form-label">Kiểu Dáng</label>
                                         <select id="kieuDang" class="form-control"
                                                 ng-model="spct.idKieuDang"
-                                                ng-options="kieuDang.idKieuDang as kieuDang.ten for kieuDang in kieuDang track by kieuDang.idKieuDang">
+                                                ng-options="kieuDang as kieuDang.ten for kieuDang in kieuDang track by kieuDang.idKieuDang">
                                         </select>
                                     </div>
                                     <div class="mb-3">

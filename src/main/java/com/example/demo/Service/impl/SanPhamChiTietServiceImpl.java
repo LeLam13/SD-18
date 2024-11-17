@@ -124,7 +124,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             SanPham sanPham = sanPhamRepo.findByIdSanPham(dto.getIdSanPham());
             chiTiet.setIdSanPham(sanPham);
 
-            HinhAnh hinhAnh=hinhAnhRepo.findByIdHinhAnh(dto.getIdHinhAnh());
+            HinhAnh hinhAnh = hinhAnhRepo.findByIdHinhAnh(dto.getIdHinhAnh());
             chiTiet.setIdHinhAnh(hinhAnh);
 
             sanPhamChiTietList.add(chiTiet);
@@ -141,8 +141,27 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     @Override
     public SanPhamChiTiet updateSanPhamChiTiet(SanPhamChiTietRequestDTO sanPhamChiTietRequestDTO) {
         SanPhamChiTiet ms = sanPhamChiTietRepo.findByMa(sanPhamChiTietRequestDTO.getMa());
-        ms.setIdKieuDang(sanPhamChiTietRequestDTO.getIdKieuDang2());
-        ms.setIdChatLieu(sanPhamChiTietRequestDTO.getIdChatLieu2());
+        ms.setGiaBan(sanPhamChiTietRequestDTO.getGiaBan());
+        ms.setSoLuong(sanPhamChiTietRequestDTO.getSoLuong());
+
+        ChatLieu chatLieu = chatLieuRepo.findByIdChatLieu(sanPhamChiTietRequestDTO.getIdChatLieu());
+        ms.setIdChatLieu(chatLieu);
+
+        XuatXu xuatXu = xuatXuRepo.findByIdXuatXu(sanPhamChiTietRequestDTO.getIdXuatXu());
+        ms.setIdXuatXu(xuatXu);
+
+        KieuDang kieuDang = kieuDangRepo.findByIdKieuDang(sanPhamChiTietRequestDTO.getIdKieuDang());
+        ms.setIdKieuDang(kieuDang);
+
+        MauSac mauSac = mauSacRepo.findByIdMauSac(sanPhamChiTietRequestDTO.getIdMauSac());
+        ms.setIdMauSac(mauSac);
+
+        KichCo kichCo = kichCoRepo.findByIdKichCo(sanPhamChiTietRequestDTO.getIdKichCo());
+        ms.setIdKichCo(kichCo);
+
+        ThuongHieu thuongHieu = thuongHieuRepo.findByIdThuongHieu(sanPhamChiTietRequestDTO.getIdThuongHieu());
+        ms.setIdThuongHieu(thuongHieu);
+
         ms.setUpdateDate(date);
         return sanPhamChiTietRepo.save(ms);
     }
@@ -150,10 +169,9 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     @Override
     public SanPhamChiTiet updateTrangThai(Integer idSanPhamChiTiet) {
         SanPhamChiTiet ms = sanPhamChiTietRepo.findByIdSanPhamChiTiet(idSanPhamChiTiet);
-        if(ms.getTrangThai()==true){
+        if (ms.getTrangThai() == true) {
             ms.setTrangThai(false);
-        }
-        else{
+        } else {
             ms.setTrangThai(true);
         }
         return sanPhamChiTietRepo.save(ms);

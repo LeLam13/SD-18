@@ -104,17 +104,17 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
             ma: ma,
             soLuong: $scope.spct.soLuong,
             giaBan:$scope.spct.giaBan,
-            idMauSac:$scope.idMauSac,
-            idThuongHieu:$scope.idThuongHieu,
-            idKieuDang:$scope.idKieuDang,
-            idChatLieu:$scope.idChatLieu,
-            idKichCo:$scope.idKichCo,
-            idXuatXu:$scope.idXuatXu,
-            // idMauSac: $scope.idHinhAnh
+            idMauSac:$scope.spct.idMauSac.idMauSac,
+            idThuongHieu:$scope.spct.idThuongHieu.idThuongHieu,
+            idKieuDang:$scope.spct.idKieuDang.idKieuDang,
+            idChatLieu:$scope.spct.idChatLieu.idChatLieu,
+            idKichCo:$scope.spct.idKichCo.idKichCo,
+            idXuatXu:$scope.spct.idXuatXu.idXuatXu,
         }
         $http.post(url, updateSPCT).then(function (r) {
+            alert("Update thành công");
+            console.log($scope.spct)
             $scope.findAll();
-            alert("Update thành công")
         }).catch(function (err) {
             console.log("Update khong thanh cong", err);
         })
