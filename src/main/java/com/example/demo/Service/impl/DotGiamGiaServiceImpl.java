@@ -124,7 +124,7 @@ public class DotGiamGiaServiceImpl {
                 productDetail.setSoTienGiam(null);
             }
         });
-        dotGiamGia.getSanPhamChiTietList().clear();
+//        dotGiamGia.getSanPhamChiTietList().clear();
         dotGiamGia.getSanPhamChiTietList().addAll(productDetails);
         dotGiamGiaRepository.save(dotGiamGia);
         return dotGiamGia;

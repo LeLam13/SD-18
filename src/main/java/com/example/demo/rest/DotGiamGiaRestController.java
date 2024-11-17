@@ -3,7 +3,9 @@ package com.example.demo.rest;
 import com.example.demo.Service.impl.DotGiamGiaServiceImpl;
 import com.example.demo.Service.impl.SanPhamChiTietServiceImpl;
 import com.example.demo.entity.DotGiamGia;
+import com.example.demo.entity.SanPham;
 import com.example.demo.entity.SanPhamChiTiet;
+import com.example.demo.repo.SanPhamRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 @RestController
 public class DotGiamGiaRestController {
+
+    @Autowired
+    private SanPhamRepo sanPhamRepo;
 
     @Autowired
     private DotGiamGiaServiceImpl dotGiamGiaService;
@@ -43,6 +48,18 @@ public class DotGiamGiaRestController {
                 .collect(Collectors.toList());
         // Trả về danh sách DTO dưới dạng JSON
         return ResponseEntity.ok(dotGiamGia1);
+    }
+
+    @GetMapping("/admin/san-pham/dot-giam-gia/{id}")
+    public ResponseEntity<List<SanPham>> getSanPhamById(@PathVariable Integer id) {
+        List<SanPham> sanPhams = sanPhamRepo.findAllByDotGiamGia(id);
+        return ResponseEntity.ok(sanPhams);
+    }
+
+    @GetMapping("/admin/delete/{idSP}/dot-giam-gia/{idGG}")
+    public ResponseEntity<?> deleteByDotGiamGiaAndSanPhamChiTiet(@PathVariable Integer idSP, @PathVariable Integer idGG) {
+        sanPhamRepo.deleteByDotGiamGiaAndSanPham(idGG,idSP);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping("/api/v1/dotgiamgia/{idGiamGia}")
