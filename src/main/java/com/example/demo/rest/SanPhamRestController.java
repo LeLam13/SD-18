@@ -26,11 +26,11 @@ public class SanPhamRestController {
     private SanPhamService sanPhamService;
 
     @GetMapping("/admin/san-pham/find-all")
-    public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") int page,
-                                     @RequestParam(defaultValue = "5") int size) {
+    public ResponseEntity<?> findAllWithStatistics(@RequestParam(defaultValue = "0") int page,
+                                                   @RequestParam(defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("idSanPham").descending());
-        Page<SanPham> sp = sanPhamService.findAll(pageable); // Phân trang
-        return ResponseEntity.ok(sp); // Trả về trang hiện tại cùng dữ liệu
+        Page<SanPham> sp = sanPhamService.findAllWithStatistics(pageable); // Sử dụng service đã bổ sung thống kê
+        return ResponseEntity.ok(sp); // Trả về dữ liệu phân trang kèm thống kê
     }
 
     @GetMapping("/admin/san-pham/get-all")
@@ -56,7 +56,6 @@ public class SanPhamRestController {
         SanPham ms = sanPhamService.getByIdSanPham(idSanPham);
         return ResponseEntity.ok(ms);
     }
-
 
     @PostMapping("/admin/san-pham/update/{ma}")
     public ResponseEntity<?> updateSanPham(@RequestBody SanPhamRequestDTO sanPhamRequestDTO) {
