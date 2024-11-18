@@ -32,6 +32,7 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
             //     console.log("username not null",$scope.username);
             //     $scope.getCart();
             // }
+
             $scope.getCart();
         }).catch(function (errors) {
             console.error("có lỗi xảy ra: ",errors)
@@ -40,9 +41,40 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
 
     $scope.getCart = function (){
         $http.get("/gio-hang/lay-theo-user").then(function (response){
-            console.log("check gio hang: ",response.data);
+            console.log("check gio hang11: ",response.data);
             idGioHang = response.data.idGioHang;
-            $scope.cart = response.data;
+            //$scope.cart = response.data;
+            if (response.data) {
+                $scope.cart = response.data;
+                console.log("Dữ liệu tồn tại:", $scope.cart);
+            } else {
+                $scope.cartData={
+                    maGioHang: $scope.generateRandomString(8),
+                    userName: $scope.username
+                }
+
+                var dataCart = angular.copy($scope.cartData);
+                $http({
+                    method: 'POST',
+                    url: '/gio-hang/them-moi',
+                    data: dataCart,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    transformRequest: function(data) {
+                        return JSON.stringify(data);
+                    }
+                }) .then(function(response) {
+                    console.log("check cart when create: ",response);
+                    idGioHang = response.data.idGioHang;
+                    $scope.cart = response.data;
+                }).catch(function(error) {
+                    console.error('Có lỗi xảy ra:', error);
+                });
+                console.log("response.data không có dữ liệu.");
+
+            }
+
             $scope.getDetailCart($scope.cart.idGioHang);
         }).catch(function (errors) {
             console.error("có lỗi xảy ra: ",errors)
@@ -66,27 +98,27 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
             userName: $scope.username
         }
 
-        if(!$scope.cart || $scope.cart.length ===0){
-            //tạo giỏ hàng
-            var dataCart = angular.copy($scope.cartData);
-            $http({
-                method: 'POST',
-                url: '/gio-hang/them-moi',
-                data: dataCart,
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                transformRequest: function(data) {
-                    return JSON.stringify(data);
-                }
-            }) .then(function(response) {
-                console.log("check cart when create: ",response);
-                idGioHang = response.data.idGioHang;
-                $scope.cart = response.data;
-            }).catch(function(error) {
-                console.error('Có lỗi xảy ra:', error);
-            });
-        }
+        // if(!$scope.cart || $scope.cart.length ===0){
+        //     //tạo giỏ hàng
+        //     var dataCart = angular.copy($scope.cartData);
+        //     $http({
+        //         method: 'POST',
+        //         url: '/gio-hang/them-moi',
+        //         data: dataCart,
+        //         headers: {
+        //             'Content-Type': 'application/json'
+        //         },
+        //         transformRequest: function(data) {
+        //             return JSON.stringify(data);
+        //         }
+        //     }) .then(function(response) {
+        //         console.log("check cart when create: ",response);
+        //         idGioHang = response.data.idGioHang;
+        //         $scope.cart = response.data;
+        //     }).catch(function(error) {
+        //         console.error('Có lỗi xảy ra:', error);
+        //     });
+        // }
         //tạo giỏ hàng chi tiết
         //kiểm tra xem có sản phẩm chưa
         if(!$scope.items || $scope.items.length === 0){
@@ -135,11 +167,12 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
 
     $scope.createCartDetail = function (){
         console.log("checkoi$scope.cart.idGioHang: ",$scope.cart);
+        console.log("checkoi$scope.cart.idGioHang: ",idGioHang);
         //lấy don hàng
         $scope.getCart();
 
         $scope.cartDetailData={
-            idGioHang: $scope.cart.idGioHang,
+            idGioHang: idGioHang,
             maGioHangChiTiet: $scope.generateRandomString(8),
             idSanPhamChiTiet: $scope.cartDetaiPro.idSanPhamChiTiet,
             soLuong: 1
@@ -706,24 +739,86 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
     }
     //tăng số lượng
     $scope.soLuongPlus = function (orderProduct){
-        // var cart = JSON.parse(localStorage.getItem("cart")) || [];
+        console.log("orderProduct1: ",orderProduct)
         var product = $scope.itemsOrder.find(item=>item.idSanPhamChiTiet === orderProduct.idSanPhamChiTiet);
+        console.log("orderProduct2: ",product)
         if(product){
             // product.qty++;
             // product.soLuong++;
             product.soLuong = parseInt(product.soLuong) + 1;  // Chuyển thành số nếu cần thiết
             product.qty = parseInt(product.qty) + 1;  // Chuyển thành số nếu cần thiết
-            this.saveToLocalStorage();
+            $scope.updateQuantityPlus(orderProduct);
         }
     }
+
+    $scope.updateQuantityPlus = function (details){
+        console.log("check Quantity: ",details);
+        $scope.dataUpdateProduct ={
+            maDonHangChiTiet: $scope.generateRandomString(8),
+            idĐonHangChiTiet: details.idGioHangChiTiet,
+            idSanPhamChiTiet: details.sanPhamChiTiet.idSanPhamChiTiet,
+            idGioHang:details.gioHang.idGioHang,
+            soLuong: '1'
+        }
+        console.log("check Quantity: ",$scope.dataUpdateProduct);
+        var updateProduct = angular.copy($scope.dataUpdateProduct);
+        $http({
+            method: 'PUT',
+            url: '/gio-hang/gio-hang-chi-tiet/so-luong-tang',
+            data: updateProduct,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            transformRequest: function(data) {
+                return JSON.stringify(data);  // Chuyển đối tượng thành chuỗi JSON
+            }
+        }).then(function(response) {
+            //console.log('Sản phẩm thêm thành công');
+            console.log('Sản phẩm thêm: ',response.data);
+            // $scope.getProducts();
+        }).catch(function(error) {
+            console.error('Có lỗi xảy ra:', error);
+        });
+    }
+
     //Giảm Số Lượng
     $scope.soLuongReduce = function(orderProduct){
         var product = $scope.itemsOrder.find(item=>item.idSanPhamChiTiet === orderProduct.idSanPhamChiTiet);
         if(product.soLuong >1){
             product.soLuong = parseInt(product.soLuong) - 1;
             product.qty = parseInt(product.qty) - 1;
-            this.saveToLocalStorage();
+            //this.saveToLocalStorage();
+            $scope.updateQuantityReduce(orderProduct);
         }
+    }
+
+    $scope.updateQuantityReduce = function (details){
+        $scope.dataUpdateProduct ={
+            maDonHangChiTiet: $scope.generateRandomString(8),
+            idĐonHangChiTiet: details.idGioHangChiTiet,
+            idSanPhamChiTiet: details.sanPhamChiTiet.idSanPhamChiTiet,
+            idGioHang:details.gioHang.idGioHang,
+            soLuong: '1'
+        }
+        console.log("check Quantity: ",$scope.dataUpdateProduct);
+        var updateProductReduce = angular.copy($scope.dataUpdateProduct);
+        $http({
+            method: 'PUT',
+            url: '/gio-hang/gio-hang-chi-tiet/so-luong-giam',
+            data: updateProductReduce,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            transformRequest: function(data) {
+                return JSON.stringify(data);  // Chuyển đối tượng thành chuỗi JSON
+            }
+        }).then(function(response) {
+            //console.log('Sản phẩm thêm thành công');
+            console.log('Sản phẩm thêm: ',response.data);
+            // $scope.getProducts();
+        }).catch(function(error) {
+            console.error('Có lỗi xảy ra:', error);
+        });
     }
 
     //giỏ hàng chi tiết
@@ -750,19 +845,52 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
             });
         }
     }
-
+    //$scope.invalidQuantity = false;
     //kiểm tra số lượng
     $scope.validateQuantity = function(orderProduct) {
         // Tìm sản phẩm tương ứng trong listProducts để lấy số lượng có sẵn
-        let availableProduct = $scope.listProducts.find(product => product.idSanPhamChiTiet === orderProduct.idSanPhamChiTiet);
-
+        let availableProduct = $scope.listProducts.find(product => product.idSanPhamChiTiet === orderProduct.sanPhamChiTiet.idSanPhamChiTiet);
+        // console.log("availableProduct1: ",$scope.listProducts);
+        // console.log("availableProduct: ",orderProduct);
         // Kiểm tra nếu số lượng yêu cầu lớn hơn số lượng có sẵn
         if (availableProduct && orderProduct.soLuong > availableProduct.soLuong) {
             orderProduct.invalidQuantity = true;
         } else {
             orderProduct.invalidQuantity = false;
+            console.log("check2:")
+            $scope.updateQuantityChange(orderProduct);
         }
     };
+
+    $scope.updateQuantityChange = function (orderProduct){
+        console.log("orderProduct change: ",orderProduct);
+        $scope.dataUpdateProduct ={
+            maDonHangChiTiet: $scope.generateRandomString(8),
+            idĐonHangChiTiet: orderProduct.idGioHangChiTiet,
+            idSanPhamChiTiet: orderProduct.sanPhamChiTiet.idSanPhamChiTiet,
+            idGioHang:orderProduct.gioHang.idGioHang,
+            soLuong: orderProduct.soLuong
+        }
+        console.log("check Quantity: ",$scope.dataUpdateProduct);
+        var updateProductReduce = angular.copy($scope.dataUpdateProduct);
+        $http({
+            method: 'PUT',
+            url: '/gio-hang/gio-hang-chi-tiet/so-luong-thay-doi',
+            data: updateProductReduce,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            transformRequest: function(data) {
+                return JSON.stringify(data);  // Chuyển đối tượng thành chuỗi JSON
+            }
+        }).then(function(response) {
+            //console.log('Sản phẩm thêm thành công');
+            console.log('Sản phẩm thêm: ',response.data);
+            // $scope.getProducts();
+        }).catch(function(error) {
+            console.error('Có lỗi xảy ra:', error);
+        });
+    }
 
     //hiển thị modal
     $scope.shoModalKhachHang = function (){

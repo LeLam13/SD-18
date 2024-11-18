@@ -14,4 +14,5 @@ public class DonHangChiTietRequestDTO {
     private Float giaBan;
     private Integer idĐonHang;
     private Integer idSanPhamChiTiet;
+    private Integer idĐonHangChiTiet;
 }

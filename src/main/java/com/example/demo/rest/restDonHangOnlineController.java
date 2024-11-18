@@ -243,6 +243,42 @@ public class restDonHangOnlineController {
 
     }
 
+    @PutMapping("/gio-hang/gio-hang-chi-tiet/so-luong-tang")
+    public ResponseEntity<?> updateOrderDetailPlus(@RequestBody GioHAngChiTietRequestDTO gioHAngChiTietRequestDTO){
+        try {
+            //System.out.println("check cart Detail update so luong: "+gioHAngChiTietRequestDTO);
+            GioHangChiTiet gioHangChiTiet = donHangOnlineService.updateCartDetailPlus(gioHAngChiTietRequestDTO);
+            return ResponseEntity.ok(gioHangChiTiet);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());  // Trả về lỗi với thông báo
+        }
+
+    }
+
+    @PutMapping("/gio-hang/gio-hang-chi-tiet/so-luong-giam")
+    public ResponseEntity<?> updateOrderDetailReduce(@RequestBody GioHAngChiTietRequestDTO gioHAngChiTietRequestDTO){
+        try {
+            //System.out.println("check cart Detail update so luong: "+gioHAngChiTietRequestDTO);
+            GioHangChiTiet gioHangChiTiet = donHangOnlineService.updateCartDetailReduce(gioHAngChiTietRequestDTO);
+            return ResponseEntity.ok(gioHangChiTiet);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());  // Trả về lỗi với thông báo
+        }
+
+    }
+
+    @PutMapping("/gio-hang/gio-hang-chi-tiet/so-luong-thay-doi")
+    public ResponseEntity<?> updateOrderDetailChange(@RequestBody GioHAngChiTietRequestDTO gioHAngChiTietRequestDTO){
+        try {
+            //System.out.println("check cart Detail update so luong: "+gioHAngChiTietRequestDTO);
+            GioHangChiTiet gioHangChiTiet = donHangOnlineService.updateCartDetailChange(gioHAngChiTietRequestDTO);
+            return ResponseEntity.ok(gioHangChiTiet);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());  // Trả về lỗi với thông báo
+        }
+
+    }
+
     @DeleteMapping("/gio-hang-chi-tiet/xoa-theo-id-san-pham/{id}")
     public ResponseEntity<?> deleteCartdetail(@PathVariable("id")Integer id){
         System.out.println("check id delete: "+id);

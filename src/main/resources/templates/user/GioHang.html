@@ -160,11 +160,13 @@
                                 <td class="text-center">
                                     <div class="quantity-input">
                                         <button ng-click="soLuongReduce(orderProduct)" class="btn btn-outline-secondary bi bi-dash-circle" ></button>
-                                        <input  ng-model="orderProduct.soLuong" ng-change="validateQuantity(orderProduct)" type="text" class="form-control"  min="1">
-                                        <div ng-show="orderProduct.invalidQuantity" class="error-message" style="color: red;">
-                                            Số lượng nhập vượt quá số lượng có sẵn!
-                                        </div>
+                                        <input  ng-model="orderProduct.soLuong"
+                                                ng-model-options="{ debounce: 500 }"
+                                                ng-change="validateQuantity(orderProduct)" type="text" class="form-control"  min="1">
                                         <button ng-click="soLuongPlus(orderProduct)" class="btn btn-outline-secondary bi bi-plus-circle" ></button>
+                                    </div>
+                                    <div ng-show="orderProduct.invalidQuantity" class="error-message" style="color: red;">
+                                        Số lượng nhập vượt quá số lượng có sẵn!
                                     </div>
                                 </td>
                                 <td>{{orderProduct.giaBan}}</td>

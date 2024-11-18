@@ -26,6 +26,6 @@ public interface DonHangRepo extends JpaRepository<DonHang, Integer> {
     @Query("SELECT d FROM DonHang d WHERE d.loaiDonHang = :loaiDonHang ORDER BY d.idDonHang DESC")
     List<DonHang> findDonHangByLoaiDonHang(@Param("loaiDonHang") Integer loaiDonHang);
 
-    @Query("SELECT d FROM DonHang d WHERE d.khachHang.idKhachHang = :idKhachHang")
+    @Query("SELECT d FROM DonHang d WHERE d.khachHang.idKhachHang = :idKhachHang ORDER BY d.idDonHang DESC")
     List<DonHang> findByKhachHangId(@Param("idKhachHang") Long idKhachHang);
 }

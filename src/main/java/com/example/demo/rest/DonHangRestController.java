@@ -55,7 +55,7 @@ public class DonHangRestController {
 //            responseDTO.setDonGia(donHangChiTiet.getDonGia());
             responseDTO.setGiaBan(donHangChiTiet.getDonGia());
             responseDTO.setIdSanPham(donHangChiTiet.getSanPhamChiTiet().getIdSanPhamChiTiet());
-//            responseDTO.setTenSanPham(donHangChiTiet.getSanPhamChiTiet().getTen());
+            responseDTO.setTenSanPham(donHangChiTiet.getSanPhamChiTiet().getIdSanPham().getTen());
 
             responseDTOList.add(responseDTO);
         }
@@ -93,7 +93,7 @@ public class DonHangRestController {
         responseDTO.setSoLuong(donHangChiTiet.getSoLuong());
 //        responseDTO.setDonGia(donHangChiTiet.getDonGia());
         responseDTO.setGiaBan(donHangChiTiet.getDonGia());
-//        responseDTO.setTenSanPham(donHangChiTiet.getSanPhamChiTiet().getTen());
+        responseDTO.setTenSanPham(donHangChiTiet.getSanPhamChiTiet().getIdSanPham().getTen());
         responseDTO.setIdSanPham(donHangChiTiet.getSanPhamChiTiet().getIdSanPhamChiTiet());
         System.out.println("donHangChiTiet: "+donHangChiTiet);
         return ResponseEntity.ok(responseDTO);
@@ -112,6 +112,12 @@ public class DonHangRestController {
     @PutMapping("/don-hang/don-hang-chi-tiet/cap-nhat-so-luong-tang")
     public ResponseEntity<?> updateQuantityPlus(@RequestBody DonHangChiTietRequestDTO donHangChiTietRequestDTO){
         DonHangChiTiet donHangChiTiet = donHangService.updateQuntityPlus(donHangChiTietRequestDTO);
+        return ResponseEntity.ok("");
+    }
+
+    @PutMapping("/don-hang/don-hang-chi-tiet/cap-nhat-so-luong-giam")
+    public ResponseEntity<?> updateQuantityReduce(@RequestBody DonHangChiTietRequestDTO donHangChiTietRequestDTO){
+        DonHangChiTiet donHangChiTiet = donHangService.updateQuntityReduce(donHangChiTietRequestDTO);
         return ResponseEntity.ok("");
     }
 

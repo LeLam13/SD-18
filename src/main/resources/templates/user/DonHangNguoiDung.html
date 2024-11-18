@@ -123,20 +123,20 @@
                 left: 0;
                 width: 100%;
                 height: 4px;
-                background-color: #ddd;
-                /*background-color: #2196F3;*/
+                /*background-color: #ddd;*/
+                background-color: #2196F3;
                 /*z-index: -1;*/
                 z-index: 1;
             }
              /*Phần màu xanh phía trước biểu tượng đầu tiên */
-            .progress-line::before {
-                content: "";
-                position: absolute;
-                left: 0;
-                width: 20%; /* Điều chỉnh độ dài phần màu xanh */
-                height: 4px;
-                background-color: #2196F3; /* Màu xanh */
-            }
+            /*.progress-line::before {*/
+            /*    content: "";*/
+            /*    position: absolute;*/
+            /*    left: 0;*/
+            /*    width: 20%; !* Điều chỉnh độ dài phần màu xanh *!*/
+            /*    height: 4px;*/
+            /*    background-color: #2196F3; !* Màu xanh *!*/
+            /*}*/
 
             /* Mỗi bước */
             .step {
@@ -208,7 +208,10 @@
                 font-size: 12px;
                 color: #888;
             }
-
+            #ten-khach-hang,#email-khach-hang,#sdt-khach-hang,#dia-chi-khach-hang,#trang-thai,#phi-van-chuyen,#ma-don-hang,#tong-tien,
+            #loai-don-hang,#tong-tien-thanh-toan{
+                font-size: 14px;
+            }
 
         </style>
         <div class="row" ng-controller="donhanguser-ctrl">
@@ -221,44 +224,44 @@
 
                             <div class="step active" id="step-1">
                                 <div class="arrow">Đặt</div>
-                                <div class="icon">📦</div>
+                                <div class="icon">🎁</div>
                                 <div class="text">Đơn hàng đã đặt</div>
-                                <div class="date">16:37 23-12-2023</div>
+<!--                                <div class="date">16:37 23-12-2023</div>-->
                             </div>
 
-                            <div class="step " id="step-2" ng-click="setActiveStep(2)">
+                            <div class="step " id="step-2" >
                                 <div class="arrow">Chuẩn bị</div>
                                 <div class="icon">📦</div>
                                 <div class="text">Đang chuẩn bị</div>
-                                <div class="date">16:40 23-12-2023</div>
+<!--                                <div class="date">16:40 23-12-2023</div>-->
                             </div>
 
-                            <div class="step " id="step-3" ng-click="setActiveStep(3)">
+                            <div class="step " id="step-3" >
                                 <div class="arrow">Giao hàng</div>
-                                <div class="icon">🚚</div>
+                                <div class="icon">⏳</div>
                                 <div class="text">Chờ giao hàng</div>
-                                <div class="date">17:00 23-12-2023</div>
+<!--                                <div class="date">17:00 23-12-2023</div>-->
                             </div>
 
-                            <div class="step " id="step-4" ng-click="setActiveStep(4)">
+                            <div class="step " id="step-4">
                                 <div class="arrow">Giao hàng</div>
                                 <div class="icon">🚚</div>
                                 <div class="text">Đang giao hàng</div>
-                                <div class="date">17:00 23-12-2023</div>
+<!--                                <div class="date">17:00 23-12-2023</div>-->
                             </div>
 
-                            <div class="step " id="step-5" ng-click="setActiveStep(5)">
+                            <div class="step " id="step-5" >
                                 <div class="arrow">Hoàn Thành</div>
                                 <div class="icon">✔️</div>
                                 <div class="text">Giao hàng thành công</div>
-                                <div class="date">18:00 23-12-2023</div>
+<!--                                <div class="date">18:00 23-12-2023</div>-->
                             </div>
 
-                            <div class="step " id="step-6" ng-click="setActiveStep(6)">
+                            <div class="step " id="step-6" >
                                 <div class="arrow">Huỷ Đơn</div>
-                                <div class="icon">✔️</div>
+                                <div class="icon">❌</div>
                                 <div class="text">Đã huỷ đơn</div>
-                                <div class="date">18:00 23-12-2023</div>
+<!--                                <div class="date">18:00 23-12-2023</div>-->
                             </div>
                         </div>
                     </div>
@@ -349,15 +352,15 @@
 
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-6">
-                                    <div class="row">
-                                        <div class="col-8">TRạng Thái Thanh Toán:</div>
-                                        <div class="col-4" id="trang-thai-thanh-toan"></div>
-                                    </div>
+<!--                            <div class="row">-->
+<!--                                <div class="col-6">-->
+<!--                                    <div class="row">-->
+<!--                                        <div class="col-8">TRạng Thái Thanh Toán:</div>-->
+<!--                                        <div class="col-4" id="trang-thai-thanh-toan"></div>-->
+<!--                                    </div>-->
 
-                                </div>
-                            </div>
+<!--                                </div>-->
+<!--                            </div>-->
                         </div>
                         <hr/>
                         <div class="row">

@@ -18,7 +18,9 @@ app.controller("donhanguser-ctrl", function ($scope, $http,$interval){
     }
 
     //idDonHang lấy chi tiết của đơn hàng
+    var idDonHangShow = null;
     $scope.getOrderOfUserByIdDonHang = function (idDonHang){
+        $scope.startAutoCheck();
         $http.get("/don-hang-cua-khach/lay-don-hang/"+idDonHang).then(function (response) {
             console.log("check order detail username: ",response.data);
             $scope.listOrderDetail = response.data;
@@ -28,6 +30,7 @@ app.controller("donhanguser-ctrl", function ($scope, $http,$interval){
             response.data.forEach((item, index) => {
                 itemOrder = item.donHang;
             });
+            idDonHangShow = itemOrder.idDonHang;
             if (response.data && itemOrder) {
                 $('#trang-thai').text(itemOrder.trangThai.tenTrangThai);
                 //$('#phi-van-chuyen').text(itemOrder.phiVanChuyen);
@@ -101,62 +104,89 @@ app.controller("donhanguser-ctrl", function ($scope, $http,$interval){
         return  sumMoney;
     }
 
-    $scope.activeStep = 1;
-    $scope.setActiveStep = function(stepId) {
-        $scope.activeStep = stepId;
-        var currentWidth = getProgressLineWidth();
-        console.log("Current Width:", currentWidth);
-        updateProgressLine(stepId, currentWidth);
+    // $scope.activeStep = 1;
+    // $scope.setActiveStep = function(stepId) {
+    //     $scope.activeStep = stepId;
+    //     updateProgressLine(stepId);
+    // };
+    //
+    // function updateProgressLine(stepId) {
+    //     $(".step").removeClass("active"); // Loại bỏ lớp active khỏi tất cả các bước
+    //
+    //     for(let i = 1; i <= stepId; i++){
+    //         $("#" + "step-" + i).addClass("active");
+    //     }
+    // }
+    var intervalPromise;
+    $scope.startAutoCheck = function() {
+        // Khởi động interval khi nhấn nút
+        if (!intervalPromise) {
+            intervalPromise = $interval(checkTrangThai, 3000); // Lưu tham chiếu interval
+            console.log("Đã bắt đầu tự động kiểm tra trạng thái.");
+        }
     };
+    $scope.stopAutoCheck = function() {
+        // Dừng interval khi trạng thái đạt 5
+        if (intervalPromise) {
+            $interval.cancel(intervalPromise);
+            intervalPromise = null; // Đặt lại tham chiếu interval
+            console.log("Đã dừng tự động kiểm tra trạng thái.");
+        }
+    };
+    // var intervalPromise = $interval(checkTrangThai, 3000); // Lưu tham chiếu interval
 
-    function getProgressLineWidth() {
-        var progressLine = document.querySelector('.progress-line'); // Lấy phần tử progress-line
-        var computedStyle = window.getComputedStyle(progressLine, '::before'); // Lấy computed style của ::before
+    function checkTrangThai() {
+        if(idDonHangShow ===null){
+            $scope.showActive(1);
+        }else {
 
-        // Trả về chiều rộng của pseudo-element
-        return parseFloat(computedStyle.width);
+            $http.get('/api/getTrangThai/' +idDonHangShow)  // Gọi API để lấy trạng thái mới
+                .then(function(response) {
+                    // Cập nhật idTrangThai từ phản hồi server
+                    //$scope.idTrangThai = response.data.trangThai.idTrangThai;
+                    const newTrangThai = response.data.trangThai.idTrangThai;
+                    // Chỉ cập nhật giao diện nếu trạng thái thay đổi
+                    if ($scope.idTrangThai !== newTrangThai) {
+                        console.log("check.....")
+                        if(newTrangThai ===1){
+                            console.log(newTrangThai)
+                            $scope.showActive(1);
+                        }
+                        if(newTrangThai ===7){
+                            console.log(newTrangThai)
+                            $scope.showActive(2);
+                        }
+                        if(newTrangThai ===2){
+                            console.log(newTrangThai)
+                            $scope.showActive(3);
+                        }
+                        if(newTrangThai ===3){
+                            console.log(newTrangThai)
+                            $scope.showActive(4);
+                        }
+                        if(newTrangThai ===5){
+                            console.log("Trạng thái đạt 5, dừng tự động!");
+                            $scope.showActive(5);
+                            $scope.stopAutoCheck(); // Dừng interval
+
+                        }
+                        // $scope.idTrangThai = newTrangThai;
+                        // $scope.showActive($scope.idTrangThai); // Cập nhật giao diện
+                    }
+                    //$scope.showActive($scope.idTrangThai);
+                })
+                .catch(function(error) {
+                    console.error("Có lỗi khi lấy trạng thái", error);
+                });
+        }
+
     }
-
-    function updateProgressLine(stepId, currentWidth) {
-        //$(".step").removeClass("active"); // Loại bỏ lớp active khỏi tất cả các bước
-        $("#" + "step-" + stepId).addClass("active"); // Thêm lớp active vào bước được chọn
-        var width = ((stepId) * 20) +currentWidth;
-        var width = currentWidth + currentWidth;
-        console.log("Old Width:", currentWidth, "New Width:", width);
-        // Cập nhật phần đường thẳng với chiều rộng mới
-        $(".progress-line::before").css("width", width + "%");
-    }
-
-    // Khởi tạo giá trị idTrangThai
-    $scope.idTrangThai = 1; // Bắt đầu từ bước 1
-
-    // Hàm để hiển thị các biểu tượng và thay đổi màu sắc theo idTrangThai
     $scope.showActive = function(idTrangThai) {
-        // Đặt lại tất cả các biểu tượng về trạng thái ban đầu (màu sắc mặc định)
         $(".step").removeClass("active");
-
-        // Lặp qua từng biểu tượng và thay đổi màu sắc dựa trên idTrangThai
         for (let i = 1; i <= idTrangThai; i++) {
             $("#" + "step-" + i).addClass("active"); // Thêm class active cho các bước từ 1 đến idTrangThai
-            $("#" + "step-" + i + " .icon").css("background-color", "#2196F3"); // Đổi màu icon
-            $("#" + "step-" + i + " .arrow").css("background-color", "#2196F3"); // Đổi màu arrow
         }
     };
-
-    // Hàm tự động tăng idTrangThai từ 1 đến 5 mỗi giây
-    $interval(function() {
-        if ($scope.idTrangThai < 5) {
-            $scope.idTrangThai++;  // Tăng idTrangThai lên 1
-        } else {
-            $scope.idTrangThai = 1;  // Khi đạt đến 5, reset lại về 1
-        }
-    }, 3000);  // Cập nhật mỗi 1000ms (1 giây)
-
-    // Gọi showActive mỗi khi idTrangThai thay đổi
-    $scope.$watch('idTrangThai', function(newVal) {
-        $scope.showActive(newVal); // Gọi showActive mỗi khi idTrangThai thay đổi
-    });
-
     //load data
     $scope.getOrderOfUser();
 });

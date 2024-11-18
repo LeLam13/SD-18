@@ -39,6 +39,7 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
     }
     var idDonHangShow = null;
     $scope.getOrderOnlineByID = function (orderID) {
+        $scope.startAutoCheck;
         $scope.idDonHang = orderID;
         item = $scope.listOrderOnline.find(item=>item.idDonHang === orderID);
         console.log("item: ",item)
@@ -84,11 +85,11 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
         $('#modal-status').modal('show');
     }
 
-    $scope.updateStatuOrder = function (){
+    $scope.updateStatuOrder = function (idTrangThai){
         var ghichu = $('#ghi-chu').val();
         $scope.dataStatus ={
             idDonHang: $scope.idDonHang,
-            idTrangThai: item.trangThai.idTrangThai,
+            idTrangThai: idTrangThai,
             ghiChu: ghichu
         }
         var statusData = angular.copy($scope.dataStatus);
@@ -331,7 +332,23 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
         $('#step-6').hide();
     }
 
-    var intervalPromise = $interval(checkTrangThai, 3000); // Lưu tham chiếu interval
+    // var intervalPromise = $interval(checkTrangThai, 3000); // Lưu tham chiếu interval
+    var intervalPromise;
+    $scope.startAutoCheck = function() {
+        // Khởi động interval khi nhấn nút
+        if (!intervalPromise) {
+            intervalPromise = $interval(checkTrangThai, 3000); // Lưu tham chiếu interval
+            console.log("Đã bắt đầu tự động kiểm tra trạng thái.");
+        }
+    };
+    $scope.stopAutoCheck = function() {
+        // Dừng interval khi trạng thái đạt 5
+        if (intervalPromise) {
+            $interval.cancel(intervalPromise);
+            intervalPromise = null; // Đặt lại tham chiếu interval
+            console.log("Đã dừng tự động kiểm tra trạng thái.");
+        }
+    };
 
     function checkTrangThai() {
         if(idDonHangShow ===null){
@@ -365,19 +382,15 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
                         if(newTrangThai ===5){
                             console.log("Trạng thái đạt 5, dừng tự động!");
                             $scope.showActive(5);
-                            $interval.cancel(intervalPromise);  // Dừng interval
+                            $scope.stopAutoCheck ();  // Dừng interval
 
                         }
-                        // $scope.idTrangThai = newTrangThai;
-                        // $scope.showActive($scope.idTrangThai); // Cập nhật giao diện
                     }
-                    //$scope.showActive($scope.idTrangThai);
                 })
                 .catch(function(error) {
                     console.error("Có lỗi khi lấy trạng thái", error);
                 });
         }
-
     }
 
 

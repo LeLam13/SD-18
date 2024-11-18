@@ -81,7 +81,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
             }
             $scope.khachHangById = response.data;
             // $scope.productDetails = response.data;
-            console.log("check don hàng kh: ",$scope.khachHangById);
+            //console.log("check don hàng kh: ",$scope.khachHangById);
         }).catch(function (err){
             console.log("err: ", err);
         })
@@ -270,10 +270,14 @@ app.controller("banhang-ctrl", function ($scope, $http) {
 
 
         console.log("check id khach hàng1: ",$scope.khachHangById);
+        var trangThai = 5;
+        if($scope.shippingMethod===2){
+            trangThai=1;
+        }
         $scope.hoaDonData ={
             maHoaDon: $scope.generateRandomString(8),
             idKhuyenMai: phieuGiamGia,
-            idTrangThai: 5,//trạng thái của hoá đơn hoàn thành
+            idTrangThai: trangThai,//trạng thái của hoá đơn hoàn thành
             idPhuongThucThanhToan: phuongThucThanhToan,
             idDonHang: $scope.selectedId,
             idKhachHang: $scope.khachHangById.id_khach_hang,
@@ -282,7 +286,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
             tongTienKhuyenMai: $scope.getTienGiam(),
             tongTienSauKhuyenMai: $scope.getTienKhachPTra(),
             phiVanChuyen: $scope.getFeeShip(),
-            tongTienThanhToan: $scope.getTienKhachPTra() +$scope.getFeeShip(),
+            tongTienThanhToan: $scope.tongTienTHanhToan(),
             ghiChu: ghiChu,
             tenKhachNhan: tenKhachNhan,
             soDienThoaiKhachNhan: sdtKhachNhan,
@@ -501,29 +505,81 @@ app.controller("banhang-ctrl", function ($scope, $http) {
     //tang so luong
     $scope.soLuongPlus = function (details){
         details.soLuong +=1;
-        $scope.getProducts();
+        //$scope.getProducts();
         console.log("Số Lượng Reduce: ",details);
         console.log("Số Lượng Reduce: ",details.soLuong);
-        console.log("Số Lượng Reduce: ",details.soLuong * details.giaBan);
+        console.log("Số Lượng Reduce: ",details.soLuong * details.giaBan)
+        $scope.updateQuantityPlus(details);
     }
     //Giảm Số Lượng
     $scope.soLuongReduce = function(details){
         if(details.soLuong >1){
             details.soLuong -=1;
-            $scope.getProducts();
-            $scope.updateQuantity(details);
+            //$scope.getProducts();
             console.log("Số Lượng plus: ",details.soLuong);
             console.log("Số Lượng plus: ",details.soLuong * details.giaBan);
+            $scope.updateQuantityReduce(details);
         }
     }
+
     //cập nhật số lượng khi reduce hoặc plus
-    $scope.updateQuantity = function (details){
+    $scope.updateQuantityPlus = function (details){
         console.log("check Quantity: ",details);
-        // $http.put("").then(function (response) {
-        //     console.log("update số lượng khi plus: ",response.data);
-        // }).catch(function (errors) {
-        //     console.error('Có lỗi xảy ra:', errors);
-        // })
+        $scope.dataUpdateProduct ={
+            maDonHangChiTiet: $scope.generateRandomString(8),
+            idĐonHangChiTiet: details.idDonHangChiTiet,
+            idSanPhamChiTiet: details.idSanPham,
+            idĐonHang:selectedId,
+            soLuong: '1'
+        }
+        console.log("check Quantity: ",$scope.dataUpdateProduct);
+        var updateProduct = angular.copy($scope.dataUpdateProduct);
+        $http({
+            method: 'PUT',
+            url: '/don-hang/don-hang-chi-tiet/cap-nhat-so-luong-tang',
+            data: updateProduct,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            transformRequest: function(data) {
+                return JSON.stringify(data);  // Chuyển đối tượng thành chuỗi JSON
+            }
+        }).then(function(response) {
+            //console.log('Sản phẩm thêm thành công');
+            console.log('Sản phẩm thêm: ',response.data);
+            // $scope.getProducts();
+        }).catch(function(error) {
+            console.error('Có lỗi xảy ra:', error);
+        });
+    }
+
+    $scope.updateQuantityReduce = function (details){
+        $scope.dataUpdateProductReduce ={
+            maDonHangChiTiet: $scope.generateRandomString(8),
+            idĐonHangChiTiet: details.idDonHangChiTiet,
+            idSanPhamChiTiet: details.idSanPham,
+            idĐonHang:selectedId,
+            soLuong: '1'
+        }
+        //console.log("check Quantity: ",$scope.dataUpdateProduct);
+        var updateProductReduce = angular.copy($scope.dataUpdateProductReduce);
+        $http({
+            method: 'PUT',
+            url: '/don-hang/don-hang-chi-tiet/cap-nhat-so-luong-giam',
+            data: updateProductReduce,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            transformRequest: function(data) {
+                return JSON.stringify(data);  // Chuyển đối tượng thành chuỗi JSON
+            }
+        }).then(function(response) {
+            //console.log('Sản phẩm thêm thành công');
+            console.log('Sản phẩm thêm: ',response.data);
+            $scope.getProducts();
+        }).catch(function(error) {
+            console.error('Có lỗi xảy ra:', error);
+        });
     }
 
     //lưu só lượng ban đầu
@@ -570,12 +626,16 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         let khachPhaiTra = $scope.getSum() - $scope.getTienGiam();
         return khachPhaiTra;
     }
+    $scope.tongTienTHanhToan = function (){
+        let tong = $scope.getTienKhachPTra() +$scope.getFeeShip();
+        return tong;
+    }
     //tính tiền thừa
     $scope.tinhTienThua = function () {
         if($scope.khachThanhToan ===0){
             return 0;
         }
-        let tongTien = $scope.getTienKhachPTra();
+        let tongTien = $scope.tongTienTHanhToan();
         let khachThanhToan = parseFloat($scope.khachThanhToan) || 0; // Đảm bảo giá trị là số
         return khachThanhToan - tongTien;
     };
