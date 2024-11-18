@@ -15,6 +15,8 @@ public class HoaDonResquestDTO {
     private Float tongTien;
     private Float tongTienKhuyenMai;
     private Float tongTienSauKhuyenMai;
+    private Float phiVanChuyen;
+    private Float tongTienThanhToan;
     private String ghiChu;
 
     private String tenKhachNhan;

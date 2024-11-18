@@ -107,6 +107,8 @@ public class HoaDonServiceImpl implements HoaDonService {
         donHang.setTongTien(hoaDon.getTongTien());
         donHang.setTongTienKhuyenMai(hoaDon.getTongTienKhuyenMai());
         donHang.setTongTienSauKhuyenMai(hoaDon.getTongTienSauKhuyenMai());
+        donHang.setPhiVanChuyen(hoaDon.getPhiVanChuyen());
+        donHang.setTongTienThanhToan(hoaDon.getTongTienThanhToan());
         donHang.setGhiChu(hoaDon.getGhiChu());
         donHang.setTrangThaiThanhToan(true);
         donHang.setNhanVien(getNV);
@@ -142,6 +144,8 @@ public class HoaDonServiceImpl implements HoaDonService {
         newHoaDon.setTongTien(hoaDon.getTongTien());
         newHoaDon.setTongTienKhuyenMai(hoaDon.getTongTienKhuyenMai());
         newHoaDon.setTongTienSauKhuyenMai(hoaDon.getTongTienSauKhuyenMai());
+        newHoaDon.setPhiVanChuyen(hoaDon.getPhiVanChuyen());
+        newHoaDon.setTongTienThanhToan(hoaDon.getTongTienThanhToan());
         newHoaDon.setGhiChu(hoaDon.getGhiChu());
         newHoaDon.setTrangThaiThanhToan(true);
         newHoaDon.setPhuongThucNhan(hoaDon.getPhuongThucNhan());

@@ -286,6 +286,20 @@ public class DonHangRestController {
         return ResponseEntity.ok(responseKHDTOList);
     }
 
+    //khuyen mãi
+    @GetMapping("/don-hang/khuyen-mai")
+    public ResponseEntity<?> getAllKhuyenMai(){
+        List<KhuyenMai> khuyenMai = donHangService.getAllKhuyenMai();
+        return ResponseEntity.ok(khuyenMai);
+    }
+
+    //khuyen mãi
+    @GetMapping("/don-hang/khuyen-mai/{id}")
+    public ResponseEntity<?> getAllKhuyenMaiById(@PathVariable("id") Integer id){
+        KhuyenMai khuyenMai = donHangService.getKhuyenMaiById(id);
+        return ResponseEntity.ok(khuyenMai);
+    }
+
     //hoá đơn
     @PostMapping("/hoa-don/them-moi")
     public ResponseEntity<?> createHoaDon(@RequestBody HoaDonResquestDTO hoaDon){

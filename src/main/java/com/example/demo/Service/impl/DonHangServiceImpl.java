@@ -32,6 +32,8 @@ public class DonHangServiceImpl implements DonHangService {
     TrangThaiRepo trangThaiRepo;
     @Autowired
     khachhangRePo khachhangRePo;
+    @Autowired
+    KhuyenMaiRepo khuyenMaiRepo;
 
     @Override
     public List<SanPhamChiTiet> getAllProducts() {
@@ -270,6 +272,18 @@ public class DonHangServiceImpl implements DonHangService {
         oldDonHangCT.setSoLuong(soLuong);
         donHangChiTietRepo.save(oldDonHangCT);
         return oldDonHangCT;
+    }
+
+    @Override
+    public List<KhuyenMai> getAllKhuyenMai() {
+        List<KhuyenMai> khuyenMai = khuyenMaiRepo.findAll();
+        return khuyenMai;
+    }
+
+    @Override
+    public KhuyenMai getKhuyenMaiById(Integer id) {
+        KhuyenMai khuyenMai = khuyenMaiRepo.findById(id).get();
+        return khuyenMai;
     }
 
 }

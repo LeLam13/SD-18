@@ -13,6 +13,19 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         return result;
     };
 
+    $scope.provinces = [];
+    $scope.selectedProvince = null;
+    //quận-huyện
+    $scope.selectedDistricts = null;
+    $scope.districts = [];
+    //xã
+    $scope.selectedWards = null;
+    $scope.wards = [];
+
+    //fee-shipping
+    $scope.fromDistrictId = 3440;
+    $scope.fromWardId = 13010;
+    $scope.feeShipping =[];
 
     //$scope.donHang = {}
     $scope.donHangAdd = {
@@ -35,6 +48,8 @@ app.controller("banhang-ctrl", function ($scope, $http) {
     $scope.products = [];
     $scope.productDetails = [];
     $scope.khachHang =[];
+    $scope.khuyenMai =[];
+    $scope.khuyenMaiById={};
 
     var selectedId = null;
     $scope.selectedId = null;
@@ -233,15 +248,28 @@ app.controller("banhang-ctrl", function ($scope, $http) {
     $scope.createHoaDon = function (){
         var nameKH = $('#nameKH').val();
         var tongTien = $('.total-amount').text();
-        var phieuGiamGia = $('#discountSelect').val();
+        // var phieuGiamGia = $('#discountSelect').val();
+        var phieuGiamGia = $scope.khuyenMaiById.idKhuyenMai;
         var khachThanhToan = $('#id-khach-thanh-toan').val();
         var phuongThucThanhToan = $('#paymentMethodSelect').val();
         var ghiChu = $('textarea').val();
         var tenKhachNhan = $('#nameKHNhan').val();
         var sdtKhachNhan = $('#sdtKHNhan').val();
-        var diaChiKhachNhan = $('#soNha').val() +"-"+ $('#phuong option:selected').text() +"-"+$('#quan option:selected').text() +"-"+ $("#tinh option:selected").text();
 
-        console.log("check id khach hàng: ",$scope.khachHangById);
+        var selectedProvinceName = $scope.selectedProvince ? $scope.selectedProvince.ProvinceName : '';
+
+        // Tìm quận/huyện đã chọn
+        var selectedDistrict = $scope.districts.find(d => d.DistrictID == $scope.selectedDistricts); // Sử dụng == thay vì ===
+        var selectedDistrictName = selectedDistrict ? selectedDistrict.DistrictName : '';
+
+        // Tìm xã/phường đã chọn
+        var selectedWard = $scope.wards.find(w => w.WardCode === $scope.selectedWards);
+        var selectedWardName = selectedWard ? selectedWard.WardName : '';
+
+        var diaChiKhachNhan =$('#soNha').val()+ "-" + selectedWardName+ "-" + selectedDistrictName  + "-" + selectedProvinceName ;
+
+
+        console.log("check id khach hàng1: ",$scope.khachHangById);
         $scope.hoaDonData ={
             maHoaDon: $scope.generateRandomString(8),
             idKhuyenMai: phieuGiamGia,
@@ -253,6 +281,8 @@ app.controller("banhang-ctrl", function ($scope, $http) {
             tongTien: tongTien,
             tongTienKhuyenMai: $scope.getTienGiam(),
             tongTienSauKhuyenMai: $scope.getTienKhachPTra(),
+            phiVanChuyen: $scope.getFeeShip(),
+            tongTienThanhToan: $scope.getTienKhachPTra() +$scope.getFeeShip(),
             ghiChu: ghiChu,
             tenKhachNhan: tenKhachNhan,
             soDienThoaiKhachNhan: sdtKhachNhan,
@@ -278,7 +308,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
 
         khachThanhToan = parseFloat(khachThanhToan);
 
-        if (khachThanhToan < $scope.getTienKhachPTra()) {
+        if (khachThanhToan < ($scope.getTienKhachPTra()+$scope.getFeeShip())) {
             alert("Khách chưa thanh toán đủ tiền!");
             return;
         }
@@ -303,8 +333,24 @@ app.controller("banhang-ctrl", function ($scope, $http) {
                 alert("Chưa nhập số diện thoại khách nhận!");
                 return;
             }
-            if(diaChiKhachNhan === null || diaChiKhachNhan ===""){
-                alert("Chưa chọn địa chỉ nhận hàng!");
+            if($('#soNha').val() === null || $('#soNha').val()===""){
+                $('#messSoNha').text('Chưa nhập địa chỉ nhà!');
+                $('#messSoNha').show();
+                return;
+            }
+            if(selectedProvinceName === null || selectedProvinceName===""){
+                $('#messThanhPho').text('Chưa chọn tỉnh - thành phố!');
+                $('#messThanhPho').show();
+                return;
+            }
+            if(selectedDistrictName === null || selectedDistrictName===""){
+                $('#messQuan').text('Chưa chon quận - huyện!');
+                $('#messQuan').show();
+                return;
+            }
+            if(selectedWardName === null || selectedWardName===""){
+                $('#messPhuong').text('Chưa chọn phường - xã !');
+                $('#messPhuong').show();
                 return;
             }
         }
@@ -447,6 +493,11 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         $('#show-modal-khach').modal('show');
     };
 
+    $scope.openModalKhuyenMai = function() {
+        $scope.getKhuyenmai();
+        $('#show-modal-khuyen-mai').modal('show');
+    };
+
     //tang so luong
     $scope.soLuongPlus = function (details){
         details.soLuong +=1;
@@ -501,9 +552,18 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         return sumMoney;
     }
     $scope.getTienGiam = function (){
-        $scope.discountRate = "10%";
-        let tienGiam = parseFloat($scope.discountRate.replace('%',''))/100;
-        let tongTienGiam = $scope.getSum() * tienGiam;
+        $scope.discountRate = $('#muc-giam-gia').val();
+        if ($scope.discountRate === null || $scope.discountRate.length === 0) {
+            return 0;
+        }
+        let tongTienGiam =0;
+        if ($scope.discountRate.includes('%')) {
+            let tienGiam = parseFloat($scope.discountRate.replace('%', '')) / 100;
+            tongTienGiam = $scope.getSum() * tienGiam;
+        } else {
+            let tienGiam = parseFloat($scope.discountRate);
+            tongTienGiam = $scope.getSum() - tienGiam;
+        }
         return tongTienGiam;
     }
     $scope.getTienKhachPTra = function (){
@@ -520,11 +580,42 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         return khachThanhToan - tongTien;
     };
 
+    //khuyen mai
+    $scope.getKhuyenmai = function (){
+        if ($scope.productDetails && $scope.productDetails.length === 0) {
+            alert("Chưa chọn sản phẩm!");
+            return;
+        }
+        $http.get("/don-hang/khuyen-mai").then(function (response) {
+            console.log('khuyen mai:', response.data);
+            $scope.khuyenMai = response.data;
+        }).catch(function (errors) {
+            console.error('Có lỗi xảy ra:', errors);
+        })
+    }
+    $scope.getKhuyenmaiById = function (id){
+        $http.get("/don-hang/khuyen-mai/"+id).then(function (response) {
+            console.log('khuyen mai by id:', response.data);
+            $scope.khuyenMaiById = response.data;
+             $('#ma-khuyen-mai').val(response.data.maKhuyenMai);
+             if(response.data.mucGiamGia < 100){
+                 $('#muc-giam-gia').val(response.data.mucGiamGia + '%');
+             }else {
+                 $('#muc-giam-gia').val(response.data.mucGiamGia);
+             }
+
+            // $('#show-modal-khach').modal('hide');
+        }).catch(function (errors) {
+            console.error('Có lỗi xảy ra:', errors);
+        })
+    }
+
+
     //in hoá đơn
     $scope.printer = function (){
         if($scope.selectedId === null)
         $http.get("/hoa-don/invoice").then(function (response) {
-            console.error('thanh cong:', response);
+            console.log('thanh cong:', response);
         }).catch(function (errors) {
             console.error('Có lỗi xảy ra:', errors);
         })
@@ -532,6 +623,10 @@ app.controller("banhang-ctrl", function ($scope, $http) {
     //ẩn thông báo
     $scope.hideErrrorsMes = function (){
         $('#erroresMessage').hide();
+    }
+    //ẩn thông báo
+    $scope.hideErrrorsMes1 = function (){
+        $('#erroresMessage1').hide();
     }
     //hiện thông báo
     $scope.showErrrorsMes = function (message){
@@ -542,54 +637,113 @@ app.controller("banhang-ctrl", function ($scope, $http) {
             $('#erroresMessage').hide();
         }, 2000);
     }
+    //hiện thông báo
+    $scope.showErrrorsMes1 = function (message){
+        $('#showMessage1').text(message);
+        $('#erroresMessage1').show();
 
-    //test get tỉnh/thành phố
-    function loadProvinces() {
-        $http.get('https://esgoo.net/api-tinhthanh/1/0.htm').then(function(response) {
-            if (response.data.error == 0) {
-                $.each(response.data.data, function(key_tinh, val_tinh) {
-                     $("#tinh").append('<option value="' + val_tinh.id + '">' + val_tinh.full_name + '</option>');
-                    //$("#tinh").append('<option value="' + val_tinh.full_name + '">' + val_tinh.full_name + '</option>');
-                });
+        setTimeout(() => {
+            $('#erroresMessage1').hide();
+        }, 2000);
+    }
+
+
+
+    $scope.getProvinces = function (){
+        $http.get("/api/provinces").then(function (response){
+            console.log("check res: ",response);
+            $scope.provinces = response.data;
+        }).catch(function (errors) {
+            console.error("có lỗi xảy ra: ",errors)
+        })
+    }
+
+    $scope.getDisTricts = function (){
+        console.log($scope.selectedProvince)
+        if($scope.selectedProvince === null || $scope.selectedProvince ===""){
+            alert("Chưa chọn tỉnh Thành Phố")
+            return;
+        }
+
+        var url = "/api/districts/" + $scope.selectedProvince.ProvinceID;
+        console.log(url)
+        $http.get(url).then(function (response){
+            console.log("check res: ",response);
+            $scope.districts = response.data;
+        }).catch(function (errors) {
+            console.error("có lỗi xảy ra: ",errors)
+        })
+    }
+
+    $scope.getWard = function (){
+        console.log($scope.selectedDistrict)
+        if($scope.selectedDistricts === null || $scope.selectedDistricts ===""){
+            alert("Chưa chọn tỉnh Thành Phố")
+            return;
+        }
+
+        var url = "/api/ward/" + $scope.selectedDistricts;
+        console.log(url)
+        $http.get(url).then(function (response){
+            console.log("check res: ",response);
+            $scope.wards = response.data;
+        }).catch(function (errors) {
+            console.error("có lỗi xảy ra: ",errors)
+        })
+    }
+
+    $scope.feeShippingApi = function (){
+        console.log($scope.selectedProvince)
+        if($scope.selectedProvince === null || $scope.selectedProvince ===""){
+            alert("Chưa chọn tỉnh Thành Phố")
+            return;
+        }
+        if($scope.selectedDistricts === null || $scope.selectedDistricts ===""){
+            alert("Chưa chọn Quận-Huyện")
+            return;
+        }
+        if($scope.selectedWards === null || $scope.selectedWards ===""){
+            alert("Chưa chọn Phường-Xã")
+            return;
+        }
+
+        $scope.shippingData = {
+            service_type_id: 2,
+            from_district_id: $scope.fromDistrictId,
+            from_ward_code: "13010",
+            // to_province_id: $scope.selectedProvince.ProvinceID,
+            to_district_id: $scope.selectedDistricts,
+            to_ward_code: $scope.selectedWards,
+            weight: 2000
+        };
+        var dataShipping = angular.copy($scope.shippingData);
+        $http({
+            method: 'POST',
+            url: '/api/fee',
+            data: dataShipping,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            transformRequest: function(data) {
+                return JSON.stringify(data);  // Chuyển đối tượng thành chuỗi JSON
             }
+        }) .then(function(response) {
+            console.log("check fee shipping: ",response);
+            $scope.feeShipping = response.data;
+        }).catch(function(error) {
+            console.error('Có lỗi xảy ra:', error);
         });
     }
 
-    // Function to load districts based on selected province
-    $scope.loadDistricts = function() {
-        var idtinh = $("#tinh").val();
-        $http.get('https://esgoo.net/api-tinhthanh/2/' + idtinh + '.htm').then(function(response) {
-            if (response.data.error == 0) {
-                $("#quan").html('<option value="0">Quận Huyện</option>');
-                $("#phuong").html('<option value="0">Phường Xã</option>');
-                $.each(response.data.data, function(key_quan, val_quan) {
-                    $("#quan").append('<option value="' + val_quan.id + '">' + val_quan.full_name + '</option>');
-                    //$("#quan").append('<option value="' + val_quan.full_name + '">' + val_quan.full_name + '</option>');
-                });
-            }
-        });
-    };
+    //phí vận chuyển
+    $scope.getFeeShip = function (){
+        if($scope.feeShipping === null || $scope.feeShipping.length === 0){
+            return 0;
+        }
+        let feeShipping = $scope.feeShipping.total
+        return feeShipping;
+    }
 
-    // Function to load wards based on selected district
-    $scope.loadWards = function() {
-        var idquan = $("#quan").val();
-        $http.get('https://esgoo.net/api-tinhthanh/3/' + idquan + '.htm').then(function(response) {
-            if (response.data.error == 0) {
-                $("#phuong").html('<option value="0">Phường Xã</option>');
-                $.each(response.data.data, function(key_phuong, val_phuong) {
-                     $("#phuong").append('<option value="' + val_phuong.id + '">' + val_phuong.full_name + '</option>');
-                    //$("#phuong").append('<option value="' + val_phuong.full_name + '">' + val_phuong.full_name + '</option>');
-                });
-            }
-        });
-    };
-    // Call loadProvinces when the controller initializes
-    loadProvinces();
-    // Watch for changes in the province dropdown to load districts
-    $("#tinh").change($scope.loadDistricts);
-
-    // Watch for changes in the district dropdown to load wards
-    $("#quan").change($scope.loadWards);
 
 
 
@@ -598,4 +752,10 @@ app.controller("banhang-ctrl", function ($scope, $http) {
     $scope.getDonHang();
     $scope.getKhachHang();
     $scope.hideErrrorsMes();
+    $scope.hideErrrorsMes1();
+    $scope.getProvinces();
+    $('#messSoNha').hide();
+    $('#messThanhPho').hide();
+    $('#messQuan').hide();
+    $('#messPhuong').hide();
 })
