@@ -1,16 +1,11 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
 import java.util.Date;
 
 @Data
 @Entity
-//@AllArgsConstructor
-//@NoArgsConstructor
 @Table(name = "khuyen_mai")
 public class KhuyenMai {
     @Id
@@ -25,7 +20,7 @@ public class KhuyenMai {
     private String tenKhuyenMai;
 
     @Column(name = "muc_giam_gia", nullable = false, length = 100)
-    private String mucGiamGia;
+    private Integer mucGiamGia;
 
     @Column(name = "thoi_gian_bat_dau", nullable = false)
     @Temporal(TemporalType.DATE)
@@ -43,4 +38,10 @@ public class KhuyenMai {
 
     @Column(name = "dieu_kien_ap_dung", length = 100)
     private String dieuKienApDung;
+
+    @Column(name = "so_luong", nullable = false)
+    private Integer soLuong;
+
+    @Column(name = "so_tien_toi_thieu", nullable = false)
+    private Integer soTienToiThieu; // Điều kiện áp dụng: số tiền tối thiểu
 }
