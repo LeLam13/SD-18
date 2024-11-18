@@ -42,4 +42,7 @@ public interface DonHangService {
 
     List<khachhang> searchKhachHang(String sdt);
     List<SanPhamChiTiet> searchSanPhamChiTiet(String tenSP);
+
+    DonHangChiTiet updateQuntityPlus(DonHangChiTietRequestDTO donHangChiTietRequestDTO);
+    DonHangChiTiet updateQuntityReduce(DonHangChiTietRequestDTO donHangChiTietRequestDTO);
 }

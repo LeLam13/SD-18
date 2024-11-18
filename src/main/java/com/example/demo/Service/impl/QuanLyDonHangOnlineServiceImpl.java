@@ -221,4 +221,9 @@ public class QuanLyDonHangOnlineServiceImpl implements QuanLyDonHangOnlineServic
         donHangRepo.save(donHang);
         return donHang;
     }
+
+    @Override
+    public DonHang getStuats(Integer id) {
+        return donHangRepo.findById(id).get();
+    }
 }

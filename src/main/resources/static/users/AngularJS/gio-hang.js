@@ -19,18 +19,20 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
     $scope.cartDetaiPro = [];
     $scope.cartDetai =[];
     $scope.cart = [];
+    var idGioHang = null;
 
     $scope.getUserName = function (){
         $http.get("/lay-tai-khoan").then(function (response){
             console.log("check user: ",response);
             $scope.username = response.data;
-            if (!$scope.username) {
-                $scope.loadFromLocalStorage();
-                console.log("username null");
-            } else {
-                console.log("username not null",$scope.username);
-                $scope.getCart();
-            }
+            // if (!$scope.username) {
+            //     $scope.loadFromLocalStorage();
+            //     console.log("username null");
+            // } else {
+            //     console.log("username not null",$scope.username);
+            //     $scope.getCart();
+            // }
+            $scope.getCart();
         }).catch(function (errors) {
             console.error("có lỗi xảy ra: ",errors)
         })
@@ -39,6 +41,7 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
     $scope.getCart = function (){
         $http.get("/gio-hang/lay-theo-user").then(function (response){
             console.log("check gio hang: ",response.data);
+            idGioHang = response.data.idGioHang;
             $scope.cart = response.data;
             $scope.getDetailCart($scope.cart.idGioHang);
         }).catch(function (errors) {
@@ -55,6 +58,7 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
         })
     }
     var idSanPhamChiTiet = null;
+
     $scope.createCartWithUsername = function (id){
 
         $scope.cartData={
@@ -77,7 +81,7 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
                 }
             }) .then(function(response) {
                 console.log("check cart when create: ",response);
-
+                idGioHang = response.data.idGioHang;
                 $scope.cart = response.data;
             }).catch(function(error) {
                 console.error('Có lỗi xảy ra:', error);
@@ -130,11 +134,15 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
     }
 
     $scope.createCartDetail = function (){
-        console.log("checkoi$scope.cart.idGioHang: ",$scope.cart)
+        console.log("checkoi$scope.cart.idGioHang: ",$scope.cart);
+        //lấy don hàng
+        $scope.getCart();
+
         $scope.cartDetailData={
             idGioHang: $scope.cart.idGioHang,
             maGioHangChiTiet: $scope.generateRandomString(8),
-            idSanPhamChiTiet: $scope.cartDetaiPro.idSanPhamChiTiet
+            idSanPhamChiTiet: $scope.cartDetaiPro.idSanPhamChiTiet,
+            soLuong: 1
         }
         console.log("checkoi: ",$scope.cartDetailData)
         var dataCartDetail = angular.copy($scope.cartDetailData);
@@ -281,9 +289,6 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
     $scope.getUserName();
 });
 
-
-
-
 app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
     $scope.generateRandomString = function(length) {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -345,23 +350,28 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
             // $scope.username = response.data;
             $scope.username = response.data;
             console.log("check user after setting: ", $scope.username);
-            if(!$scope.username){
-                console.log("check user: null");
-                $('#hoVaTen').val('');
-                $('#email').val('');
-                $('#soDienThoai').val('');
-                $scope.loadFromLocalStorage();
-            }else {
-                console.log("check user view gio hang: not null",$scope.username);
-                //hiển thị thông tin khách hàng khi đăng nhập
-                $('#hoVaTen').val(response.data.hoTen);
-                $('#email').val(response.data.email);
-                $('#soDienThoai').val(response.data.soDienThoai);
-
-                //lấy giỏ hàng chi tiết
-                $scope.itemsOrder =[];
-                $scope.getCart();
-            }
+            // if(!$scope.username){
+            //     console.log("check user: null");
+            //     $('#hoVaTen').val('');
+            //     $('#email').val('');
+            //     $('#soDienThoai').val('');
+            //     $scope.loadFromLocalStorage();
+            // }else {
+            //     console.log("check user view gio hang: not null",$scope.username);
+            //     //hiển thị thông tin khách hàng khi đăng nhập
+            //     $('#hoVaTen').val(response.data.hoTen);
+            //     $('#email').val(response.data.email);
+            //     $('#soDienThoai').val(response.data.soDienThoai);
+            //
+            //     //lấy giỏ hàng chi tiết
+            //     $scope.itemsOrder =[];
+            //     $scope.getCart();
+            // }
+            $('#hoVaTen').val(response.data.hoTen);
+            $('#email').val(response.data.email);
+            $('#soDienThoai').val(response.data.soDienThoai);
+            $scope.itemsOrder =[];
+            $scope.getCart();
         }).catch(function (errors) {
             console.error("có lỗi xảy ra: ",errors)
         })

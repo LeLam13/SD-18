@@ -109,6 +109,12 @@ public class DonHangRestController {
         return ResponseEntity.notFound().build();
     }
 
+    @PutMapping("/don-hang/don-hang-chi-tiet/cap-nhat-so-luong-tang")
+    public ResponseEntity<?> updateQuantityPlus(@RequestBody DonHangChiTietRequestDTO donHangChiTietRequestDTO){
+        DonHangChiTiet donHangChiTiet = donHangService.updateQuntityPlus(donHangChiTietRequestDTO);
+        return ResponseEntity.ok("");
+    }
+
     //đơn hàng
     @GetMapping("/don-hang/get-don-hang")//lấy tất cả đơn hàng
     public ResponseEntity<?> getDonHang(){

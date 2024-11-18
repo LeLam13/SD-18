@@ -164,7 +164,7 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
         gioHangChiTiet.setGioHang(gioHang);
         gioHangChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
         gioHangChiTiet.setMaGioHangChiTiet(gioHAngChiTietRequestDTO.getMaGioHangChiTiet());
-        gioHangChiTiet.setSoLuong(1);
+        gioHangChiTiet.setSoLuong(gioHAngChiTietRequestDTO.getSoLuong());
 //        gioHangChiTiet.setDonGia(sanPhamChiTiet.getGiaBan());
         gioHangChiTiet.setGiaBan(sanPhamChiTiet.getGiaBan());
         gioHangChiTiet.setTrangThai(true);

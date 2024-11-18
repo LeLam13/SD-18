@@ -19,4 +19,6 @@ public interface QuanLyDonHangOnlineService {
     String generateRandomString(int length);
 
     DonHang cancelStatusOrder(DonHangOnlineStatusRequestDTO donHangOnlineStatusRequestDTO, String username);
+
+    DonHang getStuats(Integer id);
 }

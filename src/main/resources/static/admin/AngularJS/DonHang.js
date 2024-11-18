@@ -1,5 +1,5 @@
 var app = angular.module("donhang-app", [])
-app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout) {
+app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) {
     $scope.generateRandomString = function(length) {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         let result = '';
@@ -17,8 +17,9 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout) {
     $scope.listOrderOnline = [];
     $scope.listOrderDetail =[];
     $scope.idDonHang= null;
-    $scope.idTrangThai = null;
+    // $scope.idTrangThai = null;
     var item = null;
+    $scope.idTrangThai = 1;
 
     $scope.notification = {
         show: false,
@@ -36,7 +37,7 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout) {
             console.error('Có lỗi xảy ra:', errors);
         })
     }
-
+    var idDonHangShow = null;
     $scope.getOrderOnlineByID = function (orderID) {
         $scope.idDonHang = orderID;
         item = $scope.listOrderOnline.find(item=>item.idDonHang === orderID);
@@ -45,12 +46,15 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout) {
             $scope.listOrderDetail = response.data;
             console.log("check order online details: ",$scope.listOrderDetail);
             //console.log("check order online details: ",response.data.donHang.trangThai.idTrangThai);
-            $scope.showStep(response);
+            //$scope.showStep(response);
             var itemOrder = null
             var index =0;
             response.data.forEach((item, index) => {
                 itemOrder = item.donHang;
             });
+
+            // $scope.idTrangThai = itemOrder.trangThai.tenTrangThai;
+            idDonHangShow = itemOrder.idDonHang;
             if (response.data && itemOrder) {
                 $('#trang-thai').text(itemOrder.trangThai.tenTrangThai);
                 $('#phi-van-chuyen').text(itemOrder.phiVanChuyen);
@@ -103,7 +107,9 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout) {
             $scope.getAllOrderOnline();
             $('#modal-status').modal('hide');
             $scope.showNotification('Cập Nhật trạng Thái Thành công!','success');
-            $scope.showStepUpdate(response);
+            //$scope.showStepUpdate(response);
+
+            // $scope.idTrangThai = response.data.trangThai.idTrangThai;
         }).catch(function(error) {
             console.error('Có lỗi xảy ra:', error);
             $scope.showNotification('Cập Nhật trạng Thái Thất Bại!','error');
@@ -134,7 +140,7 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout) {
             $scope.getAllOrderOnline();
             $('#modal-status').modal('hide');
             $scope.showNotification('Cập Nhật Thành công!','success');
-            $scope.showStepUpdate(response);
+            //$scope.showStepUpdate(response);
         }).catch(function(error) {
             console.error('Có lỗi xảy ra:', error);
             $scope.showNotification('Cập Nhật trạng Thái!','error');
@@ -321,12 +327,78 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout) {
         }, 3000);
     };
 
-    //ẩn các step
     $scope.hideStep = function (){
-        $('#step-1, #step-2, #step-3, #step-4, #step-5,#step-6').hide();
+        $('#step-6').hide();
+    }
+
+    var intervalPromise = $interval(checkTrangThai, 3000); // Lưu tham chiếu interval
+
+    function checkTrangThai() {
+        if(idDonHangShow ===null){
+            $scope.showActive(1);
+        }else {
+
+            $http.get('/api/getTrangThai/' +idDonHangShow)  // Gọi API để lấy trạng thái mới
+                .then(function(response) {
+                    // Cập nhật idTrangThai từ phản hồi server
+                    //$scope.idTrangThai = response.data.trangThai.idTrangThai;
+                    const newTrangThai = response.data.trangThai.idTrangThai;
+                    // Chỉ cập nhật giao diện nếu trạng thái thay đổi
+                    if ($scope.idTrangThai !== newTrangThai) {
+                        console.log("check.....")
+                        if(newTrangThai ===1){
+                            console.log(newTrangThai)
+                            $scope.showActive(1);
+                        }
+                        if(newTrangThai ===7){
+                            console.log(newTrangThai)
+                            $scope.showActive(2);
+                        }
+                        if(newTrangThai ===2){
+                            console.log(newTrangThai)
+                            $scope.showActive(3);
+                        }
+                        if(newTrangThai ===3){
+                            console.log(newTrangThai)
+                            $scope.showActive(4);
+                        }
+                        if(newTrangThai ===5){
+                            console.log("Trạng thái đạt 5, dừng tự động!");
+                            $scope.showActive(5);
+                            $interval.cancel(intervalPromise);  // Dừng interval
+
+                        }
+                        // $scope.idTrangThai = newTrangThai;
+                        // $scope.showActive($scope.idTrangThai); // Cập nhật giao diện
+                    }
+                    //$scope.showActive($scope.idTrangThai);
+                })
+                .catch(function(error) {
+                    console.error("Có lỗi khi lấy trạng thái", error);
+                });
+        }
+
     }
 
 
+
+    // Lưu giữ tham chiếu đến interval
+    // var intervalPromise;
+    $scope.showActive = function(idTrangThai) {
+        $(".step").removeClass("active");
+        for (let i = 1; i <= idTrangThai; i++) {
+            $("#" + "step-" + i).addClass("active"); // Thêm class active cho các bước từ 1 đến idTrangThai
+        }
+    };
+
+    // intervalPromise = $interval(function() {
+    //     //     $scope.idTrangThai = 5;  // Khi đạt đến 5, dừng lại
+    //     //     $interval.cancel(intervalPromise);  // Hủy bỏ interval khi idTrangThai đạt 5
+    //     // Gọi showActive mỗi khi idTrangThai thay đổi
+    //     console.log("show trang thai....");
+    //     $scope.showActive($scope.idTrangThai);
+    //
+    // }, 2000);
 
     //load data
     $scope.getAllOrderOnline();
