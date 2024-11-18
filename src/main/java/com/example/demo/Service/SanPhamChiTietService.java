@@ -1,5 +1,6 @@
 package com.example.demo.Service;
 
+import com.example.demo.dto.request.FilterRequestDTO;
 import com.example.demo.dto.request.SanPhamChiTietRequestDTO;
 import com.example.demo.dto.request.SanPhamRequestDTO;
 import com.example.demo.entity.MauSac;
@@ -24,4 +25,6 @@ public interface SanPhamChiTietService {
     public SanPhamChiTiet updateSanPhamChiTiet(SanPhamChiTietRequestDTO sanPhamChiTietRequestDTO);
 
     public SanPhamChiTiet updateTrangThai(Integer idSanPhamChiTiet);
+
+    Page<SanPhamChiTiet> filterProducts(FilterRequestDTO filterRequest,Pageable pageable);
 }

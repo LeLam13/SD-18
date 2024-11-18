@@ -1,6 +1,7 @@
 package com.example.demo.rest;
 
 import com.example.demo.Service.SanPhamChiTietService;
+import com.example.demo.dto.request.FilterRequestDTO;
 import com.example.demo.dto.request.MauSacRequestDTO;
 import com.example.demo.dto.request.SanPhamChiTietRequestDTO;
 import com.example.demo.dto.request.SanPhamRequestDTO;
@@ -36,7 +37,6 @@ public class SanPhamChiTietRestController {
         Pageable pageable = PageRequest.of(page, size, Sort.by("idSanPhamChiTiet").descending());
         Page<SanPhamChiTiet> sp = sanPhamChiTietService.findBySanPham(idSanPham, pageable); // Assuming this is your service method
 //        PagedModel<SanPham> pagedModel = assembler.toModel(sp);
-        System.out.println("sp:" + sp);
         return ResponseEntity.ok(sp); // Return the PagedModel
     }
 
@@ -53,6 +53,7 @@ public class SanPhamChiTietRestController {
         return ResponseEntity.ok(idSanPhamChiTiet);
 
     }
+
     @PostMapping("/admin/san-pham/chi-tiet/add")
     public ResponseEntity<?> addSanPhamChiTiet(@RequestBody List<SanPhamChiTietRequestDTO> sanPhamChiTietRequestDTO) {
         sanPhamChiTietService.createSanPhamChiTietList(sanPhamChiTietRequestDTO);
@@ -77,4 +78,14 @@ public class SanPhamChiTietRestController {
         sanPhamChiTietService.updateTrangThai(idSanPhamChiTiet);
         return ResponseEntity.ok("");
     }
+
+    @PostMapping("/admin/san-pham/chi-tiet/filter")
+    public ResponseEntity<?> filterProducts(@RequestBody FilterRequestDTO filterData,
+                                            @RequestParam(defaultValue = "0") int page,
+                                            @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size,Sort.by("idSanPhamChiTiet").descending());
+        Page<SanPhamChiTiet> filteredProducts = sanPhamChiTietService.filterProducts(filterData,pageable);
+        return ResponseEntity.ok(filteredProducts);
+    }
+
 }

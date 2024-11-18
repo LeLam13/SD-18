@@ -2,6 +2,7 @@ package com.example.demo.Service.impl;
 
 import com.example.demo.Service.SanPhamChiTietService;
 
+import com.example.demo.dto.request.FilterRequestDTO;
 import com.example.demo.dto.request.MauSacRequestDTO;
 import com.example.demo.dto.request.SanPhamChiTietRequestDTO;
 import com.example.demo.dto.request.SanPhamRequestDTO;
@@ -26,6 +27,8 @@ import com.example.demo.repo.XuatXuRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 
@@ -176,4 +179,63 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         }
         return sanPhamChiTietRepo.save(ms);
     }
+
+    @Override
+    public Page<SanPhamChiTiet> filterProducts(FilterRequestDTO filterRequest, Pageable pageable) {
+        Specification<SanPhamChiTiet> spec = Specification.where(null);
+
+//        if (filterData.getTen() != null && !filterData.getTen().isEmpty()) {
+//            spec = spec.and((root, query, criteriaBuilder) ->
+//                    criteriaBuilder.like(root.get("ten"), "%" + filterData.getTen() + "%"));
+//        }
+        if (filterRequest.getIdSanPham() != null) {
+            SanPham sanPham = sanPhamRepo.findByIdSanPham(filterRequest.getIdSanPham());
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("idSanPham"), sanPham));
+        }
+
+        if (filterRequest.getGiaMin() != null) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.greaterThanOrEqualTo(root.get("giaBan"), filterRequest.getGiaMin()));
+        }
+        if (filterRequest.getGiaMax() != null) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.lessThanOrEqualTo(root.get("giaBan"), filterRequest.getGiaMax()));
+        }
+        if (filterRequest.getIdXuatXu() != null) {
+            XuatXu xuatXu = xuatXuRepo.findByIdXuatXu(filterRequest.getIdXuatXu());
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("idXuatXu"), xuatXu));
+        }
+        if (filterRequest.getIdMauSac() != null) {
+            MauSac mauSac = mauSacRepo.findByIdMauSac(filterRequest.getIdMauSac());
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("idMauSac"), mauSac));
+        }
+        if (filterRequest.getIdThuongHieu() != null) {
+            ThuongHieu thuongHieu = thuongHieuRepo.findByIdThuongHieu(filterRequest.getIdThuongHieu());
+
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("idThuongHieu"), thuongHieu));
+        }
+        if (filterRequest.getIdKieuDang() != null) {
+            KieuDang kieuDang = kieuDangRepo.findByIdKieuDang(filterRequest.getIdKieuDang());
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("idKieuDang"), kieuDang));
+        }
+        if (filterRequest.getIdChatLieu() != null) {
+            ChatLieu chatLieu = chatLieuRepo.findByIdChatLieu(filterRequest.getIdChatLieu());
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("idChatLieu"), chatLieu));
+        }
+
+        Page<SanPhamChiTiet> result = sanPhamChiTietRepo.findAll(spec, pageable);
+
+        if (result.getTotalElements() == 0) {
+            return Page.empty(); // Trả về danh sách trống nếu không có sản phẩm nào thỏa mãn
+        }
+        // Thêm các điều kiện khác tương tự...
+        return result;
+    }
+
 }

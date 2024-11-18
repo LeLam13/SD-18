@@ -71,7 +71,7 @@
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label>Giá min</label>
-                                                                <input type="text" ng-model="filterData.giaBan"
+                                                                <input type="text" ng-model="filterData.giaMin"
                                                                        class="form-control"/>
                                                             </div>
                                                             <div class="mb-3">
@@ -81,9 +81,9 @@
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label>Xuất xứ</label>
-                                                                <select class="form-control" ng-model="filterData.xuatXu">
+                                                                <select class="form-control" ng-model="filterData.idXuatXu">
                                                                     <option value="" selected>Tất cả</option>
-                                                                    <option ng-repeat="x in xuatXu" value="{{x.id}}">
+                                                                    <option ng-repeat="x in xuatXu" value="{{x.idXuatXu}}">
                                                                         {{x.ten}}
                                                                     </option>
                                                                 </select>
@@ -92,9 +92,9 @@
                                                         <div class="col-sm-6">
                                                             <div class="mb-3">
                                                                 <label>Màu sắc</label>
-                                                                <select class="form-control" ng-model="filterData.mauSac">
+                                                                <select class="form-control" ng-model="filterData.idMauSac">
                                                                     <option value="" selected>Tất cả</option>
-                                                                    <option ng-repeat="m in mauSac" value="{{m.ma}}">
+                                                                    <option ng-repeat="m in mauSac" value="{{m.idMauSac}}">
                                                                         {{m.ten}}
                                                                     </option>
                                                                 </select>
@@ -102,27 +102,27 @@
                                                             <div class="mb-3">
                                                                 <label>Thương Hiệu</label>
                                                                 <select class="form-control"
-                                                                        ng-model="filterData.thuongHieu">
+                                                                        ng-model="filterData.idThuongHieu">
                                                                     <option value="" selected>Tất cả</option>
-                                                                    <option ng-repeat="t in thuongHieu" value="{{t.ma}}">
+                                                                    <option ng-repeat="t in thuongHieu" value="{{t.idThuongHieu}}">
                                                                         {{t.ten}}
                                                                     </option>
                                                                 </select>
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label>Kiểu dáng</label>
-                                                                <select class="form-control" ng-model="filterData.kieuDang">
+                                                                <select class="form-control" ng-model="filterData.idKieuDang">
                                                                     <option value="" selected>Tất cả</option>
-                                                                    <option ng-repeat="k in kieuDang" value="{{k.id}}">
+                                                                    <option ng-repeat="k in kieuDang" value="{{k.idKieuDang}}">
                                                                         {{k.ten}}
                                                                     </option>
                                                                 </select>
                                                             </div>
                                                             <div class="mb-3">
                                                                 <label>Chất liệu</label>
-                                                                <select class="form-control" ng-model="filterData.chatLieu">
+                                                                <select class="form-control" ng-model="filterData.idChatLieu">
                                                                     <option value="" selected>Tất cả</option>
-                                                                    <option ng-repeat="c in chatLieu" value="{{c.id}}">
+                                                                    <option ng-repeat="c in chatLieu" value="{{c.idChatLieu}}">
                                                                         {{c.ten}}
                                                                     </option>
                                                                 </select>
