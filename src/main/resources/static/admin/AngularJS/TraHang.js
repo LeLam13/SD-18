@@ -1,5 +1,5 @@
 var app = angular.module("trahang-app", [])
-app.controller("trahang-ctrl", function ($scope, $http,$interval) {
+app.controller("trahang-ctrl", function ($scope, $http,$interval,$sce, $timeout) {
     $scope.listDonHang = [];
     $scope.donHangChiTiet = [];
     $scope.idDonHang = null;
@@ -35,7 +35,7 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval) {
             });
             idDonHangShow = itemOrder.idDonHang;
             if (response.data && itemOrder) {
-                $scope.idTrangThai = itemOrder.trangThai.idTrangThai;
+                // $scope.idTrangThai = itemOrder.trangThai.idTrangThai;
                 $('#tongHoaDon').val(itemOrder.tongTien);
                 $('#tongTienKhuyenMai').val(itemOrder.tongTienKhuyenMai);
                 if(itemOrder.trangThaiThanhToan){
@@ -89,6 +89,7 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval) {
             idTrangThai: idTrangThai,
             ghiChu: chichu
         }
+        console.log("status after update $scope.dataStatus: ",$scope.dataStatus);
         var orderStatus = angular.copy($scope.dataStatus);
         $http({
             method: 'PUT',
@@ -133,16 +134,12 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval) {
         }, 3000);
     };
 
-    // $scope.hideStep = function (){
-    //     $('#step-6').hide();
-    // }
-
     // var intervalPromise = $interval(checkTrangThai, 3000); // Lưu tham chiếu interval
     var intervalPromise;
     $scope.startAutoCheck = function() {
         // Khởi động interval khi nhấn nút
         if (!intervalPromise) {
-            intervalPromise = $interval(checkTrangThai, 3000); // Lưu tham chiếu interval
+            intervalPromise = $interval(checkTrangThai, 2000); // Lưu tham chiếu interval
             console.log("Đã bắt đầu tự động kiểm tra trạng thái.");
         }
     };
@@ -159,11 +156,12 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval) {
         if(idDonHangShow ===null){
             $scope.showActive(1);
         }else {
-
             $http.get('/api/getTrangThai/' +idDonHangShow)  // Gọi API để lấy trạng thái mới
                 .then(function(response) {
                     // Cập nhật idTrangThai từ phản hồi server
                     const newTrangThai = response.data.trangThai.idTrangThai;
+                    // console.log("newTrangThai",newTrangThai);
+                    // console.log("newTrangThai",$scope.idTrangThai);
                     // Chỉ cập nhật giao diện nếu trạng thái thay đổi
                     if ($scope.idTrangThai !== newTrangThai) {
                         console.log("check.....")
@@ -187,7 +185,6 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval) {
                             console.log("Trạng thái đạt 5, dừng tự động!");
                             $scope.showActive(5);
                             $scope.stopAutoCheck ();  // Dừng interval
-
                         }
                     }
                 })
@@ -200,7 +197,8 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval) {
     $scope.showActive = function(idTrangThai) {
         $(".step").removeClass("active");
         for (let i = 1; i <= idTrangThai; i++) {
-            $("#" + "step-" + i).addClass("active"); // Thêm class active cho các bước từ 1 đến idTrangThai
+            $("#" + "step-" + i).addClass("active");
+            // console.log("check:....","#" + "step-" + i)// Thêm class active cho các bước từ 1 đến idTrangThai
         }
     };
 
