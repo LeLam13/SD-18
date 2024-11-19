@@ -13,7 +13,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
     return result;
   };
 
-<<<<<<< HEAD
+
     $scope.provinces = [];
     $scope.selectedProvince = null;
     //quận-huyện
@@ -27,7 +27,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
     $scope.fromDistrictId = 3440;
     $scope.fromWardId = 13010;
     $scope.feeShipping =[];
-=======
+
   //$scope.donHang = {}
   $scope.donHangAdd = {
     maDonHang: $scope.generateRandomString(8),
@@ -42,7 +42,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
     idPhuongThucThanhToan: 1,
     idKhuyenMai: 1,
   };
->>>>>>> feature/khuyenmai
+
 
   $scope.khachHangById = {};
   $scope.chiTietDonHang = [];
@@ -51,7 +51,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
   $scope.productDetails = [];
   $scope.khachHang = [];
 
-<<<<<<< HEAD
+
     $scope.khachHangById={};
     $scope.chiTietDonHang = []
     $scope.donHang = [];
@@ -60,13 +60,13 @@ app.controller("banhang-ctrl", function ($scope, $http) {
     $scope.khachHang =[];
     $scope.khuyenMai =[];
     $scope.khuyenMaiById={};
-=======
+
   var selectedId = null;
   $scope.selectedId = null;
   $scope.khachThanhToan = 0;
   //hiển thị vận chuyển
   $scope.shippingMethod = "1";
->>>>>>> feature/khuyenmai
+
 
   //lấy don hàng chi tiết khi click đơn hàng
   $scope.selectOrder = function (id) {
@@ -252,14 +252,14 @@ app.controller("banhang-ctrl", function ($scope, $http) {
             if (productInScope && productInScope.soLuong > 1) {
               productInScope.soLuong--;
             }
-<<<<<<< HEAD
+
             $scope.khachHangById = response.data;
             // $scope.productDetails = response.data;
             //console.log("check don hàng kh: ",$scope.khachHangById);
         }).catch(function (err){
             console.log("err: ", err);
         })
-=======
+
           })
           .catch(function (error) {
             console.error("Có lỗi xảy ra:", error);
@@ -411,7 +411,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
     $scope.dataKhachHang = {
       maKhachHang: $scope.generateRandomString(8),
       soDienThoai: sdt,
->>>>>>> feature/khuyenmai
+
     };
     var khachHangData = angular.copy($scope.dataKhachHang);
     $http({
@@ -530,7 +530,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
     $("#show-modal-khach").modal("show");
   };
 
-<<<<<<< HEAD
+
     //thêm/cập nhật sản phẩm vào đơn hàng chi tiết
     $scope.addProductsDetail = function (idSanPhamChiTiet){
         $scope.dataProduct ={
@@ -1185,7 +1185,8 @@ app.controller("banhang-ctrl", function ($scope, $http) {
     $('#messQuan').hide();
     $('#messPhuong').hide();
 })
-=======
+
+
   //tang so luong
   $scope.soLuongPlus = function (details) {
     details.soLuong += 1;
@@ -1461,4 +1462,4 @@ app.controller("banhang-ctrl", function ($scope, $http) {
   $scope.hideErrrorsMes();
   $scope.getAllKhuyenMai();
 });
->>>>>>> feature/khuyenmai
+
