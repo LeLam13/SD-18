@@ -325,9 +325,20 @@
                                 </div>
                                 <div class="mb-2">
                                     <label class="form-label" >Phiếu giảm giá:</label>
-                                    <select class="form-select" id="discountSelect">
-                                        <option value="1" selected>Giảm giá mừng lễ</option>
-                                    </select>
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <input type="text" id="ma-khuyen-mai" class="form-control">
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="text" id="muc-giam-gia" class="form-control">
+                                        </div>
+                                        <div class="col-3">
+                                            <button ng-click="openModalKhuyenMai()" type="button" class="btn btn-info">Info</button>
+                                        </div>
+                                    </div>
+<!--                                    <select class="form-select" id="discountSelect">-->
+<!--                                        <option value="1" selected>Giảm giá mừng lễ</option>-->
+<!--                                    </select>-->
 <!--                                    <span>200,000</span>-->
                                 </div>
                                 <div class="mb-2">
@@ -348,16 +359,6 @@
                                         <option value="2" selected>Tiền Mặt</option>
                                         <option value="3" >Thanh Toán Online</option>
                                     </select>
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Khách thanh toán:</label>
-<!--                                    <button class="btn btn-success btn-sm"><i class="bi bi-calculator"></i></button>-->
-                                    <input type="text" class="form-control" ng-model="khachThanhToan" id="id-khach-thanh-toan">
-
-                                </div>
-                                <div class="mb-2">
-                                    <label class="form-label">Số tiền thừa:</label>
-                                    <span>{{ tinhTienThua()  }}</span>
                                 </div>
                                 <div class="mb-2" id="hinh-thuc-van-chuyen">
                                     <label class="form-label">Hình Thức Nhận Hàng:</label>
@@ -384,31 +385,66 @@
                                         <label class="form-label">Địa Chỉ Giao Hàng:</label>
                                         <div class="row">
                                             <div class="col-6">
-                                                <label class="form-label">Tỉnh/Thành Phố:</label>
-                                                <select class="form-select" id="tinh" name="tinh" title="Chọn Tỉnh Thành">
-                                                    <option value="0">Tỉnh Thành</option>
+                                                <label  class="form-label">Tỉnh - Thành Phố</label>
+                                                <select class="form-select" aria-label="Default select example" ng-model="selectedProvince"
+                                                        ng-change="getDisTricts()"
+                                                        ng-options="province.ProvinceName for province in provinces track by province.ProvinceID">
+                                                    <option value="" selected>Chọn Tỉnh - Thành Phố</option>
                                                 </select>
+                                                <span id="messThanhPho" style="color: red;"></span>
                                             </div>
                                             <div class="col-6">
-                                                <label class="form-label">Quận/Huyện:</label>
-                                                <select class="form-select" id="quan" name="quan" title="Chọn Quận Huyện">
-                                                    <option value="0">Quận Huyện</option>
+                                                <label  class="form-label">Quận - Huyện</label>
+                                                <select class="form-select" aria-label="Default select example" ng-model="selectedDistricts"
+                                                        ng-change="getWard()">
+                                                    <option value="" selected>Chọn Quận - Huyện</option>
+                                                    <option ng-repeat="district in districts" value="{{district.DistrictID}}">{{district.DistrictName}}</option>
                                                 </select>
+                                                <span id="messQuan" style="color: red;"></span>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-6">
-                                                <label class="form-label">Xã/Phường:</label>
-                                                <select class="form-select" id="phuong" name="phuong" title="Chọn Phường Xã">
-                                                    <option value="0">Phường Xã</option>
+                                                <label  class="form-label">Phường - Xã</label>
+                                                <select class="form-select" aria-label="Default select example"
+                                                        ng-model="selectedWards" ng-change="feeShippingApi()">
+                                                    <option value="" selected>Chọn Phường - Xã</option>
+                                                    <option ng-repeat="ward in wards" value="{{ward.WardCode}}">{{ward.WardName}}</option>
                                                 </select>
+                                                <span id="messPhuong" style="color: red;"></span>
                                             </div>
                                             <div class="col-6">
                                                 <label class="form-label">Số Nhà:</label>
                                                 <input type="text" id="soNha" class="form-control">
+                                                <span id="messSoNha" style="color: red;"></span>
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label  class="form-label">Phí Vận chuyển:</label>
+                                                <span>{{ getFeeShip()}}</span>
+                                            </div>
+                                        </div>
+<!--                                        <div class="row">-->
+<!--                                            <div class="col-10">-->
+<!--                                                <label  class="form-label">Tổng tiền Thanh Toán:</label>-->
+<!--                                                <span>{{ getTienKhachPTra() + getFeeShip()}}</span>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
                                     </div>
+                                </div>
+                                <div class="mb-2">
+                                    <label  class="form-label">Tổng tiền Thanh Toán:</label>
+                                    <span>{{ tongTienTHanhToan() }}</span>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Khách thanh toán:</label>
+                                    <input type="text" class="form-control" ng-model="khachThanhToan" id="id-khach-thanh-toan">
+
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Số tiền thừa:</label>
+                                    <span>{{ tinhTienThua()  }}</span>
                                 </div>
                                 <div class="mb-2">
                                     <label class="form-label">Ghi chú:</label>
@@ -466,6 +502,62 @@
                                         <td>{{ kh.so_dien_thoai }}</td>
                                         <td>
                                             <button ng-click="getKhachHangByID(kh.id_khach_hang)" type="button" class="btn btn-primary bi bi-box-fill"></button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal fade" id="show-modal-khuyen-mai" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel1">Danh Sách Khách Hàng</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row mb-2">
+<!--                                    <div class="input-group">-->
+<!--                                        <input type="text" class="form-control" placeholder="Nhập số điện thoại" id="sdt-khach-hang">-->
+<!--                                        <button ng-click="addKhachHang()" class="btn btn-outline-secondary" type="button">Thêm</button>-->
+<!--                                        <button ng-click="searchKhachHang()" class="btn btn-outline-secondary" type="button">Tìm Kiếm</button>-->
+<!--                                    </div>-->
+                                </div>
+                                <div class="row" id="erroresMessage1">
+                                    <div class="alert alert-danger" role="alert">
+                                        <span id="showMessage1"></span>
+                                    </div>
+                                </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">STT</th>
+                                        <th scope="col">Mã Khuyến Mãi</th>
+                                        <th scope="col">Tên Khuyến Mãi</th>
+                                        <th scope="col">Mức Giảm Giá</th>
+                                        <th scope="col">Số Lượng</th>
+                                        <th scope="col">Số Tiền Tối Thiểu</th>
+                                        <th scope="col">Thời Gian Kết Thúc</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="km in khuyenMai">
+                                        <th scope="row">{{ $index + 1 }}</th>
+                                        <td>{{ km.maKhuyenMai }}</td>
+                                        <td>{{ km.tenKhuyenMai }}</td>
+                                        <td>{{ km.mucGiamGia}}</td>
+                                        <td>{{ km.soLuong}}</td>
+                                        <td>{{ km.soTienToiThieu}}</td>
+                                        <td>{{ km.thoiGianKetThuc}}</td>
+                                        <td>
+                                            <button ng-click="getKhuyenmaiById(km.idKhuyenMai)" type="button" class="btn btn-primary bi bi-box-fill"></button>
                                         </td>
                                     </tr>
                                     </tbody>

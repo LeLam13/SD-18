@@ -55,7 +55,7 @@ public class DonHangRestController {
 //            responseDTO.setDonGia(donHangChiTiet.getDonGia());
             responseDTO.setGiaBan(donHangChiTiet.getDonGia());
             responseDTO.setIdSanPham(donHangChiTiet.getSanPhamChiTiet().getIdSanPhamChiTiet());
-//            responseDTO.setTenSanPham(donHangChiTiet.getSanPhamChiTiet().getTen());
+            responseDTO.setTenSanPham(donHangChiTiet.getSanPhamChiTiet().getIdSanPham().getTen());
 
             responseDTOList.add(responseDTO);
         }
@@ -93,7 +93,7 @@ public class DonHangRestController {
         responseDTO.setSoLuong(donHangChiTiet.getSoLuong());
 //        responseDTO.setDonGia(donHangChiTiet.getDonGia());
         responseDTO.setGiaBan(donHangChiTiet.getDonGia());
-//        responseDTO.setTenSanPham(donHangChiTiet.getSanPhamChiTiet().getTen());
+        responseDTO.setTenSanPham(donHangChiTiet.getSanPhamChiTiet().getIdSanPham().getTen());
         responseDTO.setIdSanPham(donHangChiTiet.getSanPhamChiTiet().getIdSanPhamChiTiet());
         System.out.println("donHangChiTiet: "+donHangChiTiet);
         return ResponseEntity.ok(responseDTO);
@@ -107,6 +107,18 @@ public class DonHangRestController {
         }
 
         return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/don-hang/don-hang-chi-tiet/cap-nhat-so-luong-tang")
+    public ResponseEntity<?> updateQuantityPlus(@RequestBody DonHangChiTietRequestDTO donHangChiTietRequestDTO){
+        DonHangChiTiet donHangChiTiet = donHangService.updateQuntityPlus(donHangChiTietRequestDTO);
+        return ResponseEntity.ok("");
+    }
+
+    @PutMapping("/don-hang/don-hang-chi-tiet/cap-nhat-so-luong-giam")
+    public ResponseEntity<?> updateQuantityReduce(@RequestBody DonHangChiTietRequestDTO donHangChiTietRequestDTO){
+        DonHangChiTiet donHangChiTiet = donHangService.updateQuntityReduce(donHangChiTietRequestDTO);
+        return ResponseEntity.ok("");
     }
 
     //đơn hàng
@@ -133,6 +145,10 @@ public class DonHangRestController {
         donHangResponse.setTrangThaiThanhToan(donHang.getTrangThaiThanhToan());
         donHangResponse.setOldKhachHang(donHang.getKhachHang());
         if (donHang.getKhachHang() != null) {
+<<<<<<< HEAD
+=======
+            //donHangResponse.setOldKhachHang(donHang.getKhachHang());
+>>>>>>> feature/banhang
             donHangResponse.setId_khach_hang(donHang.getKhachHang().getIdKhachHang());
         } else {
             //donHangResponse.setOldKhachHang(null);
@@ -277,6 +293,20 @@ public class DonHangRestController {
 
         System.out.println("check Search KH11: "+ responseKHDTOList);
         return ResponseEntity.ok(responseKHDTOList);
+    }
+
+    //khuyen mãi
+    @GetMapping("/don-hang/khuyen-mai")
+    public ResponseEntity<?> getAllKhuyenMai(){
+        List<KhuyenMai> khuyenMai = donHangService.getAllKhuyenMai();
+        return ResponseEntity.ok(khuyenMai);
+    }
+
+    //khuyen mãi
+    @GetMapping("/don-hang/khuyen-mai/{id}")
+    public ResponseEntity<?> getAllKhuyenMaiById(@PathVariable("id") Integer id){
+        KhuyenMai khuyenMai = donHangService.getKhuyenMaiById(id);
+        return ResponseEntity.ok(khuyenMai);
     }
 
     //hoá đơn

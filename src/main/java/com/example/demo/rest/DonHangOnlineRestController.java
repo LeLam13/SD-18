@@ -106,4 +106,11 @@ public class DonHangOnlineRestController {
         }
 
     }
+
+    @GetMapping("/api/getTrangThai/{id}")
+    public ResponseEntity<?> getStatus(@PathVariable("id") Integer id){
+        DonHang donHang = quanLyDonHangOnlineService.getStuats(id);
+        return ResponseEntity.ok(donHang);
+    }
+
 }

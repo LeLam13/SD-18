@@ -5,10 +5,7 @@ import com.example.demo.dto.reponse.KhachHangResponseDTO;
 import com.example.demo.dto.request.DonHangChiTietRequestDTO;
 import com.example.demo.dto.request.DonHangRequestDTO;
 import com.example.demo.dto.request.KhachHangRequestDTO;
-import com.example.demo.entity.DonHang;
-import com.example.demo.entity.DonHangChiTiet;
-import com.example.demo.entity.SanPhamChiTiet;
-import com.example.demo.entity.khachhang;
+import com.example.demo.entity.*;
 
 import java.util.List;
 
@@ -42,4 +39,11 @@ public interface DonHangService {
 
     List<khachhang> searchKhachHang(String sdt);
     List<SanPhamChiTiet> searchSanPhamChiTiet(String tenSP);
+
+    DonHangChiTiet updateQuntityPlus(DonHangChiTietRequestDTO donHangChiTietRequestDTO);
+    DonHangChiTiet updateQuntityReduce(DonHangChiTietRequestDTO donHangChiTietRequestDTO);
+
+    List<KhuyenMai> getAllKhuyenMai();
+
+    KhuyenMai getKhuyenMaiById(Integer id);
 }

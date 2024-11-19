@@ -19,4 +19,5 @@ public interface GioHangchiTietRepo extends JpaRepository<GioHangChiTiet, Intege
     GioHangChiTiet findBySanPhamChiTiet_IdSanPhamChiTiet(Integer idSanPhamChiTiet);
 
     void deleteBySanPhamChiTiet_IdSanPhamChiTiet(Integer idSanPhamChiTiet);
+
 }

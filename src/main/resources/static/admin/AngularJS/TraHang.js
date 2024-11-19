@@ -1,9 +1,15 @@
 var app = angular.module("trahang-app", [])
-app.controller("trahang-ctrl", function ($scope, $http) {
+app.controller("trahang-ctrl", function ($scope, $http,$interval) {
     $scope.listDonHang = [];
     $scope.donHangChiTiet = [];
     $scope.idDonHang = null;
     $scope.idTrangThai = null;
+    $scope.notification = {
+        show: false,
+        message: '',
+        type: '',
+        icon: ''
+    };
 
     $scope.getAllOrder = function (){
         $http.get("/don-hang-tai-quay").then(function (response){
@@ -13,8 +19,9 @@ app.controller("trahang-ctrl", function ($scope, $http) {
             console.error("Có lỗi xảy ra: ",errors);
         })
     }
-    
+    var idDonHangShow = null;
     $scope.getOrderByID = function (id){
+        $scope.startAutoCheck();
         $scope.idDonHang = id;
         $http.get("/don-hang-tai-quay/"+id).then(function (response) {
             $scope.donHangChiTiet = response.data;
@@ -26,6 +33,7 @@ app.controller("trahang-ctrl", function ($scope, $http) {
                 itemOrder = item.donHang;
                 //console.log(`Order ${index+1} Detail:`, itemOrder);
             });
+            idDonHangShow = itemOrder.idDonHang;
             if (response.data && itemOrder) {
                 $scope.idTrangThai = itemOrder.trangThai.idTrangThai;
                 $('#tongHoaDon').val(itemOrder.tongTien);
@@ -62,7 +70,7 @@ app.controller("trahang-ctrl", function ($scope, $http) {
             } else {
                 console.error("Dữ liệu donHang không tồn tại trong response.");
             }
-            $scope.showStatusOrder(response);
+            //$scope.showStatusOrder(response);
 
         }).catch(function (errors) {
             console.error("Có lỗi xảy ra: ",errors);
@@ -74,11 +82,11 @@ app.controller("trahang-ctrl", function ($scope, $http) {
         $('#modal-status').modal('show');
     }
 
-    $scope.updateOrderStatus = function (){
+    $scope.updateOrderStatus = function (idTrangThai){
         var chichu = $('#ghi-chu').val();
         $scope.dataStatus ={
             idDonHang: $scope.idDonHang,
-            idTrangThai: $scope.idTrangThai,
+            idTrangThai: idTrangThai,
             ghiChu: chichu
         }
         var orderStatus = angular.copy($scope.dataStatus);
@@ -94,20 +102,112 @@ app.controller("trahang-ctrl", function ($scope, $http) {
             }
         }) .then(function(response) {
             console.log("status after update: ",response.data);
-            $scope.showStatusOrderAfterUpdate(response);
+            //$scope.showStatusOrderAfterUpdate(response);
             $scope.getAllOrder();
-            alert("Cập Nhật Thành công!");
+            $scope.showNotification('Cập Nhật trạng Thái Thành công!','success');
             $('#modal-status').modal('hide');
         }).catch(function(errors) {
             console.error("Có lỗi xảy ra: ",errors);
-            alert("Cập Nhật Thất Bại!")
+            $scope.showNotification('Cập Nhật trạng Thái Thất Bại!','error');
         });
     }
+
+    $scope.showNotification = function(message, type) {
+        $scope.notification.message = message;
+        $scope.notification.type = type;
+
+        // Chọn icon dựa trên loại thông báo
+        if (type === 'success') {
+            $scope.notification.icon = $sce.trustAsHtml('✔️');
+        } else if (type === 'error') {
+            $scope.notification.icon = $sce.trustAsHtml('❌');
+        } else {
+            $scope.notification.icon = $sce.trustAsHtml('ℹ️');
+        }
+
+        $scope.notification.show = true;
+
+        // Sử dụng $timeout để tự động ẩn sau 5 giây
+        $timeout(function() {
+            $scope.notification.show = false;
+        }, 3000);
+    };
+
+    // $scope.hideStep = function (){
+    //     $('#step-6').hide();
+    // }
+
+    // var intervalPromise = $interval(checkTrangThai, 3000); // Lưu tham chiếu interval
+    var intervalPromise;
+    $scope.startAutoCheck = function() {
+        // Khởi động interval khi nhấn nút
+        if (!intervalPromise) {
+            intervalPromise = $interval(checkTrangThai, 3000); // Lưu tham chiếu interval
+            console.log("Đã bắt đầu tự động kiểm tra trạng thái.");
+        }
+    };
+    $scope.stopAutoCheck = function() {
+        // Dừng interval khi trạng thái đạt 5
+        if (intervalPromise) {
+            $interval.cancel(intervalPromise);
+            intervalPromise = null; // Đặt lại tham chiếu interval
+            console.log("Đã dừng tự động kiểm tra trạng thái.");
+        }
+    };
+
+    function checkTrangThai() {
+        if(idDonHangShow ===null){
+            $scope.showActive(1);
+        }else {
+
+            $http.get('/api/getTrangThai/' +idDonHangShow)  // Gọi API để lấy trạng thái mới
+                .then(function(response) {
+                    // Cập nhật idTrangThai từ phản hồi server
+                    const newTrangThai = response.data.trangThai.idTrangThai;
+                    // Chỉ cập nhật giao diện nếu trạng thái thay đổi
+                    if ($scope.idTrangThai !== newTrangThai) {
+                        console.log("check.....")
+                        if(newTrangThai ===1){
+                            console.log(newTrangThai)
+                            $scope.showActive(1);
+                        }
+                        if(newTrangThai ===7){
+                            console.log(newTrangThai)
+                            $scope.showActive(2);
+                        }
+                        if(newTrangThai ===2){
+                            console.log(newTrangThai)
+                            $scope.showActive(3);
+                        }
+                        if(newTrangThai ===3){
+                            console.log(newTrangThai)
+                            $scope.showActive(4);
+                        }
+                        if(newTrangThai ===5){
+                            console.log("Trạng thái đạt 5, dừng tự động!");
+                            $scope.showActive(5);
+                            $scope.stopAutoCheck ();  // Dừng interval
+
+                        }
+                    }
+                })
+                .catch(function(error) {
+                    console.error("Có lỗi khi lấy trạng thái", error);
+                });
+        }
+    }
+
+    $scope.showActive = function(idTrangThai) {
+        $(".step").removeClass("active");
+        for (let i = 1; i <= idTrangThai; i++) {
+            $("#" + "step-" + i).addClass("active"); // Thêm class active cho các bước từ 1 đến idTrangThai
+        }
+    };
 
 
     //ẩn trạng thái
     $scope.hideStatusOrder = function (){
-        $('#order-tracking').hide();
+        $('#step-6').hide();
     }
     //hiển thị trạng thái
     $scope.showStatusOrder = function (response){

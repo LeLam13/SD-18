@@ -30,4 +30,10 @@ public interface DonHangOnlineService {
 
     GioHangChiTiet updateCartDetail(GioHAngChiTietRequestDTO gioHAngChiTietRequestDTO);
     GioHangChiTiet  deleteAndReturnBySanPhamChiTietId(Integer idSanPhamChiTiet);
+
+    GioHangChiTiet updateCartDetailPlus(GioHAngChiTietRequestDTO gioHAngChiTietRequestDTO);
+
+    GioHangChiTiet updateCartDetailReduce(GioHAngChiTietRequestDTO gioHAngChiTietRequestDTO);
+
+    GioHangChiTiet updateCartDetailChange(GioHAngChiTietRequestDTO gioHAngChiTietRequestDTO);
 }

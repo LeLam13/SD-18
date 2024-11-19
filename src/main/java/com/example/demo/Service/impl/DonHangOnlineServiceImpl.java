@@ -164,12 +164,22 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
         gioHangChiTiet.setGioHang(gioHang);
         gioHangChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
         gioHangChiTiet.setMaGioHangChiTiet(gioHAngChiTietRequestDTO.getMaGioHangChiTiet());
-        gioHangChiTiet.setSoLuong(1);
+        gioHangChiTiet.setSoLuong(gioHAngChiTietRequestDTO.getSoLuong());
 //        gioHangChiTiet.setDonGia(sanPhamChiTiet.getGiaBan());
         gioHangChiTiet.setGiaBan(sanPhamChiTiet.getGiaBan());
         gioHangChiTiet.setTrangThai(true);
 
         gioHangchiTietRepo.save(gioHangChiTiet);
+
+        SanPhamChiTiet oldSanPhamCT = sanPhamChiTietRepo.findById(gioHAngChiTietRequestDTO.getIdSanPhamChiTiet())
+                .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm chi tiết!"));
+        //cập nhật lại số lượng sản phẩm
+        if (oldSanPhamCT.getSoLuong() < gioHAngChiTietRequestDTO.getSoLuong()) {
+            throw new RuntimeException("Số lượng sản phẩm không đủ!");
+        }
+        // Cập nhật lại số lượng tồn kho của sản phẩm
+        oldSanPhamCT.setSoLuong(oldSanPhamCT.getSoLuong() - gioHAngChiTietRequestDTO.getSoLuong());
+        sanPhamChiTietRepo.save(oldSanPhamCT);
         return gioHangChiTiet;
     }
 
@@ -214,6 +224,78 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
             gioHangchiTietRepo.delete(gioHangChiTiet);
         }
         return gioHangChiTiet;
+    }
+
+    @Override
+    public GioHangChiTiet updateCartDetailPlus(GioHAngChiTietRequestDTO gioHAngChiTietRequestDTO) {
+        GioHangChiTiet oldDonHangCT = gioHangchiTietRepo.findBySanPhamIdAndGioHangId(gioHAngChiTietRequestDTO.getIdSanPhamChiTiet(),gioHAngChiTietRequestDTO.getIdGioHang());
+
+        //số lượng cập nhật > sô lượng có
+        SanPhamChiTiet oldSacPhamCT = sanPhamChiTietRepo.findById(gioHAngChiTietRequestDTO.getIdSanPhamChiTiet()).get();
+        if (oldSacPhamCT.getSoLuong() < gioHAngChiTietRequestDTO.getSoLuong()) {
+            throw new RuntimeException("Số lượng sản phẩm không đủ!");
+        }
+        //cập nhật số lượng của sản phẩm chi tiết
+        oldSacPhamCT.setSoLuong(oldSacPhamCT.getSoLuong() - gioHAngChiTietRequestDTO.getSoLuong());
+        sanPhamChiTietRepo.save(oldSacPhamCT);
+
+        //cập nhật số lượng đon hàng chi tiết
+        oldDonHangCT.setIdGioHangChiTiet(oldDonHangCT.getIdGioHangChiTiet());
+        Integer soLuong = oldDonHangCT.getSoLuong() + gioHAngChiTietRequestDTO.getSoLuong();
+        oldDonHangCT.setSoLuong(soLuong);
+        gioHangchiTietRepo.save(oldDonHangCT);
+        return oldDonHangCT;
+    }
+
+    @Override
+    public GioHangChiTiet updateCartDetailReduce(GioHAngChiTietRequestDTO gioHAngChiTietRequestDTO) {
+        GioHangChiTiet oldDonHangCT = gioHangchiTietRepo.findBySanPhamIdAndGioHangId(gioHAngChiTietRequestDTO.getIdSanPhamChiTiet(),gioHAngChiTietRequestDTO.getIdGioHang());
+
+        //số lượng cập nhật > sô lượng có
+        SanPhamChiTiet oldSacPhamCT = sanPhamChiTietRepo.findById(gioHAngChiTietRequestDTO.getIdSanPhamChiTiet()).get();
+        if (oldSacPhamCT.getSoLuong() < gioHAngChiTietRequestDTO.getSoLuong()) {
+            throw new RuntimeException("Số lượng sản phẩm không đủ!");
+        }
+        //cập nhật số lượng của sản phẩm chi tiết
+        oldSacPhamCT.setSoLuong(oldSacPhamCT.getSoLuong() + gioHAngChiTietRequestDTO.getSoLuong());
+        sanPhamChiTietRepo.save(oldSacPhamCT);
+
+        //cập nhật số lượng đon hàng chi tiết
+        oldDonHangCT.setIdGioHangChiTiet(oldDonHangCT.getIdGioHangChiTiet());
+        Integer soLuong = oldDonHangCT.getSoLuong() - gioHAngChiTietRequestDTO.getSoLuong();
+        oldDonHangCT.setSoLuong(soLuong);
+        gioHangchiTietRepo.save(oldDonHangCT);
+        return oldDonHangCT;
+    }
+
+    @Override
+    public GioHangChiTiet updateCartDetailChange(GioHAngChiTietRequestDTO gioHAngChiTietRequestDTO) {
+        GioHangChiTiet oldDonHangCT = gioHangchiTietRepo.findBySanPhamIdAndGioHangId(gioHAngChiTietRequestDTO.getIdSanPhamChiTiet(),gioHAngChiTietRequestDTO.getIdGioHang());
+
+        //số lượng cập nhật > sô lượng có
+        SanPhamChiTiet oldSacPhamCT = sanPhamChiTietRepo.findById(gioHAngChiTietRequestDTO.getIdSanPhamChiTiet()).get();
+        if (oldSacPhamCT.getSoLuong() < gioHAngChiTietRequestDTO.getSoLuong()) {
+            throw new RuntimeException("Số lượng sản phẩm không đủ!");
+        }
+        //cập nhật số lượng của sản phẩm chi tiết
+        int soLuongChange=0;
+        if(gioHAngChiTietRequestDTO.getSoLuong() > oldDonHangCT.getSoLuong()){
+            soLuongChange= gioHAngChiTietRequestDTO.getSoLuong()- oldDonHangCT.getSoLuong();
+            oldSacPhamCT.setSoLuong(oldSacPhamCT.getSoLuong() - soLuongChange);
+        }else {
+            soLuongChange = oldDonHangCT.getSoLuong() - gioHAngChiTietRequestDTO.getSoLuong();
+            oldSacPhamCT.setSoLuong(oldSacPhamCT.getSoLuong() + soLuongChange);
+        }
+
+        //oldSacPhamCT.setSoLuong(oldSacPhamCT.getSoLuong() - soLuongChange);
+        sanPhamChiTietRepo.save(oldSacPhamCT);
+
+        //cập nhật số lượng đon hàng chi tiết
+        oldDonHangCT.setIdGioHangChiTiet(oldDonHangCT.getIdGioHangChiTiet());
+        //Integer soLuong = oldDonHangCT.getSoLuong() - gioHAngChiTietRequestDTO.getSoLuong();
+        oldDonHangCT.setSoLuong(gioHAngChiTietRequestDTO.getSoLuong());
+        gioHangchiTietRepo.save(oldDonHangCT);
+        return oldDonHangCT;
     }
 
 }
