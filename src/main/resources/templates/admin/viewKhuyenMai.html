@@ -6,30 +6,14 @@
   layout:decorate="~{/admin/index}"
 >
   <head>
-    <title>Thêm/Sửa Khuyến Mãi</title>
+    <title>Chi Tiết Khuyến Mãi</title>
   </head>
   <body>
-    <div class="main-content mb-4" layout:fragment="content">
+    <div class="main-content" layout:fragment="content">
       <div class="container" style="margin-top: 10rem">
-        <h2
-          class="mb-4"
-          th:text="${khuyenMai != null ? 'Sửa Khuyến Mãi' : 'Thêm Khuyến Mãi'}"
-        ></h2>
+        <h2 class="mb-4">Chi Tiết Khuyến Mãi</h2>
 
-        <!-- Hiển thị lỗi nếu có -->
-        <div
-          class="alert alert-danger"
-          th:if="${error != null}"
-          th:text="${error}"
-        ></div>
-
-        <form th:action="@{/admin/khuyen-mai/save}" method="post">
-          <input
-            type="hidden"
-            name="idKhuyenMai"
-            th:value="${khuyenMai != null ? khuyenMai.idKhuyenMai : ''}"
-          />
-
+        <form>
           <!-- Mã Khuyến Mãi -->
           <div class="mb-3">
             <label for="maKhuyenMai" class="form-label">Mã Khuyến Mãi</label>
@@ -38,8 +22,8 @@
               class="form-control"
               id="maKhuyenMai"
               name="maKhuyenMai"
-              th:value="${khuyenMai != null ? khuyenMai.maKhuyenMai : ''}"
-              required
+              th:value="${khuyenMai.maKhuyenMai}"
+              readonly
             />
           </div>
 
@@ -51,22 +35,21 @@
               class="form-control"
               id="tenKhuyenMai"
               name="tenKhuyenMai"
-              th:value="${khuyenMai != null ? khuyenMai.tenKhuyenMai : ''}"
-              required
+              th:value="${khuyenMai.tenKhuyenMai}"
+              readonly
             />
           </div>
 
           <!-- Mức Giảm -->
           <div class="mb-3">
-            <label for="mucGiamGia" class="form-label">Mức Giảm (%) hoặc VND</label>
+            <label for="mucGiamGia" class="form-label">Mức Giảm</label>
             <input
-              type="number"
+              type="text"
               class="form-control"
               id="mucGiamGia"
               name="mucGiamGia"
-              th:value="${khuyenMai != null ? khuyenMai.mucGiamGia : ''}"
-              min="0"
-              required
+              th:value="${khuyenMai.mucGiamGia <= 100 ? khuyenMai.mucGiamGia + '%' : khuyenMai.mucGiamGia + ' VND'}"
+              readonly
             />
           </div>
 
@@ -78,9 +61,8 @@
               class="form-control"
               id="soLuong"
               name="soLuong"
-              th:value="${khuyenMai != null ? khuyenMai.soLuong : ''}"
-              min="0"
-              required
+              th:value="${khuyenMai.soLuong}"
+              readonly
             />
           </div>
 
@@ -92,9 +74,8 @@
               class="form-control"
               id="thoiGianBatDau"
               name="thoiGianBatDau"
-              placeholder="MM/dd/yyyy"
-              th:value="${khuyenMai != null && khuyenMai.thoiGianBatDau != null ? #dates.format(khuyenMai.thoiGianBatDau, 'MM/dd/yyyy') : ''}"
-              required
+              th:value="${#dates.format(khuyenMai.thoiGianBatDau, 'MM/dd/yyyy')}"
+              readonly
             />
           </div>
 
@@ -106,23 +87,21 @@
               class="form-control"
               id="thoiGianKetThuc"
               name="thoiGianKetThuc"
-              placeholder="MM/dd/yyyy"
-              th:value="${khuyenMai != null && khuyenMai.thoiGianKetThuc != null ? #dates.format(khuyenMai.thoiGianKetThuc, 'MM/dd/yyyy') : ''}"
-              required
+              th:value="${#dates.format(khuyenMai.thoiGianKetThuc, 'MM/dd/yyyy')}"
+              readonly
             />
           </div>
 
           <!-- Điều Kiện Áp Dụng -->
           <div class="mb-3">
-            <label for="soTienToiThieu" class="form-label">Điều Kiện Áp Dụng (Số Tiền Tối Thiểu)</label>
+            <label for="soTienToiThieu" class="form-label">Điều Kiện Áp Dụng</label>
             <input
-              type="number"
+              type="text"
               class="form-control"
               id="soTienToiThieu"
               name="soTienToiThieu"
-              th:value="${khuyenMai != null ? khuyenMai.soTienToiThieu : ''}"
-              min="0"
-              placeholder="Nhập số tiền tối thiểu (VND)"
+              th:value="${khuyenMai.soTienToiThieu != null ? khuyenMai.soTienToiThieu + ' VND' : 'Không yêu cầu'}"
+              readonly
             />
           </div>
 
@@ -134,32 +113,31 @@
               id="moTa"
               name="moTa"
               rows="3"
-              th:text="${khuyenMai != null ? khuyenMai.moTa : ''}"
+              readonly
+              th:text="${khuyenMai.moTa != null ? khuyenMai.moTa : 'Không có mô tả'}"
             ></textarea>
           </div>
 
           <!-- Trạng Thái -->
           <div class="mb-3">
             <label for="trangThai" class="form-label">Trạng Thái</label>
-            <select class="form-control" id="trangThai" name="trangThai">
-              <option
-                th:selected="${khuyenMai.trangThai != null ? khuyenMai.trangThai : false}"
-                value="true"
-              >
+            <select
+              class="form-control"
+              id="trangThai"
+              name="trangThai"
+              disabled
+            >
+              <option th:selected="${khuyenMai.trangThai}" value="true">
                 Đang hoạt động
               </option>
-              <option
-                th:selected="${khuyenMai.trangThai != null ? !khuyenMai.trangThai : true}"
-                value="false"
-              >
+              <option th:selected="${!khuyenMai.trangThai}" value="false">
                 Ngừng hoạt động
               </option>
             </select>
           </div>
 
-          <!-- Nút Hành Động -->
-          <button type="submit" class="btn btn-success">Lưu</button>
-          <a href="/admin/khuyen-mai" class="btn btn-secondary">Hủy</a>
+          <!-- Nút Quay Lại -->
+          <a href="/admin/khuyen-mai" class="btn btn-primary">Quay Lại</a>
         </form>
       </div>
     </div>
