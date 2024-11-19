@@ -7,11 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
-<<<<<<< HEAD
+
 
 import org.springframework.data.jpa.repository.Modifying;
-=======
->>>>>>> feature/hoadon
+
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -25,7 +24,7 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
     @Query("SELECT spct FROM SanPhamChiTiet spct JOIN spct.idSanPham sp WHERE LOWER(sp.ten) LIKE LOWER(CONCAT('%', :ten, '%'))")
     List<SanPhamChiTiet> findBySanPhamTenContainingIgnoreCase(String ten);
 
-<<<<<<< HEAD
+
     @Query("SELECT spc FROM SanPhamChiTiet spc JOIN spc.dotGiamGiaList dgg " +
             "WHERE dgg.idGiamGia = :idGG AND spc.idSanPham.idSanPham = :idSP")
     List<SanPhamChiTiet> findByDotGiamGiaAndSanPham(@Param("idGG") Integer idGG, @Param("idSP") Integer idSP);
@@ -67,8 +66,7 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
 //    @Query("SELECT s FROM SanPhamChiTiet s WHERE s.idSanPham.idSanPham = :idSanPham")
 //    List<SanPhamChiTiet> findCustomBySanPhamId(@Param("idSanPham") Integer idSanPham);
 
-=======
->>>>>>> feature/hoadon
+
     @Query("SELECT s FROM SanPhamChiTiet s WHERE s.idSanPham.idSanPham = :idSanPham")
     Page<SanPhamChiTiet> getByID(@Param("idSanPham") Integer idSanPham, Pageable pageable);
 
@@ -76,7 +74,6 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
 
     List<SanPhamChiTiet> findAllByIdSanPhamChiTietIn(List<Integer> idSanPhamChiTietList);
 
-<<<<<<< HEAD
 
     SanPhamChiTiet findByMa(String ma);
 
@@ -104,14 +101,6 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
 //            @Param("chatLieu") Integer chatLieu
 //    );
 
-}
-
-
-
-=======
-    SanPhamChiTiet findByMa(String ma);
-
-    SanPhamChiTiet findByIdSanPhamChiTiet(Integer idSanPhamChiTiet);
 
     @Query("SELECT spct.idSanPhamChiTiet, SUM(hdct.soLuong) " +
             "FROM HoaDonChiTiet hdct " +
@@ -126,4 +115,4 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
     Integer getTotalInventoryByProduct(@Param("idSanPham") Integer idSanPham);
 
 }
->>>>>>> feature/hoadon
+

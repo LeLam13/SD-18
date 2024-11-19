@@ -145,10 +145,9 @@ public class DonHangRestController {
         donHangResponse.setTrangThaiThanhToan(donHang.getTrangThaiThanhToan());
         donHangResponse.setOldKhachHang(donHang.getKhachHang());
         if (donHang.getKhachHang() != null) {
-<<<<<<< HEAD
-=======
+
             //donHangResponse.setOldKhachHang(donHang.getKhachHang());
->>>>>>> feature/banhang
+
             donHangResponse.setId_khach_hang(donHang.getKhachHang().getIdKhachHang());
         } else {
             //donHangResponse.setOldKhachHang(null);
