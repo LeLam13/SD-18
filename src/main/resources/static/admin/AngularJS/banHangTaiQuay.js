@@ -43,14 +43,12 @@ app.controller("banhang-ctrl", function ($scope, $http) {
     idKhuyenMai: 1,
   };
 
-
   // $scope.khachHangById = {};
   // $scope.chiTietDonHang = [];
   // $scope.donHang = [];
   // $scope.products = [];
   // $scope.productDetails = [];
   // $scope.khachHang = [];
-
 
     $scope.khachHangById={};
     $scope.chiTietDonHang = []
@@ -256,10 +254,9 @@ app.controller("banhang-ctrl", function ($scope, $http) {
             $scope.khachHangById = response.data;
             // $scope.productDetails = response.data;
             //console.log("check don hàng kh: ",$scope.khachHangById);
+
         // }).catch(function (err){
         //     console.log("err: ", err);
-        // })
-
           })
           .catch(function (error) {
             console.error("Có lỗi xảy ra:", error);
@@ -530,6 +527,85 @@ app.controller("banhang-ctrl", function ($scope, $http) {
     $("#show-modal-khach").modal("show");
   };
 
+
+    //thêm/cập nhật sản phẩm vào đơn hàng chi tiết
+    $scope.addProductsDetail = function (idSanPhamChiTiet){
+        $scope.dataProduct ={
+            maDonHangChiTiet: $scope.generateRandomString(8),
+            idĐonHang: selectedId,
+            idSanPhamChiTiet: idSanPhamChiTiet,
+            soLuong: '1'
+        }
+        var dataProductsDetails = angular.copy($scope.dataProduct);
+        if ($scope.dataProduct.idDonHang === null) {
+            console.log("idDonHang is null, action blocked.");
+            alert("Bạn Chưa Chọn Đơn Hàng!");
+            return;  // Chặn không cho thực hiện nếu idDonHang là null
+        }
+        var name = $('#nameKH').val();
+        var sdt = $('#sdtKH').val();
+        if(name === "" || sdt === "") {
+            alert("Bạn Chưa Chọn Khách Hàng!");
+            return;
+        }
+
+        if($scope.selectedId === null || $scope.selectedId ===''){
+            alert("Chưa Chọn Đơn Hàng!");
+            return;
+        }
+
+        //kiểm tra đã tồn tại sản phẩm chưa
+        var productWithId = $scope.productDetails.find(item => item.idSanPham === idSanPhamChiTiet);
+        if(productWithId){
+            //console.log("productWithId",productWithId);
+            $http({
+                method: 'PUT',
+                url: '/don-hang/don-hang-chi-tiet/cap-nhat',
+                data: dataProductsDetails,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                transformRequest: function(data) {
+                    return JSON.stringify(data);  // Chuyển đối tượng thành chuỗi JSON
+                }
+            }).then(function(response) {
+                //console.log('Sản phẩm thêm thành công');
+                console.log('Sản phẩm thêm: ',response.data);
+                productWithId.soLuong++;
+                //$scope.getProducts();
+                var productInScope = $scope.products.find(item => item.idSanPhamChiTiet === idSanPhamChiTiet);
+                if (productInScope && productInScope.soLuong > 1) {
+                    productInScope.soLuong--;
+                }
+            }).catch(function(error) {
+                    console.error('Có lỗi xảy ra:', error);
+            });
+        }else {
+            //console.log("check sản phẩm chưa tồn tạo ");
+            //thêm sản phẩm vào giỏ hàng
+            $http({
+                method: 'POST',
+                url: '/don-hang/don-hang-chi-tiet/them-moi',
+                data: dataProductsDetails,
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                transformRequest: function(data) {
+                    return JSON.stringify(data);  // Chuyển đối tượng thành chuỗi JSON
+                }
+            }) .then(function(response) {
+                console.log('Sp dơn hàng chi tiết đã được thêm:', response.data);
+                $scope.productDetails.push(response.data);
+                var productInScope = $scope.products.find(item => item.idSanPhamChiTiet === idSanPhamChiTiet);
+                if (productInScope && productInScope.soLuong > 1) {
+                    productInScope.soLuong--;
+                }
+            }).catch(function(error) {
+                console.error('Có lỗi xảy ra:', error);
+            });
+        }
+        console.log("check Data spct",$scope.dataProduct);
+    }
 
     //tạo hoá đơn
     $scope.createHoaDon = function (){
@@ -991,79 +1067,4 @@ app.controller("banhang-ctrl", function ($scope, $http) {
     $('#messPhuong').hide();
 })
 
-
-
-  // $scope.khuyenMaiList = []; // Danh sách khuyến mãi
-  // $scope.selectedKhuyenMai = null; // Mã khuyến mãi được chọn
-  // $scope.discountMessage = null; // Thông báo kết quả
-  // $scope.discountError = null;
-  // $scope.getAllKhuyenMai = function () {
-  //   $http
-  //       .get("/api/khuyen-mai")
-  //       .then(function (response) {
-  //         $scope.khuyenMaiList = response.data; // Lưu danh sách khuyến mãi
-  //       })
-  //       .catch(function (error) {
-  //         console.error("Lỗi khi tải danh sách khuyến mãi", error);
-  //       });
-  // };
-  //
-  // // Kiểm tra mã khuyến mãi khi chọn
-  // $scope.checkKhuyenMai = function () {
-  //   if (!$scope.selectedKhuyenMai) {
-  //     $scope.discountError = "Vui lòng chọn mã khuyến mãi!";
-  //     $scope.discountMessage = null;
-  //     return;
-  //   }
-  //
-  //   $http
-  //       .get("/api/khuyen-mai/kiem-tra", {
-  //         params: {
-  //           maKhuyenMai: $scope.selectedKhuyenMai,
-  //           tongTien: $scope.getSum(), // Truyền tổng tiền của đơn hàng
-  //         },
-  //       })
-  //       .then(function (response) {
-  //         const discount = response.data; // Giá trị trả về từ server
-  //
-  //         let discountMessage = ""; // Biến chứa thông báo
-  //         if (discount <= 100) {
-  //           // Nếu giá trị giảm <= 100, coi như % giảm giá
-  //           const tienGiam = ($scope.getSum() * discount) / 100;
-  //           discountMessage =
-  //               "Mã khuyến mãi hợp lệ! Giảm " +
-  //               discount +
-  //               "% (Tương đương: " +
-  //               tienGiam +
-  //               " VND)";
-  //         } else {
-  //           // Nếu giá trị giảm > 100, coi như số tiền giảm cố định
-  //           discountMessage =
-  //               "Mã khuyến mãi hợp lệ! Giảm trực tiếp: " + discount + " VND";
-  //         }
-  //
-  //         // Cập nhật thông báo
-  //         $scope.discountMessage = discountMessage;
-  //         $scope.discountError = null;
-  //       })
-  //       .catch(function (error) {
-  //         $scope.discountError = error.data || "Mã khuyến mãi không hợp lệ!";
-  //         $scope.discountMessage = null;
-  //         $scope.tienGiam = 0; // Đảm bảo tiền giảm được reset
-  //       });
-  // };
-  // $scope.clearVoucher = function () {
-  //   $scope.selectedKhuyenMai = null;
-  //   $scope.discountMessage = null;
-  //   $scope.discountError = null;
-  //   $scope.tienGiam = 0; // Reset tiền giảm
-  // };
-  //load data product when run
-  // $scope.getProducts();
-  // $scope.getDonHang();
-  // $scope.getKhachHang();
-  // $scope.hideErrrorsMes();
-  // $scope.getAllKhuyenMai();
-
-// })
 
