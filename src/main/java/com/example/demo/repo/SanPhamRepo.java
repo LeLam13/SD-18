@@ -70,7 +70,8 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Integer> {
 
 
 
-    @Query("SELECT s FROM SanPham s WHERE REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(s.ten, 'á', 'a'), 'à', 'a'), 'ả', 'a'), 'ã', 'a'), 'ạ', 'a'), 'ă', 'a'), 'â', 'a') LIKE %:ten%")
+    @Query("SELECT s FROM SanPham s WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(s.ten, 'á', 'a'), 'à', 'a'), 'ả', 'a'), 'ã', 'a'), 'ạ', 'a'), 'ă', 'a'), 'â', 'a')) LIKE LOWER(CONCAT('%', :ten, '%'))")
     List<SanPham> findByName(@Param("ten") String ten);
+
 }
 

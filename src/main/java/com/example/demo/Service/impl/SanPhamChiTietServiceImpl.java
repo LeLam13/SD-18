@@ -185,14 +185,18 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     public Page<SanPhamChiTiet> filterProducts(FilterRequestDTO filterRequest, Pageable pageable) {
         Specification<SanPhamChiTiet> spec = Specification.where(null);
 
+
+
         if (filterRequest.getTen() != null && !filterRequest.getTen().isEmpty()) {
             // Lấy danh sách các sản phẩm theo tên
-            List<SanPham> sanPhamList = sanPhamRepo.findByName(filterRequest.getTen());
+            String tenKhongDau = removeAccents(filterRequest.getTen());
+
+            // Lấy danh sách các sản phẩm theo tên không dấu
+            List<SanPham> sanPhamList = sanPhamRepo.findByName(tenKhongDau);
 
                 // Thêm điều kiện vào specification để lọc theo idSanPham trong danh sách
                 spec = spec.and((root, query, criteriaBuilder) ->
                         criteriaBuilder.in(root.get("idSanPham")).value(sanPhamList));
-//            }
         }
 
         if (filterRequest.getIdSanPham() != null) {
@@ -243,6 +247,18 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         }
         // Thêm các điều kiện khác tương tự...
         return result;
+    }
+
+    public static String removeAccents(String str) {
+        if (str == null) return null;
+        return str.replaceAll("[áàảãạăắằẳẵặâấầẩẫậ]", "a")
+                .replaceAll("[éèẻẽẹêếềểễệ]", "e")
+                .replaceAll("[íìỉĩị]", "i")
+                .replaceAll("[óòỏõọôốồổỗộơớờởỡợ]", "o")
+                .replaceAll("[úùủũụưứừửữự]", "u")
+                .replaceAll("[ýỳỷỹỵ]", "y")
+                .replaceAll("[đ]", "d")
+                .replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
     }
 
 }

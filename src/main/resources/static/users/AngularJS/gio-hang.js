@@ -19,7 +19,7 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
     $scope.cartDetaiPro = [];
     $scope.cartDetai =[];
     $scope.cart = [];
-<<<<<<< HEAD
+
     $scope.page = 0;  // Trang hiện tại
     $scope.size = 10; // Số lượng bản ghi trên mỗi trang
     $scope.totalPages = 0; // Tổng số trang
@@ -125,9 +125,9 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
         }
     };
 
-=======
+
     var idGioHang = null;
->>>>>>> feature/banhang
+
 
     $scope.getUserName = function (){
         $http.get("/lay-tai-khoan").then(function (response){
