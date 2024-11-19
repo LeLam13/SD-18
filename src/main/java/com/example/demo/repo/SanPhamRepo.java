@@ -5,10 +5,15 @@ import com.example.demo.entity.SanPham;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+<<<<<<< HEAD
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
+=======
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+>>>>>>> feature/sanpham
 
 import java.util.List;
 
@@ -18,6 +23,7 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Integer> {
 
     SanPham findByIdSanPham(Integer idSanPham);
 
+<<<<<<< HEAD
     @Query(nativeQuery = true, value = """
             SELECT DISTINCT sp.*
             FROM giam_gia_san_pham_chi_tiet ggspct
@@ -55,3 +61,8 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Integer> {
     Page<SanPham> findAllNotInDotGiamGia(@Param("idGiamGia") Integer idGiamGia, Pageable pageable);
 
 }
+=======
+    @Query("SELECT s FROM SanPham s WHERE REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(s.ten, 'á', 'a'), 'à', 'a'), 'ả', 'a'), 'ã', 'a'), 'ạ', 'a'), 'ă', 'a'), 'â', 'a') LIKE %:ten%")
+    List<SanPham> findByName(@Param("ten") String ten);
+}
+>>>>>>> feature/sanpham

@@ -41,6 +41,12 @@ public class XuatXuRestController {
         return ResponseEntity.ok(xx);
     }
 
+    @GetMapping("/xuat-xu/get-all")
+    public ResponseEntity<?> getAll2() {
+        List<XuatXu> xx = xuatXuService.getAll();
+        return ResponseEntity.ok(xx);
+    }
+
     @PostMapping("/admin/xuat-xu/add")
     public ResponseEntity<?> createMauSac(@RequestBody XuatXuRequestDTO xuatXuRequestDTO) {
         xuatXuService.createXuatXu(xuatXuRequestDTO);

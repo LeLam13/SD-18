@@ -2,6 +2,7 @@ package com.example.demo.Service.impl;
 
 import com.example.demo.Service.SanPhamChiTietService;
 
+import com.example.demo.dto.request.FilterRequestDTO;
 import com.example.demo.dto.request.MauSacRequestDTO;
 import com.example.demo.dto.request.SanPhamChiTietRequestDTO;
 import com.example.demo.dto.request.SanPhamRequestDTO;
@@ -26,12 +27,15 @@ import com.example.demo.repo.XuatXuRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
@@ -124,7 +128,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             SanPham sanPham = sanPhamRepo.findByIdSanPham(dto.getIdSanPham());
             chiTiet.setIdSanPham(sanPham);
 
-            HinhAnh hinhAnh=hinhAnhRepo.findByIdHinhAnh(dto.getIdHinhAnh());
+            HinhAnh hinhAnh = hinhAnhRepo.findByIdHinhAnh(dto.getIdHinhAnh());
             chiTiet.setIdHinhAnh(hinhAnh);
 
             sanPhamChiTietList.add(chiTiet);
@@ -141,8 +145,27 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     @Override
     public SanPhamChiTiet updateSanPhamChiTiet(SanPhamChiTietRequestDTO sanPhamChiTietRequestDTO) {
         SanPhamChiTiet ms = sanPhamChiTietRepo.findByMa(sanPhamChiTietRequestDTO.getMa());
-        ms.setIdKieuDang(sanPhamChiTietRequestDTO.getIdKieuDang2());
-        ms.setIdChatLieu(sanPhamChiTietRequestDTO.getIdChatLieu2());
+        ms.setGiaBan(sanPhamChiTietRequestDTO.getGiaBan());
+        ms.setSoLuong(sanPhamChiTietRequestDTO.getSoLuong());
+
+        ChatLieu chatLieu = chatLieuRepo.findByIdChatLieu(sanPhamChiTietRequestDTO.getIdChatLieu());
+        ms.setIdChatLieu(chatLieu);
+
+        XuatXu xuatXu = xuatXuRepo.findByIdXuatXu(sanPhamChiTietRequestDTO.getIdXuatXu());
+        ms.setIdXuatXu(xuatXu);
+
+        KieuDang kieuDang = kieuDangRepo.findByIdKieuDang(sanPhamChiTietRequestDTO.getIdKieuDang());
+        ms.setIdKieuDang(kieuDang);
+
+        MauSac mauSac = mauSacRepo.findByIdMauSac(sanPhamChiTietRequestDTO.getIdMauSac());
+        ms.setIdMauSac(mauSac);
+
+        KichCo kichCo = kichCoRepo.findByIdKichCo(sanPhamChiTietRequestDTO.getIdKichCo());
+        ms.setIdKichCo(kichCo);
+
+        ThuongHieu thuongHieu = thuongHieuRepo.findByIdThuongHieu(sanPhamChiTietRequestDTO.getIdThuongHieu());
+        ms.setIdThuongHieu(thuongHieu);
+
         ms.setUpdateDate(date);
         return sanPhamChiTietRepo.save(ms);
     }
@@ -150,12 +173,76 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     @Override
     public SanPhamChiTiet updateTrangThai(Integer idSanPhamChiTiet) {
         SanPhamChiTiet ms = sanPhamChiTietRepo.findByIdSanPhamChiTiet(idSanPhamChiTiet);
-        if(ms.getTrangThai()==true){
+        if (ms.getTrangThai() == true) {
             ms.setTrangThai(false);
-        }
-        else{
+        } else {
             ms.setTrangThai(true);
         }
         return sanPhamChiTietRepo.save(ms);
     }
+
+    @Override
+    public Page<SanPhamChiTiet> filterProducts(FilterRequestDTO filterRequest, Pageable pageable) {
+        Specification<SanPhamChiTiet> spec = Specification.where(null);
+
+        if (filterRequest.getTen() != null && !filterRequest.getTen().isEmpty()) {
+            // Lấy danh sách các sản phẩm theo tên
+            List<SanPham> sanPhamList = sanPhamRepo.findByName(filterRequest.getTen());
+
+                // Thêm điều kiện vào specification để lọc theo idSanPham trong danh sách
+                spec = spec.and((root, query, criteriaBuilder) ->
+                        criteriaBuilder.in(root.get("idSanPham")).value(sanPhamList));
+//            }
+        }
+
+        if (filterRequest.getIdSanPham() != null) {
+            SanPham sanPham = sanPhamRepo.findByIdSanPham(filterRequest.getIdSanPham());
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("idSanPham"), sanPham));
+        }
+
+        if (filterRequest.getGiaMin() != null) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.greaterThanOrEqualTo(root.get("giaBan"), filterRequest.getGiaMin()));
+        }
+        if (filterRequest.getGiaMax() != null) {
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.lessThanOrEqualTo(root.get("giaBan"), filterRequest.getGiaMax()));
+        }
+        if (filterRequest.getIdXuatXu() != null) {
+            XuatXu xuatXu = xuatXuRepo.findByIdXuatXu(filterRequest.getIdXuatXu());
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("idXuatXu"), xuatXu));
+        }
+        if (filterRequest.getIdMauSac() != null) {
+            MauSac mauSac = mauSacRepo.findByIdMauSac(filterRequest.getIdMauSac());
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("idMauSac"), mauSac));
+        }
+        if (filterRequest.getIdThuongHieu() != null) {
+            ThuongHieu thuongHieu = thuongHieuRepo.findByIdThuongHieu(filterRequest.getIdThuongHieu());
+
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("idThuongHieu"), thuongHieu));
+        }
+        if (filterRequest.getIdKieuDang() != null) {
+            KieuDang kieuDang = kieuDangRepo.findByIdKieuDang(filterRequest.getIdKieuDang());
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("idKieuDang"), kieuDang));
+        }
+        if (filterRequest.getIdChatLieu() != null) {
+            ChatLieu chatLieu = chatLieuRepo.findByIdChatLieu(filterRequest.getIdChatLieu());
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("idChatLieu"), chatLieu));
+        }
+
+        Page<SanPhamChiTiet> result = sanPhamChiTietRepo.findAll(spec, pageable);
+
+        if (result.getTotalElements() == 0) {
+            return Page.empty(); // Trả về danh sách trống nếu không có sản phẩm nào thỏa mãn
+        }
+        // Thêm các điều kiện khác tương tự...
+        return result;
+    }
+
 }

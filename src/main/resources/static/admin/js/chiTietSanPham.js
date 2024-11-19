@@ -6,6 +6,7 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
     $scope.size = 4; // Số lượng bản ghi trên mỗi trang
     $scope.totalPages = 0; // Tổng số trang
     $scope.pageInput = 1; // Giá trị nhập từ ô input
+    $scope.filterData = {};
 
     const pathName = window.location.pathname.split('/');
     var idSanPham = pathName[pathName.length - 1];
@@ -19,20 +20,6 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
             console.log(error);
         });
     };
-
-    // $scope.findAll = function () {
-    //     var url = "/san-pham/" + idSanPham + "/find-all?page=" + $scope.page + "&size=" + $scope.size;
-    //     $http.get(url).then(resp => {
-    //         console.log("check: ", resp);
-    //         $scope.items = resp.data.content;
-    //         $scope.totalPages = resp.data.totalPages; // Cập nhật tổng số trang
-    //         console.log("$scope.totalPages: ", $scope.totalPages);
-    //         console.log("$scope.items: ", $scope.items);
-    //     }).catch(error => {
-    //         console.log(error);
-    //     });
-    //
-    // };
 
     $scope.getThuocTinh = function () {
         $http.get("/admin/mau-sac/get-all").then(r => {
@@ -76,15 +63,25 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
     $scope.previousPage = function () {
         if ($scope.page > 0) {
             $scope.page--;
-            $scope.findAll();
+            // Kiểm tra nếu có bộ lọc, gọi lại filter, nếu không gọi findAll
+            if (Object.keys($scope.filterData).length > 0) {
+                $scope.filter($scope.filterData); // Lọc với dữ liệu hiện tại
+            } else {
+                $scope.findAll(); // Nếu không lọc, lấy tất cả sản phẩm
+            }
         }
     };
 
-    // Hàm chuyển tới trang sau
+// Hàm chuyển tới trang sau
     $scope.nextPage = function () {
         if ($scope.page < $scope.totalPages - 1) {
             $scope.page++;
-            $scope.findAll();
+            // Kiểm tra nếu có bộ lọc, gọi lại filter, nếu không gọi findAll
+            if (Object.keys($scope.filterData).length > 0) {
+                $scope.filter($scope.filterData); // Lọc với dữ liệu hiện tại
+            } else {
+                $scope.findAll(); // Nếu không lọc, lấy tất cả sản phẩm
+            }
         }
     };
 
@@ -103,18 +100,18 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
         var updateSPCT = {
             ma: ma,
             soLuong: $scope.spct.soLuong,
-            giaBan:$scope.spct.giaBan,
-            idMauSac:$scope.idMauSac,
-            idThuongHieu:$scope.idThuongHieu,
-            idKieuDang:$scope.idKieuDang,
-            idChatLieu:$scope.idChatLieu,
-            idKichCo:$scope.idKichCo,
-            idXuatXu:$scope.idXuatXu,
-            // idMauSac: $scope.idHinhAnh
+            giaBan: $scope.spct.giaBan,
+            idMauSac: $scope.spct.idMauSac.idMauSac,
+            idThuongHieu: $scope.spct.idThuongHieu.idThuongHieu,
+            idKieuDang: $scope.spct.idKieuDang.idKieuDang,
+            idChatLieu: $scope.spct.idChatLieu.idChatLieu,
+            idKichCo: $scope.spct.idKichCo.idKichCo,
+            idXuatXu: $scope.spct.idXuatXu.idXuatXu,
         }
         $http.post(url, updateSPCT).then(function (r) {
+            alert("Update thành công");
+            console.log($scope.spct)
             $scope.findAll();
-            alert("Update thành công")
         }).catch(function (err) {
             console.log("Update khong thanh cong", err);
         })
@@ -133,10 +130,64 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
     }
 
 
-
     $scope.navigateToForm = function () {
         window.location.href = '/admin/san-pham/formAdd/' + idSanPham;
     };
+
+
+    // Hàm lọc sản phẩm
+    $scope.filter = function (filterData) {
+        // Loại bỏ các thuộc tính không hợp lệ (rỗng/null)
+        for (const [key, value] of Object.entries(filterData)) {
+            if (!value || value.length === 0) {
+                delete filterData[key];
+            }
+        }
+
+        filterData.idSanPham = idSanPham;
+        console.log("Dữ liệu lọc: ", filterData);
+
+        // Gửi yêu cầu lọc đến server với phân trang
+        $http.post(`/admin/san-pham/chi-tiet/filter?page=${$scope.page}&size=${$scope.size}`, filterData).then(function (response) {
+            $scope.items = response.data.content; // Gán danh sách sản phẩm sau khi lọc
+            $scope.totalPages = response.data.totalPages; // Tổng số trang
+            $scope.pageNumber = 0; // Reset lại trang hiện tại sau khi lọc
+            console.log("Dữ liệu lọc: ", $scope.items);
+
+            // Hiển thị số bộ lọc đang được áp dụng
+            if (Object.keys(filterData).length > 1) {
+                document.getElementById('lengthFilter').innerText = Object.keys(filterData).length-1;
+            } else {
+                document.getElementById('lengthFilter').innerText = "";
+            }
+
+        }).catch(function (error) {
+            console.error("Lỗi khi lọc sản phẩm:", error);
+            alertify.error("Không thể lọc sản phẩm. Vui lòng thử lại sau!");
+        });
+    };
+
+
+    // Hàm xóa bộ lọc
+    $scope.clearFilter = function () {
+        $scope.filterData = {}; // Reset dữ liệu lọc
+        document.getElementById('lengthFilter').innerText = "";
+        // $scope.filter($scope.filterData); // Gọi lại hàm lọc để làm mới danh sách
+        $scope.findAll();
+    };
+
+    // Hàm lấy danh sách số trang (nếu muốn phân trang)
+    $scope.getPageNumbers = function (totalPages) {
+        $scope.pageNumbers = Array.from({length: totalPages}, (_, i) => i + 1);
+    };
+
+    // Hàm chuyển trang (phân trang)
+    $scope.changePage = function (page) {
+        $scope.pageNumber = page;
+        const filterDataWithPage = {...$scope.filterData, page};
+        $scope.filter(filterDataWithPage);
+    };
+
 
 //     const pathName = window.location.pathname.split('/');
 //     const idSP = pathName[pathName.length - 1]

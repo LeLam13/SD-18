@@ -32,6 +32,12 @@ public class ThuongHieuRestController {
         return ResponseEntity.ok(th);
     }
 
+    @GetMapping("/thuong-hieu/get-all")
+    public ResponseEntity<?> getAll2(){
+        List<ThuongHieu> th=thuongHieuService.getAll();
+        return ResponseEntity.ok(th);
+    }
+
     @GetMapping("/admin/thuong-hieu/find-all")
     public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") int page,
                                      @RequestParam(defaultValue = "5") int size) {
