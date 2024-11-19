@@ -35,6 +35,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
@@ -184,10 +185,16 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     public Page<SanPhamChiTiet> filterProducts(FilterRequestDTO filterRequest, Pageable pageable) {
         Specification<SanPhamChiTiet> spec = Specification.where(null);
 
-//        if (filterData.getTen() != null && !filterData.getTen().isEmpty()) {
-//            spec = spec.and((root, query, criteriaBuilder) ->
-//                    criteriaBuilder.like(root.get("ten"), "%" + filterData.getTen() + "%"));
-//        }
+        if (filterRequest.getTen() != null && !filterRequest.getTen().isEmpty()) {
+            // Lấy danh sách các sản phẩm theo tên
+            List<SanPham> sanPhamList = sanPhamRepo.findByName(filterRequest.getTen());
+
+                // Thêm điều kiện vào specification để lọc theo idSanPham trong danh sách
+                spec = spec.and((root, query, criteriaBuilder) ->
+                        criteriaBuilder.in(root.get("idSanPham")).value(sanPhamList));
+//            }
+        }
+
         if (filterRequest.getIdSanPham() != null) {
             SanPham sanPham = sanPhamRepo.findByIdSanPham(filterRequest.getIdSanPham());
             spec = spec.and((root, query, criteriaBuilder) ->

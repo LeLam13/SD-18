@@ -40,6 +40,13 @@ public class MauSacRestController {
         return ResponseEntity.ok(ms);
     }
 
+
+    @GetMapping("/mau-sac/get-all")
+    public ResponseEntity<?> getAll3() {
+        List<MauSac> ms = mauSacService.getAll();
+        return ResponseEntity.ok(ms);
+    }
+
     @PostMapping("/admin/mau-sac/add")
     public ResponseEntity<?> createMauSac(@RequestBody MauSacRequestDTO msDTO) {
         mauSacService.createMauSac(msDTO);

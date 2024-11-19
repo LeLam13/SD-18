@@ -87,5 +87,12 @@ public class SanPhamChiTietRestController {
         Page<SanPhamChiTiet> filteredProducts = sanPhamChiTietService.filterProducts(filterData,pageable);
         return ResponseEntity.ok(filteredProducts);
     }
-
+    @PostMapping("/san-pham/chi-tiet/filter")
+    public ResponseEntity<?> filterProducts2(@RequestBody FilterRequestDTO filterData,
+                                            @RequestParam(defaultValue = "0") int page,
+                                            @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size,Sort.by("idSanPhamChiTiet").descending());
+        Page<SanPhamChiTiet> filteredProducts = sanPhamChiTietService.filterProducts(filterData,pageable);
+        return ResponseEntity.ok(filteredProducts);
+    }
 }

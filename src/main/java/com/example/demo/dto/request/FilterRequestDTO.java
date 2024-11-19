@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FilterRequestDTO {
+    private String ten;
     private Float giaMin;
     private Float giaMax;
     private Integer idSanPham;
