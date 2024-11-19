@@ -1,8 +1,8 @@
-﻿create database DATN
+﻿create database DATN1
 go
 
 
-use DATN
+use DATN1
 go
 
 
@@ -575,7 +575,8 @@ VALUES
 INSERT INTO hoa_don (id_khuyen_mai, id_trang_thai, id_phuong_thuc_thanh_toan, id_don_hang, id_nhan_vien, id_khach_hang, ma_hoa_don, create_by, create_date, update_date, update_by, 
 tong_tien, tong_tien_khuyen_mai, tong_tien_sau_khuyen_mai, ghi_chu, trang_thai_thanh_toan, phuong_thuc_nhan_hang)
 VALUES 
-(NULL, 2, 2, 2, 2, 2,'HD002', N'admin', '2023-02-10', '2023-04-11', N'admin', 1200000, 100000, 1100000, N'Hóa đơn 2', 1, 1)
+(1, 1, 1, 1, 1, 1,'HD001', N'admin', '2024-11-09', '2024-11-13', N'admin', 750000, 50000, 700000, N'Hóa đơn 1', 1, 1),
+(NULL, 2, 2, 2, 2, 2,'HD002', N'admin', '2024-11-10', '2024-11-13', N'admin', 1200000, 100000, 1100000, N'Hóa đơn 2', 1, 1);
 
 
 INSERT INTO hoa_don_chi_tiet (ma_hoa_don_chi_tiet, id_hoa_don, id_san_pham_chi_tiet, so_luong, don_gia, trang_thai, ghi_chu)
