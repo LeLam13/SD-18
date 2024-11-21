@@ -794,7 +794,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         }).then(function(response) {
             //console.log('Sản phẩm thêm thành công');
             console.log('Sản phẩm thêm: ',response.data);
-            // $scope.getProducts();
+             $scope.getProducts();
         }).catch(function(error) {
             console.error('Có lỗi xảy ra:', error);
         });
