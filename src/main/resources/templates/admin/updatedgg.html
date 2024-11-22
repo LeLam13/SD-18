@@ -1,0 +1,57 @@
+<form th:action="@{/admin/dot-giam-gia/update}" method="post">
+    <input type="hidden" id="updateDiscountId" name="idGiamGia" th:value="${dotGiamGia.idGiamGia}">
+
+    <div class="form-group">
+        <label>Chọn kiểu giảm giá:</label>
+        <div>
+            <input type="radio" id="updateDiscountPercent" name="discountType" value="percent" th:checked="${dotGiamGia.loaiGiamGia == 0}" onclick="toggleUpdateFields()">
+            <label for="updateDiscountPercent">Theo phần trăm</label>
+        </div>
+        <div>
+            <input type="radio" id="updateDiscountAmount" name="discountType" value="amount" th:checked="${dotGiamGia.loaiGiamGia == 1}" onclick="toggleUpdateFields()">
+            <label for="updateDiscountAmount">Theo tiền</label>
+        </div>
+    </div>
+
+    <div class="form-group" id="updatePercentField">
+        <label for="updateGiamGiaPercent">Giảm Giá (%):</label>
+        <input type="number" class="form-control" id="updateGiamGiaPercent" name="giamGiaPercent" th:value="${dotGiamGia.giamGia}" min="1" max="100">
+    </div>
+
+    <div class="form-group" id="updateAmountField" style="display: none;">
+        <label for="updateGiamGiaAmount">Giảm Giá (tiền):</label>
+        <input type="number" class="form-control" id="updateGiamGiaAmount" name="giamGiaAmount" th:value="${dotGiamGia.giamGia}">
+    </div>
+
+    <div class="form-group">
+        <label for="updateThoiGianBatDau">Thời Gian Bắt Đầu:</label>
+        <input type="datetime-local" class="form-control" id="updateThoiGianBatDau" name="thoiGianBatDau" th:value="${dotGiamGia.thoiGianBatDau}">
+    </div>
+    <div class="form-group">
+        <label for="updateThoiGianKetThuc">Thời Gian Kết Thúc:</label>
+        <input type="datetime-local" class="form-control" id="updateThoiGianKetThuc" name="thoiGianKetThuc" th:value="${dotGiamGia.thoiGianKetThuc}">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Cập Nhật</button>
+</form>
+
+<script>
+    function toggleDiscountFields() {
+        var discountType = document.querySelector('input[name="discountType"]:checked').value;
+        var percentField = document.getElementById("percentField");
+        var amountField = document.getElementById("amountField");
+        var giamGiaAmount = document.getElementById("giamGiaAmount");
+
+        if (discountType === "percent") {
+            percentField.style.display = "block";
+            amountField.style.display = "none";
+            giamGiaAmount.required = false; // Không yêu cầu
+            document.getElementById("giamGiaPercent").required = true; // Yêu cầu phần trăm
+        } else {
+            percentField.style.display = "none";
+            amountField.style.display = "block";
+            giamGiaAmount.required = true; // Yêu cầu
+            document.getElementById("giamGiaPercent").required = false; // Không yêu cầu phần trăm
+        }
+    }
+</script>

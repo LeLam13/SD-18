@@ -45,6 +45,13 @@ public class DotGiamGiaServiceImpl {
         updateStatus(dotGiamGia);
         return dotGiamGiaRepository.save(dotGiamGia);
     }
+    public DotGiamGia updateDotGiamGia(DotGiamGia dotGiamGia) {
+        LocalDateTime now = LocalDateTime.now();
+        // Cập nhật trạng thái nếu cần
+        updateStatus(dotGiamGia);
+        return dotGiamGiaRepository.save(dotGiamGia); // Lưu thay đổi vào cơ sở dữ liệu
+    }
+
 
     public DotGiamGia getDotGiamGiaById(Integer id) {
         return dotGiamGiaRepository.findById(id).orElseThrow(()->{
@@ -89,9 +96,6 @@ public class DotGiamGiaServiceImpl {
     }
 
     // Phương thức lưu đợt giảm giá
-    public DotGiamGia save(DotGiamGia dotGiamGia) {
-        return dotGiamGiaRepository.save(dotGiamGia);
-    }
 
     public DotGiamGia addProductDetailToPromotion(Integer promotionId, List<Integer> productDetailIds){
         DotGiamGia dotGiamGia = dotGiamGiaRepository.findById(promotionId).orElseThrow(() ->
@@ -135,58 +139,58 @@ public class DotGiamGiaServiceImpl {
 
 
     // Áp dụng giảm giá
-    public void applyDiscount(SanPhamChiTiet sanPhamChiTiet, DotGiamGia dotGiamGia) {
-        if (sanPhamChiTiet.getSoTienGiam() == null) { // Chỉ áp dụng nếu chưa có giảm giá
-            sanPhamChiTiet.setSoTienGiam(sanPhamChiTiet.getGiaBan()); // Lưu giá gốc
-
-            float discountAmount;
-
-            if (dotGiamGia.getLoaiGiamGia() == 0) { // Giảm giá theo phần trăm
-                discountAmount = sanPhamChiTiet.getGiaBan() * (dotGiamGia.getGiamGia().floatValue() / 100);
-            } else if (dotGiamGia.getLoaiGiamGia() == 1) { // Giảm giá theo số tiền cụ thể
-                discountAmount = dotGiamGia.getGiamGia().floatValue();
-            } else {
-                return; // Trường hợp loại giảm giá không hợp lệ, thoát mà không thay đổi
-            }
-
-            // Đảm bảo giá bán không âm
-            float newGiaBan = sanPhamChiTiet.getGiaBan() - discountAmount;
-            sanPhamChiTiet.setGiaBan(Math.max(newGiaBan, 0));
-        }
-    }
-
-
-    // Hoàn lại giá gốc sau khi kết thúc đợt giảm giá
-    public void revertDiscount(SanPhamChiTiet sanPhamChiTiet) {
-        if (sanPhamChiTiet.getSoTienGiam() != null) { // Chỉ hoàn lại nếu đã áp dụng giảm giá
-
-
-//            sanPhamChiTiet.setDonGia(sanPhamChiTiet.getSoTienGiam()); // Khôi phục giá gốc
-
-            sanPhamChiTiet.setGiaBan(sanPhamChiTiet.getSoTienGiam()); // Khôi phục giá gốc
-            sanPhamChiTiet.setSoTienGiam(null); // Đặt lại soTienGiam thành null
-        }
-    }
-
-    // Tác vụ kiểm tra giảm giá định kỳ
-    @Scheduled(fixedRate = 10000) // Chạy mỗi phút
-    public void updateDiscounts() {
-        LocalDateTime now = LocalDateTime.now();
-
-        List<DotGiamGia> discountEvents = dotGiamGiaRepository.findAll();
-        for (DotGiamGia discountEvent : discountEvents) {
-            for (SanPhamChiTiet sanPhamChiTiet : discountEvent.getSanPhamChiTietList()) {
-                if (now.isAfter(discountEvent.getThoiGianBatDau()) && now.isBefore(discountEvent.getThoiGianKetThuc())) {
-                    // Đợt giảm giá đang diễn ra
-                    applyDiscount(sanPhamChiTiet, discountEvent);
-                } else if (now.isAfter(discountEvent.getThoiGianKetThuc())) {
-                    // Đợt giảm giá đã kết thúc
-                    revertDiscount(sanPhamChiTiet);
-                }
-                sanPhamChiTietRepository.save(sanPhamChiTiet); // Lưu cập nhật vào DB
-            }
-        }
-    }
+//    public void applyDiscount(SanPhamChiTiet sanPhamChiTiet, DotGiamGia dotGiamGia) {
+//        if (sanPhamChiTiet.getSoTienGiam() == null) { // Chỉ áp dụng nếu chưa có giảm giá
+//            sanPhamChiTiet.setSoTienGiam(sanPhamChiTiet.getGiaBan()); // Lưu giá gốc
+//
+//            float discountAmount;
+//
+//            if (dotGiamGia.getLoaiGiamGia() == 0) { // Giảm giá theo phần trăm
+//                discountAmount = sanPhamChiTiet.getSoTienGiam() * (dotGiamGia.getGiamGia().floatValue() / 100);
+//            } else if (dotGiamGia.getLoaiGiamGia() == 1) { // Giảm giá theo số tiền cụ thể
+//                discountAmount = dotGiamGia.getGiamGia().floatValue();
+//            } else {
+//                return; // Trường hợp loại giảm giá không hợp lệ, thoát mà không thay đổi
+//            }
+//
+//            // Đảm bảo giá bán không âm
+//            float newGiaBan = sanPhamChiTiet.getSoTienGiam() - discountAmount;
+//            sanPhamChiTiet.setGiaBan(Math.max(newGiaBan, 0));
+//        }
+//    }
+//
+//
+//    // Hoàn lại giá gốc sau khi kết thúc đợt giảm giá
+//    public void revertDiscount(SanPhamChiTiet sanPhamChiTiet) {
+//        if (sanPhamChiTiet.getSoTienGiam() != null) { // Chỉ hoàn lại nếu đã áp dụng giảm giá
+//
+//
+////            sanPhamChiTiet.setDonGia(sanPhamChiTiet.getSoTienGiam()); // Khôi phục giá gốc
+//
+//            sanPhamChiTiet.setGiaBan(sanPhamChiTiet.getSoTienGiam()); // Khôi phục giá gốc
+//            sanPhamChiTiet.setSoTienGiam(null); // Đặt lại soTienGiam thành null
+//        }
+//    }
+//
+//    // Tác vụ kiểm tra giảm giá định kỳ
+//    @Scheduled(cron = "*/10 * * * * *")
+//    public void updateDiscounts() {
+//        LocalDateTime now = LocalDateTime.now();
+//
+//        List<DotGiamGia> discountEvents = dotGiamGiaRepository.findAll();
+//        for (DotGiamGia discountEvent : discountEvents) {
+//            for (SanPhamChiTiet sanPhamChiTiet : discountEvent.getSanPhamChiTietList()) {
+//                if (now.isAfter(discountEvent.getThoiGianBatDau()) && now.isBefore(discountEvent.getThoiGianKetThuc())) {
+//                    // Đợt giảm giá đang diễn ra
+//                    applyDiscount(sanPhamChiTiet, discountEvent);
+//                } else if (now.isAfter(discountEvent.getThoiGianKetThuc())) {
+//                    // Đợt giảm giá đã kết thúc
+//                    revertDiscount(sanPhamChiTiet);
+//                }
+//                sanPhamChiTietRepository.save(sanPhamChiTiet); // Lưu cập nhật vào DB
+//            }
+//        }
+//    }
 
 
 }

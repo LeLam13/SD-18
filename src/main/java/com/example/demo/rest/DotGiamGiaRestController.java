@@ -5,6 +5,7 @@ import com.example.demo.Service.impl.SanPhamChiTietServiceImpl;
 import com.example.demo.entity.DotGiamGia;
 import com.example.demo.entity.SanPham;
 import com.example.demo.entity.SanPhamChiTiet;
+import com.example.demo.repo.SanPhamChiTietRepo;
 import com.example.demo.repo.SanPhamRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,8 @@ import java.util.Map;
 import java.util.stream.Collectors;
 @RestController
 public class DotGiamGiaRestController {
-
+    @Autowired
+    private SanPhamChiTietRepo sanPhamChiTietRepo;
     @Autowired
     private SanPhamRepo sanPhamRepo;
 
@@ -58,6 +60,12 @@ public class DotGiamGiaRestController {
 
     @GetMapping("/admin/delete/{idSP}/dot-giam-gia/{idGG}")
     public ResponseEntity<?> deleteByDotGiamGiaAndSanPhamChiTiet(@PathVariable Integer idSP, @PathVariable Integer idGG) {
+        List<SanPhamChiTiet> sanPhamChiTietList = sanPhamChiTietRepo.findAllBySanPhamAndDotGiamGia(idSP, idGG);
+        for (SanPhamChiTiet s:sanPhamChiTietList) {
+            s.setGiaBan(s.getSoTienGiam());
+            s.setSoTienGiam(null);
+            sanPhamChiTietRepo.save(s);
+        }
         sanPhamRepo.deleteByDotGiamGiaAndSanPham(idGG,idSP);
         return new ResponseEntity<>(HttpStatus.OK);
     }

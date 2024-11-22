@@ -29,7 +29,6 @@ public class DotGiamGiaController {
                                    @RequestParam("thoiGianBatDau") LocalDateTime thoiGianBatDau,
                                    @RequestParam("thoiGianKetThuc") LocalDateTime thoiGianKetThuc,
                                    Model model) {
-
         // Kiểm tra ngày bắt đầu không được lớn hơn ngày kết thúc
         if (thoiGianBatDau.isAfter(thoiGianKetThuc)) {
             model.addAttribute("error", "Ngày bắt đầu không được lớn hơn ngày kết thúc.");
@@ -61,6 +60,7 @@ public class DotGiamGiaController {
 
         return "redirect:/admin/dot-giam-gia"; // Chuyển hướng sau khi thêm
     }
+
 
 
 
@@ -105,6 +105,43 @@ public class DotGiamGiaController {
         return "admin/detail_dot_giam_gia"; // Trang hiển thị chi tiết đợt giảm giá
     }
 
+    @GetMapping("/update/{id}")
+    public String showUpdateForm(@PathVariable Integer id, Model model) {
+        DotGiamGia dotGiamGia = dotGiamGiaService.getDotGiamGiaById(id); // Lấy đợt giảm giá cần cập nhật
+        model.addAttribute("dotGiamGia", dotGiamGia);
+        return "admin/updatedgg"; // Trang cập nhật
+    }
+    @PostMapping("/update")
+    public String updateDotGiamGia(@RequestParam("idGiamGia") Integer idGiamGia,
+                                   @RequestParam("discountType") String discountType,
+                                   @RequestParam(value = "giamGiaPercent", required = false) Double giamGiaPercent,
+                                   @RequestParam(value = "giamGiaAmount", required = false) Double giamGiaAmount,
+                                   @RequestParam("thoiGianBatDau") LocalDateTime thoiGianBatDau,
+                                   @RequestParam("thoiGianKetThuc") LocalDateTime thoiGianKetThuc) {
+        // Lấy đối tượng giảm giá cần cập nhật
+        DotGiamGia dotGiamGia = dotGiamGiaService.getDotGiamGiaById(idGiamGia);
+
+        // Cập nhật thông tin giảm giá
+        if ("percent".equals(discountType)) {
+            dotGiamGia.setGiamGia(giamGiaPercent);
+            dotGiamGia.setLoaiGiamGia(0); // Giảm giá theo %
+        } else {
+            dotGiamGia.setGiamGia(giamGiaAmount);
+            dotGiamGia.setLoaiGiamGia(1); // Giảm giá theo tiền
+        }
+
+        dotGiamGia.setThoiGianBatDau(thoiGianBatDau);
+        dotGiamGia.setThoiGianKetThuc(thoiGianKetThuc);
+
+        // Cập nhật trạng thái nếu cần
+        dotGiamGiaService.updateStatus(dotGiamGia);
+
+        // Gọi phương thức update trong service để cập nhật dữ liệu
+        dotGiamGiaService.updateDotGiamGia(dotGiamGia);
+
+        // Chuyển hướng về danh sách sau khi cập nhật
+        return "redirect:/admin/dot-giam-gia";
+    }
 
 
 }

@@ -114,5 +114,18 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
             "WHERE spct.idSanPham.idSanPham = :idSanPham")
     Integer getTotalInventoryByProduct(@Param("idSanPham") Integer idSanPham);
 
+
+    @Query(nativeQuery = true, value = """
+    SELECT spct.*
+    FROM san_pham_chi_tiet spct
+    JOIN san_pham sp ON sp.id_san_pham = spct.id_san_pham
+    JOIN giam_gia_san_pham_chi_tiet ggspct ON ggspct.id_san_pham_chi_tiet = spct.id_san_pham_chi_tiet
+    WHERE sp.id_san_pham = :idSanPham
+      AND ggspct.id_giam_gia = :idGiamGia
+    """)
+    List<SanPhamChiTiet> findAllBySanPhamAndDotGiamGia(@Param("idSanPham") Integer idSanPham, @Param("idGiamGia") Integer idGiamGia);
+
+    @Query("SELECT pd FROM SanPhamChiTiet pd JOIN pd.dotGiamGiaList p WHERE p.idGiamGia = :promotionId")
+    Page<SanPhamChiTiet> findByPromotionId(@Param("promotionId") Integer promotionId, Pageable pageable);
 }
 

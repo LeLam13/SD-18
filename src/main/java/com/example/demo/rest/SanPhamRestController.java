@@ -59,6 +59,10 @@ public class SanPhamRestController {
 
     @DeleteMapping("/admin/delete/chi-tiet/{idChiTiet}/dot-giam-gia/{idGG}")
     public ResponseEntity<?> deleteChiTietSanPham(@PathVariable Integer idChiTiet, @PathVariable Integer idGG) {
+        SanPhamChiTiet s = sanPhamChiTietRepo.findById(idChiTiet).get();
+        s.setGiaBan(s.getSoTienGiam());
+        s.setSoTienGiam(null);
+        sanPhamChiTietRepo.save(s);
         sanPhamChiTietRepo.deleteByDotGiamGiaAndSanPhamChiTiet(idGG, idChiTiet);
         return new ResponseEntity<>(HttpStatus.OK);
     }
