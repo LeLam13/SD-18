@@ -2,10 +2,7 @@ package com.example.demo.rest;
 
 import com.example.demo.Service.DonHangOnlineService;
 import com.example.demo.dto.reponse.*;
-import com.example.demo.dto.request.DonHangOnlineRequestDTO;
-import com.example.demo.dto.request.GioHAngChiTietRequestDTO;
-import com.example.demo.dto.request.GioHangRequestDTO;
-import com.example.demo.dto.request.ShippingRequest;
+import com.example.demo.dto.request.*;
 import com.example.demo.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -176,6 +173,7 @@ public class restDonHangOnlineController {
         donHangOnlineResponseDTO.setIdTrangThai(donHang.getTrangThai().getIdTrangThai());
         donHangOnlineResponseDTO.setTrangThai(donHang.getTrangThai());
         donHangOnlineResponseDTO.setPhuongThucThanhToan(donHang.getPhuongThucThanhToan());
+        //donHangOnlineResponseDTO.setGioHang(donHang.getGio);
 
         return ResponseEntity.ok(donHangOnlineResponseDTO);
     }
@@ -289,5 +287,38 @@ public class restDonHangOnlineController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Không tìm thấy sản phẩm trong giỏ hàng với ID sản phẩm: " + id);
         }
 
+    }
+
+    @DeleteMapping("/gio-hang/xoa-gio-hang-chi-tiet/{id}")
+    public void deleteAllCartDetail(@PathVariable("id") Integer id){
+        System.out.println("check id delete: "+id);
+        donHangOnlineService.deleCartDetailByIdGioHang(id);
+    }
+
+    //tạo hoá đơn khi đặt hàng
+    @PostMapping("/don-hang-online/tao-moi-hoa-don")
+    public ResponseEntity<?> createInvoice (@RequestBody  HoaDonOnlineRequestDTO hoaDonOnlineRequestDTO){
+        String username =null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetails) {
+                //return ((UserDetails) principal).getUsername();
+                System.out.println("test get user1: "+((UserDetails) principal).getUsername());
+                username = ((UserDetails) principal).getUsername();
+            } else {
+                System.out.println("test get user2: "+principal.toString());
+                //return principal.toString();
+            }
+        }
+
+        try {
+            System.out.println("hoaDonOnlineRequestDTO: "+hoaDonOnlineRequestDTO);
+            HoaDon hoaDon = donHangOnlineService.createInvoice(hoaDonOnlineRequestDTO,username);
+            return ResponseEntity.ok(hoaDon);
+        } catch (RuntimeException e) {
+            System.out.println("lỗi: "+ e);
+            return ResponseEntity.badRequest().body(e.getMessage());  // Trả về lỗi với thông báo
+        }
     }
 }

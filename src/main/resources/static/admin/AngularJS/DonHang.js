@@ -39,7 +39,7 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
     }
     var idDonHangShow = null;
     $scope.getOrderOnlineByID = function (orderID) {
-        $scope.startAutoCheck;
+        $scope.startAutoCheck();
         $scope.idDonHang = orderID;
         item = $scope.listOrderOnline.find(item=>item.idDonHang === orderID);
         console.log("item: ",item)
@@ -62,11 +62,12 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
                 $('#ma-don-hang').text(itemOrder.maDonHang);
                 $('#tong-tien').text(itemOrder.tongTien);
                 $('#loai-don-hang').text(itemOrder.loaiDonHang === 2 ? "Đơn hàng online" : "Đơn hàng tại quầy");
-                if (itemOrder.trangThaiThanhToan) {
-                    $('#tong-tien-thanh-toan').text(itemOrder.tongTienThanhToan);
-                } else {
-                    $('#tong-tien-thanh-toan').text(0 + itemOrder.phiVanChuyen);
-                }
+                // if (itemOrder.trangThaiThanhToan) {
+                //     $('#tong-tien-thanh-toan').text(itemOrder.tongTienThanhToan);
+                // } else {
+                //     $('#tong-tien-thanh-toan').text(0 + itemOrder.phiVanChuyen);
+                // }
+                $('#tong-tien-thanh-toan').text(itemOrder.tongTienThanhToan);
                 $('#trang-thai-thanh-toan').text(itemOrder.trangThaiThanhToan ? "Đã thanh toán" : "Chưa thanh toán");
 
                 //khách hàng
@@ -106,7 +107,7 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
         }) .then(function(response) {
             console.log("check order after update: ",response.data);
             $scope.getAllOrderOnline();
-            $('#modal-status').modal('hide');
+            // $('#modal-status').modal('hide');
             $scope.showNotification('Cập Nhật trạng Thái Thành công!','success');
             //$scope.showStepUpdate(response);
 
@@ -393,26 +394,13 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
         }
     }
 
-
-
     // Lưu giữ tham chiếu đến interval
-    // var intervalPromise;
     $scope.showActive = function(idTrangThai) {
         $(".step").removeClass("active");
         for (let i = 1; i <= idTrangThai; i++) {
             $("#" + "step-" + i).addClass("active"); // Thêm class active cho các bước từ 1 đến idTrangThai
         }
     };
-
-    // intervalPromise = $interval(function() {
-    //     //     $scope.idTrangThai = 5;  // Khi đạt đến 5, dừng lại
-    //     //     $interval.cancel(intervalPromise);  // Hủy bỏ interval khi idTrangThai đạt 5
-    //     // Gọi showActive mỗi khi idTrangThai thay đổi
-    //     console.log("show trang thai....");
-    //     $scope.showActive($scope.idTrangThai);
-    //
-    // }, 2000);
-
     //load data
     $scope.getAllOrderOnline();
     $scope.hideStep();

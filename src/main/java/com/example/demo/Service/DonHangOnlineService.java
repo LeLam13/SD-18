@@ -3,6 +3,7 @@ package com.example.demo.Service;
 import com.example.demo.dto.request.DonHangOnlineRequestDTO;
 import com.example.demo.dto.request.GioHAngChiTietRequestDTO;
 import com.example.demo.dto.request.GioHangRequestDTO;
+import com.example.demo.dto.request.HoaDonOnlineRequestDTO;
 import com.example.demo.entity.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,4 +37,10 @@ public interface DonHangOnlineService {
     GioHangChiTiet updateCartDetailReduce(GioHAngChiTietRequestDTO gioHAngChiTietRequestDTO);
 
     GioHangChiTiet updateCartDetailChange(GioHAngChiTietRequestDTO gioHAngChiTietRequestDTO);
+
+    HoaDon createInvoice(HoaDonOnlineRequestDTO hoaDonOnlineRequestDTO, String username);
+
+    void deleCartDetailByIdGioHang(Integer id);
+
+    DonHang findByID(Integer idDonHang);
 }

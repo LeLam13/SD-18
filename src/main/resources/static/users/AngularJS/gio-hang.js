@@ -382,6 +382,10 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
         return $scope.items.map(item => item.soLuong).reduce((total, soLuong) => total + soLuong, 0);
     }
 
+    $scope.$on('cartUpdated', function() {
+        $scope.getCart();
+    });
+
     $scope.clearLocalStorage = function (){
         $scope.items=[];
         this.saveToLocalStorage();
@@ -430,7 +434,7 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
     $scope.getUserName();
 });
 
-app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
+app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$rootScope) {
     $scope.generateRandomString = function(length) {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         let result = '';
@@ -462,6 +466,9 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
 
     //lấy dữ liệu
     $scope.paymentMethod = 1;
+    //khuyến mãi
+    $scope.khuyenMai =[];
+    $scope.khuyenMaiById={};
 
     //thông báo
     $scope.notification = {
@@ -474,6 +481,7 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
     $scope.listProducts = [];
     $scope.username = null;
     $scope.cart = [];
+    var idGioHang = null;
 
 
 
@@ -525,6 +533,7 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
             console.log("check gio hang: ",response.data);
             $scope.cart = response.data;
             $scope.getDetailCart($scope.cart.idGioHang);
+            idGioHang = $scope.cart.idGioHang;
         }).catch(function (errors) {
             console.error("có lỗi xảy ra: ",errors)
         })
@@ -686,10 +695,20 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
         return sumMoney;
         //return  sumMoney;
     }
+    //giảm giá
     $scope.promotionAmount = function (){
-        $scope.discountRate = "10%";
-        let reduceMoney = parseFloat($scope.discountRate.replace('%',''))/100;
-        let sumPromotionAmount = $scope.getSum() * reduceMoney;
+        $scope.discountRate = $('#muc-giam-gia').val();
+        if ($scope.discountRate === null || $scope.discountRate.length === 0) {
+            return 0;
+        }
+        let sumPromotionAmount =0;
+        if ($scope.discountRate.includes('%')) {
+            let reduceMoney = parseFloat($scope.discountRate.replace('%',''))/100;
+            sumPromotionAmount = $scope.getSum() * reduceMoney;
+        } else {
+            let reduceMoney = parseFloat($scope.discountRate);
+            sumPromotionAmount = $scope.getSum() - reduceMoney;
+        }
         return sumPromotionAmount;
     }
     //tính tiền thừa
@@ -798,6 +817,10 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
             $('#messPhuong').show();
             return;
         }
+        let trangThaiThanhToan = false;
+        if($scope.paymentMethod === 2){
+            trangThaiThanhToan = true;
+        }
 
 
         $scope.orderData ={
@@ -812,10 +835,10 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
             tongTienThanhToan: $scope.sumAmount(),
             phiVanChuyen: $scope.getFeeShip(),
             ghiChu: $('#ghi-chu').val(),
-            trangThaiThanhToan: false,
+            trangThaiThanhToan: trangThaiThanhToan,
             idTrangThai: 1,
             idPhuongThucThanhToan: $scope.paymentMethod,
-            idKhuyenMai: 1,
+            idKhuyenMai: $scope.khuyenMaiById.idKhuyenMai != null ? $scope.khuyenMaiById.idKhuyenMai : null,
             // orderDetail: $scope.itemsOrder
             orderDetail: $scope.username ? $scope.itemsOrder.map(item => ({
                 soLuong: item.soLuong,
@@ -838,8 +861,14 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
             }
         }) .then(function(response) {
             console.log("check fee order when create: ",response);
-            $scope.showNotification('Đặt hàng Thành công!','success')
             //xoá giỏ hàng chi tiết
+            $scope.deleteCartDetail(response);
+            $scope.createInvoince(response);
+            $scope.getCart();
+            $scope.showNotification('Đặt hàng Thành công!','success')
+            if(response.data.phuongThucThanhToan.idPhuongThucThanhToan ===2){
+                $scope.showVNPay(response);
+            }
 
         }).catch(function(error) {
             $scope.showNotification('Đặt Hàng Thất Bại!','error')
@@ -847,6 +876,32 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
         });
 
     }
+    //chuyển trang thanh toán
+    $scope.showVNPay = function (response){
+        $scope.dataVNPay ={
+            idDonHang:response.data.idDonHang
+        }
+        $http.post('/create-payment', $scope.dataInvoice)
+            .then(function(response) {
+                const paymentUrl = response.data.paymentUrl;
+                console.log("Redirecting to VNPay:", paymentUrl);
+                window.location.href = paymentUrl; // Redirect to VNPay
+            })
+            .catch(function(error) {
+                console.error('Có lỗi xảy ra:', error);
+            });
+    }
+    //xoa gio hang chi tiet
+    $scope.deleteCartDetail = function (response){
+        console.log("$scope.cart.idGioHang: ",idGioHang);
+        $http.delete("/gio-hang/xoa-gio-hang-chi-tiet/"+ idGioHang).then(function (response) {
+            console.log("Xoá giỏ hàng chi tiết thành công!");
+            $rootScope.$broadcast('cartUpdated');
+        }).catch(function (errors) {
+            console.error('Có lỗi xảy ra:', errors);
+        })
+    }
+
     //tăng số lượng
     $scope.soLuongPlus = function (orderProduct){
         console.log("orderProduct1: ",orderProduct)
@@ -1002,9 +1057,79 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
         });
     }
 
+    $scope.getKhuyenmai = function (){
+        // if ($scope.productDetails && $scope.productDetails.length === 0) {
+        //     alert("Chưa chọn sản phẩm!");
+        //     return;
+        // }
+        $http.get("/don-hang/khuyen-mai").then(function (response) {
+            console.log('khuyen mai:', response.data);
+            $scope.khuyenMai = response.data;
+        }).catch(function (errors) {
+            console.error('Có lỗi xảy ra:', errors);
+        })
+    }
+    //ẩn thông báo
+    $scope.hideErrrorsMes = function (){
+        $('#erroresMessage').hide();
+    }
+    //hiện thông báo
+    $scope.showErrrorsMes = function (message){
+        $('#showMessage').text(message);
+        $('#erroresMessage').show();
+
+        setTimeout(() => {
+            $('#erroresMessage').hide();
+        }, 2000);
+    }
+
+    $scope.getKhuyenmaiById = function (id){
+
+        $http.get("/don-hang/khuyen-mai/"+id).then(function (response) {
+            console.log('khuyen mai by id:', response.data);
+            var discourate =  response.data.soTienToiThieu;
+            let getDiscourate = parseFloat(discourate);
+            if($scope.getSum() < getDiscourate){
+                $scope.showErrrorsMes("Giá Tiền Không Phù Hợp Với Mức Áp Dụng!");
+                return;
+            }
+            $scope.khuyenMaiById = response.data;
+            $('#ma-khuyen-mai').val(response.data.maKhuyenMai);
+            if(response.data.mucGiamGia < 100){
+                $('#muc-giam-gia').val(response.data.mucGiamGia + '%');
+            }else {
+                $('#muc-giam-gia').val(response.data.mucGiamGia);
+            }
+            $('#show-modal-khuyen-mai').modal('hide');
+        }).catch(function (errors) {
+            console.error('Có lỗi xảy ra:', errors);
+        })
+    }
+
     //hiển thị modal
-    $scope.shoModalKhachHang = function (){
-        $('#modal-khuyen-mai').modal('show');
+    $scope.openModalKhuyenMai = function() {
+        $scope.getKhuyenmai();
+        $('#show-modal-khuyen-mai').modal('show');
+    };
+
+    //tạo hoá đơn
+    $scope.createInvoince = function (response){
+        //console.log("response: ",response.data.idDonHang);
+        $scope.dataInvoice ={
+            idDonHang: response.data.idDonHang,
+            maHoaDon: $scope.generateRandomString(8)
+        }
+
+        var invoiceData = angular.copy($scope.dataInvoice);
+        console.log("response: ",invoiceData);
+        $http.post('/don-hang-online/tao-moi-hoa-don', $scope.dataInvoice)
+            .then(function(response) {
+                console.log("check invoice when create: ", response);
+            })
+            .catch(function(error) {
+                console.error('Có lỗi xảy ra:', error);
+            });
+
     }
 
 
@@ -1013,4 +1138,5 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout) {
     $scope.getProvinces();
     $scope.getUser();
     $scope.getAllProduct();
+    $scope.hideErrrorsMes();
 })
