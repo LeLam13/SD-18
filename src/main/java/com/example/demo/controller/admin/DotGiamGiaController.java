@@ -117,9 +117,37 @@ public class DotGiamGiaController {
                                    @RequestParam(value = "giamGiaPercent", required = false) Double giamGiaPercent,
                                    @RequestParam(value = "giamGiaAmount", required = false) Double giamGiaAmount,
                                    @RequestParam("thoiGianBatDau") LocalDateTime thoiGianBatDau,
-                                   @RequestParam("thoiGianKetThuc") LocalDateTime thoiGianKetThuc) {
-        // Lấy đối tượng giảm giá cần cập nhật
+                                   @RequestParam("thoiGianKetThuc") LocalDateTime thoiGianKetThuc,
+                                   Model model
+                                   ) {
         DotGiamGia dotGiamGia = dotGiamGiaService.getDotGiamGiaById(idGiamGia);
+        if (thoiGianBatDau.isAfter(thoiGianKetThuc)) {
+            model.addAttribute("error2", "Ngày bắt đầu không được lớn hơn ngày kết thúc.");
+            model.addAttribute("dotGiamGia", dotGiamGia); // Truyền lại đối tượng để điền dữ liệu vào form
+            return "admin/updatedgg"; // Trả về trang cập nhật
+        }
+
+
+
+        // Lấy tất cả các đợt giảm giá đang diễn ra hoặc sắp diễn ra
+        List<DotGiamGia> activeDotGiamGiaList = dotGiamGiaService.getActiveDotGiamGiaList();
+
+// Kiểm tra ngày bắt đầu của đợt giảm giá mới (thoiGianBatDau) không được nhỏ hơn ngày kết thúc của bất kỳ đợt giảm giá nào đang diễn ra
+        for (DotGiamGia activeDotGiamGia : activeDotGiamGiaList) {
+            // Bỏ qua kiểm tra với chính đợt giảm giá đang cập nhật
+            if (!activeDotGiamGia.getIdGiamGia().equals(dotGiamGia.getIdGiamGia()) && thoiGianBatDau.isBefore(activeDotGiamGia.getThoiGianKetThuc())) {
+                // Thêm thông báo lỗi vào model nếu ngày bắt đầu của đợt giảm giá mới nhỏ hơn ngày kết thúc của đợt giảm giá đang diễn ra
+                model.addAttribute("error2", "Ngày bắt đầu của đợt giảm giá mới phải lớn hơn ngày kết thúc của đợt giảm giá hiện tại.");
+
+                // Truyền lại đối tượng DotGiamGia để giữ lại dữ liệu trong form
+                model.addAttribute("dotGiamGia", dotGiamGia);
+
+                // Trả về trang cập nhật
+                return "admin/updatedgg";
+            }
+        }
+
+
 
         // Cập nhật thông tin giảm giá
         if ("percent".equals(discountType)) {

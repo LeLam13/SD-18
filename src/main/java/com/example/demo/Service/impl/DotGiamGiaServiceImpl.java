@@ -24,23 +24,6 @@ public class DotGiamGiaServiceImpl {
     public DotGiamGia createDotGiamGia(DotGiamGia dotGiamGia) {
         LocalDateTime now = LocalDateTime.now();
 
-        // Kiểm tra ngày bắt đầu không lớn hơn ngày kết thúc
-        if (dotGiamGia.getThoiGianBatDau().isAfter(dotGiamGia.getThoiGianKetThuc())) {
-            throw new IllegalArgumentException("Ngày bắt đầu không được lớn hơn ngày kết thúc.");
-        }
-
-        // Kiểm tra ngày bắt đầu của đợt giảm giá mới so với đợt giảm giá hiện tại hoặc sắp diễn ra
-        Optional<DotGiamGia> activeDiscount = dotGiamGiaRepository
-                .findFirstByTrangThaiInOrderByThoiGianKetThucDesc(List.of(0, 1));
-
-        if (activeDiscount.isPresent()) {
-            LocalDateTime endOfLastActiveDiscount = activeDiscount.get().getThoiGianKetThuc();
-            if (!dotGiamGia.getThoiGianBatDau().isAfter(endOfLastActiveDiscount)) {
-                throw new IllegalArgumentException(
-                        "Ngày bắt đầu của đợt giảm giá mới phải lớn hơn ngày kết thúc của đợt giảm giá hiện tại hoặc sắp diễn ra.");
-            }
-        }
-
         // Cập nhật trạng thái dựa trên ngày bắt đầu và kết thúc
         updateStatus(dotGiamGia);
         return dotGiamGiaRepository.save(dotGiamGia);
@@ -52,7 +35,9 @@ public class DotGiamGiaServiceImpl {
         return dotGiamGiaRepository.save(dotGiamGia); // Lưu thay đổi vào cơ sở dữ liệu
     }
 
-
+    public List<DotGiamGia> getActiveDotGiamGiaList() {
+        return dotGiamGiaRepository.findActiveDotGiamGia();
+    }
     public DotGiamGia getDotGiamGiaById(Integer id) {
         return dotGiamGiaRepository.findById(id).orElseThrow(()->{
             throw new RuntimeException("Không tìm thấy id");
