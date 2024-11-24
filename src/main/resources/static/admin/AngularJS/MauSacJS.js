@@ -35,6 +35,23 @@ app.controller("mau-sac-ctrl", function ($scope, $http) {
         }
     };
 
+    // Hàm chuyển tới trang đầu
+    $scope.goToFirstPage = function () {
+        if ($scope.page > 0) { // Kiểm tra nếu không phải trang đầu
+            $scope.page = 0;
+            $scope.findAll();
+        }
+    };
+
+// Hàm chuyển tới trang cuối
+    $scope.goToLastPage = function () {
+        if ($scope.page < $scope.totalPages - 1) { // Kiểm tra nếu không phải trang cuối
+            $scope.page = $scope.totalPages - 1;
+            $scope.findAll();
+        }
+    };
+
+
     $scope.generateRandomString = function (length) {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
         let result = '';
@@ -60,58 +77,69 @@ app.controller("mau-sac-ctrl", function ($scope, $http) {
 
     $scope.create = function () {
         var mauSac = {
-            ma: $scope.generateRandomString(8),
-            ten: $scope.ten
+            ma: $scope.ma?.trim(),
+            ten: $scope.ten?.trim()
+        };
+
+        let check = true;
+
+        // Hàm hiển thị lỗi
+        const showError = (id, message) => {
+            document.getElementById(id).innerText = message || "";
+        };
+
+        // Xóa lỗi trước khi kiểm tra
+        showError("eMaMau", "");
+        showError("eTenMau", "");
+
+        // Kiểm tra mã
+        if (!mauSac.ma) {
+            showError("eMaMau", "Vui lòng chọn mã!!!");
+            check = false;
         }
 
-        // Kiểm tra tính hợp lệ của tên
-        if ($scope.ten == undefined || $scope.ten.length == 0) {
-            document.getElementById("eTenMau").innerText = "Vui lòng nhập tên!!!";
-            return;
+        // Kiểm tra tên
+        if (!mauSac.ten) {
+            showError("eTenMau", "Vui lòng nhập tên!!!");
+            check = false;
+        } else if (mauSac.ten.length > 100) {
+            showError("eTenMau", "Tên tối đa 100 ký tự!!!");
+            check = false;
         }
 
-        if ($scope.ten.length > 100) {
-            document.getElementById("eTenMau").innerText = "Tên tối đa 100 ký tự!!!";
-            return;
-        }
+        if (!check) return; // Dừng nếu có lỗi
 
         // Gọi getAll để kiểm tra xem tên đã tồn tại chưa
         $http.get("/admin/mau-sac/get-all").then(function (response) {
             var existingMauSac = response.data;
-            var tenTonTai = false;
 
-            // Kiểm tra xem tên có trùng với dữ liệu hiện có không
-            angular.forEach(existingMauSac, function (item) {
-                if (item.ten.toLowerCase() === $scope.ten.toLowerCase()) {
-                    tenTonTai = true;
-                }
-            });
+            // Kiểm tra trùng tên
+            const tenTonTai = existingMauSac.some(item => item.ten.toLowerCase() === mauSac.ten.toLowerCase());
 
-            // Nếu tên đã tồn tại, hiển thị thông báo
             if (tenTonTai) {
-                document.getElementById("eTenMau").innerText = "Tên đã tồn tại";
+                showError("eTenMau", "Tên đã tồn tại");
             } else {
-                // Nếu không, gửi yêu cầu tạo mới
+                // Gửi yêu cầu tạo mới
                 $http.post("/admin/mau-sac/add", mauSac).then(function (r) {
                     $scope.findAll();
                     alert("Thêm thành công");
                 }).catch(function (err) {
-                    console.log("Thêm không thành công", err);
+                    console.error("Thêm không thành công", err);
                 });
             }
         }).catch(function (err) {
-            console.log("Lỗi khi lấy dữ liệu", err);
+            console.error("Lỗi khi lấy dữ liệu", err);
         });
-    }
+    };
 
 
-    $scope.getMauSac = function (ma) {
-        var url = "/admin/mau-sac/chiTiet" + "/" + ma;
+    $scope.getMauSac = function (idMauSac) {
+        var url = "/admin/mau-sac/chiTiet" + "/" + idMauSac;
         console.log(url)
         $http.get(url).then(function (r) {
             console.log(r.data)
             let mauSac = r.data;
-            $scope.idMauSac=mauSac.idMauSac;
+            $scope.idMauSac = mauSac.idMauSac;
             $scope.ma = mauSac.ma;
             $scope.ten = mauSac.ten;
             $scope.createBy = mauSac.createBy;
@@ -123,21 +151,42 @@ app.controller("mau-sac-ctrl", function ($scope, $http) {
     }
 
 
-    $scope.update = function (ma) {
+    $scope.update = function (idMauSac) {
+        let check = true;
+// Hàm hiển thị lỗi
+        const showError = (id, message) => {
+            document.getElementById(id).innerText = message || "";
+        };
+
+        // Xóa lỗi trước khi kiểm tra
+        showError("eMaMauUd", "");
+        showError("eTenMauUd", "");
+
+        // Kiểm tra mã
+        if ($scope.ma == undefined || $scope.ma.length == 0) {
+            showError("eMaMauUd", "Vui lòng chọn mã!!!");
+            check =
+
+                false;
+        }
+
+        // Kiểm tra tên
         if ($scope.ten == undefined || $scope.ten.length == 0) {
-            document.getElementById("eTenMauUd").innerText = "Vui lòng nhập tên!!!";
-            return
+            showError("eTenMauUd", "Vui lòng nhập tên!!!");
+            check = false;
+        } else if ($scope.ten.length > 100) {
+            showError("eTenMauUd", "Tên tối đa 100 ký tự!!!");
+            check = false;
         }
-        if ($scope.ten.length > 100) {
-            document.getElementById("eTenMauUd").innerText = "Tên tối đa 100 ký tự!!!";
-            return
-        }
+
+        if (!check) return; // Dừng nếu có lỗi
+
 
         $http.get("/admin/mau-sac/get-all").then(function (response) {
             var existingMauSac = response.data;
             var tenTonTai = false;
             angular.forEach(existingMauSac, function (item) {
-                if (item.ten.toLowerCase() === $scope.ten.toLowerCase() && item.ma !== ma) {
+                if (item.ten.toLowerCase() === $scope.ten.toLowerCase() && item.idMauSac !== idMauSac) {
                     tenTonTai = true;
                 }
             });
@@ -146,12 +195,13 @@ app.controller("mau-sac-ctrl", function ($scope, $http) {
                 document.getElementById("eTenMauUd").innerText = "Tên đã tồn tại";
                 return;
             } else {
-                var url = "/admin/mau-sac/update" + "/" + ma;
+                var url = "/admin/mau-sac/update" + "/" + idMauSac;
                 var updateMau = {
-                    ma: ma,
+                    idMauSac:idMauSac,
+                    ma: $scope.ma,
                     ten: $scope.ten
                 }
-
+                console.log("data", updateMau);
                 $http.post(url, updateMau).then(function (r) {
                     $scope.findAll();
                     alert("Update thành công")

@@ -187,17 +187,17 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
 
 
-        if (filterRequest.getTen() != null && !filterRequest.getTen().isEmpty()) {
-            // Lấy danh sách các sản phẩm theo tên
-            String tenKhongDau = removeAccents(filterRequest.getTen());
-
-            // Lấy danh sách các sản phẩm theo tên không dấu
-            List<SanPham> sanPhamList = sanPhamRepo.findByName(tenKhongDau);
-
-                // Thêm điều kiện vào specification để lọc theo idSanPham trong danh sách
-                spec = spec.and((root, query, criteriaBuilder) ->
-                        criteriaBuilder.in(root.get("idSanPham")).value(sanPhamList));
-        }
+//        if (filterRequest.getTen() != null && !filterRequest.getTen().isEmpty()) {
+//            // Lấy danh sách các sản phẩm theo tên
+//            String tenKhongDau = removeAccents(filterRequest.getTen());
+//
+//            // Lấy danh sách các sản phẩm theo tên không dấu
+//            List<SanPham> sanPhamList = sanPhamRepo.findByName(tenKhongDau);
+//
+//                // Thêm điều kiện vào specification để lọc theo idSanPham trong danh sách
+//                spec = spec.and((root, query, criteriaBuilder) ->
+//                        criteriaBuilder.in(root.get("idSanPham")).value(sanPhamList));
+//        }
 
         if (filterRequest.getIdSanPham() != null) {
             SanPham sanPham = sanPhamRepo.findByIdSanPham(filterRequest.getIdSanPham());
@@ -238,6 +238,11 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             ChatLieu chatLieu = chatLieuRepo.findByIdChatLieu(filterRequest.getIdChatLieu());
             spec = spec.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.equal(root.get("idChatLieu"), chatLieu));
+        }
+        if (filterRequest.getIdKichCo() != null) {
+            KichCo kichCo = kichCoRepo.findByIdKichCo(filterRequest.getIdKichCo());
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("idKichCo"), kichCo));
         }
 
         Page<SanPhamChiTiet> result = sanPhamChiTietRepo.findAll(spec, pageable);

@@ -19,7 +19,7 @@ public interface MauSacService {
 
     public MauSac updateMauSac(MauSacRequestDTO mauSacRequestDTO);
 
-    public MauSac getMauSac(String ma);
+    public MauSac getMauSac(Integer idMauSac);
 
     public MauSac updateTrangThai(Integer idMauSac);
 

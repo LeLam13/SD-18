@@ -54,6 +54,22 @@ app.controller("thuonghieu-ctrl", function ($scope, $http) {
                 $scope.itemss = r.data;
             }).catch(e => console.log(e))
         }
+
+        // Hàm chuyển tới trang đầu
+        $scope.goToFirstPage = function () {
+            if ($scope.page > 0) { // Kiểm tra nếu không phải trang đầu
+                $scope.page = 0;
+                $scope.findAll();
+            }
+        };
+
+// Hàm chuyển tới trang cuối
+        $scope.goToLastPage = function () {
+            if ($scope.page < $scope.totalPages - 1) { // Kiểm tra nếu không phải trang cuối
+                $scope.page = $scope.totalPages - 1;
+                $scope.findAll();
+            }
+        };
         $scope.findAll();
 
         $scope.create = function () {
@@ -95,26 +111,25 @@ app.controller("thuonghieu-ctrl", function ($scope, $http) {
         }
 
         // chi tiết
-    $scope.getThuongHieu = function (ma) {
-        var url = "/admin/thuong-hieu/chiTiet" + "/" + ma;
-        console.log(url)
-        $http.get(url).then(function (r) {
-            console.log(r.data)
-            let ThuongHieu = r.data;
-            $scope.idThuongHieu=ThuongHieu.idThuongHieu;
-            $scope.ma = ThuongHieu.ma;
-            $scope.ten = ThuongHieu.ten;
-            $scope.createBy = ThuongHieu.createBy;
-            $scope.createDate = ThuongHieu.createDate;
-            $scope.updateDate = ThuongHieu.updateDate;
-            $scope.updateBy = ThuongHieu.updateBy;
-            $scope.trangThai = ThuongHieu.trangThai;
-        })
-    }
+        $scope.getThuongHieu = function (ma) {
+            var url = "/admin/thuong-hieu/chiTiet" + "/" + ma;
+            console.log(url)
+            $http.get(url).then(function (r) {
+                console.log(r.data)
+                let ThuongHieu = r.data;
+                $scope.idThuongHieu = ThuongHieu.idThuongHieu;
+                $scope.ma = ThuongHieu.ma;
+                $scope.ten = ThuongHieu.ten;
+                $scope.createBy = ThuongHieu.createBy;
+                $scope.createDate = ThuongHieu.createDate;
+                $scope.updateDate = ThuongHieu.updateDate;
+                $scope.updateBy = ThuongHieu.updateBy;
+                $scope.trangThai = ThuongHieu.trangThai;
+            })
+        }
 
 
-
-    //update
+        //update
 
         $scope.update = function (ma) {
             if ($scope.ten == undefined || $scope.ten.length == 0) {

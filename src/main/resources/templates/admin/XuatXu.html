@@ -97,16 +97,30 @@
 
                                 <!-- Điều hướng phân trang -->
                                 <nav aria-label="Page navigation" class="d-flex justify-content-center mt-3">
-                                    <ul class="pagination">
+                                    <ul class="pagination pagination-sm-125">
+                                        <!-- Nút Trang đầu -->
                                         <li class="page-item" ng-class="{ 'disabled': page === 0 }">
-                                            <a class="page-link" href="" ng-click="previousPage()">&#8592; Trang
-                                                trước</a>
+                                            <a class="page-link" href="" ng-click="goToFirstPage()"><small>&#8676; Trang đầu</small></a>
                                         </li>
+
+                                        <!-- Nút Trang trước -->
+                                        <li class="page-item" ng-class="{ 'disabled': page === 0 }">
+                                            <a class="page-link" href="" ng-click="previousPage()"><small>&#8592; Trang trước></small></a>
+                                        </li>
+
+                                        <!-- Hiển thị thông tin trang -->
                                         <li class="page-item disabled">
-                                            <span class="page-link">Trang {{ page + 1 }} / {{ totalPages }}</span>
+                                            <span class="page-link"><small>Trang {{ page + 1 }} / {{ totalPages }}</small></span>
                                         </li>
-                                        <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 || page + 1 === totalPages + 1}">
-                                            <a class="page-link" href="" ng-click="nextPage()">Trang sau &#8594;</a>
+
+                                        <!-- Nút Trang sau -->
+                                        <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 }">
+                                            <a class="page-link" href="" ng-click="nextPage()"><small>Trang sau &#8594;</small></a>
+                                        </li>
+
+                                        <!-- Nút Trang cuối -->
+                                        <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 }">
+                                            <a class="page-link" href="" ng-click="goToLastPage()"><small>Trang cuối &#8677;</small></a>
                                         </li>
                                     </ul>
                                 </nav>
