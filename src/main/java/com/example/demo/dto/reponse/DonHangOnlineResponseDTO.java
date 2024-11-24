@@ -1,5 +1,6 @@
 package com.example.demo.dto.reponse;
 
+import com.example.demo.entity.GioHang;
 import com.example.demo.entity.PhuongThucThanhToan;
 import com.example.demo.entity.TrangThai;
 import lombok.Data;
@@ -25,4 +26,5 @@ public class DonHangOnlineResponseDTO {
     private Integer idPhuongThucThanhToan;
     private PhuongThucThanhToan phuongThucThanhToan;
     private Integer idKhuyenMai;
+    private GioHang gioHang;
 }

@@ -2,24 +2,23 @@ package com.example.demo.Service.impl;
 
 
 import com.example.demo.Service.DonHangOnlineService;
+import com.example.demo.dto.request.*;
 import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.repo.SanPhamChiTietRepo;
 
-import com.example.demo.dto.request.DonHangChiTietRequestDTO;
-import com.example.demo.dto.request.DonHangOnlineRequestDTO;
-import com.example.demo.dto.request.GioHAngChiTietRequestDTO;
-import com.example.demo.dto.request.GioHangRequestDTO;
 import com.example.demo.entity.*;
 import com.example.demo.repo.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
+@Transactional
 public class DonHangOnlineServiceImpl implements DonHangOnlineService {
     @Autowired
     SanPhamChiTietRepo sanPhamChiTietRepo;
@@ -37,11 +36,14 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
     taikhoanRepo taikhoanRepo;
     @Autowired
     khachhangRePo khachhangRePo;
-
     @Autowired
     GioHangRepo gioHangRepo;
     @Autowired
     GioHangchiTietRepo gioHangchiTietRepo;
+    @Autowired
+    HoaDonRepo hoaDonRepo;
+    @Autowired
+    HoaDonChiTietRepo hoaDonChiTietRepo;
 
     @Override
     public List<SanPhamChiTiet> getAllProducts() {
@@ -76,13 +78,18 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
         donHang.setTrangThaiThanhToan(donHangOnlineRequestDTO.getTrangThaiThanhToan());
         donHang.setLoaiDonHang(2);
         donHang.setPhuongThucNhan(2);
-
         TrangThai trangThai = trangThaiRepo.findById(donHangOnlineRequestDTO.getIdTrangThai()).get();
         donHang.setTrangThai(trangThai);
         PhuongThucThanhToan phuongThucThanhToan= phuongThucThanhToanRepo.findById(donHangOnlineRequestDTO.getIdPhuongThucThanhToan()).get();
         donHang.setPhuongThucThanhToan(phuongThucThanhToan);
-        KhuyenMai khuyenMai = khuyenMaiRepo.findById(donHangOnlineRequestDTO.getIdKhuyenMai()).get();
-        donHang.setKhuyenMai(khuyenMai);
+
+        if(donHangOnlineRequestDTO.getIdKhuyenMai() != null){
+            KhuyenMai khuyenMai = khuyenMaiRepo.findById(donHangOnlineRequestDTO.getIdKhuyenMai()).get();
+            donHang.setKhuyenMai(khuyenMai);
+
+            khuyenMai.setSoLuong(khuyenMai.getSoLuong()-1);
+            khuyenMaiRepo.save(khuyenMai);
+        }
 
         taikhoan oldTaiKoan = taikhoanRepo.findByUsername(username);
         if(username!= null || username.length()>0){
@@ -296,6 +303,101 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
         oldDonHangCT.setSoLuong(gioHAngChiTietRequestDTO.getSoLuong());
         gioHangchiTietRepo.save(oldDonHangCT);
         return oldDonHangCT;
+    }
+
+    @Override
+    public HoaDon createInvoice(HoaDonOnlineRequestDTO hoaDonOnlineRequestDTO, String username) {
+        HoaDon hoaDon = new HoaDon();
+        String nameCustorm = null;
+
+        taikhoan oldTaiKoan = taikhoanRepo.findByUsername(username);
+        if(oldTaiKoan!= null){
+            System.out.println("check TK: "+oldTaiKoan.toString());
+            //System.out.println("check TK: "+oldTaiKoan.getNhanVien().getIdNhanVien());
+//            nhanvien getNV = nhanVienRepo.findById(oldTaiKoan.getNhanVien().getIdNhanVien()).get();
+//            hoaDon.setNhanVien(getNV);
+            khachhang khachhang = khachhangRePo.findByIdKhachHang(oldTaiKoan.getKhachHang().getIdKhachHang());
+            nameCustorm = khachhang.getHoTen();
+            hoaDon.setKhachHang(khachhang);
+        }
+
+        DonHang donHang = donHangRepo.findById(hoaDonOnlineRequestDTO.getIdDonHang()).get();
+        if(donHang == null){
+            throw new RuntimeException("Không tìm thấy đơn hàng!");
+        }
+        //set khuyến mãi
+        if(donHang.getKhuyenMai() != null){
+            hoaDon.setKhuyenMai(donHang.getKhuyenMai());
+        }
+        //set trang Thai
+        hoaDon.setTrangThai(donHang.getTrangThai());
+        //set phương thuc thanh toan
+        hoaDon.setPhuongThucThanhToan(donHang.getPhuongThucThanhToan());
+        //set don hàng
+        hoaDon.setDonHang(donHang);
+        //set khach hàng
+        hoaDon.setKhachHang(donHang.getKhachHang());
+        //set ma hd
+        hoaDon.setMaHoaDon(hoaDonOnlineRequestDTO.getMaHoaDon());
+        //set ten kn
+        hoaDon.setTenKhachNhan(donHang.getTenKhachNhan());
+        //set email kn
+        hoaDon.setEmailKhachNhan(donHang.getEmailKhachNhan());
+        //set sdt kn
+        hoaDon.setSoDienThoaiKhachNhan(donHang.getSoDienThoaiKhachNhan());
+        //set dia chỉ kn
+        hoaDon.setDiaChiNhan(donHang.getDiaChiNhan());
+        //tổng tiên
+        hoaDon.setTongTien(donHang.getTongTien());
+        //tong tiền km
+        hoaDon.setTongTienKhuyenMai(donHang.getTongTienKhuyenMai());
+        //tong tien sau km
+        hoaDon.setTongTienSauKhuyenMai(donHang.getTongTienSauKhuyenMai());
+        //tong tien phai thanh toan
+        hoaDon.setTongTienThanhToan(donHang.getTongTienThanhToan());
+        //phi van chuyen
+        hoaDon.setPhiVanChuyen(donHang.getPhiVanChuyen());
+        //ghi chu
+        hoaDon.setGhiChu(donHang.getGhiChu());
+        //trang thai thanh toan
+        hoaDon.setTrangThaiThanhToan(donHang.getTrangThaiThanhToan());
+        //phuong thuc nhan
+        hoaDon.setPhuongThucNhan(donHang.getPhuongThucNhan());
+
+        //ngày tháng người tạo hoá đơn
+        LocalDate localDate = LocalDate.now();
+        donHang.setCreateDate(localDate);
+        donHang.setCreateBy(nameCustorm);
+
+        hoaDonRepo.save(hoaDon);
+
+        //tạo háo đơn chi tiết
+        HoaDon findHoaDon = hoaDonRepo.findByMaHoaDon(hoaDonOnlineRequestDTO.getMaHoaDon());
+        List<DonHangChiTiet> donHangChiTietLits = donHangChiTietRepo.findByDonHangId(donHang.getIdDonHang());
+        for(DonHangChiTiet donHangChiTiet: donHangChiTietLits){
+            HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
+
+            hoaDonChiTiet.setMaHoaDonChiTiet(generateRandomString(8));
+            hoaDonChiTiet.setHoaDon(findHoaDon);
+            hoaDonChiTiet.setSanPhamChiTiet(donHangChiTiet.getSanPhamChiTiet());
+            hoaDonChiTiet.setSoLuong(donHangChiTiet.getSoLuong());
+            hoaDonChiTiet.setDonGia(donHangChiTiet.getDonGia());
+            hoaDonChiTiet.setTrangThai(true);
+            hoaDonChiTiet.setGhiChu(donHangChiTiet.getGhiChu());
+
+            hoaDonChiTietRepo.save(hoaDonChiTiet);
+        }
+        return hoaDon;
+    }
+
+    @Override
+    public void deleCartDetailByIdGioHang(Integer id) {
+        gioHangchiTietRepo.deleteByGioHangId(id);
+    }
+
+    @Override
+    public DonHang findByID(Integer idDonHang) {
+        return donHangRepo.findById(idDonHang).get();
     }
 
 }

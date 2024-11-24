@@ -86,14 +86,15 @@ public class HoaDonServiceImpl implements HoaDonService {
     @Override
     @Transactional
     public HoaDon createHoaDon(HoaDonResquestDTO hoaDon, String username) {
+        HoaDon newHoaDon = new HoaDon();
+
         //lấy tài khoản
         taikhoan oldTaiKoan = taikhoanRepo.findByUsername(username);
         //lấy nhân viên
         nhanvien getNV = nhanVienRepo.findById(oldTaiKoan.getNhanVien().getIdNhanVien()).get();
         //lấy khách hàng
         khachhang khachhang = khachhangRePo.findById(hoaDon.getIdKhachHang()).get();
-        //lấy khuyến mãi
-        KhuyenMai khuyenMai = khuyenMaiRepo.findById(hoaDon.getIdKhuyenMai()).get();
+
         //lấy trạng thái hoá đơn
         TrangThai trangThai = trangThaiRepo.findById(hoaDon.getIdTrangThai()).get();
         //lấy phương thức thanh toán
@@ -120,7 +121,17 @@ public class HoaDonServiceImpl implements HoaDonService {
         }
 
         donHang.setPhuongThucThanhToan(PTTT);
-        donHang.setKhuyenMai(khuyenMai);
+
+        //lấy khuyến mãi
+        if(hoaDon.getIdKhuyenMai() != null){
+            KhuyenMai khuyenMai = khuyenMaiRepo.findById(hoaDon.getIdKhuyenMai()).get();
+            donHang.setKhuyenMai(khuyenMai);
+            newHoaDon.setKhuyenMai(khuyenMai);
+            khuyenMai.setSoLuong(khuyenMai.getSoLuong()-1);
+            khuyenMaiRepo.save(khuyenMai);
+        }
+
+
         donHang.setTenKhachNhan(hoaDon.getTenKhachNhan());
         donHang.setSoDienThoaiKhachNhan(hoaDon.getSoDienThoaiKhachNhan());
         donHang.setDiaChiNhan(hoaDon.getDiaChiKhachNhan());
@@ -128,10 +139,8 @@ public class HoaDonServiceImpl implements HoaDonService {
         donHang.setLoaiDonHang(hoaDon.getLoaiDonHang());
         donHangRepo.save(donHang);
         //System.out.println("check đơn hàng update: "+donHang);
-        //tạo hoá đơn
-        HoaDon newHoaDon = new HoaDon();
 
-        newHoaDon.setKhuyenMai(khuyenMai);
+        //tạo hoá đơn
         newHoaDon.setTrangThai(trangThai);//trạng thái hoá đơn hoàn thành
         newHoaDon.setPhuongThucThanhToan(PTTT);
         newHoaDon.setDonHang(donHang);
