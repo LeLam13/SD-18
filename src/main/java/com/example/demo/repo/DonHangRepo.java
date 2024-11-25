@@ -14,9 +14,15 @@ public interface DonHangRepo extends JpaRepository<DonHang, Integer> {
 //            "GROUP BY dh.idDonHang")
 //    List<DonHangTongSoLuongResponseDTO> findTongSoLuongDonHang();
 
+//    @Query("SELECT new com.example.demo.dto.reponse.DonHangTongSoLuongResponseDTO(dh.idDonHang, SUM(dhc.soLuong)) " +
+//            "FROM DonHang dh LEFT JOIN DonHangChiTiet dhc ON dh.idDonHang = dhc.donHang.idDonHang " +
+//            "WHERE dh.trangThai.idTrangThai = 1 " +
+//            "GROUP BY dh.idDonHang")
+//    List<DonHangTongSoLuongResponseDTO> findTongSoLuongDonHang();
+
     @Query("SELECT new com.example.demo.dto.reponse.DonHangTongSoLuongResponseDTO(dh.idDonHang, SUM(dhc.soLuong)) " +
             "FROM DonHang dh LEFT JOIN DonHangChiTiet dhc ON dh.idDonHang = dhc.donHang.idDonHang " +
-            "WHERE dh.trangThai.idTrangThai = 1 " +
+            "WHERE dh.trangThai.idTrangThai = 1 AND dh.loaiDonHang = 1 " +
             "GROUP BY dh.idDonHang")
     List<DonHangTongSoLuongResponseDTO> findTongSoLuongDonHang();
 

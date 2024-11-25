@@ -56,6 +56,7 @@ public class DonHangServiceImpl implements DonHangService {
             newDonHang.setNhanVien(getNV);
             TrangThai trangThai = trangThaiRepo.findById(donHangDTO.getIdTrangThai()).get();
             newDonHang.setTrangThai(trangThai);
+            newDonHang.setLoaiDonHang(donHangDTO.getLoaiDonHang());
         }
         return donHangRepo.save(newDonHang);
     }
@@ -284,6 +285,36 @@ public class DonHangServiceImpl implements DonHangService {
     public KhuyenMai getKhuyenMaiById(Integer id) {
         KhuyenMai khuyenMai = khuyenMaiRepo.findById(id).get();
         return khuyenMai;
+    }
+
+    @Override
+    public DonHangChiTiet updateCartDetailChange(DonHangChiTietRequestDTO donHangChiTietRequestDTO) {
+        DonHangChiTiet oldDonHangCT = donHangChiTietRepo.findBySanPhamChiTietIdAndDonHangId(donHangChiTietRequestDTO.getIdSanPhamChiTiet(),donHangChiTietRequestDTO.getIdĐonHang());
+
+        //số lượng cập nhật > sô lượng có
+        SanPhamChiTiet oldSacPhamCT = sanPhamChiTietRepo.findById(donHangChiTietRequestDTO.getIdSanPhamChiTiet()).get();
+        if (oldSacPhamCT.getSoLuong() < donHangChiTietRequestDTO.getSoLuong()) {
+            throw new RuntimeException("Số lượng sản phẩm không đủ!");
+        }
+        //cập nhật số lượng của sản phẩm chi tiết
+        int soLuongChange=0;
+        if(donHangChiTietRequestDTO.getSoLuong() > oldDonHangCT.getSoLuong()){
+            soLuongChange= donHangChiTietRequestDTO.getSoLuong()- oldDonHangCT.getSoLuong();
+            oldSacPhamCT.setSoLuong(oldSacPhamCT.getSoLuong() - soLuongChange);
+        }else {
+            soLuongChange = oldDonHangCT.getSoLuong() - donHangChiTietRequestDTO.getSoLuong();
+            oldSacPhamCT.setSoLuong(oldSacPhamCT.getSoLuong() + soLuongChange);
+        }
+
+        //oldSacPhamCT.setSoLuong(oldSacPhamCT.getSoLuong() - soLuongChange);
+        sanPhamChiTietRepo.save(oldSacPhamCT);
+
+        //cập nhật số lượng đon hàng chi tiết
+        oldDonHangCT.setIdDonHangChiTiet(oldDonHangCT.getIdDonHangChiTiet());
+        oldDonHangCT.setSoLuong(donHangChiTietRequestDTO.getSoLuong());
+        donHangChiTietRepo.save(oldDonHangCT);
+
+        return oldDonHangCT;
     }
 
 }

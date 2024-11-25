@@ -5,6 +5,7 @@ import com.example.demo.dto.request.HoaDonOnlineRequestDTO;
 import com.example.demo.entity.DonHang;
 import com.example.demo.entity.DonHangChiTiet;
 import com.example.demo.entity.HoaDon;
+import com.itextpdf.layout.element.Cell;
 
 import java.util.List;
 
@@ -21,4 +22,8 @@ public interface QuanLyDonHangOnlineService {
     DonHang cancelStatusOrder(DonHangOnlineStatusRequestDTO donHangOnlineStatusRequestDTO, String username);
 
     DonHang getStuats(Integer id);
+
+    String printerInvoiceOnlice(Integer id);
+    Cell getBillingShippingCell(Object  textValue);
+    Cell getCell10fleft(Object textValue, Boolean isBoolean);
 }

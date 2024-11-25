@@ -10,11 +10,15 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval) {
         type: '',
         icon: ''
     };
+    //phân trang
+    $scope.currentPage = 1; // Trang hiện tại
+    $scope.pageSize = 5;
 
     $scope.getAllOrder = function (){
         $http.get("/don-hang-tai-quay").then(function (response){
             $scope.listDonHang = response.data;
             console.log("get all order: ",response.data);
+            $scope.totalPages = Math.ceil($scope.listDonHang.length / $scope.pageSize); // Tổng số trang
         }).catch(function (errors){
             console.error("Có lỗi xảy ra: ",errors);
         })
@@ -35,7 +39,7 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval) {
             });
             idDonHangShow = itemOrder.idDonHang;
             if (response.data && itemOrder) {
-                $scope.idTrangThai = itemOrder.trangThai.idTrangThai;
+                // $scope.idTrangThai = itemOrder.trangThai.idTrangThai;
                 $('#tongHoaDon').val(itemOrder.tongTien);
                 $('#tongTienKhuyenMai').val(itemOrder.tongTienKhuyenMai);
                 if(itemOrder.trangThaiThanhToan){
@@ -142,7 +146,7 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval) {
     $scope.startAutoCheck = function() {
         // Khởi động interval khi nhấn nút
         if (!intervalPromise) {
-            intervalPromise = $interval(checkTrangThai, 3000); // Lưu tham chiếu interval
+            intervalPromise = $interval(checkTrangThai, 2000); // Lưu tham chiếu interval
             console.log("Đã bắt đầu tự động kiểm tra trạng thái.");
         }
     };
@@ -294,6 +298,39 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval) {
             $('#step-4').show();
         }
     }
+
+    //phân trang
+    $scope.getPagedProducts = function () {
+        const start = ($scope.currentPage - 1) * $scope.pageSize;
+        const end = start + $scope.pageSize;
+        return $scope.listDonHang.slice(start, end); // Lấy danh sách đơn hàng cho trang hiện tại
+    };
+
+    // Chuyển đến trang khác
+    $scope.setPage = function (page) {
+        if (page >= 1 && page <= $scope.totalPages) {
+            $scope.currentPage = page;
+        }
+    };
+
+    $scope.getPaginationRange = function () {
+        const rangeSize = 5; // Số lượng trang muốn hiển thị (mặc định là 5)
+        let start = Math.max($scope.currentPage - Math.floor(rangeSize / 2), 1);
+        const end = Math.min(start + rangeSize - 1, $scope.totalPages);
+
+        // Điều chỉnh lại nếu các trang bị vượt giới hạn
+        start = Math.max(Math.min(start, $scope.totalPages - rangeSize + 1), 1);
+
+        const pages = [];
+        for (let i = start; i <= end; i++) {
+            pages.push(i);
+        }
+        return pages;
+    };
+
+    $scope.isPaginationVisible = function () {
+        return $scope.listDonHang.length > $scope.pageSize;
+    };
 
     //load data
     $scope.hideStatusOrder();

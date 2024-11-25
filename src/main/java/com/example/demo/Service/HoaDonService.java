@@ -14,7 +14,7 @@ public interface HoaDonService {
     HoaDon createHoaDon(HoaDonResquestDTO hoaDon, String username);
     String generateRandomString(int length);
 
-    String  printerInvoice();
+    String  printerInvoice(Integer id);
     Cell getBillingShippingCell(Object  textValue);
     Cell getCell10fleft(Object textValue, Boolean isBoolean);
 
@@ -23,4 +23,5 @@ public interface HoaDonService {
     List<HoaDon> searchHoaDonsByMaHoaDon(String maHoaDon);
 
 
+    HoaDon getInvoice(Integer id);
 }

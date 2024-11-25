@@ -20,4 +20,8 @@ public interface DonHangChiTietRepo extends JpaRepository<DonHangChiTiet,Integer
     @Modifying
     @Query("DELETE FROM DonHangChiTiet d WHERE d.donHang.idDonHang = :donHangId")
     void deleteByDonHangId(Integer donHangId);
+
+    @Query("SELECT d FROM DonHangChiTiet d WHERE d.sanPhamChiTiet.idSanPhamChiTiet = :idSanPhamChiTiet AND d.donHang.idDonHang = :idDonHang")
+    DonHangChiTiet findBySanPhamChiTietIdAndDonHangId(@Param("idSanPhamChiTiet") Integer idSanPhamChiTiet,
+                                                      @Param("idDonHang") Integer idDonHang);
 }

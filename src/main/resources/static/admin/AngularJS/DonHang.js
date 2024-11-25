@@ -28,11 +28,15 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
         icon: ''
     };
     $scope.isCancelDisabled = false;
+    //phân trang
+    $scope.currentPage = 1; // Trang hiện tại
+    $scope.pageSize = 5;
     //idDonHang
     $scope.getAllOrderOnline = function (){
         $http.get("/don-hang-online").then(function (response) {
             $scope.listOrderOnline = response.data;
             //console.log("check order online: ",$scope.listOrderOnline);
+            $scope.totalPages = Math.ceil($scope.listOrderOnline.length / $scope.pageSize); // Tổng số trang
         }).catch(function (errors) {
             console.error('Có lỗi xảy ra:', errors);
         })
@@ -401,6 +405,41 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
             $("#" + "step-" + i).addClass("active"); // Thêm class active cho các bước từ 1 đến idTrangThai
         }
     };
+
+    //phân trang
+    $scope.getPagedProducts = function () {
+        const start = ($scope.currentPage - 1) * $scope.pageSize;
+        const end = start + $scope.pageSize;
+        return $scope.listOrderOnline.slice(start, end); // Lấy danh sách đơn hàng cho trang hiện tại
+    };
+
+    // Chuyển đến trang khác
+    $scope.setPage = function (page) {
+        if (page >= 1 && page <= $scope.totalPages) {
+            $scope.currentPage = page;
+        }
+    };
+
+    $scope.getPaginationRange = function () {
+        const rangeSize = 5; // Số lượng trang muốn hiển thị (mặc định là 5)
+        let start = Math.max($scope.currentPage - Math.floor(rangeSize / 2), 1);
+        const end = Math.min(start + rangeSize - 1, $scope.totalPages);
+
+        // Điều chỉnh lại nếu các trang bị vượt giới hạn
+        start = Math.max(Math.min(start, $scope.totalPages - rangeSize + 1), 1);
+
+        const pages = [];
+        for (let i = start; i <= end; i++) {
+            pages.push(i);
+        }
+        return pages;
+    };
+
+    $scope.isPaginationVisible = function () {
+        return $scope.listOrderOnline.length > $scope.pageSize;
+    };
+
+
     //load data
     $scope.getAllOrderOnline();
     $scope.hideStep();

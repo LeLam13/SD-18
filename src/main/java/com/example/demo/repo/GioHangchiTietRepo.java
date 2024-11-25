@@ -22,7 +22,7 @@ public interface GioHangchiTietRepo extends JpaRepository<GioHangChiTiet, Intege
     void deleteBySanPhamChiTiet_IdSanPhamChiTiet(Integer idSanPhamChiTiet);
 
     @Modifying
-    @Query("DELETE FROM GioHangChiTiet g WHERE g.gioHang.id = :idGioHang")
+    @Query("DELETE FROM GioHangChiTiet g WHERE g.gioHang.idGioHang = :idGioHang")
     void deleteByGioHangId(@Param("idGioHang") Integer idGioHang);
 
 }

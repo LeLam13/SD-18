@@ -194,9 +194,12 @@
                                         <td class="text-center">
                                             <div class="quantity-input">
                                                 <button ng-click="soLuongReduce(details)" class="btn btn-outline-secondary bi bi-dash-circle"></button>
-                                                <input ng-model="details.soLuong" ng-forcus="saveOriginalQuantity(details)"
-                                                       ng-blur="checkQuantity(details)" type="number" class="form-control" value="1" min="1">
+                                                <input ng-model="details.soLuong" ng-model-options="{ debounce: 500 }"
+                                                       ng-change="validateQuantity(details)" type="number" class="form-control" value="1" min="1">
                                                 <button ng-click="soLuongPlus(details)" class="btn btn-outline-secondary bi bi-plus-circle"></button>
+                                            </div>
+                                            <div ng-show="details.invalidQuantity" class="error-message" style="color: red;">
+                                                Số lượng nhập vượt quá số lượng có sẵn!
                                             </div>
                                         </td>
                                         <td>{{ details.giaBan}}</td>
@@ -240,11 +243,6 @@
                                              <input type="text" ng-model="inputData" ng-model-options="{ debounce: 500 }" ng-change="searchSanPham(inputData)" class="form-control" placeholder="Tìm kiếm" id="search-product">
                                          </div>
                                      </div>
-                                     <div class="col-2">
-<!--                                         <button  class="btn btn-outline-secondary">-->
-<!--                                             QR CODE-->
-<!--                                         </button>-->
-                                     </div>
                                  </div>
                                 </div>
                                 <table class="table table-bordered">
@@ -259,7 +257,8 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr ng-repeat="itemProducts in products">
+<!--                                    ng-repeat="itemProducts in products"-->
+                                    <tr ng-repeat="itemProducts in getPagedProducts()">
                                         <td>
                                             <img ng-src="/assets/img/{{itemProducts.idHinhAnh.ten}}" alt="" class="img-fluid mx-auto d-block" style="max-height: 80px; max-width: 80px;">
                                         </td>
@@ -277,19 +276,39 @@
                                     </tr>
                                     </tbody>
                                 </table>
+<!--                                <div class="row">-->
+<!--                                    <nav aria-label="Page navigation example">-->
+<!--                                        <ul class="pagination">-->
+<!--                                            <li class="page-item">-->
+<!--                                                <a class="page-link" href="#" aria-label="Previous">-->
+<!--                                                    <span aria-hidden="true">&laquo;</span>-->
+<!--                                                </a>-->
+<!--                                            </li>-->
+<!--                                            <li class="page-item"><a class="page-link" href="#">1</a></li>-->
+<!--                                            <li class="page-item"><a class="page-link" href="#">2</a></li>-->
+<!--                                            <li class="page-item"><a class="page-link" href="#">3</a></li>-->
+<!--                                            <li class="page-item">-->
+<!--                                                <a class="page-link" href="#" aria-label="Next">-->
+<!--                                                    <span aria-hidden="true">&raquo;</span>-->
+<!--                                                </a>-->
+<!--                                            </li>-->
+<!--                                        </ul>-->
+<!--                                    </nav>-->
+<!--                                </div>-->
                                 <div class="row">
                                     <nav aria-label="Page navigation example">
                                         <ul class="pagination">
-                                            <li class="page-item">
-                                                <a class="page-link" href="#" aria-label="Previous">
+                                            <li class="page-item" ng-class="{disabled: currentPage === 1}">
+                                                <a class="page-link" href="#" ng-click="setPage(currentPage - 1)" aria-label="Previous">
                                                     <span aria-hidden="true">&laquo;</span>
                                                 </a>
                                             </li>
-                                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                            <li class="page-item">
-                                                <a class="page-link" href="#" aria-label="Next">
+                                            <li class="page-item" ng-repeat="page in [].constructor(totalPages) track by $index"
+                                                ng-class="{active: currentPage === ($index + 1)}">
+                                                <a class="page-link" href="#" ng-click="setPage($index + 1)">{{ $index + 1 }}</a>
+                                            </li>
+                                            <li class="page-item" ng-class="{disabled: currentPage === totalPages}">
+                                                <a class="page-link" href="#" ng-click="setPage(currentPage + 1)" aria-label="Next">
                                                     <span aria-hidden="true">&raquo;</span>
                                                 </a>
                                             </li>

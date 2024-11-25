@@ -6,10 +6,7 @@ import com.example.demo.dto.reponse.DonHangChiTietResponseDTO;
 import com.example.demo.dto.reponse.DonHangResponseDTO;
 import com.example.demo.dto.reponse.DonHangTongSoLuongResponseDTO;
 import com.example.demo.dto.reponse.KhachHangResponseDTO;
-import com.example.demo.dto.request.DonHangChiTietRequestDTO;
-import com.example.demo.dto.request.DonHangRequestDTO;
-import com.example.demo.dto.request.HoaDonResquestDTO;
-import com.example.demo.dto.request.KhachHangRequestDTO;
+import com.example.demo.dto.request.*;
 import com.example.demo.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +29,7 @@ public class DonHangRestController {
     @GetMapping("/don-hang/san-pham-chi-tiet")
     public ResponseEntity<?> getAllProduct(){
         List<SanPhamChiTiet> spct = donHangService.getAllProducts();
-        System.out.println("log check: "+spct);
+        //System.out.println("log check: "+spct);
         return ResponseEntity.ok(spct);
     }
 
@@ -59,7 +56,7 @@ public class DonHangRestController {
 
             responseDTOList.add(responseDTO);
         }
-        System.out.println("log check responseDTOList: "+responseDTOList);
+        //System.out.println("log check responseDTOList: "+responseDTOList);
         return ResponseEntity.ok(responseDTOList);
     }
 
@@ -84,7 +81,7 @@ public class DonHangRestController {
     @PutMapping("/don-hang/don-hang-chi-tiet/cap-nhat")
     public ResponseEntity<?> updateDonHangChiTiet(@RequestBody DonHangChiTietRequestDTO donHangCTDTO){
 //        DonHang donHang = donHangService.createDonHAng(donHangDTO);
-        System.out.println("log check DonHangChiTietRequestDTO: "+donHangCTDTO);
+        //System.out.println("log check DonHangChiTietRequestDTO: "+donHangCTDTO);
         DonHangChiTiet donHangChiTiet = donHangService.updateDonHangChitiet(donHangCTDTO);
 
         DonHangChiTietResponseDTO responseDTO = new DonHangChiTietResponseDTO();
@@ -95,7 +92,7 @@ public class DonHangRestController {
         responseDTO.setGiaBan(donHangChiTiet.getDonGia());
         responseDTO.setTenSanPham(donHangChiTiet.getSanPhamChiTiet().getIdSanPham().getTen());
         responseDTO.setIdSanPham(donHangChiTiet.getSanPhamChiTiet().getIdSanPhamChiTiet());
-        System.out.println("donHangChiTiet: "+donHangChiTiet);
+        //System.out.println("donHangChiTiet: "+donHangChiTiet);
         return ResponseEntity.ok(responseDTO);
     }
 
@@ -121,11 +118,23 @@ public class DonHangRestController {
         return ResponseEntity.ok("");
     }
 
+    @PutMapping("/don-hang/don-hang-chi-tiet/so-luong-thay-doi")
+    public ResponseEntity<?> updateOrderDetailChange(@RequestBody DonHangChiTietRequestDTO donHangChiTietRequestDTO){
+        try {
+            //System.out.println("check cart Detail update so luong: "+gioHAngChiTietRequestDTO);
+            DonHangChiTiet gioHangChiTiet = donHangService.updateCartDetailChange(donHangChiTietRequestDTO);
+            return ResponseEntity.ok(gioHangChiTiet);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());  // Trả về lỗi với thông báo
+        }
+
+    }
+
     //đơn hàng
     @GetMapping("/don-hang/get-don-hang")//lấy tất cả đơn hàng
     public ResponseEntity<?> getDonHang(){
         List<DonHangTongSoLuongResponseDTO> donHang = donHangService.getTongSoLuongDonHang();
-        System.out.println("log check: "+donHang);
+        //System.out.println("log check: "+donHang);
         return ResponseEntity.ok(donHang);
     }
 
@@ -133,7 +142,7 @@ public class DonHangRestController {
     @GetMapping("/don-hang/get-don-hang/{id}")
     public ResponseEntity<?> getDonHang(@PathVariable("id") Integer id){
         DonHang donHang = donHangService.getDonHangByID(id);
-        System.out.println("log check: "+donHang);
+        //System.out.println("log check: "+donHang);
         DonHangResponseDTO donHangResponse = new DonHangResponseDTO();
 
         donHangResponse.setIdDonHang(donHang.getIdDonHang());
@@ -272,7 +281,7 @@ public class DonHangRestController {
 
     @GetMapping("/don-hang/khach-hang/tim-kiem")
     public ResponseEntity<?> searchKhachHang(@RequestParam String sdt){
-        System.out.println("check Search KH: "+ sdt);
+        //System.out.println("check Search KH: "+ sdt);
 
         List<khachhang> listKH = donHangService.searchKhachHang(sdt);
         List<KhachHangResponseDTO> responseKHDTOList = new ArrayList<>();
@@ -288,7 +297,7 @@ public class DonHangRestController {
             responseKHDTOList.add(khachHangResponseDTO);
         }
 
-        System.out.println("check Search KH11: "+ responseKHDTOList);
+        //System.out.println("check Search KH11: "+ responseKHDTOList);
         return ResponseEntity.ok(responseKHDTOList);
     }
 
@@ -325,19 +334,37 @@ public class DonHangRestController {
 
        HoaDon newHoaDon = hoaDonService.createHoaDon(hoaDon,username);
 
-        System.out.println("hoa don checkll hd: "+hoaDon);
+        //System.out.println("hoa don checkll hd: "+hoaDon);
         //return ResponseEntity.ok("");
         return ResponseEntity.ok(newHoaDon);
     }
-    @GetMapping("/hoa-don/invoice")
-    public ResponseEntity<?> printerInvoice(){
+
+    @GetMapping("/hoa-don/get-invoice/{id}")
+    public ResponseEntity<?> getInvoice(@PathVariable("id") Integer id){
+        System.out.println("checkID: "+id);
         try{
-            String path = hoaDonService.printerInvoice();
+            HoaDon hoaDon = hoaDonService.getInvoice(id);
+            System.out.println("hoaDon: "+hoaDon);
+            return ResponseEntity.ok(hoaDon);
+        }catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.noContent().build();
+        }
+        //return ResponseEntity.ok("");
+    }
+
+    @GetMapping("/hoa-don/invoice/{id}")
+    public ResponseEntity<?> printerInvoice(@PathVariable("id") Integer id){
+        System.out.println("checkID: "+id);
+        try{
+            String path = hoaDonService.printerInvoice(id);
+            System.out.println("path"+path);
             return ResponseEntity.ok("");
         }catch (Exception e){
             e.printStackTrace();
             return ResponseEntity.noContent().build();
         }
+        //return ResponseEntity.ok("");
     }
 
 }

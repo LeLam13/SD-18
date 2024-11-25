@@ -39,7 +39,8 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         idNhanVien: 1,
         idKhachHang: 1,
         idPhuongThucThanhToan: 1,
-        idKhuyenMai: 1
+        idKhuyenMai: 1,
+        loaiDonHang: 1
     };
 
     $scope.khachHangById={};
@@ -52,10 +53,14 @@ app.controller("banhang-ctrl", function ($scope, $http) {
     $scope.khuyenMaiById={};
 
     var selectedId = null;
+    var idHoaDoncheck = null;
     $scope.selectedId = null;
     $scope.khachThanhToan = 0;
     //hiển thị vận chuyển
     $scope.shippingMethod = '1';
+    //phân trang
+    $scope.currentPage = 1; // Trang hiện tại
+    $scope.pageSize = 5;
 
 
     //lấy don hàng chi tiết khi click đơn hàng
@@ -92,6 +97,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         $http.get("/don-hang/san-pham-chi-tiet").then(function (response){
             console.log("check log get products: ",response)
             $scope.products = response.data;
+            $scope.totalPages = Math.ceil($scope.products.length / $scope.pageSize); // Tổng số trang
         }).catch(function (errors){
             console.log(errors)
         });
@@ -373,6 +379,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
             }
         }) .then(function(response) {
                 console.log('Hoá Đơn DATA:', response.data);
+                idHoaDoncheck = response.data.idHoaDon;
                 $scope.getKhachHang();
                 alert("Lưu Hoá Đơn Thành Công!");
         }).catch(function(error) {
@@ -428,6 +435,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
                 //$scope.selectOrder(selectedId);
                 $scope.getDonHang();
                 $scope.productDetails =[];
+                $scope.getProducts();
             }).catch(function (errors){
                 console.error('Có lỗi xảy ra:', errors);
             })
@@ -673,13 +681,30 @@ app.controller("banhang-ctrl", function ($scope, $http) {
 
     //in hoá đơn
     $scope.printer = function (){
-        if($scope.selectedId === null)
-        $http.get("/hoa-don/invoice").then(function (response) {
+        // if($scope.selectedId === null){
+        //     return ;
+        // }
+        console.log('hoa dơn get id:', idHoaDoncheck);
+        $http.get("/hoa-don/get-invoice/"+idHoaDoncheck).then(function (response) {
+            console.log('response.data has data',response.data);
+            if (response.data && response.data.idHoaDon) {
+                console.log('response.data has data',response.data);
+                $scope.printerInvoice(response.data.idHoaDon);
+            }
+        }).catch(function (errors) {
+            console.error('Có lỗi xảy ra:', errors);
+        })
+
+    }
+    $scope.printerInvoice = function (idHoaDon){
+        console.log('check in hoá đơn:');
+        $http.get("/hoa-don/invoice/"+idHoaDon).then(function (response) {
             console.log('thanh cong:', response);
         }).catch(function (errors) {
             console.error('Có lỗi xảy ra:', errors);
         })
     }
+
     //ẩn thông báo
     $scope.hideErrrorsMes = function (){
         $('#erroresMessage').hide();
@@ -803,6 +828,68 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         let feeShipping = $scope.feeShipping.total
         return feeShipping;
     }
+
+    $scope.validateQuantity = function(details) {
+        // console.log("Products:", $scope.products);
+        // console.log("Details:", details);
+        // Tìm sản phẩm tương ứng trong listProducts để lấy số lượng có sẵn
+        let availableProduct = $scope.products.find(product => product?.idSanPhamChiTiet === details.idSanPham);
+         console.log("availableProduct: ",availableProduct);
+         console.log("availableProduct: ",$scope.products);
+        // Kiểm tra nếu số lượng yêu cầu lớn hơn số lượng có sẵn
+        if (availableProduct && details.soLuong > availableProduct.soLuong) {
+            details.invalidQuantity = true;
+        } else {
+            details.invalidQuantity = false;
+            console.log("check2:")
+            $scope.updateQuantityChange(details);
+        }
+    };
+    $scope.updateQuantityChange = function (details){
+        console.log("details change: ",details);
+        $scope.dataUpdateProduct ={
+            maDonHangChiTiet: $scope.generateRandomString(8),
+            idĐonHangChiTiet: details.idDonHangChiTiet,
+            idSanPhamChiTiet: details.idSanPham,
+            idĐonHang:selectedId,
+            soLuong: details.soLuong,
+            giaBan:details.giaBan
+        }
+        console.log("check Quantity: ",$scope.dataUpdateProduct);
+        var updateProductReduce = angular.copy($scope.dataUpdateProduct);
+        $http({
+            method: 'PUT',
+            url: '/don-hang/don-hang-chi-tiet/so-luong-thay-doi',
+            data: updateProductReduce,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            transformRequest: function(data) {
+                return JSON.stringify(data);  // Chuyển đối tượng thành chuỗi JSON
+            }
+        }).then(function(response) {
+            //console.log('Sản phẩm thêm thành công');
+            console.log('Sản phẩm thay đổi số lượng: ',response.data);
+             $scope.getProducts();
+        }).catch(function(error) {
+            console.error('Có lỗi xảy ra:', error);
+        });
+    }
+
+    //phân trang
+    $scope.getPagedProducts = function () {
+        const start = ($scope.currentPage - 1) * $scope.pageSize;
+        const end = start + $scope.pageSize;
+        return $scope.products.slice(start, end); // Lấy danh sách sản phẩm cho trang hiện tại
+    };
+
+    // Chuyển đến trang khác
+    $scope.setPage = function (page) {
+        if (page >= 1 && page <= $scope.totalPages) {
+            $scope.currentPage = page;
+        }
+    };
+
 
 
 
