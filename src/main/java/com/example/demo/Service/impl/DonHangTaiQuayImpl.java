@@ -52,11 +52,10 @@ public class DonHangTaiQuayImpl implements DonHangTaiQuayService {
         if(oldOrder == null){
             throw new RuntimeException("Đơn hàng không tồn tại!");
         }
-        TrangThai status = new TrangThai();
-        status = trangThaiRepo.findById(donHangStatus.getIdTrangThai()).get();
-        if(donHangStatus.getIdTrangThai() < 5){
-            status = trangThaiRepo.findById(donHangStatus.getIdTrangThai()+1).get();
-        }
+        TrangThai status = trangThaiRepo.findById(donHangStatus.getIdTrangThai()).get();
+//        if(donHangStatus.getIdTrangThai() < 5){
+//            status = trangThaiRepo.findById(donHangStatus.getIdTrangThai()+1).get();
+//        }
 
         oldOrder.setTrangThai(status);
         donHangRepo.save(oldOrder);

@@ -61,21 +61,22 @@ public class QuanLyDonHangOnlineServiceImpl implements QuanLyDonHangOnlineServic
             throw new RuntimeException("Không tìm thấy đơn hàng!");
         }
 
-        int currentTrangThaiId = donHang.getTrangThai().getIdTrangThai();
-
-        if (currentTrangThaiId == 1) {
-            TrangThai trangThai = trangThaiRepo.findById(7).orElse(null);
-            donHang.setTrangThai(trangThai);
-        } else if (currentTrangThaiId == 7) {
-            TrangThai trangThai = trangThaiRepo.findById(2).orElse(null);
-            donHang.setTrangThai(trangThai);
-        } else if (currentTrangThaiId == 2) {
-            TrangThai trangThai = trangThaiRepo.findById(3).orElse(null);
-            donHang.setTrangThai(trangThai);
-        } else if (currentTrangThaiId == 3) {
-            TrangThai trangThai = trangThaiRepo.findById(5).orElse(null);
-            donHang.setTrangThai(trangThai);
-        }
+        TrangThai trangThai = trangThaiRepo.findById(donHangOnlineStatusRequestDTO.getIdTrangThai()).orElse(null);
+        donHang.setTrangThai(trangThai);
+//        int currentTrangThaiId = donHang.getTrangThai().getIdTrangThai();
+//        if (currentTrangThaiId == 1) {
+//            TrangThai trangThai = trangThaiRepo.findById(7).orElse(null);
+//            donHang.setTrangThai(trangThai);
+//        } else if (currentTrangThaiId == 7) {
+//            TrangThai trangThai = trangThaiRepo.findById(2).orElse(null);
+//            donHang.setTrangThai(trangThai);
+//        } else if (currentTrangThaiId == 2) {
+//            TrangThai trangThai = trangThaiRepo.findById(3).orElse(null);
+//            donHang.setTrangThai(trangThai);
+//        } else if (currentTrangThaiId == 3) {
+//            TrangThai trangThai = trangThaiRepo.findById(5).orElse(null);
+//            donHang.setTrangThai(trangThai);
+//        }
 
 //        if(donHang.getTrangThai().getIdTrangThai() ==3){
 //            TrangThai trangThai = trangThaiRepo.findById(4).get();
@@ -90,6 +91,7 @@ public class QuanLyDonHangOnlineServiceImpl implements QuanLyDonHangOnlineServic
     @Override
     public HoaDon createInvoice(HoaDonOnlineRequestDTO hoaDonOnlineRequestDTO, String username) {
         HoaDon hoaDon = new HoaDon();
+
         taikhoan oldTaiKoan = taikhoanRepo.findByUsername(username);
         if(oldTaiKoan!= null){
             System.out.println("check TK: "+oldTaiKoan.toString());

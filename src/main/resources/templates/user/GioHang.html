@@ -261,16 +261,30 @@
                     <div class="voucher">
                         <div class="row">
                             <div class="row">
-                                <div class="mb-2 col-4">
-                                    <label  class="form-label">Mã Khuyến Mãi:</label>
-                                </div>
-                                <div class="mb-2 col-5">
-                                    <input type="Text" id="maKhuyenMai" class="form-control" >
-                                </div>
-                                <div class="mb-2 col-1">
-                                    <button type="button" ng-click="shoModalKhachHang()" id="action-khuyenMai" class="btn btn-primary">
-                                        <i class="bi bi-trash3" style="font-size: 12px"></i>
-                                    </button>
+<!--                                <div class="mb-2 col-4">-->
+<!--                                    <label  class="form-label">Mã Khuyến Mãi:</label>-->
+<!--                                </div>-->
+<!--                                <div class="mb-2 col-5">-->
+<!--                                    <input type="Text" id="maKhuyenMai" class="form-control" >-->
+<!--                                </div>-->
+<!--                                <div class="mb-2 col-1">-->
+<!--                                    <button type="button" ng-click="openModalKhuyenMai()" id="action-khuyenMai" class="btn btn-primary">-->
+<!--                                        <i class="bi bi-trash3" style="font-size: 12px"></i>-->
+<!--                                    </button>-->
+<!--                                </div>-->
+                                <label class="form-label" >Mã Khuyến Mãi:</label>
+                                <div class="row">
+                                    <div class="mb-2 col-5">
+                                        <input type="text" id="ma-khuyen-mai" class="form-control" readonly>
+                                    </div>
+                                    <div class="mb-2 col-4">
+                                        <input type="text" id="muc-giam-gia" class="form-control" readonly>
+                                    </div>
+                                    <div class="mb-2 col-3">
+                                        <button type="button" ng-click="openModalKhuyenMai()" id="action-khuyenMai" class="btn btn-primary">
+                                            <i class="bi bi-trash3" style="font-size: 12px"></i>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                             <div class="mb-2 col-7">
@@ -351,47 +365,51 @@
         </div>
 
 <!--            modal-->
-            <div class="modal fade" id="modal-khuyen-mai" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
+            <div class="modal fade" id="show-modal-khuyen-mai" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Danh Sách Khuyến Mãi</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <table class="table">
+                            <div class="row" id="erroresMessage">
+                                <div class="alert alert-danger" role="alert">
+                                    <span id="showMessage"></span>
+                                </div>
+                            </div>
+                            <table class="table table-bordered">
                                 <thead>
                                 <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">First</th>
-                                    <th scope="col">Last</th>
-                                    <th scope="col">Handle</th>
+                                    <th scope="col">STT</th>
+                                    <th scope="col">Mã Khuyến Mãi</th>
+                                    <th scope="col">Tên Khuyến Mãi</th>
+                                    <th scope="col">Mức Giảm Giá</th>
+                                    <th scope="col">Số Lượng</th>
+                                    <th scope="col">Số Tiền Tối Thiểu</th>
+                                    <th scope="col">Thời Gian Kết Thúc</th>
+                                    <th scope="col"></th>
                                 </tr>
                                 </thead>
-                                <tbody>
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Jacob</td>
-                                    <td>Thornton</td>
-                                    <td>@fat</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">3</th>
-                                    <td colspan="2">Larry the Bird</td>
-                                    <td>@twitter</td>
+                                <tbody style="font-size: 14px">
+                                <tr ng-repeat="km in khuyenMai">
+                                    <th scope="row">{{ $index + 1 }}</th>
+                                    <td>{{ km.maKhuyenMai }}</td>
+                                    <td>{{ km.tenKhuyenMai }}</td>
+                                    <td>{{ km.mucGiamGia}}</td>
+                                    <td>{{ km.soLuong}}</td>
+                                    <td>{{ km.soTienToiThieu}}</td>
+                                    <td>{{ km.thoiGianKetThuc}}</td>
+                                    <td>
+                                        <button ng-click="getKhuyenmaiById(km.idKhuyenMai)" type="button" class="btn btn-primary bi bi-box-fill" style="min-width: 50px"></button>
+                                    </td>
                                 </tr>
                                 </tbody>
                             </table>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
+<!--                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
+<!--                            <button type="button" class="btn btn-primary">Save changes</button>-->
                         </div>
                     </div>
                 </div>
