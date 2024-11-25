@@ -40,42 +40,35 @@ app.controller("hoaDon-ctrl", function ($scope, $http) {
     $scope.invoiceData = {};
 
     $scope.exportHoaDon = function (idHoaDon) {
-        $scope.invoiceData = {
-            idHoaDon: idHoaDon,
-            customerName: "",
-            companyName: "",
-            taxCode: "",
-            address: "",
-            paymentMethod: "Tiền mặt",
-        };
-        $("#exportInvoiceModal").modal("show");
-    };
+        // Gửi request đến API export hóa đơn
+        $http({
+            method: "POST",
+            url: "/admin/hoa-don/export",
+            params: { idHoaDon: idHoaDon }, // Gửi idHoaDon qua query params
+            responseType: "arraybuffer", // Đảm bảo nhận dữ liệu nhị phân (PDF)
+        })
+            .then(function (response) {
+                // Tạo Blob từ response data
+                const blob = new Blob([response.data], { type: "application/pdf" });
 
-    $scope.confirmExport = function () {
-        const invoiceData = $scope.invoiceData;
+                // Tạo URL từ Blob
+                const url = window.URL.createObjectURL(blob);
 
-        // Gửi API để tạo file PDF hóa đơn
-        $http
-            .post(`/admin/hoa-don/export`, invoiceData, {
-                responseType: "arraybuffer",
+                // Tạo thẻ a để tải file
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `HoaDon_${idHoaDon}.pdf`; // Tên file PDF
+                document.body.appendChild(a);
+                a.click();
+
+                // Xóa URL sau khi tải
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
             })
-            .then(
-                function (response) {
-                    const blob = new Blob([response.data], { type: "application/pdf" });
-                    const url = window.URL.createObjectURL(blob);
-                    const a = document.createElement("a");
-                    a.href = url;
-                    a.download = `Invoice_${invoiceData.idHoaDon}.pdf`;
-                    a.click();
-                    window.URL.revokeObjectURL(url);
-                    $("#exportInvoiceModal").modal("hide");
-                    alert("Xuất hóa đơn thành công!");
-                },
-                function (error) {
-                    console.error("Error exporting invoice:", error);
-                    alert("Đã xảy ra lỗi khi xuất hóa đơn!");
-                }
-            );
+            .catch(function (error) {
+                console.error("Lỗi khi xuất hóa đơn:", error);
+                alert("Không thể xuất hóa đơn. Vui lòng thử lại sau.");
+            });
     };
 
     $scope.closeModal = function () {
