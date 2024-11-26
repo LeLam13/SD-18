@@ -85,6 +85,22 @@ app.controller('ctrl', function ($scope, $http) {
         }
     };
 
+    // Hàm chuyển tới trang đầu
+    $scope.goToFirstPage = function () {
+        if ($scope.page > 0) { // Kiểm tra nếu không phải trang đầu
+            $scope.page = 0;
+            $scope.findAll();
+        }
+    };
+
+// Hàm chuyển tới trang cuối
+    $scope.goToLastPage = function () {
+        if ($scope.page < $scope.totalPages - 1) { // Kiểm tra nếu không phải trang cuối
+            $scope.page = $scope.totalPages - 1;
+            $scope.findAll();
+        }
+    };
+
     $scope.findAll();
 
     $scope.viewChiTiet = function (idSanPham) {

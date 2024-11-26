@@ -59,29 +59,40 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
     };
 
     $scope.findAll();
-    // Hàm chuyển tới trang trước
-    $scope.previousPage = function () {
-        if ($scope.page > 0) {
-            $scope.page--;
-            // Kiểm tra nếu có bộ lọc, gọi lại filter, nếu không gọi findAll
-            if (Object.keys($scope.filterData).length > 0) {
-                $scope.filter($scope.filterData); // Lọc với dữ liệu hiện tại
-            } else {
-                $scope.findAll(); // Nếu không lọc, lấy tất cả sản phẩm
-            }
+
+    $scope.loadData = function () {
+        if (Object.keys($scope.filterData).length > 0) {
+            $scope.filter($scope.filterData);
+        } else {
+            $scope.findAll();
         }
     };
 
-// Hàm chuyển tới trang sau
+    $scope.previousPage = function () {
+        if ($scope.page > 0) {
+            $scope.page--;
+            $scope.loadData();
+        }
+    };
+
     $scope.nextPage = function () {
         if ($scope.page < $scope.totalPages - 1) {
             $scope.page++;
-            // Kiểm tra nếu có bộ lọc, gọi lại filter, nếu không gọi findAll
-            if (Object.keys($scope.filterData).length > 0) {
-                $scope.filter($scope.filterData); // Lọc với dữ liệu hiện tại
-            } else {
-                $scope.findAll(); // Nếu không lọc, lấy tất cả sản phẩm
-            }
+            $scope.loadData();
+        }
+    };
+
+    $scope.goToFirstPage = function () {
+        if ($scope.page > 0) {
+            $scope.page = 0;
+            $scope.loadData();
+        }
+    };
+
+    $scope.goToLastPage = function () {
+        if ($scope.page < $scope.totalPages - 1) {
+            $scope.page = $scope.totalPages - 1;
+            $scope.loadData();
         }
     };
 
@@ -181,11 +192,20 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
         $scope.pageNumbers = Array.from({length: totalPages}, (_, i) => i + 1);
     };
 
-    // Hàm chuyển trang (phân trang)
-    $scope.changePage = function (page) {
-        $scope.pageNumber = page;
-        const filterDataWithPage = {...$scope.filterData, page};
-        $scope.filter(filterDataWithPage);
+
+
+
+    $scope.getTextColor = function(color) {
+        // Kiểm tra độ sáng của màu nền để chọn màu chữ (đen hoặc trắng)
+        var r = parseInt(color.substring(1, 3), 16);
+        var g = parseInt(color.substring(3, 5), 16);
+        var b = parseInt(color.substring(5, 7), 16);
+
+        // Tính độ sáng của màu (theo công thức Y = 0.2126*R + 0.7152*G + 0.0722*B)
+        var brightness = (0.2126 * r + 0.7152 * g + 0.0722 * b);
+
+        // Nếu độ sáng > 128 thì chọn màu chữ đen, ngược lại chọn trắng
+        return brightness > 128 ? 'black' : 'white';
     };
 
 
@@ -332,6 +352,7 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
 //     closeOnSelect: false,
 //     allowClear: true,
 });
+
 
 
 

@@ -32,6 +32,14 @@ public class SanPhamChiTietRestController {
     @Autowired
     private SanPhamChiTietRepo sanPhamChiTietRepo;
 
+    @GetMapping("/san-pham/chi-tiet/find-all")
+    public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") int page,
+                                                   @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("idSanPhamChiTiet").descending());
+        Page<SanPhamChiTiet> spct = sanPhamChiTietService.findAll(pageable); // Sử dụng service đã bổ sung thống kê
+        return ResponseEntity.ok(spct); // Trả về dữ liệu phân trang kèm thống kê
+    }
+    
     @GetMapping("admin/san-pham/{idSanPham}/find-all")
     public ResponseEntity<?> findAllChiTiet(
             @PathVariable Integer idSanPham,

@@ -21,7 +21,7 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
     $scope.cart = [];
 
     $scope.page = 0;  // Trang hiện tại
-    $scope.size = 10; // Số lượng bản ghi trên mỗi trang
+    $scope.size = 12; // Số lượng bản ghi trên mỗi trang
     $scope.totalPages = 0; // Tổng số trang
     $scope.pageInput = 1; // Giá trị nhập từ ô input
     $scope.filterData = {};
@@ -99,29 +99,39 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
         $scope.getAllProduct();
     };
 
-    // Hàm chuyển tới trang trước
-    $scope.previousPage = function () {
-        if ($scope.page > 0) {
-            $scope.page--;
-            // Kiểm tra nếu có bộ lọc, gọi lại filter, nếu không gọi findAll
-            if (Object.keys($scope.filterData).length > 0) {
-                $scope.filter($scope.filterData); // Lọc với dữ liệu hiện tại
-            } else {
-                $scope.getAllProduct(); // Nếu không lọc, lấy tất cả sản phẩm
-            }
+    $scope.loadData = function () {
+        if (Object.keys($scope.filterData).length > 0) {
+            $scope.filter($scope.filterData);
+        } else {
+            $scope.getAllProduct();
         }
     };
 
-// Hàm chuyển tới trang sau
+    $scope.previousPage = function () {
+        if ($scope.page > 0) {
+            $scope.page--;
+            $scope.loadData();
+        }
+    };
+
     $scope.nextPage = function () {
         if ($scope.page < $scope.totalPages - 1) {
             $scope.page++;
-            // Kiểm tra nếu có bộ lọc, gọi lại filter, nếu không gọi findAll
-            if (Object.keys($scope.filterData).length > 0) {
-                $scope.filter($scope.filterData); // Lọc với dữ liệu hiện tại
-            } else {
-                $scope.getAllProduct();; // Nếu không lọc, lấy tất cả sản phẩm
-            }
+            $scope.loadData();
+        }
+    };
+
+    $scope.goToFirstPage = function () {
+        if ($scope.page > 0) {
+            $scope.page = 0;
+            $scope.loadData();
+        }
+    };
+
+    $scope.goToLastPage = function () {
+        if ($scope.page < $scope.totalPages - 1) {
+            $scope.page = $scope.totalPages - 1;
+            $scope.loadData();
         }
     };
 
@@ -190,9 +200,10 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
     }
 
     $scope.getAllProduct = function (){
-        $http.get("/danh-sach-san-pham").then(function (response){
-            $scope.listProducts = response.data;
-            console.log("check log: ",response.data)
+        $http.get(`/san-pham/chi-tiet/find-all?page=${$scope.page}&size=${$scope.size}`).then(function (response){
+            $scope.listProducts = response.data.content;
+            console.log("check data:",$scope.listProducts);
+            $scope.totalPages = response.data.totalPages;
         }).catch(function (errors){
             console.error("có lỗi xảy ra: ",errors)
         })

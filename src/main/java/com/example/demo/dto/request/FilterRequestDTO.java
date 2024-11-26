@@ -17,4 +17,5 @@ public class FilterRequestDTO {
     private Integer idThuongHieu;
     private Integer idKieuDang;
     private Integer idChatLieu;
+    private Integer idKichCo;
 }

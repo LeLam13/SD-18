@@ -131,25 +131,6 @@
                                        class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
                                 </div><!-- End .product -->
 
-                                <!--                                <div class="product">-->
-                                <!--                                    <div class="product-cart-details">-->
-                                <!--                                        <h4 class="product-title">-->
-                                <!--                                            <a href="product.html">Blue utility pinafore denim dress</a>-->
-                                <!--                                        </h4>-->
-
-                                <!--                                        <span class="cart-product-info">-->
-                                <!--                                            <span class="cart-product-qty">1</span>-->
-                                <!--                                            x $76.00-->
-                                <!--                                        </span>-->
-                                <!--                                    </div>&lt;!&ndash; End .product-cart-details &ndash;&gt;-->
-
-                                <!--                                    <figure class="product-image-container">-->
-                                <!--                                        <a href="product.html" class="product-image">-->
-                                <!--                                            <img src="assets/images/products/cart/product-2.jpg" alt="product">-->
-                                <!--                                        </a>-->
-                                <!--                                    </figure>-->
-                                <!--                                    <a href="#" class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>-->
-                                <!--                                </div>&lt;!&ndash; End .product &ndash;&gt;-->
                             </div><!-- End .cart-product -->
 
                             <div class="dropdown-cart-total">
@@ -353,440 +334,119 @@
             </div><!-- End #product-filter-area.widget-filter-area ng-repeat="products in listProducts"-->
 
 
-            <div class="products-container" data-layout="fitRows">
-                <div class="product-item furniture col-6 col-md-4 col-lg-3" ng-repeat="products in listProducts">
-                    <div class="product product-4">
-                        <figure class="product-media">
-                            <a href="product.html">
-                                <img src="assets/img/anh3.png" alt="Product image" class="product-image">
+            <div class="products-container"
+                 style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; width: 100%; padding: 16px; box-sizing: border-box;">
+                <div class="product-item"
+                     ng-repeat="products in listProducts"
+                     style="border: 1px solid #ddd; border-radius: 8px; text-align: center; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); background-color: #fff; padding: 16px; display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+                    <div class="product product-4" style="width: 100%;">
+                        <!-- Ảnh sản phẩm -->
+                        <div class="product-media"
+                             style="width: 100%; aspect-ratio: 4 / 3; background-color: #f9f9f9; border-radius: 8px; overflow: hidden; display: flex; justify-content: center; align-items: center; position: relative;">
+                            <a href="product.html"
+                               style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;">
+                                <img
+                                        ng-src="/assets/img/{{products.idHinhAnh.ten}}"
+                                        alt="Ảnh"
+                                        style="max-width: 100%; max-height: 100%; object-fit: contain;">
                             </a>
 
-                            <div class="product-action-vertical">
+                            <!-- Nút Add to Wishlist -->
+                            <div class="product-action-vertical"
+                                 style="position: absolute; top: 8px; right: 8px; display: flex; flex-direction: column; gap: 8px;">
                                 <a href="#"
-                                   class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>
-                            </div><!-- End .product-action -->
+                                   class="btn-product-icon btn-wishlist btn-expandable"
+                                   style="background-color: #fff; border: 1px solid #ddd; border-radius: 50%; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center; cursor: pointer;">
+                                    <span>Add to Wishlist</span>
+                                </a>
+                            </div><!-- End .product-action-vertical -->
 
-                            <div class="product-action">
-                                <a href="popup/quickView.html" class="btn-product btn-quickview"
-                                   title="Quick view"><span>quick view</span></a>
-                            </div><!-- End .product-action -->
-                        </figure><!-- End .product-media addProductIntocart(products.idSanPhamChiTiet)-->
+                            <!-- Nút Quick View -->
+                            <div class="product-action"
+                                 style="position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);">
+                                <a href="popup/quickView.html"
+                                   class="btn-product btn-quickview"
+                                   title="Quick view"
+                                   style="
+            padding: 8px 16px;
+            background: linear-gradient(135deg, #f0f0f0, #d9d9d9);
+            color: #333;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            display: inline-block;
+        ">
+                                    Quick View
+                                </a>
+                            </div>
+                            <!-- End .product-action -->
+                        </div><!-- End .product-media -->
 
-                        <div class="product-body">
-                            <h3 class="product-title"><a href="product.html">{{products.idSanPham.ten}}</a></h3>
-                            <!-- End .product-title -->
+                        <!-- Tên sản phẩm -->
+                        <div class="product-body" style="margin-top: 16px;">
+                            <h3 class="product-title" style="margin-bottom: 8px; font-size: 1rem; font-weight: 500;">
+                                <a>{{products.idSanPham.ten}}</a>
+                            </h3>
 
-                            <div class="product-action">
-                                <button ng-click="addProductIntocart(products.idSanPhamChiTiet)"
-                                        class="btn-product btn-cart"><span>add to cart</span><i
-                                        class="icon-long-arrow-right"></i></button>
-                            </div><!-- End .product-action -->
+                            <!-- Mã màu và tên màu nằm cạnh nhau -->
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px;">
+                                <!-- Màu sắc -->
+                                <div style="width: 30px; height: 30px; background-color: {{products.idMauSac.ma}}; border: 1px solid #000; border-radius: 50%;"></div>
+                                <!-- Tên màu -->
+                                <span>{{products.idMauSac.ten}}</span>
+                            </div>
                         </div><!-- End .product-body -->
+
+                        <!-- Nút thêm vào giỏ hàng -->
+                        <div class="product-action t-2">
+                            <button ng-click="addProductIntocart(products.idSanPhamChiTiet)"
+                                    class="btn-product btn-cart"
+                                    style="padding: 8px 16px; font-size: 0.875rem; border: none; background-color: #007bff; color: #fff; border-radius: 4px; cursor: pointer;">
+                                <span>Add to Cart</span>
+                            </button>
+                        </div><!-- End .product-action -->
                     </div><!-- End .product -->
                 </div><!-- End .product-item -->
+            </div>
 
-                <!--                <div class="product-item lighting col-6 col-md-4 col-lg-3">-->
-                <!--                    <div class="product product-4">-->
-                <!--                        <figure class="product-media">-->
-                <!--                            <span class="product-label">Out of stock</span>-->
-                <!--                            <a href="product.html">-->
-                <!--                                <img src="assets/img/anh3.png" alt="Product image" class="product-image">-->
-                <!--                            </a>-->
 
-                <!--                            <div class="product-action-vertical">-->
-                <!--                                <a href="#"-->
-                <!--                                   class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
+            <!-- End .products-container -->
 
-                <!--                            <div class="product-action">-->
-                <!--                                <a href="popup/quickView.html" class="btn-product btn-quickview"-->
-                <!--                                   title="Quick view"><span>quick view</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-                <!--                        </figure>&lt;!&ndash; End .product-media &ndash;&gt;-->
 
-                <!--                        <div class="product-body">-->
-                <!--                            <h3 class="product-title"><a href="product.html">Swirl Suspension lamp</a></h3>-->
-                <!--                            &lt;!&ndash; End .product-title &ndash;&gt;-->
-                <!--                            <div class="product-price">-->
-                <!--                                <div class="out-price">$446.00</div>&lt;!&ndash; End .out-price &ndash;&gt;-->
-                <!--                            </div>&lt;!&ndash; End .product-price &ndash;&gt;-->
-
-                <!--                            <div class="product-action">-->
-                <!--                                <a href="#" class="btn-product btn-cart"><span>add to cart</span><i-->
-                <!--                                        class="icon-long-arrow-right"></i></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-                <!--                        </div>&lt;!&ndash; End .product-body &ndash;&gt;-->
-                <!--                    </div>&lt;!&ndash; End .product &ndash;&gt;-->
-                <!--                </div>&lt;!&ndash; End .product-item &ndash;&gt;-->
-
-                <!--                <div class="product-item furniture col-6 col-md-4 col-lg-3">-->
-                <!--                    <div class="product product-4">-->
-                <!--                        <figure class="product-media">-->
-                <!--                            <a href="product.html">-->
-                <!--                                <img src="assets/img/anh3.png" alt="Product image" class="product-image">-->
-                <!--                            </a>-->
-
-                <!--                            <div class="product-action-vertical">-->
-                <!--                                <a href="#"-->
-                <!--                                   class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-
-                <!--                            <div class="product-action">-->
-                <!--                                <a href="popup/quickView.html" class="btn-product btn-quickview"-->
-                <!--                                   title="Quick view"><span>quick view</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-                <!--                        </figure>&lt;!&ndash; End .product-media &ndash;&gt;-->
-
-                <!--                        <div class="product-body">-->
-                <!--                            <h3 class="product-title"><a href="product.html">Block Side Table/Trolley</a></h3>-->
-                <!--                            &lt;!&ndash; End .product-title &ndash;&gt;-->
-                <!--                            <div class="product-price">-->
-                <!--                                $229.00-->
-                <!--                            </div>&lt;!&ndash; End .product-price &ndash;&gt;-->
-                <!--                            <div class="product-nav product-nav-dots">-->
-                <!--                                <a href="#" class="active" style="background: #333333;"><span-->
-                <!--                                        class="sr-only">Color name</span></a>-->
-                <!--                                <a href="#" style="background: #e2e2e2;"><span class="sr-only">Color name</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-nav &ndash;&gt;-->
-
-                <!--                            <div class="product-action">-->
-                <!--                                <a href="#" class="btn-product btn-cart"><span>add to cart</span><i-->
-                <!--                                        class="icon-long-arrow-right"></i></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-                <!--                        </div>&lt;!&ndash; End .product-body &ndash;&gt;-->
-                <!--                    </div>&lt;!&ndash; End .product &ndash;&gt;-->
-                <!--                </div>&lt;!&ndash; End .product-item &ndash;&gt;-->
-
-                <!--                <div class="product-item accessories lighting sale col-6 col-md-4 col-lg-3">-->
-                <!--                    <div class="product product-4">-->
-                <!--                        <figure class="product-media">-->
-                <!--                            <span class="product-label">Sale</span>-->
-                <!--                            <a href="product.html">-->
-                <!--                                <img src="assets/img/anh3.png" alt="Product image" class="product-image">-->
-                <!--                            </a>-->
-
-                <!--                            <div class="product-action-vertical">-->
-                <!--                                <a href="#"-->
-                <!--                                   class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-
-                <!--                            <div class="product-action">-->
-                <!--                                <a href="popup/quickView.html" class="btn-product btn-quickview"-->
-                <!--                                   title="Quick view"><span>quick view</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-                <!--                        </figure>&lt;!&ndash; End .product-media &ndash;&gt;-->
-
-                <!--                        <div class="product-body">-->
-                <!--                            <h3 class="product-title"><a href="product.html">Madra Log Holder</a></h3>-->
-                <!--                            &lt;!&ndash; End .product-title &ndash;&gt;-->
-                <!--                            <div class="product-price">-->
-                <!--                                <span class="new-price">$103.00</span>-->
-                <!--                                <span class="old-price">Was $130.00</span>-->
-                <!--                            </div>&lt;!&ndash; End .product-price &ndash;&gt;-->
-                <!--                            <div class="product-nav product-nav-dots">-->
-                <!--                                <a href="#" class="active" style="background: #333333;"><span-->
-                <!--                                        class="sr-only">Color name</span></a>-->
-                <!--                                <a href="#" style="background: #a48264;"><span class="sr-only">Color name</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-nav &ndash;&gt;-->
-
-                <!--                            <div class="product-action">-->
-                <!--                                <a href="#" class="btn-product btn-cart"><span>add to cart</span><i-->
-                <!--                                        class="icon-long-arrow-right"></i></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-                <!--                        </div>&lt;!&ndash; End .product-body &ndash;&gt;-->
-                <!--                    </div>&lt;!&ndash; End .product &ndash;&gt;-->
-                <!--                </div>&lt;!&ndash; End .product-item &ndash;&gt;-->
-
-                <!--                <div class="product-item furniture sale col-6 col-md-4 col-lg-3">-->
-                <!--                    <div class="product product-4">-->
-                <!--                        <figure class="product-media">-->
-                <!--                            <span class="product-label">Sale</span>-->
-                <!--                            <a href="product.html">-->
-                <!--                                <img src="assets/img/anh3.png" alt="Product image" class="product-image">-->
-                <!--                            </a>-->
-
-                <!--                            <div class="product-action-vertical">-->
-                <!--                                <a href="#"-->
-                <!--                                   class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-
-                <!--                            <div class="product-action">-->
-                <!--                                <a href="popup/quickView.html" class="btn-product btn-quickview"-->
-                <!--                                   title="Quick view"><span>quick view</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-                <!--                        </figure>&lt;!&ndash; End .product-media &ndash;&gt;-->
-
-                <!--                        <div class="product-body">-->
-                <!--                            <h3 class="product-title"><a href="product.html">Foldable Tray Table</a></h3>-->
-                <!--                            &lt;!&ndash; End .product-title &ndash;&gt;-->
-                <!--                            <div class="product-price">-->
-                <!--                                <span class="new-price">$320.00</span>-->
-                <!--                                <span class="old-price">Was $480.00</span>-->
-                <!--                            </div>&lt;!&ndash; End .product-price &ndash;&gt;-->
-                <!--                            <div class="product-nav product-nav-dots">-->
-                <!--                                <a href="#" class="active" style="background: #333333;"><span-->
-                <!--                                        class="sr-only">Color name</span></a>-->
-                <!--                                <a href="#" style="background: #cba374;"><span class="sr-only">Color name</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-nav &ndash;&gt;-->
-
-                <!--                            <div class="product-action">-->
-                <!--                                <a href="#" class="btn-product btn-cart"><span>add to cart</span><i-->
-                <!--                                        class="icon-long-arrow-right"></i></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-                <!--                        </div>&lt;!&ndash; End .product-body &ndash;&gt;-->
-                <!--                    </div>&lt;!&ndash; End .product &ndash;&gt;-->
-                <!--                </div>&lt;!&ndash; End .product-item &ndash;&gt;-->
-
-                <!--                <div class="product-item furniture accessories col-6 col-md-4 col-lg-3">-->
-                <!--                    <div class="product product-4">-->
-                <!--                        <figure class="product-media">-->
-                <!--                            <a href="product.html">-->
-                <!--                                <img src="assets/img/anh3.png" alt="Product image" class="product-image">-->
-                <!--                            </a>-->
-
-                <!--                            <div class="product-action-vertical">-->
-                <!--                                <a href="#"-->
-                <!--                                   class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-
-                <!--                            <div class="product-action">-->
-                <!--                                <a href="popup/quickView.html" class="btn-product btn-quickview"-->
-                <!--                                   title="Quick view"><span>quick view</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-                <!--                        </figure>&lt;!&ndash; End .product-media &ndash;&gt;-->
-
-                <!--                        <div class="product-body">-->
-                <!--                            <h3 class="product-title"><a href="product.html">Original Stonewashed Beanbag</a></h3>-->
-                <!--                            &lt;!&ndash; End .product-title &ndash;&gt;-->
-                <!--                            <div class="product-price">-->
-                <!--                                $209.00-->
-                <!--                            </div>&lt;!&ndash; End .product-price &ndash;&gt;-->
-                <!--                            <div class="product-action">-->
-                <!--                                <a href="#" class="btn-product btn-cart"><span>add to cart</span><i-->
-                <!--                                        class="icon-long-arrow-right"></i></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-                <!--                        </div>&lt;!&ndash; End .product-body &ndash;&gt;-->
-                <!--                    </div>&lt;!&ndash; End .product &ndash;&gt;-->
-                <!--                </div>&lt;!&ndash; End .product-item &ndash;&gt;-->
-
-                <!--                <div class="product-item accessories lighting col-6 col-md-4 col-lg-3">-->
-                <!--                    <div class="product product-4">-->
-                <!--                        <figure class="product-media">-->
-                <!--                            <a href="product.html">-->
-                <!--                                <img src="assets/img/anh3.png" alt="Product image" class="product-image">-->
-                <!--                            </a>-->
-
-                <!--                            <div class="product-action-vertical">-->
-                <!--                                <a href="#"-->
-                <!--                                   class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-
-                <!--                            <div class="product-action">-->
-                <!--                                <a href="popup/quickView.html" class="btn-product btn-quickview"-->
-                <!--                                   title="Quick view"><span>quick view</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-                <!--                        </figure>&lt;!&ndash; End .product-media &ndash;&gt;-->
-
-                <!--                        <div class="product-body">-->
-                <!--                            <h3 class="product-title"><a href="product.html">Wingback Chair</a></h3>-->
-                <!--                            &lt;!&ndash; End .product-title &ndash;&gt;-->
-                <!--                            <div class="product-price">-->
-                <!--                                $2450.00-->
-                <!--                            </div>&lt;!&ndash; End .product-price &ndash;&gt;-->
-                <!--                            <div class="product-nav product-nav-dots">-->
-                <!--                                <a href="#" class="active" style="background: #cc9999;"><span-->
-                <!--                                        class="sr-only">Color name</span></a>-->
-                <!--                                <a href="#" style="background: #999999;"><span class="sr-only">Color name</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-nav &ndash;&gt;-->
-
-                <!--                            <div class="product-action">-->
-                <!--                                <a href="#" class="btn-product btn-cart"><span>add to cart</span><i-->
-                <!--                                        class="icon-long-arrow-right"></i></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-                <!--                        </div>&lt;!&ndash; End .product-body &ndash;&gt;-->
-                <!--                    </div>&lt;!&ndash; End .product &ndash;&gt;-->
-                <!--                </div>&lt;!&ndash; End .product-item &ndash;&gt;-->
-
-                <!--                <div class="product-item furniture sale col-6 col-md-4 col-lg-3">-->
-                <!--                    <div class="product product-4">-->
-                <!--                        <figure class="product-media">-->
-                <!--                            <a href="product.html">-->
-                <!--                                <img src="assets/img/anh3.png" alt="Product image" class="product-image">-->
-                <!--                            </a>-->
-
-                <!--                            <div class="product-action-vertical">-->
-                <!--                                <a href="#"-->
-                <!--                                   class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-
-                <!--                            <div class="product-action">-->
-                <!--                                <a href="popup/quickView.html" class="btn-product btn-quickview"-->
-                <!--                                   title="Quick view"><span>quick view</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-                <!--                        </figure>&lt;!&ndash; End .product-media &ndash;&gt;-->
-
-                <!--                        <div class="product-body">-->
-                <!--                            <h3 class="product-title"><a href="product.html">Cushion Set 3 Pieces</a></h3>-->
-                <!--                            &lt;!&ndash; End .product-title &ndash;&gt;-->
-                <!--                            <div class="product-price">-->
-                <!--                                $99.00-->
-                <!--                            </div>&lt;!&ndash; End .product-price &ndash;&gt;-->
-                <!--                            <div class="product-action">-->
-                <!--                                <a href="#" class="btn-product btn-cart"><span>add to cart</span><i-->
-                <!--                                        class="icon-long-arrow-right"></i></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-                <!--                        </div>&lt;!&ndash; End .product-body &ndash;&gt;-->
-                <!--                    </div>&lt;!&ndash; End .product &ndash;&gt;-->
-                <!--                </div>&lt;!&ndash; End .product-item &ndash;&gt;-->
-
-                <!--                <div class="product-item furniture accessories col-6 col-md-4 col-lg-3">-->
-                <!--                    <div class="product product-4">-->
-                <!--                        <figure class="product-media">-->
-                <!--                            <a href="product.html">-->
-                <!--                                <img src="assets/img/anh3.png" alt="Product image" class="product-image">-->
-                <!--                            </a>-->
-
-                <!--                            <div class="product-action-vertical">-->
-                <!--                                <a href="#"-->
-                <!--                                   class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-
-                <!--                            <div class="product-action">-->
-                <!--                                <a href="popup/quickView.html" class="btn-product btn-quickview"-->
-                <!--                                   title="Quick view"><span>quick view</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-                <!--                        </figure>&lt;!&ndash; End .product-media &ndash;&gt;-->
-
-                <!--                        <div class="product-body">-->
-                <!--                            <h3 class="product-title"><a href="product.html">Garden Armchair</a></h3>-->
-                <!--                            &lt;!&ndash; End .product-title &ndash;&gt;-->
-                <!--                            <div class="product-price">-->
-                <!--                                $94.00-->
-                <!--                            </div>&lt;!&ndash; End .product-price &ndash;&gt;-->
-                <!--                            <div class="product-action">-->
-                <!--                                <a href="#" class="btn-product btn-cart"><span>add to cart</span><i-->
-                <!--                                        class="icon-long-arrow-right"></i></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-                <!--                        </div>&lt;!&ndash; End .product-body &ndash;&gt;-->
-                <!--                    </div>&lt;!&ndash; End .product &ndash;&gt;-->
-                <!--                </div>&lt;!&ndash; End .product-item &ndash;&gt;-->
-
-                <!--                <div class="product-item accessories col-6 col-md-4 col-lg-3">-->
-                <!--                    <div class="product product-4">-->
-                <!--                        <figure class="product-media">-->
-                <!--                            <a href="product.html">-->
-                <!--                                <img src="assets/img/anh3.png" alt="Product image" class="product-image">-->
-                <!--                            </a>-->
-
-                <!--                            <div class="product-action-vertical">-->
-                <!--                                <a href="#"-->
-                <!--                                   class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-
-                <!--                            <div class="product-action">-->
-                <!--                                <a href="popup/quickView.html" class="btn-product btn-quickview"-->
-                <!--                                   title="Quick view"><span>quick view</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-                <!--                        </figure>&lt;!&ndash; End .product-media &ndash;&gt;-->
-
-                <!--                        <div class="product-body">-->
-                <!--                            <h3 class="product-title"><a href="product.html">Roots Sofa Bed</a></h3>-->
-                <!--                            &lt;!&ndash; End .product-title &ndash;&gt;-->
-                <!--                            <div class="product-price">-->
-                <!--                                $337.00-->
-                <!--                            </div>&lt;!&ndash; End .product-price &ndash;&gt;-->
-                <!--                            <div class="product-action">-->
-                <!--                                <a href="#" class="btn-product btn-cart"><span>add to cart</span><i-->
-                <!--                                        class="icon-long-arrow-right"></i></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-                <!--                        </div>&lt;!&ndash; End .product-body &ndash;&gt;-->
-                <!--                    </div>&lt;!&ndash; End .product &ndash;&gt;-->
-                <!--                </div>&lt;!&ndash; End .product-item &ndash;&gt;-->
-
-                <!--                <div class="product-item lighting sale col-6 col-md-4 col-lg-3">-->
-                <!--                    <div class="product product-4">-->
-                <!--                        <figure class="product-media">-->
-                <!--                            <a href="product.html">-->
-                <!--                                <img src="assets/img/anh3.png" alt="Product image" class="product-image">-->
-                <!--                            </a>-->
-
-                <!--                            <div class="product-action-vertical">-->
-                <!--                                <a href="#"-->
-                <!--                                   class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-
-                <!--                            <div class="product-action">-->
-                <!--                                <a href="popup/quickView.html" class="btn-product btn-quickview"-->
-                <!--                                   title="Quick view"><span>quick view</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-                <!--                        </figure>&lt;!&ndash; End .product-media &ndash;&gt;-->
-
-                <!--                        <div class="product-body">-->
-                <!--                            <h3 class="product-title"><a href="product.html">Butler Stool Ladder</a></h3>-->
-                <!--                            &lt;!&ndash; End .product-title &ndash;&gt;-->
-                <!--                            <div class="product-price">-->
-                <!--                                $251.00-->
-                <!--                            </div>&lt;!&ndash; End .product-price &ndash;&gt;-->
-                <!--                            <div class="product-action">-->
-                <!--                                <a href="#" class="btn-product btn-cart"><span>add to cart</span><i-->
-                <!--                                        class="icon-long-arrow-right"></i></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-                <!--                        </div>&lt;!&ndash; End .product-body &ndash;&gt;-->
-                <!--                    </div>&lt;!&ndash; End .product &ndash;&gt;-->
-                <!--                </div>&lt;!&ndash; End .product-item &ndash;&gt;-->
-
-                <!--                <div class="product-item lighting sale col-6 col-md-4 col-lg-3">-->
-                <!--                    <div class="product product-4">-->
-                <!--                        <figure class="product-media">-->
-                <!--                            <span class="product-label">Sale</span>-->
-                <!--                            <a href="product.html">-->
-                <!--                                <img src="assets/img/anh2.png" alt="Product image" class="product-image">-->
-                <!--                            </a>-->
-
-                <!--                            <div class="product-action-vertical">-->
-                <!--                                <a href="#"-->
-                <!--                                   class="btn-product-icon btn-wishlist btn-expandable"><span>add to wishlist</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-
-                <!--                            <div class="product-action">-->
-                <!--                                <a href="popup/quickView.html" class="btn-product btn-quickview"-->
-                <!--                                   title="Quick view"><span>quick view</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-                <!--                        </figure>&lt;!&ndash; End .product-media &ndash;&gt;-->
-
-                <!--                        <div class="product-body">-->
-                <!--                            <h3 class="product-title"><a href="product.html">Carronade Large Suspension Lamp</a></h3>-->
-                <!--                            &lt;!&ndash; End .product-title &ndash;&gt;-->
-                <!--                            <div class="product-price">-->
-                <!--                                <span class="new-price">$892.00</span>-->
-                <!--                                <span class="old-price">Was $939.00</span>-->
-                <!--                            </div>&lt;!&ndash; End .product-price &ndash;&gt;-->
-                <!--                            <div class="product-nav product-nav-dots">-->
-                <!--                                <a href="#" class="active" style="background: #dddad5;"><span-->
-                <!--                                        class="sr-only">Color name</span></a>-->
-                <!--                                <a href="#" style="background: #825a45;"><span class="sr-only">Color name</span></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-nav &ndash;&gt;-->
-
-                <!--                            <div class="product-action">-->
-                <!--                                <a href="#" class="btn-product btn-cart"><span>add to cart</span><i-->
-                <!--                                        class="icon-long-arrow-right"></i></a>-->
-                <!--                            </div>&lt;!&ndash; End .product-action &ndash;&gt;-->
-                <!--                        </div>&lt;!&ndash; End .product-body &ndash;&gt;-->
-                <!--                    </div>&lt;!&ndash; End .product &ndash;&gt;-->
-                <!--                </div>&lt;!&ndash; End .product-item &ndash;&gt;-->
-            </div><!-- End .products-container -->
+            <!-- Điều hướng phân trang -->
             <nav aria-label="Page navigation" class="d-flex justify-content-center mt-3">
-                <ul class="pagination">
+                <ul class="pagination pagination-sm-125">
+                    <!-- Nút Trang đầu -->
                     <li class="page-item" ng-class="{ 'disabled': page === 0 }">
-                        <a class="page-link" href="" ng-click="previousPage()">&#8592; Trang
-                            trước</a>
+                        <a class="page-link" href="" ng-click="goToFirstPage()"><small>&#8676; Trang
+                            đầu</small></a>
                     </li>
+
+                    <!-- Nút Trang trước -->
+                    <li class="page-item" ng-class="{ 'disabled': page === 0 }">
+                        <a class="page-link" href="" ng-click="previousPage()"><small>&#8592; Trang
+                            trước></small></a>
+                    </li>
+
+                    <!-- Hiển thị thông tin trang -->
                     <li class="page-item disabled">
-                        <span class="page-link">Trang {{ page + 1 }} / {{ totalPages }}</span>
+                                            <span class="page-link"><small>Trang {{ page + 1 }} / {{ totalPages
+                                                }}</small></span>
                     </li>
-                    <li class="page-item"
-                        ng-class="{ 'disabled': page === totalPages - 1 || page + 1 === totalPages + 1}">
-                        <a class="page-link" href="" ng-click="nextPage()">Trang sau &#8594;</a>
+
+                    <!-- Nút Trang sau -->
+                    <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 }">
+                        <a class="page-link" href="" ng-click="nextPage()"><small>Trang sau
+                            &#8594;</small></a>
+                    </li>
+
+                    <!-- Nút Trang cuối -->
+                    <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 }">
+                        <a class="page-link" href="" ng-click="goToLastPage()"><small>Trang cuối
+                            &#8677;</small></a>
                     </li>
                 </ul>
             </nav>
