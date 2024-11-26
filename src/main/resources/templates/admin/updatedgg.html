@@ -79,7 +79,8 @@
                                 <input type="datetime-local" class="form-control" id="updateThoiGianKetThuc" name="thoiGianKetThuc" th:value="${dotGiamGia.thoiGianKetThuc}">
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Cập Nhật</button>
+                            <button type="button" class="btn btn-primary" onclick="confirmUpdate()">Cập Nhật</button>
+
                             <div th:if="${error2}" class="alert alert-danger">
                                 <p th:text="${error2}"></p>
                             </div>
@@ -88,6 +89,22 @@
                     </form>
 
                     <script>
+                        function confirmUpdate() {
+                            alertify.confirm(
+                                "Xác nhận", // Tiêu đề của hộp thoại
+                                "Bạn có chắc chắn muốn cập nhật thông tin này?", // Nội dung
+                                function () {
+                                    // Nếu chọn "Có", thực hiện hành động submit (hoặc cập nhật)
+                                    document.querySelector('form').submit(); // Gửi form đi (hoặc xử lý theo nhu cầu của bạn)
+                                    alertify.success('Cập nhật thành công');
+                                },
+                                function () {
+                                    // Nếu chọn "Không"
+                                    alertify.warning("Hành động cập nhật đã bị hủy.");
+                                }
+                            );
+                        }
+
                         function toggleUpdateFields() {
                             // Lấy loại giảm giá đã chọn
                             const discountType = document.querySelector('input[name="discountType"]:checked').value;
@@ -147,5 +164,6 @@
 </div>
 <!-- end main content-->
 </body>
-
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 </html>
