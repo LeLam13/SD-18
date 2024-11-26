@@ -347,7 +347,7 @@
 <!--                                    <label class="form-label">Phiếu giảm giá:</label>-->
 <!--                                    <select class="form-select" ng-model="selectedKhuyenMai" ng-change="checkKhuyenMai()">-->
 <!--                                      <option value="" disabled selected>Chọn mã khuyến mãi</option>-->
-<!--                                      <option ng-repeat="khuyenMai in khuyenMaiList" -->
+<!--                                      <option ng-repeat="khuyenMai in khuyenMaiList"-->
 <!--                                              ng-value="khuyenMai.maKhuyenMai"-->
 <!--                                              ng-bind="'Mã: ' + khuyenMai.maKhuyenMai + ' - ' + khuyenMai.tenKhuyenMai + (khuyenMai.soTienToiThieu ? (' (Điều kiện: ' + khuyenMai.soTienToiThieu + ' VND)') : '(Không yêu cầu)')">-->
 <!--                                      </option>-->
@@ -362,6 +362,7 @@
 <!--                                      Bỏ sử dụng voucher-->
 <!--                                    </button>-->
 <!--                                  </div>-->
+<<<<<<< HEAD
                                   
                                   
 
@@ -369,6 +370,14 @@
                                     <label class="form-label">Tiền giảm:</label>
                                     <span>{{ getTienGiam() }}</span>
                                 </div>
+=======
+<!--                                  -->
+<!--                                  -->
+<!--                                <div class="mb-2">-->
+<!--                                    <label class="form-label">Tiền giảm:</label>-->
+<!--                                    <span>{{ getTienGiam() }}</span>-->
+<!--                                </div>-->
+>>>>>>> feature/khuyenmai
                                 <div class="mb-2">
                                     <label class="form-label">Khách phải trả:</label>
                                     <span>{{ getTienKhachPTra() }}</span>
