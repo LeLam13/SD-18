@@ -46,4 +46,6 @@ public interface DonHangService {
     List<KhuyenMai> getAllKhuyenMai();
 
     KhuyenMai getKhuyenMaiById(Integer id);
+
+    DonHangChiTiet updateCartDetailChange(DonHangChiTietRequestDTO donHangChiTietRequestDTO);
 }

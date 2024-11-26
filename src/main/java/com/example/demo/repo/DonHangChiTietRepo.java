@@ -22,6 +22,7 @@ public interface DonHangChiTietRepo extends JpaRepository<DonHangChiTiet,Integer
     @Query("DELETE FROM DonHangChiTiet d WHERE d.donHang.idDonHang = :donHangId")
     void deleteByDonHangId(Integer donHangId);
 
+<<<<<<< HEAD
 
     @Query("SELECT SUM(dh.tongTienSauKhuyenMai) FROM DonHang dh")
     Float getTotalRevenue();
@@ -37,4 +38,9 @@ public interface DonHangChiTietRepo extends JpaRepository<DonHangChiTiet,Integer
             "GROUP BY spct.idSanPham.ten " +
             "ORDER BY SUM(dhct.soLuong) DESC")
     List<Object[]> getTopSellingProducts(Pageable pageable);
+=======
+    @Query("SELECT d FROM DonHangChiTiet d WHERE d.sanPhamChiTiet.idSanPhamChiTiet = :idSanPhamChiTiet AND d.donHang.idDonHang = :idDonHang")
+    DonHangChiTiet findBySanPhamChiTietIdAndDonHangId(@Param("idSanPhamChiTiet") Integer idSanPhamChiTiet,
+                                                      @Param("idDonHang") Integer idDonHang);
+>>>>>>> feature/banhang
 }

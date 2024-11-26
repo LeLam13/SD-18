@@ -273,7 +273,7 @@
                         </div>
                     </div>
                     <div class="buttons">
-                        <button ng-click="showModalUpdateStatus()" class="btn btn-info">Cập Nhật</button>
+<!--                        <button ng-click="showModalUpdateStatus()" class="btn btn-info">Cập Nhật</button>-->
                         <button class="button cancel" ng-click="cancelOrderStatus()" ng-disabled="isCancelDisabled">Hủy đơn hàng</button>
                         <button ng-click="" class="btn btn-info">In Hoá Đơn</button>
                     </div>
@@ -293,8 +293,9 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr ng-repeat="order in listDonHang">
-                                    <td>{{ $index + 1 }}</td>
+<!--                                ng-repeat="order in listDonHang"-->
+                                <tr ng-repeat="order in getPagedProducts()">
+                                    <td>{{ ($index + 1) + (currentPage - 1) * pageSize }}</td>
                                     <td>{{ order.maDonHang}}</td>
                                     <td>{{ order.khachHang.hoTen}}</td>
                                     <td>{{ order.trangThai.tenTrangThai}}</td>
@@ -306,6 +307,55 @@
                                 </tr>
                                 </tbody>
                             </table>
+                            <div class="row">
+                                <nav aria-label="Page navigation example" ng-if="isPaginationVisible()">
+                                    <ul class="pagination">
+                                        <!-- Nút Trang đầu -->
+                                        <li class="page-item" ng-class="{disabled: currentPage === 1}">
+                                            <a class="page-link" href="#" ng-click="setPage(1)" aria-label="First">
+                                                <span aria-hidden="true">« Đầu</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- Nút Previous -->
+                                        <li class="page-item" ng-class="{disabled: currentPage === 1}">
+                                            <a class="page-link" href="#" ng-click="setPage(currentPage - 1)" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- Dấu "..." trước -->
+                                        <li class="page-item" ng-if="getPaginationRange()[0] > 1">
+                                            <span class="page-link">...</span>
+                                        </li>
+
+                                        <!-- Hiển thị các trang -->
+                                        <li class="page-item" ng-repeat="page in getPaginationRange()"
+                                            ng-class="{active: currentPage === page}">
+                                            <a class="page-link" href="#" ng-click="setPage(page)">{{ page }}</a>
+                                        </li>
+
+                                        <!-- Dấu "..." sau -->
+                                        <li class="page-item" ng-if="getPaginationRange()[getPaginationRange().length - 1] < totalPages">
+                                            <span class="page-link">...</span>
+                                        </li>
+
+                                        <!-- Nút Next -->
+                                        <li class="page-item" ng-class="{disabled: currentPage === totalPages}">
+                                            <a class="page-link" href="#" ng-click="setPage(currentPage + 1)" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+
+                                        <!-- Nút Trang cuối -->
+                                        <li class="page-item" ng-class="{disabled: currentPage === totalPages}">
+                                            <a class="page-link" href="#" ng-click="setPage(totalPages)" aria-label="Last">
+                                                <span aria-hidden="true">Cuối »</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
                         </div>
                     </div>
                     <div class="col-6">
@@ -334,7 +384,28 @@
                                 </tbody>
                             </table>
                         </div>
+
                     </div>
+<!--                    <div class="row">-->
+<!--                        <nav aria-label="Page navigation example">-->
+<!--                            <ul class="pagination">-->
+<!--                                <li class="page-item" ng-class="{disabled: currentPage === 1}">-->
+<!--                                    <a class="page-link" href="#" ng-click="setPage(currentPage - 1)" aria-label="Previous">-->
+<!--                                        <span aria-hidden="true">&laquo;</span>-->
+<!--                                    </a>-->
+<!--                                </li>-->
+<!--                                <li class="page-item" ng-repeat="page in [].constructor(totalPages) track by $index"-->
+<!--                                    ng-class="{active: currentPage === ($index + 1)}">-->
+<!--                                    <a class="page-link" href="#" ng-click="setPage($index + 1)">{{ $index + 1 }}</a>-->
+<!--                                </li>-->
+<!--                                <li class="page-item" ng-class="{disabled: currentPage === totalPages}">-->
+<!--                                    <a class="page-link" href="#" ng-click="setPage(currentPage + 1)" aria-label="Next">-->
+<!--                                        <span aria-hidden="true">&raquo;</span>-->
+<!--                                    </a>-->
+<!--                                </li>-->
+<!--                            </ul>-->
+<!--                        </nav>-->
+<!--                    </div>-->
                 </div>
                 <div class="row">
                     <div class="table-responsive">
@@ -538,7 +609,7 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <script>document.write(new Date().getFullYear())</script>
-                        ©ALLDY SNEAKER.
+                        ©EIGHTEEN POLO.
                     </div>
                 </div>
             </div>

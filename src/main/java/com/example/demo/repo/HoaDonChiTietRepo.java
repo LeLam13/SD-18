@@ -3,6 +3,7 @@ package com.example.demo.repo;
 import com.example.demo.entity.HoaDonChiTiet;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -13,6 +14,7 @@ public interface HoaDonChiTietRepo extends JpaRepository<HoaDonChiTiet, Integer>
     @Query("SELECT d FROM HoaDonChiTiet d WHERE d.hoaDon.idHoaDon = :idHoaDonChiTiet")
     List<HoaDonChiTiet> findById1(Integer idHoaDonChiTiet);
 
+<<<<<<< HEAD
     @Query("SELECT SUM(hd.tongTien) FROM HoaDon hd")
     Float getTotalRevenue();
 
@@ -33,4 +35,8 @@ public interface HoaDonChiTietRepo extends JpaRepository<HoaDonChiTiet, Integer>
             "WHERE spct.idSanPhamChiTiet = :idSanPhamChiTiet " +
             "GROUP BY spct.ma")
     Object[] findTotalSoldByProductDetail(Integer idSanPhamChiTiet);
+=======
+    @Query("SELECT h FROM HoaDonChiTiet h WHERE h.hoaDon.idHoaDon = :idHoaDon")
+    List<HoaDonChiTiet> findByHoaDonId(@Param("idHoaDon") Integer idHoaDon);
+>>>>>>> feature/banhang
 }
