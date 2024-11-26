@@ -69,6 +69,11 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
     Date date = new Date();
 
     @Override
+    public Page<SanPhamChiTiet> findAll(Pageable pageable) {
+        return sanPhamChiTietRepo.findAll(pageable);
+    }
+
+    @Override
     public Page<SanPhamChiTiet> findBySanPham(Integer idSanPham, Pageable pageable) {
 //        Pageable pageable = PageRequest.of(0, 1);
 //        Page<SanPhamChiTiet> spct = sanPhamChiTietRepo.findByIdSanPham_IdSanPham(2,pageable);

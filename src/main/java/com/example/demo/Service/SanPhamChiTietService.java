@@ -14,6 +14,8 @@ import java.util.List;
 
 @Service
 public interface SanPhamChiTietService {
+    public Page<SanPhamChiTiet> findAll(Pageable pageable);
+
     Page<SanPhamChiTiet> findBySanPham(Integer idSanPham, Pageable pageable);
 
     public List<SanPhamChiTiet> getAll();
