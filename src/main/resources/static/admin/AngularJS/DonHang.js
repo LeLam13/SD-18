@@ -19,6 +19,7 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
     $scope.idDonHang= null;
     // $scope.idTrangThai = null;
     var item = null;
+    var idHoaDoncheck = null;
     $scope.idTrangThai = 1;
 
     $scope.notification = {
@@ -50,7 +51,7 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
         $http.get("/don-hang-online/"+orderID).then(function (response) {
             $scope.listOrderDetail = response.data;
             console.log("check order online details: ",$scope.listOrderDetail);
-            //console.log("check order online details: ",response.data.donHang.trangThai.idTrangThai);
+            console.log("check order online : ",response.data.donHang.trangThai.idTrangThai);
             //$scope.showStep(response);
             var itemOrder = null
             var index =0;
@@ -405,6 +406,29 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
             $("#" + "step-" + i).addClass("active"); // Thêm class active cho các bước từ 1 đến idTrangThai
         }
     };
+
+    //in hoa đon online
+    $scope.checkInvoice = function (){
+        console.log('hoa dơn get id:', idHoaDoncheck);
+        $http.get("/hoa-don/get-invoice/"+idHoaDoncheck).then(function (response) {
+            console.log('response.data has data',response.data);
+            if (response.data && response.data.idHoaDon) {
+                console.log('response.data has data',response.data);
+                $scope.printerInvoice(response.data.idHoaDon);
+            }
+        }).catch(function (errors) {
+            console.error('Có lỗi xảy ra:', errors);
+        })
+    }
+    //in hoá đơn
+    $scope.printerInvoice = function (idHoaDon){
+        console.log('check in hoá đơn:');
+        $http.get("/hoa-don/invoice/"+idHoaDon).then(function (response) {
+            console.log('thanh cong:', response);
+        }).catch(function (errors) {
+            console.error('Có lỗi xảy ra:', errors);
+        })
+    }
 
     //phân trang
     $scope.getPagedProducts = function () {
