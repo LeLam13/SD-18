@@ -54,7 +54,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form th:action="@{/admin/dot-giam-gia/create}" method="post">
+                        <form th:action="@{/admin/dot-giam-gia/create}" method="post" onsubmit="showAlertify(event)">
 
                             <div class="form-group">
                                 <label>Chọn kiểu giảm giá:</label>
@@ -99,6 +99,15 @@
     </div>
 
     <script>
+        function showAlertify(event) {
+            event.preventDefault(); // Ngăn việc gửi form ngay lập tức
+            alertify.success('Đợt giảm giá đã được tạo thành công!'); // Hiển thị thông báo thành công
+            setTimeout(() => {
+                event.target.submit(); // Gửi form sau khi hiển thị thông báo
+            }, 2000); // Đợi 2 giây trước khi gửi form
+        }
+
+
         function toggleDiscountFields() {
             var discountType = document.querySelector('input[name="discountType"]:checked').value;
             var percentField = document.getElementById("percentField");
@@ -176,5 +185,8 @@
 </div>
 <!-- end main content-->
 </body>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
 
 </html>
