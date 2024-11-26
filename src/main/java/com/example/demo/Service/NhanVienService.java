@@ -9,9 +9,7 @@ import java.util.List;
 @Service
 public interface NhanVienService {
     Page<nhanvien> getAll(Pageable pageable);
-
     public nhanvien updateNhanVien(NhanVienRequetsDTO nhanVienRequestDTO);
-
     public nhanvien getNhanVien(Integer idNhanVien);
     Page<nhanvien> getActiveNhanVien(Pageable pageable);
     nhanvien softDeleteNhanVien(Integer idNhanVien);

@@ -113,14 +113,21 @@ app.controller("nhan-vien-ctrl", function ($scope, $http) {
             email: $scope.email,
         };
 
+        // Gửi yêu cầu POST lên server
         $http.post(url, updateNhanVien).then(function (response) {
             alertify.success("Cập nhật nhân viên thành công!");
-            $scope.findAll();
+            $scope.findAll(); // Tải lại danh sách
         }).catch(function (error) {
-            alertify.error("Cập nhật không thành công!");
+            // Xử lý lỗi khi email đã tồn tại
+            if (error.data && error.data.message === "Email đã tồn tại!") {
+                alertify.error("Email đã tồn tại, vui lòng thử lại!");
+            } else {
+                alertify.error("Cập nhật không thành công!");
+            }
             console.log("Cập nhật không thành công:", error);
         });
     };
+
 
 
     // Hàm xóa mềm nhân viên

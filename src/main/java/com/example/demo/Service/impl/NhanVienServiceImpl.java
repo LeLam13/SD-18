@@ -46,9 +46,18 @@ public class NhanVienServiceImpl implements NhanVienService {
         nhanVien.setGioiTinh(nhanVienRequestDTO.getGioiTinh());
 
         // Cập nhật email trong bảng Tài khoản
-        if (nhanVien.getTaikhoan() != null) {
-            nhanVien.getTaikhoan().setEmail(nhanVienRequestDTO.getEmail());
+        if (nhanVienRequestDTO.getEmail() != null &&
+                !nhanVienRequestDTO.getEmail().equals(nhanVien.getTaikhoan().getEmail())) {
+            boolean emailExists = taikhoanRepo.existsByEmail(nhanVienRequestDTO.getEmail());
+            if (emailExists) {
+                // Trả về thông báo lỗi cho frontend
+                throw new RuntimeException("Email đã tồn tại!");
+            } else {
+                // Cập nhật email nếu không có lỗi
+                nhanVien.getTaikhoan().setEmail(nhanVienRequestDTO.getEmail());
+            }
         }
+
 
         // Cập nhật ngày cập nhật
         nhanVien.setUpdateDate(LocalDateTime.now());

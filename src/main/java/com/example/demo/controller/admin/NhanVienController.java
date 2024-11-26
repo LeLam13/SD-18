@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
+
 
 @Controller
 @RequestMapping("${admin.domain}/nhan-vien")
@@ -57,6 +59,15 @@ public class NhanVienController {
         // Kiểm tra xem email có tồn tại không
         if (taikhoanRepo.existsByEmail(dto.getEmail())) {
             redirectAttributes.addFlashAttribute("error", "Email đã tồn tại");
+            redirectAttributes.addFlashAttribute("dto", dto);  // Lưu dữ liệu đã nhập
+            return "redirect:/admin/nhan-vien"; // Quay lại trang danh sách
+        }
+        // Kiểm tra ngày sinh không phải là ngày trong tương lai
+        LocalDate ngaySinh = dto.getNgaySinh();  // Giả sử ngày sinh là LocalDate
+        LocalDate today = LocalDate.now();
+
+        if (ngaySinh.isAfter(today)) {
+            redirectAttributes.addFlashAttribute("error", "Ngày sinh không thể là ngày trong tương lai");
             redirectAttributes.addFlashAttribute("dto", dto);  // Lưu dữ liệu đã nhập
             return "redirect:/admin/nhan-vien"; // Quay lại trang danh sách
         }
