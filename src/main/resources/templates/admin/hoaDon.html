@@ -10,7 +10,7 @@
         href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
 />
 <head>
-    <title>ALLDY SNEAKER | Hóa Đơn Tại Quầy</title>
+    <title>ALLDY SNEAKER | Hóa Đơn</title>
     <style>
         /* General Styling */
         .modal-Big {
@@ -129,7 +129,7 @@
                 <div class="card">
                     <!-- Card Header -->
                     <div class="card-header">
-                        <h5 class="card-title">Danh Sách Hóa Đơn Tại Quầy</h5>
+                        <h5 class="card-title">Danh Sách Hóa Đơn</h5>
                     </div>
 
                     <!-- Table Content -->
@@ -152,6 +152,7 @@
                                         <th>Tổng Tiền Sau Khuyến Mãi</th>
                                         <th>Ghi Chú</th>
                                         <th>Trạng Thái</th>
+                                        <th>Loại Đơn Hàng</th>
                                         <th>Hành Động</th>
                                     </tr>
                                     </thead>
@@ -159,10 +160,10 @@
                                     <tr ng-repeat="hoaDon in hoaDons">
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ hoaDon.maHoaDon }}</td>
-                                        <td>{{ hoaDon.createBy}}</td>
-                                        <td>{{hoaDon.createDate}}</td>
-                                        <td>{{hoaDon.nhanVien.maNhanVien}}</td>
-                                        <td>{{hoaDon.khachHang.hoTen}}</td>
+                                        <td>{{ hoaDon.createBy }}</td>
+                                        <td>{{ hoaDon.createDate }}</td>
+                                        <td>{{ hoaDon.nhanVien.maNhanVien }}</td>
+                                        <td>{{ hoaDon.khachHang.hoTen }}</td>
                                         <td>{{ hoaDon.tongTien | currency:'₫':0 }}</td>
                                         <td>
                                             {{ hoaDon.tongTienKhuyenMai | currency:'₫':0 }}
@@ -179,22 +180,32 @@
                               đơn' }}
                             </span>
                                         </td>
+                                        <!-- Cột loại đơn hàng -->
                                         <td>
+                            <span>
+                              {{ hoaDon.loaiDonHang === '1' ? 'Đơn hàng tại
+                                    quầy' : 'Đơn hàng online' }}
+                            </span>
+                                        </td>
+                                        <td style="white-space: nowrap">
                                             <button
                                                     ng-click="viewDetails(hoaDon.idHoaDon)"
-                                                    class="btn btn-info"
+                                                    class="btn btn-info btn-sm"
+                                                    style="display: inline-block; margin-right: 8px"
                                             >
-                                                Xem Chi Tiết
+                                                Xem HĐ
                                             </button>
                                             <button
                                                     ng-click="exportHoaDon(hoaDon.idHoaDon)"
-                                                    class="btn btn-success ml-2"
+                                                    class="btn btn-success btn-sm"
+                                                    style="display: inline-block"
                                             >
-                                                Xuất Hóa Đơn
+                                                Xuất HĐ
                                             </button>
                                         </td>
                                     </tr>
                                     </tbody>
+
                                     <nav aria-label="Page navigation">
                                         <ul class="pagination">
                                             <li
@@ -279,71 +290,6 @@
                         >
                             <span aria-hidden="true">&times;</span>
                         </button>
-                    </div>
-
-                    <!-- Modal Body -->
-                    <div
-                            class="modal-body"
-                            style="padding: 20px; background-color: #f8f9fa"
-                    >
-                        <form id="exportInvoiceForm">
-                            <div class="form-group">
-                                <label for="customerName"
-                                >Họ tên người mua hàng (Customer's Name):</label
-                                >
-                                <input
-                                        type="text"
-                                        class="form-control"
-                                        id="customerName"
-                                        ng-model="invoiceData.customerName"
-                                        required
-                                />
-                            </div>
-                            <div class="form-group">
-                                <label for="companyName">Tên đơn vị (Company):</label>
-                                <input
-                                        type="text"
-                                        class="form-control"
-                                        id="companyName"
-                                        ng-model="invoiceData.companyName"
-                                        required
-                                />
-                            </div>
-                            <div class="form-group">
-                                <label for="taxCode">Mã số thuế (Tax Code):</label>
-                                <input
-                                        type="text"
-                                        class="form-control"
-                                        id="taxCode"
-                                        ng-model="invoiceData.taxCode"
-                                        required
-                                />
-                            </div>
-                            <div class="form-group">
-                                <label for="address">Địa chỉ (Address):</label>
-                                <textarea
-                                        class="form-control"
-                                        id="address"
-                                        ng-model="invoiceData.address"
-                                        rows="3"
-                                        required
-                                ></textarea>
-                            </div>
-                            <div class="form-group">
-                                <label for="paymentMethod"
-                                >Hình thức thanh toán (Payment Method):</label
-                                >
-                                <select
-                                        class="form-control"
-                                        id="paymentMethod"
-                                        ng-model="invoiceData.paymentMethod"
-                                        required
-                                >
-                                    <option value="Tiền mặt">Tiền mặt</option>
-                                    <option value="Chuyển khoản">Chuyển khoản</option>
-                                </select>
-                            </div>
-                        </form>
                     </div>
 
                     <!-- Modal Footer -->

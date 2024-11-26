@@ -94,24 +94,18 @@ public class HoaDonController {
     }
 
     @PostMapping("/export")
-    public ResponseEntity<byte[]> exportInvoice(@RequestBody Map<String, String> invoiceData) {
+    public ResponseEntity<byte[]> exportInvoice(@RequestParam Integer idHoaDon) {
         try {
-            Integer idHoaDon = Integer.parseInt(invoiceData.get("idHoaDon"));
-            String customerName = invoiceData.get("customerName");
-            String companyName = invoiceData.get("companyName");
-            String taxCode = invoiceData.get("taxCode");
-            String address = invoiceData.get("address");
-            String paymentMethod = invoiceData.get("paymentMethod");
+            byte[] pdfContent = hoaDonChiTietService.generateInvoicePdf(idHoaDon);
 
-            byte[] pdfContent = hoaDonChiTietService.generateInvoicePdf(
-                    idHoaDon, customerName, companyName, taxCode, address, paymentMethod);
-
+            // Thiết lập header HTTP
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_PDF);
-            headers.setContentDispositionFormData("attachment", "Invoice_" + idHoaDon + ".pdf");
+            headers.setContentDispositionFormData("attachment", "HoaDon_" + idHoaDon + ".pdf");
 
             return new ResponseEntity<>(pdfContent, headers, HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
