@@ -59,7 +59,6 @@
                 <div class="header-left">
                     <a href="trang-chu" class="logo">
                         <img src="assets/img/img.png" alt="Eighteen Polo Logo" width="60" height="25">
-
                     </a>
                 </div><!-- End .header-left -->
 
@@ -481,9 +480,64 @@
 <script src="assets/js/demos/demo-11.js"></script>
 
 <script th:src="@{/admin/assets/libs/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<a href="https://m.me/547997145053868" target="_blank" class="messenger-chat">
+    <img src="/assets/img/messengerlogo_icon.png" alt="Chat với chúng tôi trên Messenger" style="width: 50px; height: 50px; background-color: #0084ff; padding: 10px; border-radius: 50%;"/>
+</a>
+
+<style>
+    .messenger-chat {
+        position: fixed;        /* Đặt vị trí cố định */
+        right: 20px;            /* Đưa logo sang phải 20px */
+        bottom: 40px;           /* Dịch logo lên cao hơn 20px */
+        z-index: 9999;          /* Đảm bảo logo ở trên các phần tử khác */
+    }
+
+    /* Hiệu ứng rung lắc */
+    .shake {
+        animation: shake 0.7s ease-in-out;
+    }
+
+    @keyframes shake {
+        0% {
+            transform: translateX(0); /* Vị trí ban đầu */
+        }
+        25% {
+            transform: translateX(-10px); /* Rung sang trái */
+        }
+        50% {
+            transform: translateX(10px); /* Rung sang phải */
+        }
+        75% {
+            transform: translateX(-10px); /* Rung sang trái */
+        }
+        100% {
+            transform: translateX(0); /* Quay lại vị trí ban đầu */
+        }
+    }
+</style>
+
+<script>
+    function startShaking() {
+        var messengerChat = document.querySelector('.messenger-chat');
+
+        // Thêm class "shake" để bắt đầu hiệu ứng rung
+        messengerChat.classList.add('shake');
+
+        // Sau 1 giây, bỏ class "shake" để dừng rung
+        setTimeout(function() {
+            messengerChat.classList.remove('shake');
+        }, 1000); // 1s để rung xong
+
+        // Sau đó, lại bắt đầu rung sau 5 giây
+        setTimeout(startShaking, 5000); // Sau 5s tiếp tục rung
+    }
+
+    // Bắt đầu hiệu ứng ngay khi trang được tải
+    window.onload = function() {
+        startShaking();
+    };
+</script>
+
 
 </body>
-
-
-<!-- Mirrored from portotheme.com/html/molla/index-11.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 30 Oct 2024 05:28:28 GMT -->
 </html>
