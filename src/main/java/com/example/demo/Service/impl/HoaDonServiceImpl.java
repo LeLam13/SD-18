@@ -242,16 +242,23 @@ public class HoaDonServiceImpl implements HoaDonService {
             Paragraph paragraph = new Paragraph("\n");
 
             // Title
-            Text nameShop = new Text("EIGHTTEN POLO").setFont(pdfFont).setTextAlignment(TextAlignment.CENTER);
-//            Paragraph paragraphTong = new Paragraph().add(nameShop);
-            document.add(new Paragraph(nameShop+"\n\n"));
+            Text nameShop = new Text("EIGHTTEN POLO").setFont(pdfFont);
+            Paragraph paragraphNameShop = new Paragraph()
+                    .add(nameShop)
+                    .setTextAlignment(TextAlignment.CENTER).setBold().setFontSize(18f);
+            document.add(paragraphNameShop.add("\n\n"));
 
             // Information block
             Text phoneShop = new Text("Số điện thoại: 0123456789").setFont(pdfFont);
             Text emailShop = new Text("Email: eighteenpolo@gmail.com").setFont(pdfFont);
             Text addressShop = new Text("Địa chỉ: Tòa nhà FPT Polytechnic...").setFont(pdfFont);
             //document.add(new Paragraph("Số điện thoại: 0123456789\nEmail: beeshirt@gmail.com\nĐịa chỉ: Tòa nhà FPT Polytechnic..."));
-            document.add(new Paragraph(phoneShop+"\n"+emailShop+"\n"+addressShop));
+            Paragraph paragraphInfo = new Paragraph()
+                    .add(phoneShop).add("\n")
+                    .add(emailShop).add("\n")
+                    .add(addressShop)
+                    .setTextAlignment(TextAlignment.CENTER);
+            document.add(paragraphInfo);
 
             Border gb = new SolidBorder(new DeviceGray(0.5f),1f/2f);
             Table divider = new Table(columnWidths);
