@@ -1,7 +1,5 @@
 package com.example.demo.dto.reponse;
 
-
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -54,6 +52,7 @@ public class KhachHangResponseDTO {
     @JsonProperty("username_tai_khoan")
     private String usernameTaiKhoan;
 
-
+    @JsonProperty("email")
+    private String email; // New field for email
 
 }

@@ -29,7 +29,6 @@ public class DotGiamGiaController {
                                    @RequestParam("thoiGianBatDau") LocalDateTime thoiGianBatDau,
                                    @RequestParam("thoiGianKetThuc") LocalDateTime thoiGianKetThuc,
                                    Model model) {
-
         // Kiểm tra ngày bắt đầu không được lớn hơn ngày kết thúc
         if (thoiGianBatDau.isAfter(thoiGianKetThuc)) {
             model.addAttribute("error", "Ngày bắt đầu không được lớn hơn ngày kết thúc.");
@@ -61,6 +60,7 @@ public class DotGiamGiaController {
 
         return "redirect:/admin/dot-giam-gia"; // Chuyển hướng sau khi thêm
     }
+
 
 
 
@@ -105,6 +105,71 @@ public class DotGiamGiaController {
         return "admin/detail_dot_giam_gia"; // Trang hiển thị chi tiết đợt giảm giá
     }
 
+    @GetMapping("/update/{id}")
+    public String showUpdateForm(@PathVariable Integer id, Model model) {
+        DotGiamGia dotGiamGia = dotGiamGiaService.getDotGiamGiaById(id); // Lấy đợt giảm giá cần cập nhật
+        model.addAttribute("dotGiamGia", dotGiamGia);
+        return "admin/updatedgg"; // Trang cập nhật
+    }
+    @PostMapping("/update")
+    public String updateDotGiamGia(@RequestParam("idGiamGia") Integer idGiamGia,
+                                   @RequestParam("discountType") String discountType,
+                                   @RequestParam(value = "giamGiaPercent", required = false) Double giamGiaPercent,
+                                   @RequestParam(value = "giamGiaAmount", required = false) Double giamGiaAmount,
+                                   @RequestParam("thoiGianBatDau") LocalDateTime thoiGianBatDau,
+                                   @RequestParam("thoiGianKetThuc") LocalDateTime thoiGianKetThuc,
+                                   Model model
+                                   ) {
+        DotGiamGia dotGiamGia = dotGiamGiaService.getDotGiamGiaById(idGiamGia);
+        if (thoiGianBatDau.isAfter(thoiGianKetThuc)) {
+            model.addAttribute("error2", "Ngày bắt đầu không được lớn hơn ngày kết thúc.");
+            model.addAttribute("dotGiamGia", dotGiamGia); // Truyền lại đối tượng để điền dữ liệu vào form
+            return "admin/updatedgg"; // Trả về trang cập nhật
+        }
+
+
+
+        // Lấy tất cả các đợt giảm giá đang diễn ra hoặc sắp diễn ra
+        List<DotGiamGia> activeDotGiamGiaList = dotGiamGiaService.getActiveDotGiamGiaList();
+
+// Kiểm tra ngày bắt đầu của đợt giảm giá mới (thoiGianBatDau) không được nhỏ hơn ngày kết thúc của bất kỳ đợt giảm giá nào đang diễn ra
+        for (DotGiamGia activeDotGiamGia : activeDotGiamGiaList) {
+            // Bỏ qua kiểm tra với chính đợt giảm giá đang cập nhật
+            if (!activeDotGiamGia.getIdGiamGia().equals(dotGiamGia.getIdGiamGia()) && thoiGianBatDau.isBefore(activeDotGiamGia.getThoiGianKetThuc())) {
+                // Thêm thông báo lỗi vào model nếu ngày bắt đầu của đợt giảm giá mới nhỏ hơn ngày kết thúc của đợt giảm giá đang diễn ra
+                model.addAttribute("error2", "Ngày bắt đầu của đợt giảm giá mới phải lớn hơn ngày kết thúc của đợt giảm giá hiện tại.");
+
+                // Truyền lại đối tượng DotGiamGia để giữ lại dữ liệu trong form
+                model.addAttribute("dotGiamGia", dotGiamGia);
+
+                // Trả về trang cập nhật
+                return "admin/updatedgg";
+            }
+        }
+
+
+
+        // Cập nhật thông tin giảm giá
+        if ("percent".equals(discountType)) {
+            dotGiamGia.setGiamGia(giamGiaPercent);
+            dotGiamGia.setLoaiGiamGia(0); // Giảm giá theo %
+        } else {
+            dotGiamGia.setGiamGia(giamGiaAmount);
+            dotGiamGia.setLoaiGiamGia(1); // Giảm giá theo tiền
+        }
+
+        dotGiamGia.setThoiGianBatDau(thoiGianBatDau);
+        dotGiamGia.setThoiGianKetThuc(thoiGianKetThuc);
+
+        // Cập nhật trạng thái nếu cần
+        dotGiamGiaService.updateStatus(dotGiamGia);
+
+        // Gọi phương thức update trong service để cập nhật dữ liệu
+        dotGiamGiaService.updateDotGiamGia(dotGiamGia);
+
+        // Chuyển hướng về danh sách sau khi cập nhật
+        return "redirect:/admin/dot-giam-gia";
+    }
 
 
 }

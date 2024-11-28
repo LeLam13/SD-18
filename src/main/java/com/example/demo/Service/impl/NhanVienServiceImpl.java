@@ -37,8 +37,7 @@ public class NhanVienServiceImpl implements NhanVienService {
 
         nhanvien nhanVien = optionalNhanVien.get();
 
-
-        // Cập nhật thông tin nhân viên
+        // Cập nhật thông tin trong bảng Nhân viên
         nhanVien.setHoTen(nhanVienRequestDTO.getHoTen());
         nhanVien.setSoDienThoai(nhanVienRequestDTO.getSoDienThoai());
         nhanVien.setNgaySinh(nhanVienRequestDTO.getNgaySinh());
@@ -46,13 +45,18 @@ public class NhanVienServiceImpl implements NhanVienService {
         nhanVien.setDiaChi(nhanVienRequestDTO.getDiaChi());
         nhanVien.setGioiTinh(nhanVienRequestDTO.getGioiTinh());
 
-        // Cập nhật ngày cập nhật
-        LocalDateTime date = LocalDateTime.now();
-        nhanVien.setUpdateDate(date);
+        // Cập nhật email trong bảng Tài khoản
+        if (nhanVien.getTaikhoan() != null) {
+            nhanVien.getTaikhoan().setEmail(nhanVienRequestDTO.getEmail());
+        }
 
-        // Lưu lại thay đổi cho nhân viên
+        // Cập nhật ngày cập nhật
+        nhanVien.setUpdateDate(LocalDateTime.now());
+
+        // Lưu thông tin cập nhật
         return nhanVienRepository.save(nhanVien);
     }
+
 
 
     @Override

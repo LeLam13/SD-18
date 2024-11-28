@@ -41,6 +41,12 @@ public class ChatLieuRestController {
         return ResponseEntity.ok(cl);
     }
 
+    @GetMapping("/chat-lieu/get-all")
+    public ResponseEntity<?> getAll2() {
+        List<ChatLieu> cl = chatLieuService.getAll();
+        return ResponseEntity.ok(cl);
+    }
+
     @PostMapping("/admin/chat-lieu/add")
     public ResponseEntity<?> createChatLieu(@RequestBody ChatLieuRequestDTO chatLieuRequestDTO) {
         chatLieuService.createChatLieu(chatLieuRequestDTO);

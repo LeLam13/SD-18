@@ -19,7 +19,125 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
     $scope.cartDetaiPro = [];
     $scope.cartDetai =[];
     $scope.cart = [];
+
+    $scope.page = 0;  // Trang hiện tại
+    $scope.size = 12; // Số lượng bản ghi trên mỗi trang
+    $scope.totalPages = 0; // Tổng số trang
+    $scope.pageInput = 1; // Giá trị nhập từ ô input
+    $scope.filterData = {};
+    $scope.mauSac=[];
+    $scope.chatLieu=[];
+    $scope.thuongHieu=[];
+    $scope.xuatXu=[];
+    $scope.kieuDang=[];
+    $scope.kichCo=[];
+
+    $scope.getThuocTinh = function () {
+        $http.get("/mau-sac/get-all").then(r => {
+            $scope.mauSac = r.data;
+        }).catch(e => console.log(e))
+
+        $http.get("/chat-lieu/get-all").then(r => {
+            $scope.chatLieu = r.data;
+        }).catch(e => console.log(e))
+
+        $http.get("/thuong-hieu/get-all").then(r => {
+            $scope.thuongHieu = r.data;
+        }).catch(e => console.log(e))
+
+        $http.get("/xuat-xu/get-all").then(r => {
+            $scope.xuatXu = r.data;
+        }).catch(e => console.log(e))
+
+        $http.get("/kieu-dang/get-all").then(r => {
+            $scope.kieuDang = r.data;
+        }).catch(e => console.log(e))
+
+        $http.get("/size/get-all").then(r => {
+            $scope.kichCo = r.data;
+        }).catch(e => console.log(e))
+    }
+
+    $scope.getThuocTinh();
+
+    // Hàm lọc sản phẩm
+    $scope.filter = function (filterData) {
+        // Loại bỏ các thuộc tính không hợp lệ (rỗng/null)
+        for (const [key, value] of Object.entries(filterData)) {
+            if (!value || value.length === 0) {
+                delete filterData[key];
+            }
+        }
+
+        console.log("Dữ liệu lọc: ", filterData);
+
+        // Gửi yêu cầu lọc đến server với phân trang
+        $http.post(`/san-pham/chi-tiet/filter?page=${$scope.page}&size=${$scope.size}`, filterData).then(function (response) {
+            $scope.listProducts = response.data.content; // Gán danh sách sản phẩm sau khi lọc
+            $scope.totalPages = response.data.totalPages; // Tổng số trang
+            $scope.pageNumber = 0; // Reset lại trang hiện tại sau khi lọc
+            console.log("Dữ liệu lọc: ", $scope.listProducts);
+
+            // Hiển thị số bộ lọc đang được áp dụng
+            // if (Object.keys(filterData).length > 0) {
+            //     document.getElementById('lengthFilter').innerText = Object.keys(filterData).length;
+            // } else {
+            //     document.getElementById('lengthFilter').innerText = "";
+            // }
+
+        }).catch(function (error) {
+            console.error("Lỗi khi lọc sản phẩm:", error);
+            alertify.error("Không thể lọc sản phẩm. Vui lòng thử lại sau!");
+        });
+    };
+
+    // Hàm xóa bộ lọc
+    $scope.clearFilter = function () {
+        $scope.filterData = {}; // Reset dữ liệu lọc
+        // document.getElementById('lengthFilter').innerText = "";
+        // $scope.filter($scope.filterData); // Gọi lại hàm lọc để làm mới danh sách
+        $scope.getAllProduct();
+    };
+
+    $scope.loadData = function () {
+        if (Object.keys($scope.filterData).length > 0) {
+            $scope.filter($scope.filterData);
+        } else {
+            $scope.getAllProduct();
+        }
+    };
+
+    $scope.previousPage = function () {
+        if ($scope.page > 0) {
+            $scope.page--;
+            $scope.loadData();
+        }
+    };
+
+    $scope.nextPage = function () {
+        if ($scope.page < $scope.totalPages - 1) {
+            $scope.page++;
+            $scope.loadData();
+        }
+    };
+
+    $scope.goToFirstPage = function () {
+        if ($scope.page > 0) {
+            $scope.page = 0;
+            $scope.loadData();
+        }
+    };
+
+    $scope.goToLastPage = function () {
+        if ($scope.page < $scope.totalPages - 1) {
+            $scope.page = $scope.totalPages - 1;
+            $scope.loadData();
+        }
+    };
+
+
     var idGioHang = null;
+
 
     $scope.getUserName = function (){
         $http.get("/lay-tai-khoan").then(function (response){
@@ -82,9 +200,10 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
     }
 
     $scope.getAllProduct = function (){
-        $http.get("/danh-sach-san-pham").then(function (response){
-            $scope.listProducts = response.data;
-            console.log("check log: ",response.data)
+        $http.get(`/san-pham/chi-tiet/find-all?page=${$scope.page}&size=${$scope.size}`).then(function (response){
+            $scope.listProducts = response.data.content;
+            console.log("check data:",$scope.listProducts);
+            $scope.totalPages = response.data.totalPages;
         }).catch(function (errors){
             console.error("có lỗi xảy ra: ",errors)
         })
@@ -374,6 +493,8 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
     $scope.username = null;
     $scope.cart = [];
     var idGioHang = null;
+
+
 
     $scope.getAllProduct = function (){
         $http.get("/danh-sach-san-pham").then(function (response){

@@ -7,16 +7,19 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-public interface khachhangRePo extends JpaRepository<khachhang,Integer> {
+public interface khachhangRePo extends JpaRepository<khachhang, Integer> {
     @Query("SELECT k FROM khachhang k WHERE k.soDienThoai = :soDienThoai")
     List<khachhang> findBySoDienThoai(String soDienThoai);
-
 
     @Query("SELECT k FROM khachhang k WHERE k.taikhoan.username = :username")
     khachhang findByUsername(@Param("username") String username);
 
     @Query("SELECT k FROM khachhang  k WHERE k.idKhachHang = :idKhachHang")
     khachhang findByIdKhachHang(@Param("idKhachHang") Long idKhachHang);
+
+    @Query("SELECT k FROM khachhang k WHERE k.idKhachHang = :id")
+    Optional<khachhang> findById(@Param("id") Long id);
 }

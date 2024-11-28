@@ -268,7 +268,6 @@ public class HoaDonServiceImpl implements HoaDonService {
             document.add(divider);
             //document.add(paragraph);
 
-
             Text text2 = new Text("Mã Hoá Đơn:").setFont(pdfFont);
             Text text1 = new Text("Hoá Đơn Bán Hàng").setFont(pdfFont);
             //thông tin
@@ -326,6 +325,8 @@ public class HoaDonServiceImpl implements HoaDonService {
             twoColTable3.addCell(getCell10fleft(textEmail,false));
             twoColTable3.setWidthPercent(100);
             document.add(twoColTable3);
+
+
 
             Table tableDivider = new Table(columnWidths);
             Border dbg = new DashedBorder(Color.GRAY,0.5f);

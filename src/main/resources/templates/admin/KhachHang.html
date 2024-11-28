@@ -1,131 +1,507 @@
-<!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/admin/index}" ng-app="khachhangApp">
-<head>
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{/admin/index}"
+  ng-app="khachhangApp"
+>
+  <head>
     <style>
-        .textDetail {
-            font-weight: bold;
-            font-size: 15px;
-            font-style: italic;
-        }
+      .textDetail {
+        font-weight: bold;
+        font-size: 15px;
+        font-style: italic;
+      }
 
-        .er {
-            color: red;
-            font-size: 13px;
-        }
+      .er {
+        color: red;
+        font-size: 13px;
+      }
+
+      .icon-btn {
+        cursor: pointer;
+      }
+
+      .modal-dialog {
+        max-width: 80%;
+      }
+
+      .pagination-btn {
+        margin: 0 5px;
+      }
     </style>
-</head>
-<body data-topbar="dark">
-<div class="main-content" layout:fragment="content" ng-controller="KhachHangController">
-    <div class="page-content">
+  </head>
+  <body data-topbar="dark">
+    <div
+      class="main-content"
+      layout:fragment="content"
+      ng-controller="KhachHangController"
+    >
+      <div class="page-content">
         <div class="container-fluid">
-            <div class="row align-items-center">
-                <div class="col-md-6"></div>
-                <div class="col-md-6 d-flex justify-content-end">
-                    <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3 me-2">
-                        <div>
-                            <input class="form-control" ng-model="searchQuery" placeholder="Nhập mã, tên hoặc sđt">
-                        </div>
-                    </div>
-                    <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
-                        <div>
-                            <button class="btn btn-secondary" ng-click="showAddForm()">
-                                <i class="bx bx-plus me-1"></i> Thêm mới khách hàng
-                            </button>
-                        </div>
-                    </div>
-                </div>
+          <div class="row align-items-center">
+            <div class="col-md-6">
+              <h2>Thông Tin Khách Hàng</h2>
             </div>
+            <div class="col-md-6 d-flex justify-content-end">
+              <input
+                class="form-control me-2"
+                ng-model="searchQuery"
+                placeholder="Nhập mã, tên hoặc sđt"
+              />
+              <button class="btn btn-secondary" ng-click="showAddForm()">
+                <i class="bx bx-plus me-1"></i> Thêm mới khách hàng
+              </button>
+            </div>
+          </div>
 
-            <h2>Thông Tin Khách Hàng</h2>
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Mã Khách Hàng</th>
-                    <th>Họ Tên</th>
-                    <th>Ngày Sinh</th>
-                    <th>Số Điện Thoại</th>
-                    <th>Giới Tính</th>
-                    <th>Địa Chỉ</th>
-                    <th>Tên Tài Khoản</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr ng-repeat="khach in khachhangList | filter: { ma_khach_hang: searchQuery }">
-                    <td>{{ khach.id_khach_hang }}</td>
-                    <td>{{ khach.ma_khach_hang }}</td>
-                    <td>{{ khach.ho_ten }}</td>
-                    <td>{{ khach.ngay_sinh | date:'yyyy-MM-dd' }}</td>
-                    <td>{{ khach.so_dien_thoai }}</td>
-                    <td>{{ khach.gioi_tinh ? 'Nam' : 'Nữ' }}</td>
-                    <td>{{ khach.dia_chi }}</td>
-                    <td>{{ khach.username_tai_khoan }}</td>
-                </tr>
-                </tbody>
-            </table>
+          <table class="table table-striped mt-3">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Mã Khách Hàng</th>
+                <th>Họ Tên</th>
+                <th>Ngày Sinh</th>
+                <th>Số Điện Thoại</th>
+                <th>Email</th>
+                <th>Giới Tính</th>
+                <th>Địa Chỉ</th>
+                <th>Tên Tài Khoản</th>
+                <th>Hành Động</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr
+                ng-repeat="khach in paginatedKhachHangList | filter:searchQuery"
+              >
+                <td>{{ khach.id_khach_hang }}</td>
+                <td>{{ khach.ma_khach_hang }}</td>
+                <td>{{ khach.ho_ten }}</td>
+                <td>{{ khach.ngay_sinh | date: 'yyyy-MM-dd' }}</td>
+                <td>{{ khach.so_dien_thoai }}</td>
+                <td>{{ khach.email }}</td>
+                <td>{{ khach.gioi_tinh ? 'Nam' : 'Nữ' }}</td>
+                <td>{{ khach.dia_chi }}</td>
+                <td>{{ khach.username_tai_khoan }}</td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-info"
+                    ng-click="viewDetails(khach)"
+                  >
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-danger"
+                    ng-click="editCustomer(khach)"
+                  >
+                    <i class="fas fa-edit"></i>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="d-flex justify-content-center">
+            <button
+              class="btn btn-primary pagination-btn"
+              ng-click="previousPage()"
+              ng-disabled="currentPage === 1"
+            >
+              Trang trước
+            </button>
+            <span>Trang {{ currentPage }} / {{ totalPages }}</span>
+            <button
+              class="btn btn-primary pagination-btn"
+              ng-click="nextPage()"
+              ng-disabled="currentPage === totalPages"
+            >
+              Trang kế tiếp
+            </button>
+          </div>
         </div>
 
-        <!-- Modal for Adding Customer -->
-        <div class="modal fade" id="viewAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display: none;">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Thêm Khách Hàng Mới</h5>
-                        <button type="button" class="close" ng-click="closeAddForm()">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <form>
-                            <div class="mb-3">
-                                <label for="maKhachHang">Mã Khách Hàng</label>
-                                <input type="text" id="maKhachHang" class="form-control" ng-model="newKhachHang.ma_khach_hang">
-                            </div>
-                            <div class="mb-3">
-                                <label for="hoTen">Họ Tên</label>
-                                <input type="text" id="hoTen" class="form-control" ng-model="newKhachHang.ho_ten">
-                            </div>
-                            <div class="mb-3">
-                                <label for="ngaySinh">Ngày Sinh</label>
-                                <input type="date" id="ngaySinh" class="form-control" ng-model="newKhachHang.ngay_sinh">
-                            </div>
-                            <div class="mb-3">
-                                <label for="soDienThoai">Số Điện Thoại</label>
-                                <input type="text" id="soDienThoai" class="form-control" ng-model="newKhachHang.so_dien_thoai">
-                            </div>
-                            <div class="mb-3">
-                                <label for="gioiTinh">Giới Tính</label>
-                                <select id="gioiTinh" class="form-control" ng-model="newKhachHang.gioi_tinh">
-                                    <option value="true">Nam</option>
-                                    <option value="false">Nữ</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="diaChi">Địa Chỉ</label>
-                                <input type="text" id="diaChi" class="form-control" ng-model="newKhachHang.dia_chi">
-                            </div>
-                            <div class="mb-3">
-                                <label for="usernameTaiKhoan">Tên Tài Khoản</label>
-                                <input type="text" id="usernameTaiKhoan" class="form-control" ng-model="newKhachHang.username_tai_khoan">
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" ng-click="closeAddForm()">Đóng</button>
-                        <button type="button" class="btn btn-primary" ng-click="addKhachHang()">Thêm Khách Hàng</button>
-                    </div>
-                </div>
+        <!-- Add Modal -->
+        <div
+          class="modal fade"
+          id="viewAdd"
+          tabindex="-1"
+          role="dialog"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5>Thêm Khách Hàng Mới</h5>
+                <button class="btn-close" ng-click="closeAddForm()"></button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="mb-3">
+                    <label>Mã Khách Hàng</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      ng-model="newKhachHang.ma_khach_hang"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label>Họ Tên</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      ng-model="newKhachHang.ho_ten"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label>Ngày Sinh</label>
+                    <input
+                      type="date"
+                      class="form-control"
+                      ng-model="newKhachHang.ngay_sinh"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label>Số Điện Thoại</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      ng-model="newKhachHang.so_dien_thoai"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label>Email</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      ng-model="newKhachHang.email"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label>Giới Tính</label>
+                    <select
+                      class="form-control"
+                      ng-model="newKhachHang.gioi_tinh"
+                    >
+                      <option value="true">Nam</option>
+                      <option value="false">Nữ</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label>Địa Chỉ</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      ng-model="newKhachHang.dia_chi"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label>Tên Tài Khoản</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      ng-model="newKhachHang.username_tai_khoan"
+                    />
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" ng-click="closeAddForm()">
+                  Đóng
+                </button>
+                <button class="btn btn-primary" ng-click="addKhachHang()">
+                  Thêm Khách Hàng
+                </button>
+              </div>
             </div>
+          </div>
         </div>
-    </div>
-    <!-- Phân trang -->
-    <div class="d-flex justify-content-center my-3">
-        <button class="btn btn-primary" ng-click="previousPage()" ng-disabled="currentPage === 1">Trang trước</button>
-        <span class="mx-2">Trang {{currentPage}} / {{totalPages}}</span>
-        <button class="btn btn-primary" ng-click="nextPage()" ng-disabled="currentPage === totalPages">Trang kế tiếp</button>
+
+        <!-- View Modal -->
+        <div
+          class="modal fade"
+          id="viewDetails"
+          tabindex="-1"
+          role="dialog"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5>Chi Tiết Khách Hàng</h5>
+                <button
+                  class="btn-close"
+                  ng-click="closeViewDetails()"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <p>
+                  <strong>ID:</strong> {{ selectedKhachHang.id_khach_hang }}
+                </p>
+                <p>
+                  <strong>Mã Khách Hàng:</strong>
+                  {{ selectedKhachHang.ma_khach_hang }}
+                </p>
+                <p><strong>Họ Tên:</strong> {{ selectedKhachHang.ho_ten }}</p>
+                <p>
+                  <strong>Ngày Sinh:</strong>
+                  {{ selectedKhachHang.ngay_sinh }}
+                </p>
+                <p>
+                  <strong>Số Điện Thoại:</strong>
+                  {{ selectedKhachHang.so_dien_thoai }}
+                </p>
+                <p>
+                  <strong>Email:</strong>
+                  {{ selectedKhachHang.email }}
+                </p>
+                <p>
+                  <strong>Giới Tính:</strong>
+                  {{ selectedKhachHang.gioi_tinh ? 'Nam' : 'Nữ' }}
+                </p>
+                <p><strong>Địa Chỉ:</strong> {{ selectedKhachHang.dia_chi }}</p>
+                <p>
+                  <strong>Tên Tài Khoản:</strong>
+                  {{ selectedKhachHang.username_tai_khoan }}
+                </p>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" ng-click="closeViewDetails()">
+                  Đóng
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edit Modal -->
+        <div
+          class="modal fade"
+          id="viewEdit"
+          tabindex="-1"
+          role="dialog"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5>Sửa Khách Hàng</h5>
+                <button class="btn-close" ng-click="closeEditForm()"></button>
+              </div>
+              <div class="modal-body">
+                <form>
+                  <div class="mb-3">
+                    <label>Họ Tên</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      ng-model="selectedKhachHang.ho_ten"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label>Số Điện Thoại</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      ng-model="selectedKhachHang.so_dien_thoai"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label>Email</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      ng-model="selectedKhachHang.email"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label>Địa Chỉ</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      ng-model="selectedKhachHang.dia_chi"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label>Giới Tính</label>
+                    <select
+                      class="form-control"
+                      ng-model="selectedKhachHang.gioi_tinh"
+                    >
+                      <option value="true">Nam</option>
+                      <option value="false">Nữ</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label>Ngày Sinh</label>
+                    <input
+                      type="date"
+                      class="form-control"
+                      ng-model="selectedKhachHang.ngay_sinh"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label>Tên Tài Khoản</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      ng-model="selectedKhachHang.username_tai_khoan"
+                      disabled
+                    />
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" ng-click="closeEditForm()">
+                  Đóng
+                </button>
+                <button class="btn btn-primary" ng-click="updateKhachHang()">
+                  Lưu
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
-</div>
+    <script src="https://code.angularjs.org/1.8.2/angular.min.js"></script>
+    <script>
+      var app = angular.module("khachhangApp", []);
+      app.controller("KhachHangController", function ($scope, $http, $filter) {
+        $scope.khachhangList = [];
+        $scope.newKhachHang = {};
+        $scope.selectedKhachHang = {};
+        $scope.currentPage = 1;
+        $scope.pageSize = 5;
+        $scope.totalPages = 0;
 
-</body>
+        $scope.fetchKhachHang = function () {
+          $http.get("/admin/khach-hang/api").then(
+            function (response) {
+              $scope.khachhangList = response.data;
+              $scope.totalPages = Math.ceil(
+                $scope.khachhangList.length / $scope.pageSize
+              );
+              $scope.paginatedKhachHangList = $scope.khachhangList.slice(
+                0,
+                $scope.pageSize
+              );
+            },
+            function (error) {
+              console.error("Error fetching data:", error);
+            }
+          );
+        };
+
+        $scope.paginate = function () {
+          const start = ($scope.currentPage - 1) * $scope.pageSize;
+          const end = start + $scope.pageSize;
+          $scope.paginatedKhachHangList = $scope.khachhangList.slice(
+            start,
+            end
+          );
+        };
+
+        $scope.previousPage = function () {
+          if ($scope.currentPage > 1) {
+            $scope.currentPage--;
+            $scope.paginate();
+          }
+        };
+
+        $scope.nextPage = function () {
+          if ($scope.currentPage < $scope.totalPages) {
+            $scope.currentPage++;
+            $scope.paginate();
+          }
+        };
+
+        $scope.showAddForm = function () {
+          $scope.newKhachHang = {};
+          $("#viewAdd").modal("show");
+        };
+
+        $scope.closeAddForm = function () {
+          $("#viewAdd").modal("hide");
+        };
+
+        $scope.addKhachHang = function () {
+          // Format ngay_sinh to yyyy-MM-dd
+          if ($scope.newKhachHang.ngay_sinh) {
+            $scope.newKhachHang.ngay_sinh = $filter("date")(
+              $scope.newKhachHang.ngay_sinh,
+              "yyyy-MM-dd"
+            );
+          }
+
+          $http.post("/admin/khach-hang/api/add", $scope.newKhachHang).then(
+            function (response) {
+              console.log("Customer added successfully:", response.data);
+              $scope.khachhangList.push(response.data);
+              $scope.paginate(); // Refresh pagination if applicable
+              $scope.closeAddForm(); // Close the modal form
+              $scope.fetchKhachHang();
+            },
+            function (error) {
+              console.error("Error adding customer:", error);
+            }
+          );
+        };
+
+        $scope.viewDetails = function (khach) {
+          $scope.selectedKhachHang = khach;
+          $("#viewDetails").modal("show");
+        };
+
+        $scope.closeViewDetails = function () {
+          $("#viewDetails").modal("hide");
+        };
+
+        $scope.editCustomer = function (khach) {
+          $scope.selectedKhachHang = angular.copy(khach);
+          $("#viewEdit").modal("show");
+        };
+
+        $scope.closeEditForm = function () {
+          $("#viewEdit").modal("hide");
+        };
+
+        $scope.updateKhachHang = function () {
+          if ($scope.selectedKhachHang.ngay_sinh) {
+            $scope.selectedKhachHang.ngay_sinh = $filter("date")(
+              $scope.selectedKhachHang.ngay_sinh,
+              "yyyy-MM-dd"
+            );
+          }
+          $http
+            .put(
+              "/admin/khach-hang/api/update/" +
+                $scope.selectedKhachHang.id_khach_hang,
+              $scope.selectedKhachHang
+            )
+            .then(
+              function (response) {
+                const index = $scope.khachhangList.findIndex(
+                  (kh) => kh.id_khach_hang === response.data.id_khach_hang
+                );
+                if (index !== -1) {
+                  $scope.khachhangList[index] = response.data;
+                  $scope.paginate();
+                }
+                $scope.closeEditForm();
+                $scope.fetchKhachHang();
+              },
+              function (error) {
+                console.error("Error updating customer:", error);
+              }
+            );
+        };
+
+        $scope.fetchKhachHang();
+      });
+    </script>
+  </body>
 </html>

@@ -145,6 +145,10 @@
                 <td th:text="${dotGiamGia.loaiGiamGia == 0 ? 'Giảm theo phần trăm' : 'Giảm theo tiền'}"></td>
                 <td>
                     <a th:href="@{/admin/dot-giam-gia/detail/{id}(id=${dotGiamGia.idGiamGia})}" class="btn btn-info">Detail</a>
+                    <a th:href="@{/admin/dot-giam-gia/update/{id}(id=${dotGiamGia.idGiamGia})}"
+                       th:classappend="${dotGiamGia.trangThai == 2} ? 'disabled' : ''"
+                       th:attr="disabled=${dotGiamGia.trangThai == 2}"
+                       class="btn btn-warning">Cập Nhật</a>
                 </td>
             </tr>
             </tbody>

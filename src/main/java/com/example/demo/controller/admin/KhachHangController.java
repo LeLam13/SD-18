@@ -5,6 +5,9 @@ import com.example.demo.dto.reponse.KhachHangResponseDTO;
 import com.example.demo.dto.request.KhachHangRequestDTO;
 import com.example.demo.entity.khachhang;
 import com.example.demo.repo.khachhangRePo;
+
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,7 +18,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("${admin.domain}/khach-hang")
@@ -26,7 +32,6 @@ public class KhachHangController {
 
     @Autowired
     private KhachHangService khachHangService;
-    private Object KhachHangResponseDTO;
 
     // Display customer view page
     @GetMapping("")
@@ -48,15 +53,69 @@ public class KhachHangController {
         }
     }
 
-    // Add new customer via API
     @PostMapping("/api/add")
     @ResponseBody
-    public ResponseEntity<KhachHangResponseDTO> addKhachHang(@RequestBody KhachHangRequestDTO khachHangRequestDTO) {
+    public ResponseEntity<KhachHangResponseDTO> addKhachHang(
+            @RequestBody @Valid KhachHangRequestDTO khachHangRequestDTO) {
         try {
-            KhachHangResponseDTO savedKhachHang = khachHangService.addKhachHang((com.example.demo.dto.reponse.KhachHangResponseDTO) KhachHangResponseDTO);
+            KhachHangResponseDTO savedKhachHang = khachHangService.addKhachHang(khachHangRequestDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedKhachHang);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    @PutMapping("/api/update/{id}")
+    @ResponseBody
+    public ResponseEntity<?> updateKhachHang(
+            @PathVariable("id") Long id,
+            @RequestBody KhachHangRequestDTO khachHangRequestDTO) {
+        try {
+            // Fetch existing customer
+            khachhang existingKhachHang = khachHangRepo.findById(id.intValue())
+                    .orElseThrow(() -> new RuntimeException("Customer with ID " + id + " not found"));
+
+            // Update fields
+            existingKhachHang.setHoTen(khachHangRequestDTO.getHoTen());
+            existingKhachHang.setSoDienThoai(khachHangRequestDTO.getSoDienThoai());
+            existingKhachHang.setDiaChi(khachHangRequestDTO.getDiaChi());
+            existingKhachHang.setEmail(khachHangRequestDTO.getEmail()); // Update email
+
+            // Validate and update gender
+            Boolean gioiTinh = khachHangRequestDTO.getGioiTinh();
+            if (gioiTinh == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Giới tính không được để trống.");
+            }
+            existingKhachHang.setGioiTinh(gioiTinh);
+
+            // Validate and update date of birth
+            try {
+                LocalDate ngaySinh = LocalDate.parse(khachHangRequestDTO.getNgaySinh());
+                existingKhachHang.setNgaySinh(ngaySinh);
+            } catch (DateTimeParseException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body("Ngày sinh không hợp lệ. Định dạng đúng là yyyy-MM-dd.");
+            }
+
+            // Save updated customer
+            khachhang updatedKhachHang = khachHangRepo.save(existingKhachHang);
+
+            // Convert to response DTO
+            KhachHangResponseDTO responseDTO = new KhachHangResponseDTO();
+            responseDTO.setId_khach_hang(updatedKhachHang.getIdKhachHang());
+            responseDTO.setMaKhachHang(updatedKhachHang.getMaKhachHang());
+            responseDTO.setHoTen(updatedKhachHang.getHoTen());
+            responseDTO.setSoDienThoai(updatedKhachHang.getSoDienThoai());
+            responseDTO.setDiaChi(updatedKhachHang.getDiaChi());
+            responseDTO.setGioiTinh(updatedKhachHang.isGioiTinh());
+            responseDTO.setNgaySinh(updatedKhachHang.getNgaySinh().toString());
+            responseDTO.setEmail(updatedKhachHang.getEmail()); // Add email to response DTO
+
+            return ResponseEntity.ok(responseDTO);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred.");
         }
     }
 

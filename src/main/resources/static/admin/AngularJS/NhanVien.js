@@ -109,6 +109,7 @@ app.controller("nhan-vien-ctrl", function ($scope, $http) {
             soCanCuocCongDan: $scope.soCanCuocCongDan,
             diaChi: $scope.diaChi,
             gioiTinh: $scope.gioiTinh,
+            email: $scope.email,  // Thêm trường email
         };
 
         $http.post(url, updateNhanVien).then(function (response) {

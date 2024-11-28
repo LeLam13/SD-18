@@ -1,95 +1,178 @@
-var app = angular.module('khachhangApp', []);
+var app = angular.module("khachhangApp", []);
 
-app.controller('KhachHangController', function($scope, $http) {
-    $scope.khachhangList = [];
-    $scope.searchQuery = "";
-    $scope.newKhachHang = {};
+app.controller("KhachHangController", function ($scope, $http, $filter) {
+  // Khai báo các biến
+  $scope.khachhangList = [];
+  $scope.paginatedKhachHangList = []; // Danh sách khách hàng đã phân trang
+  $scope.searchQuery = "";
+  $scope.newKhachHang = {};
+  $scope.selectedKhachHang = {}; // Dữ liệu cho khách hàng được chọn để xem hoặc sửa
 
-    // Fetch all customers
-    $scope.fetchKhachHang = function() {
-        $http.get('/admin/khach-hang/api')
-            .then(function(response) {
-                console.log("Data fetched:", response.data);
-                $scope.khachhangList = response.data;
-            }, function(error) {
-                console.error("Error fetching khach hang data:", error);
-            });
-    };
+  // Pagination variables
+  $scope.currentPage = 1; // Trang hiện tại
+  $scope.pageSize = 5; // Số khách hàng mỗi trang
+  $scope.totalPages = 0; // Tổng số trang
 
-    // Show Add Customer Form
-    $scope.showAddForm = function() {
-        $scope.newKhachHang = {}; // Reset form data
-        document.getElementById('addKhachHangModal').style.display = 'block';
-    };
+  // Fetch all customers
+  $scope.fetchKhachHang = function () {
+    $http.get("/admin/khach-hang/api").then(
+      function (response) {
+        $scope.khachhangList = response.data;
+        $scope.totalPages = Math.ceil(
+          $scope.khachhangList.length / $scope.pageSize
+        );
+        $scope.paginate(); // Gọi hàm phân trang
+      },
+      function (error) {
+        console.error("Error fetching customer data:", error);
+      }
+    );
+  };
 
-    // Close Add Customer Form
-    $scope.closeAddForm = function() {
-        document.getElementById('addKhachHangModal').style.display = 'none';
-    };
+  // Pagination logic
+  $scope.paginate = function () {
+    const startIndex = ($scope.currentPage - 1) * $scope.pageSize;
+    const endIndex = startIndex + $scope.pageSize;
+    $scope.paginatedKhachHangList = $scope.khachhangList.slice(
+      startIndex,
+      endIndex
+    );
+  };
 
-    // Add new customer
-    $scope.addKhachHang = function() {
-        console.log("Dữ liệu khách hàng mới:", $scope.newKhachHang); // Log để kiểm tra dữ liệu
-        $http.post('/admin/khach-hang/api/add', $scope.newKhachHang)
-            .then(function(response) {
-                console.log("Khách hàng đã được thêm:", response.data);
-                $scope.khachhangList.push(response.data); // Thêm khách hàng vào danh sách
-                $scope.closeAddForm(); // Đóng form
-            }, function(error) {
-                console.error("Lỗi khi thêm khách hàng:", error);
-            });
-    };
+  $scope.previousPage = function () {
+    if ($scope.currentPage > 1) {
+      $scope.currentPage--;
+      $scope.paginate();
+    }
+  };
 
-    // Initial call to fetch data
-    $scope.fetchKhachHang();
-    // Hiển thị Form Thêm Khách Hàng
-    $scope.showAddForm = function() {
-        $scope.newKhachHang = {}; // Reset dữ liệu form
-        $('#viewAdd').modal('show'); // Hiển thị modal bằng Bootstrap
-    };
+  $scope.nextPage = function () {
+    if ($scope.currentPage < $scope.totalPages) {
+      $scope.currentPage++;
+      $scope.paginate();
+    }
+  };
 
-// Đóng Form Thêm Khách Hàng
-    $scope.closeAddForm = function() {
-        $('#viewAdd').modal('hide'); // Ẩn modal bằng Bootstrap
-    };
-    // Các biến phân trang
-    $scope.currentPage = 1;          // Trang hiện tại
-    $scope.pageSize = 5;             // Số khách hàng mỗi trang
-    $scope.totalPages = 0;           // Tổng số trang
+  $scope.setPage = function (page) {
+    if (page >= 1 && page <= $scope.totalPages) {
+      $scope.currentPage = page;
+      $scope.paginate();
+    }
+  };
 
-    // Lấy danh sách khách hàng và tính tổng số trang
-    $scope.fetchKhachHang = function() {
-        $http.get('/admin/khach-hang/api')
-            .then(function(response) {
-                $scope.khachhangList = response.data;
-                $scope.totalPages = Math.ceil($scope.khachhangList.length / $scope.pageSize);
-            }, function(error) {
-                console.error("Lỗi khi lấy dữ liệu khách hàng:", error);
-            });
-    };
+  // Show Add Customer Form
+  $scope.showAddForm = function () {
+    $scope.newKhachHang = {}; // Reset form data
+    $("#viewAdd").modal("show"); // Hiển thị modal thêm khách hàng
+  };
 
-    // Hàm để chuyển đến trang trước
-    $scope.previousPage = function() {
-        if ($scope.currentPage > 1) {
-            $scope.currentPage--;
+  // Close Add Customer Form
+  $scope.closeAddForm = function () {
+    $("#viewAdd").modal("hide"); // Đóng modal thêm khách hàng
+  };
+
+  // Add new customer
+  $scope.addKhachHang = function () {
+    // Format ngay_sinh to yyyy-MM-dd
+    if ($scope.newKhachHang.ngay_sinh) {
+      $scope.newKhachHang.ngay_sinh = $filter("date")(
+        $scope.newKhachHang.ngay_sinh,
+        "yyyy-MM-dd"
+      );
+    }
+
+    $http.post("/admin/khach-hang/api/add", $scope.newKhachHang).then(
+      function (response) {
+        console.log("Customer added successfully:", response.data);
+        $scope.khachhangList.push(response.data);
+        $scope.paginate(); // Refresh pagination if applicable
+        $scope.closeAddForm(); // Close the modal form
+      },
+      function (error) {
+        console.error("Error adding customer:", error);
+      }
+    );
+  };
+
+  // View customer details
+  $scope.viewDetails = function (khach) {
+    $scope.selectedKhachHang = khach; // Gán dữ liệu khách hàng vào selectedKhachHang
+    $("#viewDetails").modal("show"); // Hiển thị modal chi tiết
+  };
+
+  $scope.closeViewDetails = function () {
+    $("#viewDetails").modal("hide");
+  };
+
+  // Edit customer
+  $scope.editCustomer = function (khach) {
+    $scope.selectedKhachHang = angular.copy(khach); // Copy dữ liệu để sửa
+    $("#viewEdit").modal("show"); // Hiển thị modal sửa
+  };
+
+  $scope.closeEditForm = function () {
+    $("#viewEdit").modal("hide");
+  };
+  $scope.applyDiscountCode = function () {
+    // Kiểm tra nếu mã giảm giá không được nhập
+    if (!$scope.discountCode || $scope.discountCode.trim() === "") {
+      $scope.discountError = "Vui lòng nhập mã giảm giá!";
+      $scope.discountSuccess = null;
+      $scope.tienGiam = 0; // Reset tiền giảm nếu không có mã
+      return; // Dừng lại ở đây nếu không có mã giảm giá
+    }
+
+    // Tiến hành gọi API nếu có mã giảm giá
+    $http
+      .get("/api/khuyen-mai/kiem-tra", {
+        params: { maKhuyenMai: $scope.discountCode },
+      })
+      .then(function (response) {
+        const discountRate = parseFloat(response.data); // Tỉ lệ giảm giá từ server (ví dụ: 10%)
+        $scope.tienGiam = $scope.getSum() * (discountRate / 100);
+        $scope.discountSuccess = "Áp dụng mã giảm giá thành công!";
+        $scope.discountError = null;
+        $scope.formatMoney(); // Cập nhật số tiền sau khi áp dụng mã giảm giá
+      })
+      .catch(function (error) {
+        $scope.discountError = error.data || "Mã giảm giá không hợp lệ!";
+        $scope.discountSuccess = null;
+        $scope.tienGiam = 0;
+        $scope.formatMoney(); // Cập nhật lại tiền khi không có mã giảm giá
+      });
+  };
+  // Update customer data
+  $scope.updateKhachHang = function () {
+    if ($scope.selectedKhachHang.ngay_sinh) {
+      $scope.selectedKhachHang.ngay_sinh = $filter("date")(
+        $scope.selectedKhachHang.ngay_sinh,
+        "yyyy-MM-dd"
+      );
+    }
+    $http
+      .put(
+        "/admin/khach-hang/api/update/" +
+          $scope.selectedKhachHang.id_khach_hang,
+        $scope.selectedKhachHang
+      )
+      .then(
+        function (response) {
+          const index = $scope.khachhangList.findIndex(
+            (kh) => kh.id_khach_hang === response.data.id_khach_hang
+          );
+          if (index !== -1) {
+            $scope.khachhangList[index] = response.data; // Cập nhật danh sách khách hàng
+            $scope.paginate(); // Cập nhật dữ liệu phân trang
+          }
+          $scope.closeEditForm(); // Đóng modal sửa
+          $scope.fetchKhachHang();
+        },
+        function (error) {
+          console.error("Error updating customer:", error);
         }
-    };
+      );
+  };
 
-    // Hàm để chuyển đến trang kế tiếp
-    $scope.nextPage = function() {
-        if ($scope.currentPage < $scope.totalPages) {
-            $scope.currentPage++;
-        }
-    };
-
-    // Hàm để thay đổi trang khi người dùng chọn trang
-    $scope.setPage = function(page) {
-        if (page >= 1 && page <= $scope.totalPages) {
-            $scope.currentPage = page;
-        }
-    };
-
-    // Hàm khởi tạo để lấy dữ liệu ban đầu
-    $scope.fetchKhachHang();
-
+  // Initialize data fetch
+  $scope.fetchKhachHang();
 });

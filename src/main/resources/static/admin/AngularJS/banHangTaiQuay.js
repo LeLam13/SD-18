@@ -177,12 +177,12 @@ app.controller("banhang-ctrl", function ($scope, $http) {
                 return JSON.stringify(data);  // Chuyển đối tượng thành chuỗi JSON
             }
         }) .then(function(response) {
-                console.log('Đơn hàng đã được thêm:', response.data);
-                $scope.getDonHang();
-                $scope.showNotification('Tạo Đơn Hàng Thành Công!','success');
+            console.log('Đơn hàng đã được thêm:', response.data);
+            $scope.getDonHang();
+            $scope.showNotification('Tạo Đơn Hàng Thành Công!','success');
         }).catch(function(error) {
-                console.error('Có lỗi xảy ra:', error);
-                $scope.showNotification('Tạo Đơn Hàng Thất Bại!','error');
+            console.error('Có lỗi xảy ra:', error);
+            $scope.showNotification('Tạo Đơn Hàng Thất Bại!','error');
         });
     };
 
@@ -236,7 +236,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
                     productInScope.soLuong--;
                 }
             }).catch(function(error) {
-                    console.error('Có lỗi xảy ra:', error);
+                console.error('Có lỗi xảy ra:', error);
             });
         }else {
             //console.log("check sản phẩm chưa tồn tạo ");
@@ -393,14 +393,14 @@ app.controller("banhang-ctrl", function ($scope, $http) {
                 return JSON.stringify(data);
             }
         }) .then(function(response) {
-                console.log('Hoá Đơn DATA:', response.data);
-                idHoaDoncheck = response.data.idHoaDon;
-                $scope.getKhachHang();
-                alert("Lưu Hoá Đơn Thành Công!");
-                $scope.showNotification('Lưu Hoá Đơn Thành Công!','success');
+            console.log('Hoá Đơn DATA:', response.data);
+            idHoaDoncheck = response.data.idHoaDon;
+            $scope.getKhachHang();
+            alert("Lưu Hoá Đơn Thành Công!");
+            $scope.showNotification('Lưu Hoá Đơn Thành Công!','success');
         }).catch(function(error) {
-                console.error('Có lỗi xảy ra khách hàng DATA:', error);
-                $scope.showNotification('Lưu Hoá Đơn Thất Bại!','error');
+            console.error('Có lỗi xảy ra khách hàng DATA:', error);
+            $scope.showNotification('Lưu Hoá Đơn Thất Bại!','error');
         });
     }
 
@@ -687,12 +687,12 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         $http.get("/don-hang/khuyen-mai/"+id).then(function (response) {
             console.log('khuyen mai by id:', response.data);
             $scope.khuyenMaiById = response.data;
-             $('#ma-khuyen-mai').val(response.data.maKhuyenMai);
-             if(response.data.mucGiamGia < 100){
-                 $('#muc-giam-gia').val(response.data.mucGiamGia + '%');
-             }else {
-                 $('#muc-giam-gia').val(response.data.mucGiamGia);
-             }
+            $('#ma-khuyen-mai').val(response.data.maKhuyenMai);
+            if(response.data.mucGiamGia < 100){
+                $('#muc-giam-gia').val(response.data.mucGiamGia + '%');
+            }else {
+                $('#muc-giam-gia').val(response.data.mucGiamGia);
+            }
 
             // $('#show-modal-khach').modal('hide');
         }).catch(function (errors) {
@@ -856,8 +856,8 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         // console.log("Details:", details);
         // Tìm sản phẩm tương ứng trong listProducts để lấy số lượng có sẵn
         let availableProduct = $scope.products.find(product => product?.idSanPhamChiTiet === details.idSanPham);
-         console.log("availableProduct: ",availableProduct);
-         console.log("availableProduct: ",$scope.products);
+        console.log("availableProduct: ",availableProduct);
+        console.log("availableProduct: ",$scope.products);
         // Kiểm tra nếu số lượng yêu cầu lớn hơn số lượng có sẵn
         if (availableProduct && details.soLuong > availableProduct.soLuong) {
             details.invalidQuantity = true;
@@ -892,7 +892,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         }).then(function(response) {
             //console.log('Sản phẩm thêm thành công');
             console.log('Sản phẩm thay đổi số lượng: ',response.data);
-             $scope.getProducts();
+            $scope.getProducts();
         }).catch(function(error) {
             console.error('Có lỗi xảy ra:', error);
         });
@@ -933,9 +933,6 @@ app.controller("banhang-ctrl", function ($scope, $http) {
             $scope.notification.show = false;
         }, 3000);
     };
-
-
-
 
 
     //load data product when run

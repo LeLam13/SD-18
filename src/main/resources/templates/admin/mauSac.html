@@ -78,7 +78,10 @@
                                     <tbody>
                                     <tr ng-repeat="m in items">
                                         <td>{{ page * size + $index + 1 }}</td>
-                                        <td>{{m.ma}}</td>
+                                        <td>
+                                            <!-- Hiển thị ô màu -->
+                                            <div style="width: 30px; height: 30px; background-color: {{m.ma}}; border: 1px solid #000; border-radius: 50%;"></div>
+                                        </td>
                                         <td>{{m.ten}}</td>
                                         <td>{{m.createDate | date:'yyyy-MM-dd'}}</td>
                                         <td>
@@ -88,11 +91,11 @@
                                         </td>
                                         <td>
                                             <a href="" class="edit" data-bs-toggle="modal" data-bs-target="#view"
-                                               ng-click="getMauSac(m.ma)">
+                                               ng-click="getMauSac(m.idMauSac)">
                                                 <i style='font-size:24px' class='fas'>&#xf06e;</i>
                                             </a>
                                             <a href="" class="edit" data-bs-toggle="modal" data-bs-target="#update"
-                                               ng-click="getMauSac(m.ma)">
+                                               ng-click="getMauSac(m.idMauSac)">
                                                 <i class="material-icons" title="Edit">&#xE254;</i>
                                             </a>
                                             <a href="" class="edit" ng-click="updateTT(m.idMauSac)">
@@ -105,19 +108,34 @@
 
                                 <!-- Điều hướng phân trang -->
                                 <nav aria-label="Page navigation" class="d-flex justify-content-center mt-3">
-                                    <ul class="pagination">
+                                    <ul class="pagination pagination-sm-125">
+                                        <!-- Nút Trang đầu -->
                                         <li class="page-item" ng-class="{ 'disabled': page === 0 }">
-                                            <a class="page-link" href="" ng-click="previousPage()">&#8592; Trang
-                                                trước</a>
+                                            <a class="page-link" href="" ng-click="goToFirstPage()"><small>&#8676; Trang đầu</small></a>
                                         </li>
+
+                                        <!-- Nút Trang trước -->
+                                        <li class="page-item" ng-class="{ 'disabled': page === 0 }">
+                                            <a class="page-link" href="" ng-click="previousPage()"><small>&#8592; Trang trước></small></a>
+                                        </li>
+
+                                        <!-- Hiển thị thông tin trang -->
                                         <li class="page-item disabled">
-                                            <span class="page-link">Trang {{ page + 1 }} / {{ totalPages }}</span>
+                                            <span class="page-link"><small>Trang {{ page + 1 }} / {{ totalPages }}</small></span>
                                         </li>
-                                        <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1|| page + 1 === totalPages + 1 }">
-                                            <a class="page-link" href="" ng-click="nextPage()">Trang sau &#8594;</a>
+
+                                        <!-- Nút Trang sau -->
+                                        <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 }">
+                                            <a class="page-link" href="" ng-click="nextPage()"><small>Trang sau &#8594;</small></a>
+                                        </li>
+
+                                        <!-- Nút Trang cuối -->
+                                        <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 }">
+                                            <a class="page-link" href="" ng-click="goToLastPage()"><small>Trang cuối &#8677;</small></a>
                                         </li>
                                     </ul>
                                 </nav>
+
 
                                 <div class="row">
                                     <div class="col-6">
@@ -186,12 +204,17 @@
                     <form>
                         <!-- Modal body -->
                         <div class="modal-body">
-
+                            <div class="mb-3">
+                                <label class="form-label">Mã màu:</label>
+                                <input type="color" ng-model="ma" class="form-control"
+                                       onfocus="document.getElementById('eMaMau').innerText = ''">
+                                <i id="eMaMau" style="color: red;"></i>
+                            </div>
                             <div class="mb-3">
                                 <label class="form-label">Tên Màu</label>
                                 <input type="text" ng-model="ten" class="form-control"
                                        onfocus="document.getElementById('eTenMau').innerText = ''">
-                                <i id="eTenMau" class="er"></i>
+                                <i id="eTenMau" class="er" style="color: red;"></i>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
 
@@ -217,22 +240,30 @@
                         <!-- Modal body -->
                         <div class="modal-body">
                             <div class="mb-3">
-                                <label class="form-label">Mã</label>
-                                <input type="text" ng-model="ma" class="form-control" readonly>
+                                <label class="form-label">ID:</label>
+                                <input type="text" ng-model="idMauSac" class="form-control" readonly>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Tên Màu</label>
+                                <label class="form-label">Mã màu:</label>
+                                <!-- Ô nhập mã màu -->
+                                <input type="color" ng-model="ma" class="form-control me-3"
+                                       onfocus="document.getElementById('eMaMauUd').innerText = ''" readonly>
+                                <i id="eMaMauUd" style="color: red;"></i>
+                                <!-- Hình tròn hiển thị mã màu -->
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Tên Màu:</label>
                                 <input type="text" ng-model="ten" class="form-control"
                                        onfocus="document.getElementById('eTenMauUd').innerText = ''">
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
-                                <i id="eTenMauUd" class="er"></i>
+                                <i id="eTenMauUd" class="er" style="color: red;"></i>
                             </div>
 
                         </div>
                         <!-- Modal footer -->
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" ng-click="update(ma)">Cập nhật</button>
+                            <button type="button" class="btn btn-danger" ng-click="update(idMauSac)">Cập nhật</button>
                         </div>
                     </form>
                 </div>
@@ -258,9 +289,15 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Mã</label>
-                                <input type="text" ng-model="ma" class="form-control" readonly>
-                                <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+                                <div class="d-flex align-items-center">
+                                    <!-- Ô nhập mã màu -->
+                                    <input type="text" ng-model="ma" class="form-control me-3" readonly>
+
+                                    <!-- Hình tròn hiển thị mã màu -->
+                                    <div style="width: 30px; height: 30px; background-color: {{ma}}; border: 1px solid #000; border-radius: 50%;"></div>
+                                </div>
                             </div>
+
                             <div class="mb-3">
                                 <label class="form-label">Tên Màu</label>
                                 <input type="text" ng-model="ten" class="form-control" readonly>

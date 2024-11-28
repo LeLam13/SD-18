@@ -1,13 +1,15 @@
-<!doctype html>
-<html lang="en" xmlns:th="http:/www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/admin/index}">
+<!DOCTYPE html>
+<html
+        lang="en"
+        xmlns:th="http:/www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{/admin/index}"
+>
 <head>
     <title>ALLDY SNEAKER | Sản Phẩm</title>
 </head>
 <body data-topbar="dark">
 <div class="main-content" layout:fragment="content">
-
     <style>
         .imgProduct {
             width: 100px;
@@ -17,20 +19,20 @@
 
     <div class="page-content">
         <div class="container-fluid">
-
             <!-- start page title -->
             <div class="row">
                 <div class="col-12">
-                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                    <div
+                            class="page-title-box d-sm-flex align-items-center justify-content-between"
+                    >
                         <h4 class="mb-sm-0 font-size-18">Sản Phẩm</h4>
 
                         <!-- <div class="page-title-right">
-                            <ol class="breadcrumb m-0">
-                                <li class="breadcrumb-item"><a href="javascript: void(0);">T</a></li>
-                                <li class="breadcrumb-item active">DataTables</li>
-                            </ol>
-                        </div> -->
-
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">T</a></li>
+                                        <li class="breadcrumb-item active">DataTables</li>
+                                    </ol>
+                                </div> -->
                     </div>
                 </div>
             </div>
@@ -46,121 +48,23 @@
                                     <!--                                        <button type="button" class="btn btn-primary">Thêm Sản Phẩm-->
                                     <!--                                        </button>-->
                                     <!--                                    </a>-->
-                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                                            data-bs-target="#spModal">
+                                    <button
+                                            type="button"
+                                            class="btn btn-primary"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#spModal"
+                                    >
                                         Thêm Sản Phẩm
                                     </button>
                                 </div>
-                                <div class="col-6 nav justify-content-end ">
-                                    <div class="dropdown">
-                                            <span data-bs-toggle="dropdown" aria-expanded="false"
-                                                  class="btn btn-primary">
-                                                <i data-feather="filter"></i>
-                                                <span class="badge bg-primary ms-1 ml-2"
-                                                      style="font-size: 11px;font-weight: bold"
-                                                      id="lengthFilter"></span>
-                                            </span>
-                                        <ul class="dropdown-menu" style="width: 500px;padding: 20px">
-                                            <li>
-                                                <b>Phân loại</b>
-                                                <div class="row">
-                                                    <div class="col-sm-6">
-                                                        <div class="mb-3">
-                                                            <label>Tên hoặc mã</label>
-                                                            <input type="text" ng-model="filterData.ten"
-                                                                   class="form-control"/>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label>Giá min</label>
-                                                            <input type="text" ng-model="filterData.giaBan"
-                                                                   class="form-control"/>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label>Giá Max</label>
-                                                            <input type="text" ng-model="filterData.giaMax"
-                                                                   class="form-control"/>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label>Xuất xứ</label>
-                                                            <select class="form-control" ng-model="filterData.xuatXu">
-                                                                <option value="" selected>Tất cả</option>
-                                                                <option ng-repeat="x in xuatXu" value="{{x.id}}">
-                                                                    {{x.ten}}
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-sm-6">
-                                                        <div class="mb-3">
-                                                            <label>Màu sắc</label>
-                                                            <select class="form-control" ng-model="filterData.mauSac">
-                                                                <option value="" selected>Tất cả</option>
-                                                                <option ng-repeat="m in mauSac" value="{{m.ma}}">
-                                                                    {{m.ten}}
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label>Thương Hiệu</label>
-                                                            <select class="form-control"
-                                                                    ng-model="filterData.thuongHieu">
-                                                                <option value="" selected>Tất cả</option>
-                                                                <option ng-repeat="t in thuongHieu" value="{{t.ma}}">
-                                                                    {{t.ten}}
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label>Kiểu dáng</label>
-                                                            <select class="form-control" ng-model="filterData.kieuDang">
-                                                                <option value="" selected>Tất cả</option>
-                                                                <option ng-repeat="k in kieuDang" value="{{k.id}}">
-                                                                    {{k.ten}}
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                        <div class="mb-3">
-                                                            <label>Chất liệu</label>
-                                                            <select class="form-control" ng-model="filterData.chatLieu">
-                                                                <option value="" selected>Tất cả</option>
-                                                                <option ng-repeat="c in chatLieu" value="{{c.id}}">
-                                                                    {{c.ten}}
-                                                                </option>
-                                                            </select>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <!--                                            <div class="dropdown-divider"></div>-->
-                                            <!--                                            <li>-->
-                                            <!--                                                <b>Sắp xếp</b>-->
-                                            <!--                                                <div class="mb-3">-->
-                                            <!--                                                    <select class="form-control" ng-model="filterData.sort">-->
-                                            <!--                                                        <option></option>-->
-                                            <!--                                                        <option value="1">Giá bán giảm dần</option>-->
-                                            <!--                                                        <option value="2">Giá bán tăng dần</option>-->
-                                            <!--                                                        <option value="3">Tên a -> z</option>-->
-                                            <!--                                                        <option value="4">Tên z <- a</option>-->
-                                            <!--                                                    </select>-->
-                                            <!--                                                </div>-->
-                                            <!--                                            </li>-->
-                                            <div class="dropdown-divider"></div>
-                                            <li>
-                                                <button class="btn btn-danger" type="button" style="float: left"
-                                                        ng-click="clearFilter()">Bỏ lọc
-                                                </button>
-                                                <button class="btn btn-primary" type="button" style="float: right"
-                                                        ng-click="filter(filterData)">Lọc
-                                                </button>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
                         <div class="card-body" style="min-height: 450px">
-                            <table id="datatable"
-                                   class="table table-hover dt-responsive  nowrap w-100">
+                            <table
+                                    id="datatable"
+                                    class="table table-hover dt-responsive nowrap w-100"
+                            >
                                 <thead>
                                 <tr>
                                     <th>STT</th>
@@ -181,7 +85,9 @@
                                 <tbody>
                                 <tr ng-if="items.length == 0">
                                     <td colspan="8">
-                                        <h3 class="text-center col-12 mt-5">Không có sản phẩm liên quan</h3>
+                                        <h3 class="text-center col-12 mt-5">
+                                            Không có sản phẩm liên quan
+                                        </h3>
                                     </td>
                                 </tr>
                                 <tr ng-repeat="p in items" style="cursor: pointer">
@@ -222,39 +128,75 @@
                                     <td>{{p.ma}}</td>
                                     <td>{{p.ten}}</td>
                                     <td>{{p.createDate | date:'yyyy-MM-dd'}}</td>
-                                    <td><span
-                                            ng-class="{'text-success': p.trangThai, 'text-danger': !p.trangThai}">{{p.trangThai ? "Đang hoạt động" : "Không hoạt động"}}</span>
+<!--                                    <td>{{p.totalInventory || 0}}</td>-->
+<!--                                    <td>{{p.totalSold || 0}}</td>-->
+                                    <td>
+                          <span
+                                  ng-class="{'text-success': p.trangThai, 'text-danger': !p.trangThai}">{{p.trangThai ? "Đang hoạt động" : "Không hoạt động"}}</span>
                                     </td>
-                                    <td style="display: flex; gap: 10px; align-items: center;">
-                                        <a href="" class="edit" ng-click="viewChiTiet(p.idSanPham)">
-                                            <i style='font-size:24px' class='fas'>&#xf06e;</i>
+                                    <td
+                                            style="display: flex; gap: 10px; align-items: center"
+                                    >
+                                        <a
+                                                href=""
+                                                class="edit"
+                                                ng-click="viewChiTiet(p.idSanPham)"
+                                        >
+                                            <i style="font-size: 24px" class="fas">&#xf06e;</i>
                                         </a>
-                                        <a href="" class="edit" data-bs-toggle="modal" data-bs-target="#update"
-                                           ng-click="getSanPham(p.ma)">
+                                        <a
+                                                href=""
+                                                class="edit"
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#update"
+                                                ng-click="getSanPham(p.ma)"
+                                        >
                                             <i class="material-icons" title="Edit">&#xE254;</i>
                                         </a>
-                                        <a href="" class="edit" ng-click="updateTT(p.idSanPham)">
-                                            <i style="font-size:20px" class="fa">&#xf021;</i>
+                                        <a
+                                                href=""
+                                                class="edit"
+                                                ng-click="updateTT(p.idSanPham)"
+                                        >
+                                            <i style="font-size: 20px" class="fa">&#xf021;</i>
                                         </a>
-                                        <a href="/admin/san-pham/formAdd/{{p.idSanPham}}" class="edit">
-                                            <i style="font-size:24px;color: green;" class="fa">&#xf0fe;</i>
+                                        <a
+                                                href="/admin/san-pham/formAdd/{{p.idSanPham}}"
+                                                class="edit"
+                                        >
+                                            <i style="font-size: 24px; color: green" class="fa"
+                                            >&#xf0fe;</i
+                                            >
                                         </a>
                                     </td>
                                 </tr>
                                 </tbody>
                             </table>
                             <nav aria-label="Page navigation" class="d-flex justify-content-center mt-3">
-                                <ul class="pagination">
+                                <ul class="pagination pagination-sm-125">
+                                    <!-- Nút Trang đầu -->
                                     <li class="page-item" ng-class="{ 'disabled': page === 0 }">
-                                        <a class="page-link" href="" ng-click="previousPage()">&#8592; Trang
-                                            trước</a>
+                                        <a class="page-link" href="" ng-click="goToFirstPage()"><small>&#8676; Trang đầu</small></a>
                                     </li>
+
+                                    <!-- Nút Trang trước -->
+                                    <li class="page-item" ng-class="{ 'disabled': page === 0 }">
+                                        <a class="page-link" href="" ng-click="previousPage()"><small>&#8592; Trang trước></small></a>
+                                    </li>
+
+                                    <!-- Hiển thị thông tin trang -->
                                     <li class="page-item disabled">
-                                        <span class="page-link">Trang {{ page + 1 }} / {{ totalPages }}</span>
+                                        <span class="page-link"><small>Trang {{ page + 1 }} / {{ totalPages }}</small></span>
                                     </li>
-                                    <li class="page-item"
-                                        ng-class="{ 'disabled': page === totalPages - 1 || page + 1 === totalPages + 1 }">
-                                        <a class="page-link" href="" ng-click="nextPage()">Trang sau &#8594;</a>
+
+                                    <!-- Nút Trang sau -->
+                                    <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 }">
+                                        <a class="page-link" href="" ng-click="nextPage()"><small>Trang sau &#8594;</small></a>
+                                    </li>
+
+                                    <!-- Nút Trang cuối -->
+                                    <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 }">
+                                        <a class="page-link" href="" ng-click="goToLastPage()"><small>Trang cuối &#8677;</small></a>
                                     </li>
                                 </ul>
                             </nav>
@@ -301,38 +243,53 @@
                         <!--                                </div>-->
                         <!--                            </div>-->
                         <!--                        </div>-->
-
                     </div>
 
                     <div class="modal" id="update">
                         <div class="modal-dialog">
                             <div class="modal-content">
-
                                 <!-- Modal Header -->
                                 <div class="modal-header">
                                     <h4 class="modal-title">Cập nhật</h4>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    <button
+                                            type="button"
+                                            class="btn-close"
+                                            data-bs-dismiss="modal"
+                                    ></button>
                                 </div>
                                 <form>
                                     <!-- Modal body -->
                                     <div class="modal-body">
                                         <div class="mb-3">
                                             <label class="form-label">Mã</label>
-                                            <input type="text" ng-model="ma" class="form-control" readonly>
+                                            <input
+                                                    type="text"
+                                                    ng-model="ma"
+                                                    class="form-control"
+                                                    readonly
+                                            />
                                             <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                                         </div>
                                         <div class="mb-3">
                                             <label class="form-label">Tên Sản Phẩm</label>
-                                            <input type="text" ng-model="ten" class="form-control"
-                                                   onfocus="document.getElementById('eTenMauUd').innerText = ''">
+                                            <input
+                                                    type="text"
+                                                    ng-model="ten"
+                                                    class="form-control"
+                                                    onfocus="document.getElementById('eTenMauUd').innerText = ''"
+                                            />
                                             <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                                             <i id="eTenMauUd" class="er"></i>
                                         </div>
-
                                     </div>
                                     <!-- Modal footer -->
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" ng-click="update(ma)">Cập nhật
+                                        <button
+                                                type="button"
+                                                class="btn btn-danger"
+                                                ng-click="update(ma)"
+                                        >
+                                            Cập nhật
                                         </button>
                                     </div>
                                 </form>
@@ -343,38 +300,49 @@
                     <div class="modal" id="spModal">
                         <div class="modal-dialog">
                             <div class="modal-content">
-
                                 <!-- Modal Header -->
                                 <div class="modal-header">
                                     <h4 class="modal-title">Thêm Sản Phẩm</h4>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    <button
+                                            type="button"
+                                            class="btn-close"
+                                            data-bs-dismiss="modal"
+                                    ></button>
                                 </div>
                                 <form>
                                     <!-- Modal body -->
                                     <div class="modal-body">
-
                                         <div class="mb-3">
                                             <label class="form-label">Tên Sản Phẩm</label>
-                                            <input type="text" ng-model="ten" class="form-control"
-                                                   onfocus="document.getElementById('eTenMau').innerText = ''">
+                                            <input
+                                                    type="text"
+                                                    ng-model="ten"
+                                                    class="form-control"
+                                                    onfocus="document.getElementById('eTenMau').innerText = ''"
+                                            />
                                             <i id="eTenMau" class="er"></i>
                                             <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                                         </div>
-
                                     </div>
                                     <!-- Modal footer -->
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" ng-click="create()">Thêm</button>
+                                        <button
+                                                type="button"
+                                                class="btn btn-danger"
+                                                ng-click="create()"
+                                        >
+                                            Thêm
+                                        </button>
                                     </div>
                                 </form>
                             </div>
                         </div>
                     </div>
-                </div> <!-- end col -->
-
-            </div> <!-- end row -->
+                </div>
+                <!-- end col -->
+            </div>
+            <!-- end row -->
         </div>
-
 
         <!-- container-fluid -->
     </div>
@@ -384,14 +352,14 @@
         <div class="container-fluid">
             <div class="row">
                 <div class="col-sm-6">
-                    <script>document.write(new Date().getFullYear())</script>
+                    <script>
+                        document.write(new Date().getFullYear());
+                    </script>
                     © ALLDY STORE.
                 </div>
-
             </div>
         </div>
     </footer>
-
 </div>
 <!-- end main content-->
 </body>

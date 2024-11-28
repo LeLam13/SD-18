@@ -18,9 +18,9 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
     var idSanPham = pathName[pathName.length - 1];
     if (idSanPham) {
         $http.get("/admin/san-pham/get/" + idSanPham).then(response => {
-           let sanPham = response.data;
-           $scope.tenSP=sanPham.ten;
-            console.log("san pham: ", $scope.sanPham);
+            let sanPham = response.data;
+            $scope.tenSP = sanPham.ten;
+            console.log("san pham: ", $scope.tenSP);
         }).catch(error => {
             console.error("Failed to fetch product details:", error);
             alert("Could not load product details. Please try again later.");
@@ -72,7 +72,7 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
     };
 
 
-    $scope.tables = []; // Mảng chứa các bảng màu với các kích thước tương ứng
+    $scope.tables = []; // Mảng chứa các bảng màu với các kích thước tương ứng cùng ảnh
 
 // Khi chọn màu
     $scope.selectColor = function () {
@@ -93,7 +93,7 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
                 });
 
                 // Thêm màu mới với tất cả kích cỡ hiện có vào tables
-                $scope.tables.push({mau: mau, size: allSizes});
+                $scope.tables.push({mau: mau, size: allSizes, img: {imageSrc: ""}});
             }
         });
     };
@@ -193,7 +193,169 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
         }
     };
 
+
+    $scope.getHinhAnh = function (HinhAnh) {
+        // Nếu HinhAnh là null hoặc không có tên, không thực hiện gì
+        if (!HinhAnh || !HinhAnh.ten) {
+            return Promise.resolve(null);  // Trả về null ngay lập tức mà không gọi API
+        }
+
+        // Kiểm tra nếu ảnh đã tồn tại
+        return $http.get("/admin/hinh-anh", { params: { ten: HinhAnh.ten } }).then(function (r) {
+            const existingImage = r.data;
+
+            if (!existingImage) {
+                // Nếu ảnh chưa tồn tại, thêm ảnh mới
+                var addHinhAnh = {
+                    ma: $scope.generateRandomString(8),
+                    ten: HinhAnh.ten
+                };
+                // Thực hiện POST để thêm ảnh
+                return $http.post("/admin/hinh-anh/add", addHinhAnh).then(function (addResponse) {
+                    console.log("Dữ liệu thêm ảnh mới:", addResponse.data);
+
+                    // Sau khi thêm ảnh mới, thực hiện GET để lấy lại ảnh với ID
+                    return $http.get("/admin/hinh-anh", { params: { ten: HinhAnh.ten } }).then(function (getResponse) {
+                        console.log("Dữ liệu ảnh mới với ID:", getResponse.data);
+                        return getResponse.data; // Trả về dữ liệu ảnh mới với idHinhAnh
+                    });
+                }).catch(function (err) {
+                    console.error("Lỗi khi thêm ảnh mới:", err);
+                    return null;  // Trả về null nếu có lỗi
+                });
+            } else {
+                // Nếu ảnh đã tồn tại, trả về ảnh đã có
+                return existingImage;
+            }
+        }).catch(function (err) {
+            console.error("Lỗi khi kiểm tra ảnh:", err);
+            return null;  // Trả về null nếu có lỗi
+        });
+    };
+
+
+
+
+
     $scope.form = {}; // Lưu thông tin nhập liệu và thông báo lỗi cho từng ô input
+
+    // $scope.create = function () {
+    //     // Xóa các thông báo lỗi trước khi kiểm tra
+    //     $scope.tables.forEach(function (table) {
+    //         table.size.forEach(function (size) {
+    //             if (!$scope.form[table.mau.idMauSac]) $scope.form[table.mau.idMauSac] = {};
+    //             if (!$scope.form[table.mau.idMauSac][size.idKichCo]) $scope.form[table.mau.idMauSac][size.idKichCo] = {};
+    //             $scope.form[table.mau.idMauSac][size.idKichCo].errorMessages = {}; // Reset lỗi cho mỗi ô input
+    //         });
+    //     });
+    //
+    //     var hasError = false;
+    //     $scope.tables.forEach(function (table) {
+    //         table.size.forEach(function (size) {
+    //             var sizeForm = $scope.form[table.mau.idMauSac][size.idKichCo];
+    //
+    //             if (sizeForm) {
+    //                 // Kiểm tra các lỗi nhập liệu
+    //                 if (sizeForm.soLuong <= 0 || sizeForm.soLuong == null) {
+    //                     sizeForm.errorMessages.soLuong = sizeForm.soLuong == null
+    //                         ? "Số lượng không được để trống"
+    //                         : "Số lượng phải lớn hơn 0";
+    //                     hasError = true;
+    //                 }
+    //                 if (sizeForm.giaNhap <= 0 || sizeForm.giaNhap == null) {
+    //                     sizeForm.errorMessages.giaNhap = sizeForm.giaNhap == null
+    //                         ? "Giá nhập không được để trống"
+    //                         : "Giá nhập phải lớn hơn 0";
+    //                     hasError = true;
+    //                 }
+    //                 if (sizeForm.giaBan <= 0 || sizeForm.giaBan == null) {
+    //                     sizeForm.errorMessages.giaBan = sizeForm.giaBan == null
+    //                         ? "Giá bán không được để trống"
+    //                         : "Giá bán phải lớn hơn 0";
+    //                     hasError = true;
+    //                 }
+    //                 if (sizeForm.giaNhap >= sizeForm.giaBan) {
+    //                     sizeForm.errorMessages.giaNhap = "Giá nhập phải nhỏ hơn giá bán";
+    //                     sizeForm.errorMessages.giaBan = "Giá bán phải lớn hơn giá nhập";
+    //                     hasError = true;
+    //                 }
+    //             }
+    //         });
+    //     });
+    //
+    //     // Nếu có lỗi, dừng lại và hiển thị thông báo lỗi
+    //     if (hasError) return;
+    //
+    //     // Xử lý thêm sản phẩm chi tiết nếu không có lỗi
+    //     var SanPhamChiTietList = [];
+    //     var promises = [];
+    //
+    //     $scope.tables.forEach(function (table) {
+    //         table.size.forEach(function (size) {
+    //             var sizeForm = $scope.form[table.mau.idMauSac][size.idKichCo];
+    //             var HinhAnh = { ten: table.img ? table.img.imageSrc : null };  // Kiểm tra nếu ảnh không null
+    //
+    //             // Nếu ảnh hợp lệ, xử lý lấy ảnh
+    //             var promise = $scope.getHinhAnh(HinhAnh).then(function (hinhAnh) {
+    //                 var SanPhamChiTiet = {
+    //                     ma: $scope.generateRandomString(8),
+    //                     idMauSac: table.mau.idMauSac,
+    //                     idKichCo: size.idKichCo,
+    //                     idChatLieu: $scope.selectedChatLieu,
+    //                     idXuatXu: $scope.selectedXuatXu,
+    //                     idSanPham: idSanPham,
+    //                     idThuongHieu: $scope.selectedThuongHieu,
+    //                     idKieuDang: $scope.selectedKieuDang,
+    //                     soLuong: sizeForm.soLuong,
+    //                     giaNhap: sizeForm.giaNhap,
+    //                     giaBan: sizeForm.giaBan,
+    //                     // Nếu ảnh không hợp lệ hoặc không chọn ảnh, để idHinhAnh là null
+    //                     idHinhAnh: hinhAnh && hinhAnh.idHinhAnh ? hinhAnh.idHinhAnh : null
+    //                 };
+    //                 SanPhamChiTietList.push(SanPhamChiTiet);
+    //             }).catch(function (err) {
+    //                 console.error("Lỗi khi xử lý ảnh:", err);
+    //                 var SanPhamChiTiet = {
+    //                     ma: $scope.generateRandomString(8),
+    //                     idMauSac: table.mau.idMauSac,
+    //                     idKichCo: size.idKichCo,
+    //                     idChatLieu: $scope.selectedChatLieu,
+    //                     idXuatXu: $scope.selectedXuatXu,
+    //                     idSanPham: idSanPham,
+    //                     idThuongHieu: $scope.selectedThuongHieu,
+    //                     idKieuDang: $scope.selectedKieuDang,
+    //                     soLuong: sizeForm.soLuong,
+    //                     giaNhap: sizeForm.giaNhap,
+    //                     giaBan: sizeForm.giaBan,
+    //                     idHinhAnh: null // Nếu không có ảnh, để idHinhAnh là null
+    //                 };
+    //                 SanPhamChiTietList.push(SanPhamChiTiet);
+    //             });
+    //
+    //             promises.push(promise);
+    //         });
+    //     });
+    //
+    //     // Chờ tất cả ảnh xử lý xong rồi mới thêm sản phẩm
+    //     Promise.all(promises).then(function () {
+    //         // Kiểm tra xem có bất kỳ SanPhamChiTiet nào hợp lệ không
+    //         if (SanPhamChiTietList.length > 0) {
+    //             // Gửi dữ liệu lên server
+    //             $http.post("/admin/san-pham/chi-tiet/add", SanPhamChiTietList).then(function (r) {
+    //                 alert("Thêm sản phẩm chi tiết thành công!");
+    //                 console.log("Dữ liệu sản phẩm:", $scope.tables);
+    //                 // location.href = `/admin/san-pham/` + idSanPham;
+    //             }).catch(function (err) {
+    //                 console.error("Thêm sản phẩm không thành công", err);
+    //             });
+    //         } else {
+    //             console.error("Không có sản phẩm chi tiết hợp lệ để thêm.");
+    //         }
+    //     }).catch(function (err) {
+    //         console.error("Lỗi khi xử lý các ảnh:", err);
+    //     });
+    // };
+
 
     $scope.create = function () {
         // Xóa các thông báo lỗi trước khi kiểm tra
@@ -211,34 +373,25 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
                 var sizeForm = $scope.form[table.mau.idMauSac][size.idKichCo];
 
                 if (sizeForm) {
-                    // Kiểm tra số lượng
-                    if (sizeForm.soLuong <= 0) {
-                        sizeForm.errorMessages.soLuong = "Số lượng phải lớn hơn 0";
+                    // Kiểm tra các lỗi nhập liệu
+                    if (sizeForm.soLuong <= 0 || sizeForm.soLuong == null) {
+                        sizeForm.errorMessages.soLuong = sizeForm.soLuong == null
+                            ? "Số lượng không được để trống"
+                            : "Số lượng phải lớn hơn 0";
                         hasError = true;
                     }
-                    if (sizeForm.soLuong == null) {
-                        sizeForm.errorMessages.soLuong = "Số lượng không được để trống";
+                    if (sizeForm.giaNhap <= 0 || sizeForm.giaNhap == null) {
+                        sizeForm.errorMessages.giaNhap = sizeForm.giaNhap == null
+                            ? "Giá nhập không được để trống"
+                            : "Giá nhập phải lớn hơn 0";
                         hasError = true;
                     }
-                    // Kiểm tra giá nhập
-                    if (sizeForm.giaNhap <= 0) {
-                        sizeForm.errorMessages.giaNhap = "Giá nhập phải lớn hơn 0";
+                    if (sizeForm.giaBan <= 0 || sizeForm.giaBan == null) {
+                        sizeForm.errorMessages.giaBan = sizeForm.giaBan == null
+                            ? "Giá bán không được để trống"
+                            : "Giá bán phải lớn hơn 0";
                         hasError = true;
                     }
-                    if (sizeForm.giaNhap == null) { // Sửa lỗi thiếu dấu ngoặc tròn
-                        sizeForm.errorMessages.giaNhap = "Giá nhập không được để trống";
-                        hasError = true;
-                    }
-                    // Kiểm tra giá bán
-                    if (sizeForm.giaBan <= 0) {
-                        sizeForm.errorMessages.giaBan = "Giá bán phải lớn hơn 0";
-                        hasError = true;
-                    }
-                    if (sizeForm.giaBan == null) {
-                        sizeForm.errorMessages.giaBan = "Giá bán không được để trống";
-                        hasError = true;
-                    }
-                    // Kiểm tra giá nhập < giá bán
                     if (sizeForm.giaNhap >= sizeForm.giaBan) {
                         sizeForm.errorMessages.giaNhap = "Giá nhập phải nhỏ hơn giá bán";
                         sizeForm.errorMessages.giaBan = "Giá bán phải lớn hơn giá nhập";
@@ -248,41 +401,75 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
             });
         });
 
-        // Nếu có lỗi, dừng lại và hiển thị thông báo lỗi, ngược lại tiếp tục thêm
-        if (hasError) {
-            return;
-        }
+        // Nếu có lỗi, dừng lại và hiển thị thông báo lỗi
+        if (hasError) return;
+
         // Xử lý thêm sản phẩm chi tiết nếu không có lỗi
         var SanPhamChiTietList = [];
+        var promises = [];
+
+        // Xử lý ảnh cho từng table (một lần duy nhất cho mỗi table)
         $scope.tables.forEach(function (table) {
-            table.size.forEach(function (size) {
-                var sizeForm = $scope.form[table.mau.idMauSac][size.idKichCo];
-                var SanPhamChiTiet = {
-                    ma: $scope.generateRandomString(8),
-                    idMauSac: table.mau.idMauSac,
-                    idKichCo: size.idKichCo,
-                    idChatLieu: $scope.selectedChatLieu,
-                    idXuatXu: $scope.selectedXuatXu,
-                    idSanPham: idSanPham,
-                    idThuongHieu: $scope.selectedThuongHieu,
-                    idKieuDang: $scope.selectedKieuDang,
-                    soLuong: sizeForm.soLuong,
-                    giaNhap: sizeForm.giaNhap,
-                    giaBan: sizeForm.giaBan
-                };
-                SanPhamChiTietList.push(SanPhamChiTiet);
+            var HinhAnh = { ten: table.img ? table.img.imageSrc : null }; // Kiểm tra nếu ảnh không null
+
+            var promise = $scope.getHinhAnh(HinhAnh).then(function (hinhAnh) {
+                // Lưu idHinhAnh vào table để dùng lại cho các size
+                table.idHinhAnh = hinhAnh && hinhAnh.idHinhAnh ? hinhAnh.idHinhAnh : null;
+            }).catch(function (err) {
+                console.error("Lỗi khi xử lý ảnh:", err);
+                table.idHinhAnh = null; // Nếu lỗi, để idHinhAnh là null
             });
+
+            promises.push(promise);
         });
 
-        // Gửi dữ liệu lên server
-        $http.post("/admin/san-pham/chi-tiet/add", SanPhamChiTietList).then(function (r) {
-            alert("Thêm sản phẩm chi tiết thành công!");
-            location.href = `/admin/san-pham/` + idSanPham;
+        // Chờ tất cả ảnh được xử lý xong
+        Promise.all(promises).then(function () {
+            $scope.tables.forEach(function (table) {
+                table.size.forEach(function (size) {
+                    var sizeForm = $scope.form[table.mau.idMauSac][size.idKichCo];
+
+                    if (sizeForm) {
+                        // Tạo đối tượng sản phẩm chi tiết
+                        var SanPhamChiTiet = {
+                            ma: $scope.generateRandomString(8),
+                            idMauSac: table.mau.idMauSac,
+                            idKichCo: size.idKichCo,
+                            idChatLieu: $scope.selectedChatLieu,
+                            idXuatXu: $scope.selectedXuatXu,
+                            idSanPham: idSanPham,
+                            idThuongHieu: $scope.selectedThuongHieu,
+                            idKieuDang: $scope.selectedKieuDang,
+                            soLuong: sizeForm.soLuong,
+                            giaNhap: sizeForm.giaNhap,
+                            giaBan: sizeForm.giaBan,
+                            idHinhAnh: table.idHinhAnh // Sử dụng id ảnh đã xử lý trước đó
+                        };
+
+                        SanPhamChiTietList.push(SanPhamChiTiet);
+                    }
+                });
+            });
+
+            // Gửi dữ liệu lên server nếu có sản phẩm hợp lệ
+            if (SanPhamChiTietList.length > 0) {
+                $http.post("/admin/san-pham/chi-tiet/add", SanPhamChiTietList).then(function (r) {
+                    alert("Thêm sản phẩm chi tiết thành công!");
+                    console.log("Dữ liệu sản phẩm:", $scope.tables);
+                    // location.href = `/admin/san-pham/` + idSanPham;
+                }).catch(function (err) {
+                    console.error("Thêm sản phẩm không thành công", err);
+                });
+            } else {
+                console.error("Không có sản phẩm chi tiết hợp lệ để thêm.");
+            }
         }).catch(function (err) {
-            console.log("Thêm sản phẩm không thành công", err);
+            console.error("Lỗi khi xử lý các ảnh:", err);
         });
-
     };
+
+
+
 
 
 // Hàm chọn tất cả checkbox con khi chọn checkbox chính
@@ -346,22 +533,88 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
     };
 
 
-    $scope.handleFileSelect = function(event, colorId, sizeId) {
-        const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                // Create image data URL for preview
-                if (!$scope.form[colorId][sizeId]) {
-                    $scope.form[colorId][sizeId] = {};
-                }
-                $scope.form[colorId][sizeId].imageSrc = e.target.result;
-                $scope.form[colorId][sizeId].imageFile = file; // Store the file if you want to upload it later
-                $scope.$apply();
-            };
-            reader.readAsDataURL(file);
+    // $scope.nameFile = null;
+    // $scope.fileModel = null;
+    $scope.onFileSelected1 = function (event) {
+        console.log("File selection initiated.");
+
+        // Lấy thông tin bảng từ data attribute
+        var table = angular.element(event.target).data('table');
+        var file = event.target.files[0]; // Lấy file từ input
+
+        if (!table) {
+            console.error("Không tìm thấy bảng (table) từ sự kiện.");
+            return;
         }
+
+        if (!file) {
+            console.warn("Không có tệp nào được chọn.");
+
+            // Xóa dữ liệu của table.img.imageSrc nếu người dùng nhấn Cancel
+            if (table.img) {
+                table.img.imageSrc = null;
+            }
+
+            // Cập nhật lại trong $scope.tables
+            for (let i = 0; i < $scope.tables.length; i++) {
+                if ($scope.tables[i].mau.idMauSac === table.mau.idMauSac) {
+                    if ($scope.tables[i].img) {
+                        $scope.tables[i].img.imageSrc = null;
+                        $scope.tables[i].idHinhAnh = null;
+                    }
+                    break;
+                }
+            }
+
+            console.log("Dữ liệu imageSrc đã được xóa:", $scope.tables);
+            $scope.$applyAsync();
+            return;
+        }
+
+        console.log("File được chọn:", file.name);
+        console.log("Bảng hiện tại:", table);
+
+        // Cập nhật tên file vào imageSrc của bảng
+        table.img = table.img || {}; // Đảm bảo img tồn tại
+        table.img.imageSrc = file.name;
+
+        // Cập nhật mảng $scope.tables
+        for (let i = 0; i < $scope.tables.length; i++) {
+            if ($scope.tables[i].mau.idMauSac === table.mau.idMauSac) {
+                $scope.tables[i].img = $scope.tables[i].img || {};
+                $scope.tables[i].img.imageSrc = file.name;
+                break;
+            }
+        }
+
+        console.log("Cập nhật bảng trong $scope.tables:", $scope.tables);
+
+        // Gọi getHinhAnh để xử lý ảnh
+        var HinhAnh = { ten: file.name };
+        $scope.getHinhAnh(HinhAnh).then(function (result) {
+            if (result) {
+                // Cập nhật idHinhAnh vào table
+                table.idHinhAnh = result.idHinhAnh;
+
+                // Đồng bộ lại idHinhAnh trong $scope.tables
+                for (let i = 0; i < $scope.tables.length; i++) {
+                    if ($scope.tables[i].mau.idMauSac === table.mau.idMauSac) {
+                        $scope.tables[i].idHinhAnh = result.idHinhAnh;
+                        break;
+                    }
+                }
+                console.log("Đã cập nhật idHinhAnh:", table.idHinhAnh);
+            } else {
+                console.warn("Không lấy được idHinhAnh.");
+            }
+        }).catch(function (err) {
+            console.error("Lỗi khi gọi getHinhAnh:", err);
+        });
+
+        // Đảm bảo AngularJS nhận diện thay đổi
+        $scope.$applyAsync();
     };
+
 
 
 

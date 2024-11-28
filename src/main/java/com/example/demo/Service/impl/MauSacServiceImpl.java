@@ -41,15 +41,16 @@ public class MauSacServiceImpl implements MauSacService {
 
     @Override
     public MauSac updateMauSac(MauSacRequestDTO mauSacRequestDTO) {
-        MauSac ms = mauSacRepo.findByMa(mauSacRequestDTO.getMa());
+        MauSac ms = mauSacRepo.findByIdMauSac(mauSacRequestDTO.getIdMauSac());
+        ms.setMa(mauSacRequestDTO.getMa());
         ms.setTen(mauSacRequestDTO.getTen());
         ms.setUpdateDate(date);
         return mauSacRepo.save(ms);
     }
 
     @Override
-    public MauSac getMauSac(String ma) {
-        return mauSacRepo.findByMa(ma);
+    public MauSac getMauSac(Integer idMauSac) {
+        return mauSacRepo.findByIdMauSac(idMauSac);
     }
 
     @Override

@@ -10,17 +10,20 @@ import java.util.List;
 
 @Service
 public interface SanPhamService {
-    public List<SanPham> getAll();
+    List<SanPham> getAll();
 
-    public Page<SanPham> findAll(Pageable pageable);
+    Page<SanPham> findAll(Pageable pageable);
 
-    public SanPham createSanPham(SanPhamRequestDTO sanPhamRequestDTO);
+    SanPham createSanPham(SanPhamRequestDTO sanPhamRequestDTO);
 
-    public SanPham getSanPham(String ma);
+    SanPham getSanPham(String ma);
 
-    public SanPham updateSanPham(SanPhamRequestDTO sanPhamRequestDTO);
+    SanPham updateSanPham(SanPhamRequestDTO sanPhamRequestDTO);
 
-    public SanPham updateTrangThai(Integer idSanPham);
+    SanPham updateTrangThai(Integer idSanPham);
 
-    public SanPham getByIdSanPham(Integer idSanPham);
+    SanPham getByIdSanPham(Integer idSanPham);
+
+    // Hàm bổ sung
+    Page<SanPham> findAllWithStatistics(Pageable pageable); // Tìm tất cả sản phẩm kèm số lượng tồn và đã bán
 }

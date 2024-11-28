@@ -41,6 +41,12 @@ public class KichCoRestController {
         return ResponseEntity.ok(kc);
     }
 
+    @GetMapping("/size/get-all")
+    public ResponseEntity<?> getAll2() {
+        List<KichCo> kc = kichCoService.getAll();
+        return ResponseEntity.ok(kc);
+    }
+
     @PostMapping("/admin/size/add")
     public ResponseEntity<?> createKichCo(@RequestBody KichCoRequestDTO kichCoRequestDTO) {
         kichCoService.createKichCo(kichCoRequestDTO);
