@@ -62,6 +62,11 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
             // $scope.idTrangThai = itemOrder.trangThai.tenTrangThai;
             idDonHangShow = itemOrder.idDonHang;
             if (response.data && itemOrder) {
+                if(itemOrder.trangThai.idTrangThai ===1){
+                    $('#cancel-order').show();
+                }else {
+                    $('#cancel-order').hide();
+                }
                 $('#trang-thai').text(itemOrder.trangThai.tenTrangThai);
                 $('#phi-van-chuyen').text(itemOrder.phiVanChuyen);
                 $('#ma-don-hang').text(itemOrder.maDonHang);
@@ -111,12 +116,11 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
             }
         }) .then(function(response) {
             console.log("check order after update: ",response.data);
+
             $scope.getAllOrderOnline();
+            $('#trang-thai').text(response.data.trangThai.tenTrangThai);
             // $('#modal-status').modal('hide');
             $scope.showNotification('Cập Nhật trạng Thái Thành công!','success');
-            //$scope.showStepUpdate(response);
-
-            // $scope.idTrangThai = response.data.trangThai.idTrangThai;
         }).catch(function(error) {
             console.error('Có lỗi xảy ra:', error);
             $scope.showNotification('Cập Nhật trạng Thái Thất Bại!','error');
@@ -336,6 +340,7 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
 
     $scope.hideStep = function (){
         $('#step-6').hide();
+        $('#cancel-order').hide();
     }
 
     // var intervalPromise = $interval(checkTrangThai, 3000); // Lưu tham chiếu interval
@@ -364,7 +369,6 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
             $http.get('/api/getTrangThai/' +idDonHangShow)  // Gọi API để lấy trạng thái mới
                 .then(function(response) {
                     // Cập nhật idTrangThai từ phản hồi server
-                    //$scope.idTrangThai = response.data.trangThai.idTrangThai;
                     const newTrangThai = response.data.trangThai.idTrangThai;
                     // Chỉ cập nhật giao diện nếu trạng thái thay đổi
                     if ($scope.idTrangThai !== newTrangThai) {
@@ -388,9 +392,17 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
                         if(newTrangThai ===5){
                             console.log("Trạng thái đạt 5, dừng tự động!");
                             $scope.showActive(5);
+                            $('#cancel-order').hide();
                             $scope.stopAutoCheck ();  // Dừng interval
-
                         }
+                        if(newTrangThai === 6){
+                            console.log("Trạng thái đạt 6, dừng tự động!");
+                            $scope.showCancelOrder();
+                            $('#cancel-order').hide();
+                            $scope.stopAutoCheck(); // Dừng interval
+                        }
+
+                        $('#trang-thai').text(response.data.trangThai.tenTrangThai);
                     }
                 })
                 .catch(function(error) {
@@ -405,6 +417,13 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
         for (let i = 1; i <= idTrangThai; i++) {
             $("#" + "step-" + i).addClass("active"); // Thêm class active cho các bước từ 1 đến idTrangThai
         }
+    };
+
+    $scope.showCancelOrder = function() {
+        $(".step").removeClass("active");
+        $("#step-6").show();
+        $("#step-1").addClass("active");
+        $("#step-6").addClass("active");
     };
 
     //in hoa đon online
@@ -462,6 +481,18 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
     $scope.isPaginationVisible = function () {
         return $scope.listOrderOnline.length > $scope.pageSize;
     };
+
+    $scope.showModalCancel = function (){
+        $('#modal-status').modal('show');
+    }
+    $scope.showModalConfirm = function (){
+        if(idDonHangShow === null){
+            $scope.showNotification('Chưa chọn đơn hàng!','error');
+        }else {
+            $('#confirmModal').modal('show');
+        }
+
+    }
 
 
     //load data

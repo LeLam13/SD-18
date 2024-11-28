@@ -533,6 +533,13 @@
                     </div>
                 </div>
 
+                <div ng-if="notification.show" class="notification-container">
+                    <div class="notification-content">
+                        <div class="notification-icon" ng-bind-html="notification.icon"></div>
+                        <div class="notification-message">{{ notification.message }}</div>
+                    </div>
+                </div>
+
                 <div class="modal fade" id="show-modal-khuyen-mai" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">

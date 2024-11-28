@@ -13,6 +13,13 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         return result;
     };
 
+    $scope.notification = {
+        show: false,
+        message: '',
+        type: '',
+        icon: ''
+    };
+
     $scope.provinces = [];
     $scope.selectedProvince = null;
     //quận-huyện
@@ -80,9 +87,13 @@ app.controller("banhang-ctrl", function ($scope, $http) {
             if (response.data.oldKhachHang) {
                 $('#nameKH').val(response.data.oldKhachHang.hoTen || '');
                 $('#sdtKH').val(response.data.oldKhachHang.soDienThoai || '');
+                $('#nameKHNhan').val(response.data.oldKhachHang.hoTen || '');
+                $('#sdtKHNhan').val(response.data.oldKhachHang.soDienThoai || '');
             } else {
                 $('#nameKH').val('');
                 $('#sdtKH').val('');
+                $('#nameKHNhan').val('');
+                $('#sdtKHNhan').val('');
             }
             $scope.khachHangById = response.data;
             // $scope.productDetails = response.data;
@@ -118,7 +129,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
     $scope.getKhachHang = function (){
         $http.get("/don-hang/get-khach-hang").then(function (response) {
             $scope.khachHang = response.data;
-            console.log("check get All khach hàng: ",$scope.khachHang);
+            //console.log("check get All khach hàng: ",$scope.khachHang);
         }).catch(function (errors) {
             console.error('Có lỗi xảy ra:', errors);
         })
@@ -131,8 +142,10 @@ app.controller("banhang-ctrl", function ($scope, $http) {
             $scope.khachHangById = response.data;
             $('#nameKH').val(response.data.ho_ten);
             $('#sdtKH').val(response.data.so_dien_thoai);
+            $('#nameKHNhan').val(response.data.ho_ten );
+            $('#sdtKHNhan').val(response.data.so_dien_thoai);
             $('#show-modal-khach').modal('hide');
-            console.log("$scope.khachHangById: ",$scope.khachHangById);
+            //console.log("$scope.khachHangById: ",$scope.khachHangById);
         }).catch(function (errors) {
             console.error('Có lỗi xảy ra:', errors);
         })
@@ -166,8 +179,10 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         }) .then(function(response) {
                 console.log('Đơn hàng đã được thêm:', response.data);
                 $scope.getDonHang();
+                $scope.showNotification('Tạo Đơn Hàng Thành Công!','success');
         }).catch(function(error) {
                 console.error('Có lỗi xảy ra:', error);
+                $scope.showNotification('Tạo Đơn Hàng Thất Bại!','error');
         });
     };
 
@@ -302,45 +317,45 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         }
         console.log("check data hoa đon: ",$scope.hoaDonData);
         if($scope.hoaDonData.idDonHang === null){
-            alert("Chưa Chọn đơn Hàng!");
+            $scope.showNotification('Chưa Chọn đơn Hàng!','error');
             return;
         }
 
         if(khachThanhToan === null || khachThanhToan ==0){
-            alert("Chưa Nhập tiền khách thanh toán!");
+            $scope.showNotification('Chưa Nhập tiền khách thanh toán!','error');
             return;
         }
 
         if (isNaN(khachThanhToan) || khachThanhToan === "") {
-            alert("Giá trị thanh toán không hợp lệ. Vui lòng nhập số!");
+            $scope.showNotification('Giá trị thanh toán không hợp lệ. Vui lòng nhập số!','error');
             return;
         }
 
         khachThanhToan = parseFloat(khachThanhToan);
 
         if (khachThanhToan < ($scope.getTienKhachPTra()+$scope.getFeeShip())) {
-            alert("Khách chưa thanh toán đủ tiền!");
+            $scope.showNotification('Khách chưa thanh toán đủ tiền!','error');
             return;
         }
 
         var sdt = $('#sdtKH').val();
         if(nameKH === "" || sdt === "") {
-            alert("Chưa Chọn Khách Hàng!");
+            $scope.showNotification('Chưa Chọn Khách Hàng!','error');
             return;
         }
 
         if ($scope.productDetails && $scope.productDetails.length === 0) {
-            alert("Chưa chọn sản phẩm!");
+            $scope.showNotification('Chưa chọn sản phẩm!','error');
             return;
         }
 
         if($scope.shippingMethod ==='2'){
             if(tenKhachNhan === null || tenKhachNhan ===""){
-                alert("Chưa nhập tên khách nhận!");
+                $scope.showNotification('Chưa nhập tên khách nhận!','error');
                 return;
             }
             if(sdtKhachNhan === null || sdtKhachNhan ===""){
-                alert("Chưa nhập số diện thoại khách nhận!");
+                $scope.showNotification('Chưa nhập số diện thoại khách nhận!','error');
                 return;
             }
             if($('#soNha').val() === null || $('#soNha').val()===""){
@@ -382,9 +397,10 @@ app.controller("banhang-ctrl", function ($scope, $http) {
                 idHoaDoncheck = response.data.idHoaDon;
                 $scope.getKhachHang();
                 alert("Lưu Hoá Đơn Thành Công!");
+                $scope.showNotification('Lưu Hoá Đơn Thành Công!','success');
         }).catch(function(error) {
                 console.error('Có lỗi xảy ra khách hàng DATA:', error);
-                alert("Lưu Hoá Đơn Thất Bại!");
+                $scope.showNotification('Lưu Hoá Đơn Thất Bại!','error');
         });
     }
 
@@ -415,6 +431,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         }) .then(function(response) {
             console.log('Khách Hàng DATA:', response.data);
             $scope.getKhachHang();
+            $scope.showNotification('Thêm Khách Hàng Thành Công!','success');
         }).catch(function(error) {
             console.error('Có lỗi xảy ra Khách Hàng DATA:', error);
             if (error.data) {
@@ -436,6 +453,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
                 $scope.getDonHang();
                 $scope.productDetails =[];
                 $scope.getProducts();
+                $scope.showNotification('Xoá Đơn Hàng Thành Công!','success');
             }).catch(function (errors){
                 console.error('Có lỗi xảy ra:', errors);
             })
@@ -502,6 +520,10 @@ app.controller("banhang-ctrl", function ($scope, $http) {
 
     //show-modal-khach
     $scope.openModal = function() {
+        if(selectedId === null){
+            $scope.showNotification("Chưa chọn đơn hàng!","error");
+            return;
+        }
         $('#show-modal-khach').modal('show');
     };
 
@@ -888,6 +910,28 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         if (page >= 1 && page <= $scope.totalPages) {
             $scope.currentPage = page;
         }
+    };
+
+    //thông báo
+    $scope.showNotification = function(message, type) {
+        $scope.notification.message = message;
+        $scope.notification.type = type;
+
+        // Chọn icon dựa trên loại thông báo
+        if (type === 'success') {
+            $scope.notification.icon = $sce.trustAsHtml('✔️');
+        } else if (type === 'error') {
+            $scope.notification.icon = $sce.trustAsHtml('❌');
+        } else {
+            $scope.notification.icon = $sce.trustAsHtml('ℹ️');
+        }
+
+        $scope.notification.show = true;
+
+        // Sử dụng $timeout để tự động ẩn sau 5 giây
+        $timeout(function() {
+            $scope.notification.show = false;
+        }, 3000);
     };
 
 
