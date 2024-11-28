@@ -15,4 +15,9 @@ public class SanPhamRequestDTO {
     private String ten;
     private Date createDate;
     private Date updateDate;
+    private String moTa;
+    private Integer idThuongHieu;
+    private Integer idKieuDang;
+    private Integer idChatLieu;
+    private Integer idXuatXu;
 }

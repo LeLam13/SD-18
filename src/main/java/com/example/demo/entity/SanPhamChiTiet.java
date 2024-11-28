@@ -73,9 +73,6 @@ public class SanPhamChiTiet {
     @Column(name = "so_tien_giam")
     private Float soTienGiam;
 
-    @Column(name = "mo_ta")
-    private String moTa;
-
 
     @ManyToOne
     @JoinColumn(name = "id_san_pham")
@@ -86,25 +83,11 @@ public class SanPhamChiTiet {
     @JoinColumn(name = "id_mau_sac")
     private MauSac idMauSac;
 
-    @ManyToOne
-    @JoinColumn(name = "id_thuong_hieu")
-    private ThuongHieu idThuongHieu;
-
-    @ManyToOne
-    @JoinColumn(name = "id_kieu_dang")
-    private KieuDang idKieuDang;
-
-    @ManyToOne
-    @JoinColumn(name = "id_chat_lieu")
-    private ChatLieu idChatLieu;
 
     @ManyToOne
     @JoinColumn(name = "id_kich_co")
     private KichCo idKichCo;
 
-    @ManyToOne
-    @JoinColumn(name = "id_xuat_xu")
-    private XuatXu idXuatXu;
 
     @ManyToOne
     @JoinColumn(name = "id_hinh_anh")

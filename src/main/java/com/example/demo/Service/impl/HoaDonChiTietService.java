@@ -79,7 +79,7 @@ public class HoaDonChiTietService {
             Map<String, Object> chiTietMap = new HashMap<>();
             chiTietMap.put("sanPhamTen", chiTiet.getSanPhamChiTiet().getIdSanPham().getTen());
             chiTietMap.put("maSanPhamChiTiet", chiTiet.getSanPhamChiTiet().getMa());
-            chiTietMap.put("chatLieu", chiTiet.getSanPhamChiTiet().getIdChatLieu().getTen());
+//            chiTietMap.put("chatLieu", chiTiet.getSanPhamChiTiet().getIdChatLieu().getTen());
             chiTietMap.put("kichCo", chiTiet.getSanPhamChiTiet().getIdKichCo().getTen());
             chiTietMap.put("soLuong", chiTiet.getSoLuong());
             chiTietMap.put("donGia", chiTiet.getDonGia());

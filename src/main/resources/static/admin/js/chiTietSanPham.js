@@ -106,6 +106,50 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
         })
     }
 
+    // Hàm kiểm tra sự tồn tại của các giá trị
+    $scope.checkIfExists = function () {
+        var checks = [];
+
+        // Kiểm tra từng trường (chỉ cần kiểm tra các trường có giá trị hợp lệ)
+        if ($scope.spct.idMauSac && $scope.spct.idMauSac.idMauSac) {
+            checks.push($http.get("/admin/san-pham/chi-tiet", { params: { idMauSac: $scope.spct.idMauSac.idMauSac, excludeId: $scope.spct.ma } }));
+        }
+
+        if ($scope.spct.idThuongHieu && $scope.spct.idThuongHieu.idThuongHieu) {
+            checks.push($http.get("/admin/san-pham/chi-tiet", { params: { idThuongHieu: $scope.spct.idThuongHieu.idThuongHieu, excludeId: $scope.spct.ma } }));
+        }
+
+        if ($scope.spct.idKieuDang && $scope.spct.idKieuDang.idKieuDang) {
+            checks.push($http.get("/admin/san-pham/chi-tiet", { params: { idKieuDang: $scope.spct.idKieuDang.idKieuDang, excludeId: $scope.spct.ma } }));
+        }
+
+        if ($scope.spct.idChatLieu && $scope.spct.idChatLieu.idChatLieu) {
+            checks.push($http.get("/admin/san-pham/chi-tiet", { params: { idChatLieu: $scope.spct.idChatLieu.idChatLieu, excludeId: $scope.spct.ma } }));
+        }
+
+        if ($scope.spct.idKichCo && $scope.spct.idKichCo.idKichCo) {
+            checks.push($http.get("/admin/san-pham/chi-tiet", { params: { idKichCo: $scope.spct.idKichCo.idKichCo, excludeId: $scope.spct.ma } }));
+        }
+
+        if ($scope.spct.idXuatXu && $scope.spct.idXuatXu.idXuatXu) {
+            checks.push($http.get("/admin/san-pham/chi-tiet", { params: { idXuatXu: $scope.spct.idXuatXu.idXuatXu, excludeId: $scope.spct.ma } }));
+        }
+
+        // Kiểm tra tất cả các giá trị cùng một lúc
+        return $q.all(checks).then(function (responses) {
+            // Kiểm tra tất cả các phản hồi, nếu có bất kỳ giá trị trùng nào, trả về false
+            for (let response of responses) {
+                if (response.data && response.data.length > 0) {
+                    return false; // Nếu tìm thấy sản phẩm trùng với giá trị, trả về false
+                }
+            }
+            return true; // Nếu không có giá trị trùng, trả về true
+        }).catch(function () {
+            return false; // Nếu có lỗi xảy ra trong khi kiểm tra
+        });
+    };
+
+
     $scope.update = function (ma) {
         var url = "/admin/san-pham/chi-tiet/update" + "/" + ma;
         var updateSPCT = {
@@ -118,6 +162,7 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
             idChatLieu: $scope.spct.idChatLieu.idChatLieu,
             idKichCo: $scope.spct.idKichCo.idKichCo,
             idXuatXu: $scope.spct.idXuatXu.idXuatXu,
+            idHinhAnh:$scope.spct.idHinhAnh.idHinhAnh
         }
         $http.post(url, updateSPCT).then(function (r) {
             alert("Update thành công");
@@ -208,7 +253,146 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
         return brightness > 128 ? 'black' : 'white';
     };
 
+    $scope.generateRandomString = function (length) {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let result = '';
 
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            result += characters[randomIndex];
+        }
+
+        return result;
+    };
+
+
+    $scope.getHinhAnh = function (HinhAnh) {
+        console.log("getHinhAnh gọi với:", HinhAnh);
+
+        if (!HinhAnh || !HinhAnh.ten) {
+            console.log("Không có tên ảnh.");
+            return Promise.resolve(null);  // Trả về null nếu không có tên
+        }
+
+        return $http.get("/admin/hinh-anh", { params: { ten: HinhAnh.ten } })
+            .then(function (response) {
+                console.log("API trả về:", response.data);
+                const existingImage = response.data;
+
+                if (!existingImage) {
+                    var addHinhAnh = {
+                        ma: $scope.generateRandomString(8),
+                        ten: HinhAnh.ten
+                    };
+
+                    return $http.post("/admin/hinh-anh/add", addHinhAnh)
+                        .then(function (addResponse) {
+                            console.log("Dữ liệu ảnh mới:", addResponse.data);
+                            return addResponse.data;
+                        });
+                } else {
+                    return existingImage;  // Trả về ảnh đã có
+                }
+            })
+            .catch(function (err) {
+                console.error("Lỗi khi gọi API:", err);
+                return Promise.resolve(null);  // Đảm bảo Promise vẫn trả về, không gây lỗi
+            });
+    };
+
+
+    $scope.triggerFileInput = function (idSanPhamChiTiet) {
+        // Tìm thẻ input file tương ứng và kích hoạt click
+        const fileInput = document.getElementById("formFile-" + idSanPhamChiTiet);
+        if (fileInput) {
+            fileInput.click();
+        } else {
+            console.error("Không tìm thấy input file với id:", idSanPhamChiTiet);
+        }
+    };
+
+    $scope.onFileSelected1 = function (event) {
+        console.log("File selection initiated.");
+        console.log("check obj",$scope.spct);
+        // Lấy file từ input
+        var file = event.target.files[0];
+        if (!file) {
+            console.warn("Không có tệp nào được chọn.");
+            $scope.selectedFileName = null; // Xoá biến tạm
+            $scope.$applyAsync();
+            return;
+        }
+
+        // Lưu tên file vào biến tạm
+        $scope.selectedFileName = file.name;
+        console.log("File được chọn:", $scope.selectedFileName);
+
+        var HinhAnh = { ten: file.name };
+        console.log("HinhAnh được chọn:", HinhAnh);
+        // Gọi hàm kiểm tra xem HinhAnh đã tồn tại hay chưa
+        $scope.getHinhAnh(HinhAnh).then(function (result) {
+            console.log("check result:", result);
+            if (result) {
+                // Nếu tìm thấy, gán idHinhAnh vào spct
+                $scope.spct.idHinhAnh = result;
+                console.log("Tìm thấy idHinhAnh:", $scope.spct.idHinhAnh);
+            } else {
+                // Nếu không tìm thấy, xử lý khác (ví dụ: thông báo lỗi)
+                console.warn("Hình ảnh không tồn tại trong cơ sở dữ liệu.");
+                $scope.spct.idHinhAnh = null;
+            }
+
+            $scope.$applyAsync(); // Cập nhật view
+        }).catch(function (err) {
+            console.error("Lỗi khi gọi getHinhAnh:", err);
+            $scope.spct.idHinhAnh = null;
+            $scope.$applyAsync();
+        });
+    };
+
+
+// Hàm kiểm tra sự tồn tại của các giá trị
+    $scope.checkIfExists = function () {
+        var checks = [];
+
+        // Kiểm tra từng trường
+        if ($scope.spct.idMauSac && $scope.spct.idMauSac.idMauSac) {
+            checks.push($http.get("/admin/mau-sac", { params: { idMauSac: $scope.spct.idMauSac.idMauSac } }));
+        }
+
+        if ($scope.spct.idThuongHieu && $scope.spct.idThuongHieu.idThuongHieu) {
+            checks.push($http.get("/admin/thuong-hieu", { params: { idThuongHieu: $scope.spct.idThuongHieu.idThuongHieu } }));
+        }
+
+        if ($scope.spct.idKieuDang && $scope.spct.idKieuDang.idKieuDang) {
+            checks.push($http.get("/admin/kieu-dang", { params: { idKieuDang: $scope.spct.idKieuDang.idKieuDang } }));
+        }
+
+        if ($scope.spct.idChatLieu && $scope.spct.idChatLieu.idChatLieu) {
+            checks.push($http.get("/admin/chat-lieu", { params: { idChatLieu: $scope.spct.idChatLieu.idChatLieu } }));
+        }
+
+        if ($scope.spct.idKichCo && $scope.spct.idKichCo.idKichCo) {
+            checks.push($http.get("/admin/kich-co", { params: { idKichCo: $scope.spct.idKichCo.idKichCo } }));
+        }
+
+        if ($scope.spct.idXuatXu && $scope.spct.idXuatXu.idXuatXu) {
+            checks.push($http.get("/admin/xuat-xu", { params: { idXuatXu: $scope.spct.idXuatXu.idXuatXu } }));
+        }
+
+        // Kiểm tra tất cả các giá trị cùng một lúc
+        return $q.all(checks).then(function (responses) {
+            // Nếu có ít nhất 1 kết quả trả về lỗi, thì coi như không hợp lệ
+            for (let response of responses) {
+                if (!response.data || response.data.length === 0) {
+                    return false; // Trả về false nếu không tìm thấy dữ liệu
+                }
+            }
+            return true; // Tất cả đều hợp lệ
+        }).catch(function () {
+            return false; // Nếu có lỗi xảy ra trong khi kiểm tra
+        });
+    };
 //     const pathName = window.location.pathname.split('/');
 //     const idSP = pathName[pathName.length - 1]
 //

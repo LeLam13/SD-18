@@ -118,17 +118,17 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             KichCo kichCo = kichCoRepo.findById(dto.getIdKichCo()).orElseThrow(() -> new RuntimeException("Kích cỡ không tồn tại"));
             chiTiet.setIdKichCo(kichCo);
 
-            ChatLieu chatLieu = chatLieuRepo.findByIdChatLieu(dto.getIdChatLieu());
-            chiTiet.setIdChatLieu(chatLieu);
-
-            ThuongHieu thuongHieu = thuongHieuRepo.findByIdThuongHieu(dto.getIdThuongHieu());
-            chiTiet.setIdThuongHieu(thuongHieu);
-
-            XuatXu xuatXu = xuatXuRepo.findByIdXuatXu(dto.getIdXuatXu());
-            chiTiet.setIdXuatXu(xuatXu);
-
-            KieuDang kieuDang = kieuDangRepo.findByIdKieuDang(dto.getIdKieuDang());
-            chiTiet.setIdKieuDang(kieuDang);
+//            ChatLieu chatLieu = chatLieuRepo.findByIdChatLieu(dto.getIdChatLieu());
+//            chiTiet.setIdChatLieu(chatLieu);
+//
+//            ThuongHieu thuongHieu = thuongHieuRepo.findByIdThuongHieu(dto.getIdThuongHieu());
+//            chiTiet.setIdThuongHieu(thuongHieu);
+//
+//            XuatXu xuatXu = xuatXuRepo.findByIdXuatXu(dto.getIdXuatXu());
+//            chiTiet.setIdXuatXu(xuatXu);
+//
+//            KieuDang kieuDang = kieuDangRepo.findByIdKieuDang(dto.getIdKieuDang());
+//            chiTiet.setIdKieuDang(kieuDang);
 
             SanPham sanPham = sanPhamRepo.findByIdSanPham(dto.getIdSanPham());
             chiTiet.setIdSanPham(sanPham);
@@ -153,14 +153,17 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         ms.setGiaBan(sanPhamChiTietRequestDTO.getGiaBan());
         ms.setSoLuong(sanPhamChiTietRequestDTO.getSoLuong());
 
-        ChatLieu chatLieu = chatLieuRepo.findByIdChatLieu(sanPhamChiTietRequestDTO.getIdChatLieu());
-        ms.setIdChatLieu(chatLieu);
-
-        XuatXu xuatXu = xuatXuRepo.findByIdXuatXu(sanPhamChiTietRequestDTO.getIdXuatXu());
-        ms.setIdXuatXu(xuatXu);
-
-        KieuDang kieuDang = kieuDangRepo.findByIdKieuDang(sanPhamChiTietRequestDTO.getIdKieuDang());
-        ms.setIdKieuDang(kieuDang);
+//        ChatLieu chatLieu = chatLieuRepo.findByIdChatLieu(sanPhamChiTietRequestDTO.getIdChatLieu());
+//        ms.setIdChatLieu(chatLieu);
+//
+//        XuatXu xuatXu = xuatXuRepo.findByIdXuatXu(sanPhamChiTietRequestDTO.getIdXuatXu());
+//        ms.setIdXuatXu(xuatXu);
+//
+//        KieuDang kieuDang = kieuDangRepo.findByIdKieuDang(sanPhamChiTietRequestDTO.getIdKieuDang());
+//        ms.setIdKieuDang(kieuDang);
+//
+//        ThuongHieu thuongHieu = thuongHieuRepo.findByIdThuongHieu(sanPhamChiTietRequestDTO.getIdThuongHieu());
+//        ms.setIdThuongHieu(thuongHieu);
 
         MauSac mauSac = mauSacRepo.findByIdMauSac(sanPhamChiTietRequestDTO.getIdMauSac());
         ms.setIdMauSac(mauSac);
@@ -168,8 +171,9 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         KichCo kichCo = kichCoRepo.findByIdKichCo(sanPhamChiTietRequestDTO.getIdKichCo());
         ms.setIdKichCo(kichCo);
 
-        ThuongHieu thuongHieu = thuongHieuRepo.findByIdThuongHieu(sanPhamChiTietRequestDTO.getIdThuongHieu());
-        ms.setIdThuongHieu(thuongHieu);
+
+        HinhAnh hinhAnh = hinhAnhRepo.findByIdHinhAnh(sanPhamChiTietRequestDTO.getIdHinhAnh());
+        ms.setIdHinhAnh(hinhAnh);
 
         ms.setUpdateDate(date);
         return sanPhamChiTietRepo.save(ms);
