@@ -28,13 +28,8 @@ public class SanPhamChiTietRequestDTO {
     private Integer soLuong;
     private Float giaNhap;
     private Float giaBan;
-    private String moTa;
     private Integer idSanPham;
     private Integer idMauSac;
-    private Integer idThuongHieu;
-    private Integer idKieuDang;
-    private Integer idChatLieu;
     private Integer idKichCo;
-    private Integer idXuatXu;
     private Integer idHinhAnh;
 }

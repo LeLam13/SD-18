@@ -105,8 +105,7 @@
                                                                         ng-model="filterData.idMauSac">
                                                                     <option value="" selected>Tất cả</option>
                                                                     <option ng-repeat="m in mauSac"
-                                                                            value="{{m.idMauSac}}"
-                                                                            ng-style="{'background-color': m.ma, 'color': getTextColor(m.ma)}">
+                                                                            value="{{m.idMauSac}}">
                                                                         {{m.ten}}
                                                                     </option>
                                                                 </select>
@@ -303,10 +302,13 @@
                             <div class="row g-3">
                                 <!-- Cột 1: ID, Mã -->
                                 <div class="col-md-4">
-                                    <img ng-src="/assets/img/{{spct.idHinhAnh.ten}}"
+                                    <img ng-src="/assets/img/{{spct.idHinhAnh.ten ? spct.idHinhAnh.ten : 'default.png'}}"
                                          alt="Ảnh sản phẩm"
                                          class="img-thumbnail"
-                                         style="width: 120px; height: 120px; object-fit: cover; margin-bottom: 10px;">
+                                         style="width: 120px; height: 120px; object-fit: cover; cursor: pointer;"
+                                         ng-click="triggerFileInput(spct.idSanPhamChiTiet)" />
+
+                                    <input type="file" id="formFile-{{spct.idSanPhamChiTiet}}" class="d-none" onchange="angular.element(this).scope().onFileSelected1(event)">
                                 </div>
                                 <div class="col-md-4">
                                     <div class="mb-3">

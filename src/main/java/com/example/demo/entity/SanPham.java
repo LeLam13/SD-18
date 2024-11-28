@@ -5,6 +5,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import lombok.AllArgsConstructor;
@@ -48,6 +50,25 @@ public class SanPham {
 
     @Column(name = "update_by")
     private String updateBy;
+
+    @Column(name = "mo_ta")
+    private String moTa;
+
+    @ManyToOne
+    @JoinColumn(name = "id_thuong_hieu")
+    private ThuongHieu idThuongHieu;
+
+    @ManyToOne
+    @JoinColumn(name = "id_kieu_dang")
+    private KieuDang idKieuDang;
+
+    @ManyToOne
+    @JoinColumn(name = "id_chat_lieu")
+    private ChatLieu idChatLieu;
+
+    @ManyToOne
+    @JoinColumn(name = "id_xuat_xu")
+    private XuatXu idXuatXu;
 
     @Transient
     private Integer totalSold;

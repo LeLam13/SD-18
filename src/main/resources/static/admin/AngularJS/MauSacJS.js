@@ -1,5 +1,5 @@
 var app = angular.module("mau-sac", [])
-app.controller("mau-sac-ctrl", function ($scope, $http) {
+app.controller("mau-sac-ctrl", function ($scope, $http,$sce,$timeout) {
 
     $scope.items = []
     $scope.page = 0;  // Trang hiện tại
@@ -51,6 +51,33 @@ app.controller("mau-sac-ctrl", function ($scope, $http) {
         }
     };
 
+    $scope.notification = {
+        show: false,
+        message: '',
+        type: '',
+        icon: ''
+    };
+
+    $scope.showNotification = function(message, type) {
+        $scope.notification.message = message;
+        $scope.notification.type = type;
+
+        // Chọn icon dựa trên loại thông báo
+        if (type === 'success') {
+            $scope.notification.icon = $sce.trustAsHtml('✔️');
+        } else if (type === 'error') {
+            $scope.notification.icon = $sce.trustAsHtml('❌');
+        } else {
+            $scope.notification.icon = $sce.trustAsHtml('ℹ️');
+        }
+
+        $scope.notification.show = true;
+
+        // Sử dụng $timeout để tự động ẩn sau 5 giây
+        $timeout(function() {
+            $scope.notification.show = false;
+        }, 3000);
+    };
 
     $scope.generateRandomString = function (length) {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -204,7 +231,7 @@ app.controller("mau-sac-ctrl", function ($scope, $http) {
                 console.log("data", updateMau);
                 $http.post(url, updateMau).then(function (r) {
                     $scope.findAll();
-                    alert("Update thành công")
+                    alert("Update thanh cong");
                 }).catch(function (err) {
                     console.log("Update khong thanh cong", err);
                 })
