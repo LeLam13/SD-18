@@ -7,11 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Eighteen Polo</title>
+    <link rel="icon" href="assets/img/img.png" type="image/x-icon">
     <!--    <meta name="keywords" content="HTML5 Template">-->
     <meta name="description" content="Eighteen Polo">
     <meta name="author" content="p-themes">
     <!-- Favicon -->
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+
     <link rel="apple-touch-icon" sizes="180x180" href="assets/images/icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="assets/images/icons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="assets/images/icons/favicon-16x16.png">
@@ -50,9 +53,134 @@
     <!--    </script>-->
     <!--    <script th:src="@{/admin/js/ajax.googleapis.com_ajax_libs_angularjs_1.6.9_angular.min.js}"></script>-->
 </head>
+<style>
+    .tenlogo {
+        font-family: 'Brush Script MT', cursive; /* Font chữ nghệ thuật */
+        font-size: 36px; /* Kích thước chữ nhỏ gọn */
+        color: #333333; /* Màu đen than tinh tế */
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); /* Hiệu ứng bóng chữ nhẹ */
+        letter-spacing: 1.5px; /* Khoảng cách giữa các chữ cái nhẹ nhàng */
+        text-align: center; /* Căn giữa chữ */
+        margin: 20px 10px; /* Khoảng cách trên và lệch sang phải */
+        padding-right: 10px; /* Đẩy chữ lệch sang phải */
+        background: none; /* Không có nền để giữ màu đen nổi bật */
+        animation: fadeIn 2s ease-in-out; /* Hiệu ứng chuyển động */
+    }
 
+    /* Hiệu ứng chuyển động */
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    .tenmenu {
+        list-style: none; /* Bỏ dấu chấm của danh sách */
+        padding: 0;
+        margin: 0;
+        display: flex; /* Hiển thị danh sách ngang */
+        justify-content: space-evenly; /* Dàn đều các mục menu */
+        align-items: center; /* Căn giữa theo trục dọc */
+        background-color: transparent; /* Loại bỏ nền */
+        padding: 10px 0; /* Khoảng cách trên dưới */
+    }
+
+    .tenmenu li {
+        position: relative;
+    }
+
+    .tenmenu a {
+        font-family: 'Poppins', Arial, sans-serif; /* Phông chữ mềm mại và hiện đại */
+        font-size: 20px; /* Kích thước chữ vừa phải */
+        color: #1a1a1a; /* Màu đen đậm hơn */
+        font-weight: 500; /* Độ đậm vừa phải để trông nhẹ nhàng */
+        text-decoration: none; /* Bỏ gạch dưới */
+        text-transform: none; /* Giữ nguyên chữ */
+        padding: 5px 15px; /* Khoảng cách bên trong chữ */
+        transition: color 0.3s ease, transform 0.3s ease; /* Hiệu ứng hover */
+    }
+
+    .tenmenu a:hover {
+        transform: translateY(2px); /* Dịch xuống nhẹ khi hover */
+        color: #5e5b5b; /* Màu đen đậm hoàn toàn khi hover */
+    }
+
+
+
+    .marquee-container {
+        width: 100%; /* Chiếm toàn bộ chiều ngang */
+        background-color: #000; /* Màu nền đen */
+        color: #fff; /* Màu chữ trắng */
+        overflow: hidden; /* Ẩn phần nội dung ngoài phạm vi */
+        padding: 10px 0; /* Khoảng cách trên dưới */
+    }
+
+    .marquee-content {
+        display: flex; /* Hiển thị danh sách ngang */
+        animation: marquee 10s linear infinite; /* Hiệu ứng chạy liên tục */
+        white-space: nowrap; /* Đảm bảo không có ngắt dòng */
+    }
+
+    .marquee-content span {
+        padding-right: 30px; /* Khoảng cách giữa các phần tử */
+        font-family: 'Poppins', sans-serif; /* Font chữ mềm mại */
+        font-weight: 500; /* Độ đậm chữ vừa phải */
+        font-size: 14px; /* Kích thước chữ */
+    }
+
+    @keyframes marquee {
+        0% {
+            transform: translateX(0); /* Bắt đầu từ trái */
+        }
+        100% {
+            transform: translateX(-50%); /* Kéo hết 1 vòng */
+        }
+    }
+
+    .dssp {
+        font-size: 45px; /* Phông chữ to hơn */
+        font-weight: 500; /* Trọng lượng trung bình, nổi bật hơn */
+        text-align: center; /* Căn giữa chữ */
+        color: #2C3E50; /* Màu xanh đậm */
+        margin: 40px 0; /* Khoảng trắng phía trên và dưới để tách biệt */
+        line-height: 1.5; /* Tăng khoảng cách dòng, giúp chữ thoáng hơn */
+    }
+    /* Tăng kích thước chữ và làm chữ đậm hơn */
+    .intro-title {
+        color: #000000;  /* Màu chữ tối */
+        font-size: 4rem;  /* Tăng kích thước chữ */
+        font-weight: bold;  /* Làm chữ đậm */
+    }
+
+    /* Tăng kích thước và đậm cho chữ phụ */
+    .intro-subtitle {
+        color: #000000;  /* Màu chữ tối cho phần tiêu đề phụ */
+        font-size: 2.5rem;  /* Tăng kích thước chữ cho phụ đề */
+        font-weight: bold;  /* Làm chữ đậm */
+    }
+
+
+</style>
 <body>
 <div class="page-wrapper" ng-app="gio-hang" ng-controller="gio-hang-ctrl">
+    <div class="marquee-container">
+        <div class="marquee-content">
+            <span>🔥 Đơn từ 500k: Tặng Boxer Cao Cấp Trị Giá 99K</span>
+            <span>🔥 Đơn từ 800k: Tặng Combo Boxer + Vớ Cao Cấp Trị Giá 150K</span>
+            <span>🎁 Đơn từ 500k: Tặng Boxer Cao Cấp Trị Giá 99K</span>
+            <span>🔥 Đơn từ 500k: Tặng Boxer Cao Cấp Trị Giá 99K</span>
+            <!-- Nhân đôi nội dung để tạo hiệu ứng vòng lặp -->
+            <span>🔥 Đơn từ 500k: Tặng Boxer Cao Cấp Trị Giá 99K</span>
+            <span>🔥 Đơn từ 800k: Tặng Combo Boxer + Vớ Cao Cấp Trị Giá 150K</span>
+            <span>🎁 Đơn từ 500k: Tặng Boxer Cao Cấp Trị Giá 99K</span>
+        </div>
+    </div>
+
+
     <header class="header header-7">
         <div class="header-middle sticky-header">
             <div class="container">
@@ -60,26 +188,27 @@
                     <a href="trang-chu" class="logo">
                         <img src="assets/img/img.png" alt="Eighteen Polo Logo" width="60" height="25">
                     </a>
+                    <a class="tenlogo" href="trang-chu">Eighteen Polo</a>
                 </div><!-- End .header-left -->
 
                 <div class="header-right">
                     <nav class="main-nav">
-                        <ul class="menu sf-arrows">
+                        <ul  class="tenmenu">
                             <li class="megamenu-container active">
                             <li>
-                                <a href="trang-chu" class="sf-with-ul">Trang Chủ</a>
+                                <a href="trang-chu" >Trang Chủ</a>
                             </li>
                             <li>
-                                <a href="category.html" class="sf-with-ul">Sản Phẩm</a>
+                                <a href="category.html" >Sản Phẩm</a>
                             </li>
                             <li>
-                                <a href="/don-hang-khach" class="sf-with-ul">Đơn Hàng</a>
+                                <a href="/don-hang-khach" >Đơn Hàng</a>
                             </li>
                             <li>
-                                <a href="blog.html" class="sf-with-ul">Giới Thiệu</a>
+                                <a href="blog.html" >Giới Thiệu</a>
                             </li>
                             <li>
-                                <a href="elements-list.html" class="sf-with-ul">Liên Hệ</a>
+                                <a href="elements-list.html" >Liên Hệ</a>
                             </li>
                         </ul><!-- End .menu -->
                     </nav><!-- End .main-nav -->
@@ -154,7 +283,8 @@
                             <!-- Hiển thị "Xin Chào, [Tên Người Dùng]" khi người dùng đã đăng nhập -->
                             <span th:if="${#authentication.principal != 'anonymousUser'}">
             <i class="icon-user"></i>
-            <span class="user-name">Xin Chào: <span th:text="${#authentication.name}"></span></span>
+            <span class="user-name">Xin Chào: <span th:text="${#authentication.name}"></span>
+            </span>
         </span>
 
                             <!-- Hiển thị icon người dùng khi chưa đăng nhập -->
@@ -168,7 +298,7 @@
                         <!-- Nội dung dropdown -->
                         <div class="dropdown-menu dropdown-menu-right">
                             <!-- Thông tin cá nhân -->
-                            <a href="/profile" class="dropdown-item">
+                            <a href="/thong-tin-kh" class="dropdown-item">
                                 <i class="icon-user"></i> Thông tin cá nhân
                             </a>
 
@@ -204,19 +334,18 @@
                             }
                         }
                     }'>
-                <div class="intro-slide" style="background-image: url(assets/img/anh3.png);">
+                <div class="intro-slide" style="background-image: url(assets/img/anh5.webp);">
                     <div class="container intro-content">
-                        <h3 class="intro-subtitle text-primary">SEASONAL PICKS</h3><!-- End .h3 intro-subtitle -->
-                        <h1 class="intro-title">Get All <br>The Good Stuff</h1><!-- End .intro-title -->
-
+                        <h3 class="intro-title highlighted-text">Ngày Hội Black Friday</h3><!-- End .h3 intro-subtitle -->
+                        <h1 class="intro-title highlighted-text">Tất cả <br>Giảm 50%</h1><!-- End .intro-title -->
                         <a href="category.html" class="btn btn-outline-primary-2">
-                            <span>DISCOVER MORE</span>
+                            <span>Mua ngay</span>
                             <i class="icon-long-arrow-right"></i>
                         </a>
                     </div><!-- End .intro-content -->
                 </div><!-- End .intro-slide -->
 
-                <div class="intro-slide" style="background-image: url(assets/img/anh2.png);">
+                <div class="intro-slide" style="background-image: url(assets/img/anh6.webp);">
                     <div class="container intro-content">
                         <h3 class="intro-subtitle text-primary">all at 50% off</h3><!-- End .h3 intro-subtitle -->
                         <h1 class="intro-title text-white">The Most Beautiful <br>Novelties In Our Shop</h1>
@@ -232,6 +361,9 @@
 
             <span class="slider-loader"></span><!-- End .slider-loader -->
         </div><!-- End .intro-slider-container -->
+
+        <h2 class="dssp">Danh Sách Sản Phẩm</h2>
+
 
         <div class="container">
             <div class="toolbox toolbox-filter">
@@ -321,12 +453,12 @@
                             </div>
                         </div>
                         <li>
-                        <button class="btn btn-danger" type="button" style="float: left"
-                                ng-click="clearFilter()">Bỏ lọc
-                        </button>
-                        <button class="btn btn-primary" type="button" style="float: right"
-                                ng-click="filter(filterData)">Lọc
-                        </button>
+                            <button class="btn btn-danger" type="button" style="float: left"
+                                    ng-click="clearFilter()">Bỏ lọc
+                            </button>
+                            <button class="btn btn-primary" type="button" style="float: right"
+                                    ng-click="filter(filterData)">Lọc
+                            </button>
                         </li>
                     </div><!-- End .row -->
                 </div><!-- End .filter-area-wrapper -->
@@ -481,15 +613,16 @@
 
 <script th:src="@{/admin/assets/libs/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <a href="https://m.me/547997145053868" target="_blank" class="messenger-chat">
-    <img src="/assets/img/messengerlogo_icon.png" alt="Chat với chúng tôi trên Messenger" style="width: 50px; height: 50px; background-color: #0084ff; padding: 10px; border-radius: 50%;"/>
+    <img src="/assets/img/messengerlogo_icon.png" alt="Chat với chúng tôi trên Messenger"
+         style="width: 50px; height: 50px; background-color: #0084ff; padding: 10px; border-radius: 50%;"/>
 </a>
 
 <style>
     .messenger-chat {
-        position: fixed;        /* Đặt vị trí cố định */
-        right: 20px;            /* Đưa logo sang phải 20px */
-        bottom: 40px;           /* Dịch logo lên cao hơn 20px */
-        z-index: 9999;          /* Đảm bảo logo ở trên các phần tử khác */
+        position: fixed; /* Đặt vị trí cố định */
+        right: 20px; /* Đưa logo sang phải 20px */
+        bottom: 40px; /* Dịch logo lên cao hơn 20px */
+        z-index: 9999; /* Đảm bảo logo ở trên các phần tử khác */
     }
 
     /* Hiệu ứng rung lắc */
@@ -514,6 +647,7 @@
             transform: translateX(0); /* Quay lại vị trí ban đầu */
         }
     }
+
 </style>
 
 <script>
@@ -524,7 +658,7 @@
         messengerChat.classList.add('shake');
 
         // Sau 1 giây, bỏ class "shake" để dừng rung
-        setTimeout(function() {
+        setTimeout(function () {
             messengerChat.classList.remove('shake');
         }, 1000); // 1s để rung xong
 
@@ -533,7 +667,7 @@
     }
 
     // Bắt đầu hiệu ứng ngay khi trang được tải
-    window.onload = function() {
+    window.onload = function () {
         startShaking();
     };
 </script>

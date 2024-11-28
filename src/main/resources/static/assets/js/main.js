@@ -111,6 +111,7 @@ $(document).ready(function () {
         e.preventDefault();
     });
 
+
 	// Sidebar Filter - Show & Hide
     var $sidebarToggler = $('.sidebar-toggler');
     $sidebarToggler.on('click', function (e) {
