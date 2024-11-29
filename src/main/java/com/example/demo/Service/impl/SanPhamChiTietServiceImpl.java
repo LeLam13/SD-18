@@ -89,6 +89,11 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         return sanPhamChiTietRepo.findAll();
     }
 
+    @Override
+    public List<SanPhamChiTiet> getAllByIdSanPham(Integer idSanPham) {
+        return sanPhamChiTietRepo.findAllByIdSanPham(idSanPham);
+    }
+
     // Phương thức để tìm danh sách chi tiết sản phẩm từ các ID
     public List<SanPhamChiTiet> findByIds(List<Integer> sanPhamChiTietIds) {
         return sanPhamChiTietRepo.findAllByIdSanPhamChiTietIn(sanPhamChiTietIds);

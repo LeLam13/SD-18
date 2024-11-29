@@ -208,6 +208,17 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
             console.error("Có lỗi xảy ra:", errors);
         });
     };
+
+    $scope.viewChiTiet = function (idSanPham) {
+        // Chuyển hướng đến trang chi tiết sản phẩm
+        location.href = `/view-san-pham-chi-tiet/` + idSanPham ;
+    };
+
+    $scope.viewHome = function () {
+        window.location.href = "/trang-chu";
+    };
+
+
     var idSanPhamChiTiet = null;
 
     $scope.createCartWithUsername = function (id){

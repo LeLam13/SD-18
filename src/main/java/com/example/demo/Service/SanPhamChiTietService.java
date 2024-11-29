@@ -20,6 +20,8 @@ public interface SanPhamChiTietService {
 
     public List<SanPhamChiTiet> getAll();
 
+    public List<SanPhamChiTiet> getAllByIdSanPham(Integer idSanPham);
+
     public List<SanPhamChiTiet> createSanPhamChiTietList(List<SanPhamChiTietRequestDTO> sanPhamChiTietRequestDTOList);
 
     public SanPhamChiTiet getSanPhamChiTiet(String ma);

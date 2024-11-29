@@ -23,7 +23,7 @@ public interface SanPhamService {
 
     SanPham updateSanPham(SanPhamRequestDTO sanPhamRequestDTO);
 
-    SanPham updateSanPhamTheoID(SanPhamRequestDTO sanPhamRequestDTO);
+    SanPham updateSanPhamTheoID(Integer idSanPham,SanPhamRequestDTO sanPhamRequestDTO);
 
     SanPham updateTrangThai(Integer idSanPham);
 

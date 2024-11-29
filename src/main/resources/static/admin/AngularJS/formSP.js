@@ -13,7 +13,7 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
     $scope.selectedKieuDang = "";
     $scope.selectedThuongHieu = "";
     $scope.selectedXuatXu = "";
-    $scope.selectedXuatXu2 = "";
+
 
     const pathName = window.location.pathname.split('/');
     var idSanPham = pathName[pathName.length - 1];
@@ -21,7 +21,7 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
         $http.get("/admin/san-pham/get/" + idSanPham).then(response => {
             let sanPham = response.data;
             $scope.tenSP = sanPham.ten;
-            // $scope.selectedXuatXu = sanPham.idXuatXu && sanPham.idXuatXu.idXuatXu ? sanPham.idXuatXu.idXuatXu : null;
+            $scope.selectedXuatXu = sanPham.idXuatXu && sanPham.idXuatXu.idXuatXu ? sanPham.idXuatXu.idXuatXu : null;
             $scope.selectedChatLieu = sanPham.idChatLieu && sanPham.idChatLieu.idChatLieu ? sanPham.idChatLieu.idChatLieu : null;
             $scope.selectedKieuDang = sanPham.idKieuDang && sanPham.idKieuDang.idKieuDang ? sanPham.idKieuDang.idKieuDang : null;
             $scope.selectedThuongHieu = sanPham.idThuongHieu && sanPham.idThuongHieu.idThuongHieu ? sanPham.idThuongHieu.idThuongHieu : null;
@@ -40,30 +40,30 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
     //     }
     //     return null;
     // };
-
-    $scope.getTenChatLieu = function () {
-        if ($scope.selectedChatLieu) {
-            const found = $scope.chatLieu.find(c => c.idChatLieu === $scope.selectedChatLieu);
-            return found ? found.ten : "Không tìm thấy";
-        }
-        return null;
-    };
-
-    $scope.getTenKieuDang = function () {
-        if ($scope.selectedChatLieu) {
-            const found = $scope.kieuDang.find(k => k.idKieuDang === $scope.selectedKieuDang);
-            return found ? found.ten : "Không tìm thấy";
-        }
-        return null;
-    };
-
-    $scope.getTenThuongHieu = function () {
-        if ($scope.selectedChatLieu) {
-            const found = $scope.thuongHieu.find(c => c.idThuongHieu === $scope.selectedThuongHieu);
-            return found ? found.ten : "Không tìm thấy";
-        }
-        return null;
-    };
+    //
+    // $scope.getTenChatLieu = function () {
+    //     if ($scope.selectedChatLieu) {
+    //         const found = $scope.chatLieu.find(c => c.idChatLieu === $scope.selectedChatLieu);
+    //         return found ? found.ten : "Không tìm thấy";
+    //     }
+    //     return null;
+    // };
+    //
+    // $scope.getTenKieuDang = function () {
+    //     if ($scope.selectedChatLieu) {
+    //         const found = $scope.kieuDang.find(k => k.idKieuDang === $scope.selectedKieuDang);
+    //         return found ? found.ten : "Không tìm thấy";
+    //     }
+    //     return null;
+    // };
+    //
+    // $scope.getTenThuongHieu = function () {
+    //     if ($scope.selectedChatLieu) {
+    //         const found = $scope.thuongHieu.find(c => c.idThuongHieu === $scope.selectedThuongHieu);
+    //         return found ? found.ten : "Không tìm thấy";
+    //     }
+    //     return null;
+    // };
 
     $scope.getThuocTinh = function () {
         $http.get("/admin/mau-sac/get-all").then(r => {
@@ -273,7 +273,7 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
 
 
     $scope.onXuatXuChange = function () {
-        console.log("Selected Xuat Xu:", $scope.selectedXuatXu2);
+        console.log("Selected Xuat Xu:", $scope.selectedXuatXu);
     };
 
 
@@ -281,35 +281,36 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
         if (idSanPham) {
             $http.get("/admin/san-pham/get/" + idSanPham).then(response => {
                 let sanPham = response.data;
-                $scope.tenSP = sanPham.ten;
-                $scope.maSp = sanPham.ma;
                 // Kiểm tra từng giá trị và gán vào scope
-                $scope.selectedXuatXu = sanPham.idXuatXu && sanPham.idXuatXu.idXuatXu ? sanPham.idXuatXu.idXuatXu : null;
-                $scope.selectedChatLieu = sanPham.idChatLieu && sanPham.idChatLieu.idChatLieu ? sanPham.idChatLieu.idChatLieu : null;
-                $scope.selectedKieuDang = sanPham.idKieuDang && sanPham.idKieuDang.idKieuDang ? sanPham.idKieuDang.idKieuDang : null;
-                $scope.selectedThuongHieu = sanPham.idThuongHieu && sanPham.idThuongHieu.idThuongHieu ? sanPham.idThuongHieu.idThuongHieu : null;
-
+                $scope.checkXuatXu = sanPham.idXuatXu && sanPham.idXuatXu.idXuatXu ? sanPham.idXuatXu.idXuatXu : null;
+                $scope.checkChatLieu = sanPham.idChatLieu && sanPham.idChatLieu.idChatLieu ? sanPham.idChatLieu.idChatLieu : null;
+                $scope.checkKieuDang = sanPham.idKieuDang && sanPham.idKieuDang.idKieuDang ? sanPham.idKieuDang.idKieuDang : null;
+                $scope.checkThuongHieu = sanPham.idThuongHieu && sanPham.idThuongHieu.idThuongHieu ? sanPham.idThuongHieu.idThuongHieu : null;
 
 
                 // Nếu một trong bốn giá trị là null, thực hiện cập nhật
-                if (!$scope.selectedXuatXu || !$scope.selectedChatLieu || !$scope.selectedKieuDang || !$scope.selectedThuongHieu) {
-                    let updateSanPham = {
-                        idSanPham: idSanPham,
-                        ten: $scope.tenSP,
-                        ma: $scope.maSp,
-                        idXuatXu: $scope.selectedXuatXu || null,
-                        idChatLieu: $scope.selectedChatLieu || null,
-                        idKieuDang: $scope.selectedKieuDang || null,
-                        idThuongHieu: $scope.selectedThuongHieu || null
-                    };
-                    console.error("updateSanPham:", updateSanPham);
+                if (!$scope.checkXuatXu || !$scope.checkChatLieu || !$scope.checkKieuDang || !$scope.checkThuongHieu) {
+                    // Lấy idHinhAnh đầu tiên từ table màu sắc
+                    let firstTable = $scope.tables[0]; // lấy table màu sắc đầu tiên (nếu có)
+                    var firstHinhAnh = {ten: firstTable.img ? firstTable.img.imageSrc : null};
+                    $scope.getHinhAnh(firstHinhAnh).then(function (hinhAnh) {
+                        let idHinhAnh = hinhAnh && hinhAnh.idHinhAnh ? hinhAnh.idHinhAnh : null;
 
+                        let updateSanPham = {
+                            idSanPham: idSanPham,
+                            idXuatXu: $scope.selectedXuatXu || null,
+                            idChatLieu: $scope.selectedChatLieu || null,
+                            idKieuDang: $scope.selectedKieuDang || null,
+                            idThuongHieu: $scope.selectedThuongHieu || null,
+                            idHinhAnh: idHinhAnh
+                        };
 
-                    $http.post("/admin/san-pham/update" + "/" + idSanPham, updateSanPham).then(function (response) {
-                        console.log("Sản phẩm được cập nhật:", response.data);
-                    }).catch(function (error) {
-                        console.error("Cập nhật sản phẩm không thành công:", error);
-                    });
+                        $http.post("/admin/san-pham/updateByID/" + idSanPham, updateSanPham).then(function (response) {
+                            console.log("Sản phẩm được cập nhật:", response.data);
+                        }).catch(function (error) {
+                            console.error("Cập nhật sản phẩm không thành công:", error);
+                        });
+                    })
                 }
             }).catch(error => {
                 console.error("Failed to fetch product details:", error);

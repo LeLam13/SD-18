@@ -58,37 +58,29 @@
                             <div class="col-sm-6">
 
                                 <div class="mb-3 m-4">
-                                    <label>Xuất xứ</label>
+                                    <label for="xuatXu">Xuất xứ</label>
 
-                                    <!-- Hiển thị giá trị nếu đã được chọn -->
-<!--                                    <div ng-if="selectedXuatXu" class="form-control" style="background-color: #e9ecef; cursor: not-allowed;">-->
-<!--                                        {{getTenXuatXu()}}-->
-<!--                                    </div>-->
-
-                                    <!-- Dropdown nếu chưa chọn giá trị -->
-                                    <select
+                                    <!-- Dropdown luôn hiển thị -->
+                                    <select id="xuatXu"
                                             class="form-control"
-                                            ng-model="selectedXuatXu"
-                                            ng-change="onXuatXuChange()">
+                                            ng-model="selectedXuatXu" ng-change="onXuatXuChange()">
+                                        <option value="" disabled selected>Chọn xuất xứ</option>
                                         <option ng-repeat="x in xuatXu" ng-value="x.idXuatXu">
                                             {{x.ten}}
                                         </option>
                                     </select>
                                 </div>
 
+
                                 <div class="mb-3 m-4">
                                     <label for="chatLieu">Chất liệu</label>
 
-                                    <!-- Hiển thị giá trị nếu đã được chọn -->
-                                    <div ng-if="selectedChatLieu" class="form-control" style="background-color: #e9ecef; cursor: not-allowed;">
-                                        {{getTenChatLieu()}}
-                                    </div>
 
                                     <!-- Dropdown nếu chưa chọn giá trị -->
-                                    <select ng-if="!selectedChatLieu"
-                                            id="chatLieu"
+                                    <select id="chatLieu"
                                             class="form-control"
                                             ng-model="selectedChatLieu">
+                                        <option value="" disabled selected>Chọn chất liệu</option>
                                         <option ng-repeat="c in chatLieu" ng-value="c.idChatLieu">
                                             {{c.ten}}
                                         </option>
@@ -102,16 +94,11 @@
                                 <div class="mb-3 m-4">
                                     <label for="thuongHieu">Thương Hiệu</label>
 
-                                    <!-- Hiển thị giá trị nếu đã được chọn -->
-                                    <div ng-if="selectedThuongHieu" class="form-control" style="background-color: #e9ecef; cursor: not-allowed;">
-                                        {{getTenThuongHieu()}}
-                                    </div>
-
                                     <!-- Dropdown nếu chưa chọn giá trị -->
-                                    <select ng-if="!selectedThuongHieu"
-                                            id="thuongHieu"
+                                    <select id="thuongHieu"
                                             class="form-control"
                                             ng-model="selectedThuongHieu">
+                                        <option value="" disabled selected>Chọn thương hiệu</option>
                                         <option ng-repeat="t in thuongHieu" ng-value="t.idThuongHieu">
                                             {{t.ten}}
                                         </option>
@@ -121,16 +108,11 @@
                                 <div class="mb-3 m-4">
                                     <label for="kieuDang">Kiểu dáng</label>
 
-                                    <!-- Hiển thị giá trị nếu đã được chọn -->
-                                    <div ng-if="selectedKieuDang" class="form-control" style="background-color: #e9ecef; cursor: not-allowed;">
-                                        {{getTenKieuDang()}}
-                                    </div>
-
                                     <!-- Dropdown nếu chưa chọn giá trị -->
-                                    <select ng-if="!selectedKieuDang"
-                                            id="kieuDang"
+                                    <select id="kieuDang"
                                             class="form-control"
                                             ng-model="selectedKieuDang">
+                                        <option value="" disabled selected>Chọn kiểu dáng</option>
                                         <option ng-repeat="k in kieuDang" ng-value="k.idKieuDang">
                                             {{k.ten}}
                                         </option>

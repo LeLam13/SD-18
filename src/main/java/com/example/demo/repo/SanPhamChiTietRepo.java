@@ -128,5 +128,8 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
 
     @Query("SELECT pd FROM SanPhamChiTiet pd JOIN pd.dotGiamGiaList p WHERE p.idGiamGia = :promotionId")
     Page<SanPhamChiTiet> findByPromotionId(@Param("promotionId") Integer promotionId, Pageable pageable);
+
+    @Query("SELECT s FROM SanPhamChiTiet s WHERE s.idSanPham.idSanPham = :idSanPham")
+    List<SanPhamChiTiet> findAllByIdSanPham(@Param("idSanPham") Integer idSanPham);
 }
 

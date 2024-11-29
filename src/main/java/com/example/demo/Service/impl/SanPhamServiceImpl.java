@@ -4,11 +4,13 @@ import com.example.demo.Service.SanPhamService;
 import com.example.demo.dto.request.SanPhamRequestDTO;
 import com.example.demo.dto.request.SanPhamWithImageDto;
 import com.example.demo.entity.ChatLieu;
+import com.example.demo.entity.HinhAnh;
 import com.example.demo.entity.KieuDang;
 import com.example.demo.entity.SanPham;
 import com.example.demo.entity.ThuongHieu;
 import com.example.demo.entity.XuatXu;
 import com.example.demo.repo.ChatLieuRepo;
+import com.example.demo.repo.HinhAnhRepo;
 import com.example.demo.repo.KieuDangRepo;
 import com.example.demo.repo.SanPhamChiTietRepo;
 import com.example.demo.repo.SanPhamRepo;
@@ -41,6 +43,9 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     @Autowired
     private KieuDangRepo kieuDangRepo;
+
+    @Autowired
+    private HinhAnhRepo hinhAnhRepo;
 
     Date date = new Date();
 
@@ -107,9 +112,8 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
-    public SanPham updateSanPhamTheoID(SanPhamRequestDTO sanPhamRequestDTO) {
-        SanPham ms = sanPhamRepo.findByIdSanPham(sanPhamRequestDTO.getIdSanPham());
-        ms.setTen(sanPhamRequestDTO.getTen());
+    public SanPham updateSanPhamTheoID(Integer idSanPham,SanPhamRequestDTO sanPhamRequestDTO) {
+        SanPham ms = sanPhamRepo.findByIdSanPham(idSanPham);
 
         ChatLieu chatLieu = chatLieuRepo.findByIdChatLieu(sanPhamRequestDTO.getIdChatLieu());
         ms.setIdChatLieu(chatLieu);
@@ -122,6 +126,10 @@ public class SanPhamServiceImpl implements SanPhamService {
 
         ThuongHieu thuongHieu = thuongHieuRepo.findByIdThuongHieu(sanPhamRequestDTO.getIdThuongHieu());
         ms.setIdThuongHieu(thuongHieu);
+
+        HinhAnh hinhAnh = hinhAnhRepo.findByIdHinhAnh(sanPhamRequestDTO.getIdHinhAnh());
+        ms.setIdHinhAnh(hinhAnh);
+
 
         ms.setUpdateDate(date);
         return sanPhamRepo.save(ms);

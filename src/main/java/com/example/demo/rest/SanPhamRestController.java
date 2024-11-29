@@ -113,9 +113,10 @@ public class SanPhamRestController {
         return ResponseEntity.ok(sanPhamRequestDTO);
     }
 
-    @PostMapping("/admin/san-pham/update/{idSanPham}")
-    public ResponseEntity<?> updateSanPhamTheoID(@RequestBody SanPhamRequestDTO sanPhamRequestDTO) {
-        sanPhamService.updateSanPham(sanPhamRequestDTO);
+    @PostMapping("/admin/san-pham/updateByID/{idSanPham}")
+    public ResponseEntity<?> updateSanPhamTheoID(@PathVariable("idSanPham") Integer idSanPham,
+                                                 @RequestBody SanPhamRequestDTO sanPhamRequestDTO) {
+        sanPhamService.updateSanPhamTheoID(idSanPham,sanPhamRequestDTO);
         return ResponseEntity.ok(sanPhamRequestDTO);
     }
 
