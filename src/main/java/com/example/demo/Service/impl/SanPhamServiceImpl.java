@@ -2,9 +2,18 @@ package com.example.demo.Service.impl;
 
 import com.example.demo.Service.SanPhamService;
 import com.example.demo.dto.request.SanPhamRequestDTO;
+import com.example.demo.dto.request.SanPhamWithImageDto;
+import com.example.demo.entity.ChatLieu;
+import com.example.demo.entity.KieuDang;
 import com.example.demo.entity.SanPham;
+import com.example.demo.entity.ThuongHieu;
+import com.example.demo.entity.XuatXu;
+import com.example.demo.repo.ChatLieuRepo;
+import com.example.demo.repo.KieuDangRepo;
 import com.example.demo.repo.SanPhamChiTietRepo;
 import com.example.demo.repo.SanPhamRepo;
+import com.example.demo.repo.ThuongHieuRepo;
+import com.example.demo.repo.XuatXuRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,9 +26,30 @@ import java.util.List;
 public class SanPhamServiceImpl implements SanPhamService {
     @Autowired
     private SanPhamRepo sanPhamRepo;
+
     @Autowired
     private SanPhamChiTietRepo sanPhamChiTietRepo;
+
+    @Autowired
+    private ChatLieuRepo chatLieuRepo;
+
+    @Autowired
+    private ThuongHieuRepo thuongHieuRepo;
+
+    @Autowired
+    private XuatXuRepo xuatXuRepo;
+
+    @Autowired
+    private KieuDangRepo kieuDangRepo;
+
     Date date = new Date();
+
+//    public Page<SanPhamWithImageDto> findAllWithImages(Pageable pageable) {
+//        // Query kết hợp sản phẩm, chi tiết sản phẩm và hình ảnh
+//
+//
+//        return sanPhamRepo.findAllWithImages(pageable);
+//    }
 
     @Override
     public List<SanPham> getAll() {
@@ -72,6 +102,27 @@ public class SanPhamServiceImpl implements SanPhamService {
     public SanPham updateSanPham(SanPhamRequestDTO sanPhamRequestDTO) {
         SanPham ms = sanPhamRepo.findByMa(sanPhamRequestDTO.getMa());
         ms.setTen(sanPhamRequestDTO.getTen());
+        ms.setUpdateDate(date);
+        return sanPhamRepo.save(ms);
+    }
+
+    @Override
+    public SanPham updateSanPhamTheoID(SanPhamRequestDTO sanPhamRequestDTO) {
+        SanPham ms = sanPhamRepo.findByIdSanPham(sanPhamRequestDTO.getIdSanPham());
+        ms.setTen(sanPhamRequestDTO.getTen());
+
+        ChatLieu chatLieu = chatLieuRepo.findByIdChatLieu(sanPhamRequestDTO.getIdChatLieu());
+        ms.setIdChatLieu(chatLieu);
+
+        XuatXu xuatXu = xuatXuRepo.findByIdXuatXu(sanPhamRequestDTO.getIdXuatXu());
+        ms.setIdXuatXu(xuatXu);
+
+        KieuDang kieuDang = kieuDangRepo.findByIdKieuDang(sanPhamRequestDTO.getIdKieuDang());
+        ms.setIdKieuDang(kieuDang);
+
+        ThuongHieu thuongHieu = thuongHieuRepo.findByIdThuongHieu(sanPhamRequestDTO.getIdThuongHieu());
+        ms.setIdThuongHieu(thuongHieu);
+
         ms.setUpdateDate(date);
         return sanPhamRepo.save(ms);
     }

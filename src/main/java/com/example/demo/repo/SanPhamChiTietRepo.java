@@ -81,6 +81,7 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
 
     Page<SanPhamChiTiet> findAll(Specification<SanPhamChiTiet> spec,Pageable pageable);
 
+//    SanPhamChiTiet findFirstBySanPhamId(Integer idSanPham);
 
 //    @Query("SELECT p FROM SanPhamChiTiet p WHERE "
 //            + "(:giaBan IS NULL OR p.giaBan >= :giaMin) AND "

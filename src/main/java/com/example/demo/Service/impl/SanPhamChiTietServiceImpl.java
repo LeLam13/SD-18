@@ -153,17 +153,6 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         ms.setGiaBan(sanPhamChiTietRequestDTO.getGiaBan());
         ms.setSoLuong(sanPhamChiTietRequestDTO.getSoLuong());
 
-//        ChatLieu chatLieu = chatLieuRepo.findByIdChatLieu(sanPhamChiTietRequestDTO.getIdChatLieu());
-//        ms.setIdChatLieu(chatLieu);
-//
-//        XuatXu xuatXu = xuatXuRepo.findByIdXuatXu(sanPhamChiTietRequestDTO.getIdXuatXu());
-//        ms.setIdXuatXu(xuatXu);
-//
-//        KieuDang kieuDang = kieuDangRepo.findByIdKieuDang(sanPhamChiTietRequestDTO.getIdKieuDang());
-//        ms.setIdKieuDang(kieuDang);
-//
-//        ThuongHieu thuongHieu = thuongHieuRepo.findByIdThuongHieu(sanPhamChiTietRequestDTO.getIdThuongHieu());
-//        ms.setIdThuongHieu(thuongHieu);
 
         MauSac mauSac = mauSacRepo.findByIdMauSac(sanPhamChiTietRequestDTO.getIdMauSac());
         ms.setIdMauSac(mauSac);
