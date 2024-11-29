@@ -199,15 +199,26 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
         })
     }
 
-    $scope.getAllProduct = function (){
-        $http.get(`/san-pham/chi-tiet/find-all?page=${$scope.page}&size=${$scope.size}`).then(function (response){
+    $scope.getAllProduct = function () {
+        $http.get(`/san-pham/find-all?page=${$scope.page}&size=${$scope.size}`).then(function (response) {
             $scope.listProducts = response.data.content;
-            console.log("check data:",$scope.listProducts);
             $scope.totalPages = response.data.totalPages;
-        }).catch(function (errors){
-            console.error("có lỗi xảy ra: ",errors)
-        })
-    }
+            console.log("Danh sách sản phẩm:", $scope.listProducts);
+        }).catch(function (errors) {
+            console.error("Có lỗi xảy ra:", errors);
+        });
+    };
+
+    $scope.viewChiTiet = function (idSanPham) {
+        // Chuyển hướng đến trang chi tiết sản phẩm
+        location.href = `/view-san-pham-chi-tiet/` + idSanPham ;
+    };
+
+    $scope.viewHome = function () {
+        window.location.href = "/trang-chu";
+    };
+
+
     var idSanPhamChiTiet = null;
 
     $scope.createCartWithUsername = function (id){
