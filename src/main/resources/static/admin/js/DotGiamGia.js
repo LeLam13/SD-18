@@ -51,34 +51,24 @@ app.controller('ctrl', function ($scope, $http) {
     $scope.removeFromDiscount = function (productId) {
         const discountId = getDiscountIdFromUrl(); // Hàm lấy ID đợt giảm giá từ URL
         if (!discountId) {
-            alertify.error('Không tìm thấy ID đợt giảm giá!');
+            alert('Không tìm thấy ID đợt giảm giá!');
             return;
         }
 
-        alertify.confirm(
-            "Xác nhận xóa", // Tiêu đề
-            "Bạn có chắc muốn xóa sản phẩm này khỏi đợt giảm giá?", // Nội dung
-            function () {
-                // Nếu người dùng chọn "Có"
-                console.log(`/admin/delete/${productId}/dot-giam-gia/${discountId}`);
-                $http.get(`/admin/delete/${productId}/dot-giam-gia/${discountId}`)
-                    .then(() => {
-                        alertify.success('Xóa sản phẩm khỏi đợt giảm giá thành công!');
-                        $scope.loadDiscountProducts(); // Cập nhật danh sách sau khi xóa
-                        $scope.findAll(); // Tải lại danh sách tổng quát
-                    })
-                    .catch(error => {
-                        alertify.error("Lỗi khi xóa sản phẩm khỏi đợt giảm giá!");
-                        console.error(error);
-                    });
-            },
-            function () {
-                // Nếu người dùng chọn "Không"
-                alertify.warning("Hủy xóa sản phẩm khỏi đợt giảm giá.");
-            }
-        );
+        if (confirm("Bạn có chắc muốn xóa sản phẩm này khỏi đợt giảm giá?")) {
+            console.log(`/admin/delete/${productId}/dot-giam-gia/${discountId}`);
+            $http.get(`/admin/delete/${productId}/dot-giam-gia/${discountId}`)
+                .then(() => {
+                    alert('Xóa sản phẩm khỏi đợt giảm giá thành công!');
+                    $scope.loadDiscountProducts(); // Cập nhật danh sách sau khi xóa
+                    $scope.findAll();
+                })
+                .catch(error => {
+                    alert("Lỗi khi xóa sản phẩm khỏi đợt giảm giá!");
+                    console.error(error);
+                });
+        }
     };
-
 
 // Hàm hiển thị danh sách chi tiết sản phẩm
     $scope.showProductDetails = function (productId) {
@@ -104,33 +94,23 @@ app.controller('ctrl', function ($scope, $http) {
     $scope.removeProductDetail = function (productDetailId) {
         const discountId = getDiscountIdFromUrl(); // Lấy ID đợt giảm giá
         if (!discountId) {
-            alertify.error('Không tìm thấy ID đợt giảm giá!');
+            alert('Không tìm thấy ID đợt giảm giá!');
             return;
         }
 
-        alertify.confirm(
-            "Xác nhận xóa", // Tiêu đề
-            "Bạn có chắc muốn xóa chi tiết sản phẩm này khỏi đợt giảm giá?", // Nội dung
-            function () {
-                // Xử lý khi xác nhận "Có"
-                $http.delete(`/admin/delete/chi-tiet/${productDetailId}/dot-giam-gia/${discountId}`)
-                    .then(() => {
-                        alertify.success("Xóa chi tiết sản phẩm thành công!");
-                        // Tải lại danh sách chi tiết sản phẩm sau khi xóa
-                        $scope.showProductDetails($scope.selectedProductId);
-                    })
-                    .catch(error => {
-                        console.error("Lỗi khi xóa chi tiết sản phẩm:", error);
-                        alertify.error("Không thể xóa chi tiết sản phẩm!");
-                    });
-            },
-            function () {
-                // Xử lý khi hủy "Không"
-                alertify.warning("Hủy xóa chi tiết sản phẩm.");
-            }
-        );
+        if (confirm("Bạn có chắc muốn xóa chi tiết sản phẩm này khỏi đợt giảm giá?")) {
+            $http.delete(`/admin/delete/chi-tiet/${productDetailId}/dot-giam-gia/${discountId}`)
+                .then(() => {
+                    alert("Xóa chi tiết sản phẩm thành công!");
+                    // Tải lại danh sách chi tiết sản phẩm sau khi xóa
+                    $scope.showProductDetails($scope.selectedProductId);
+                })
+                .catch(error => {
+                    console.error("Lỗi khi xóa chi tiết sản phẩm:", error);
+                    alert("Không thể xóa chi tiết sản phẩm!");
+                });
+        }
     };
-
 
 
 
