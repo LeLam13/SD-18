@@ -81,6 +81,7 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
 
     Page<SanPhamChiTiet> findAll(Specification<SanPhamChiTiet> spec,Pageable pageable);
 
+//    SanPhamChiTiet findFirstBySanPhamId(Integer idSanPham);
 
 //    @Query("SELECT p FROM SanPhamChiTiet p WHERE "
 //            + "(:giaBan IS NULL OR p.giaBan >= :giaMin) AND "
@@ -127,5 +128,8 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
 
     @Query("SELECT pd FROM SanPhamChiTiet pd JOIN pd.dotGiamGiaList p WHERE p.idGiamGia = :promotionId")
     Page<SanPhamChiTiet> findByPromotionId(@Param("promotionId") Integer promotionId, Pageable pageable);
+
+    @Query("SELECT s FROM SanPhamChiTiet s WHERE s.idSanPham.idSanPham = :idSanPham")
+    List<SanPhamChiTiet> findAllByIdSanPham(@Param("idSanPham") Integer idSanPham);
 }
 
