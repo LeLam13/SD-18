@@ -155,6 +155,7 @@ public class restDonHangOnlineController {
                 //return principal.toString();
             }
         }
+        System.out.println("username check: "+donHangOnlineRequestDTO);
 
         DonHang donHang = donHangOnlineService.createOrder(donHangOnlineRequestDTO,username);
 

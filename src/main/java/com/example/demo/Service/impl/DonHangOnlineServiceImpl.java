@@ -91,13 +91,22 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
             khuyenMaiRepo.save(khuyenMai);
         }
 
-        taikhoan oldTaiKoan = taikhoanRepo.findByUsername(username);
-        if(username!= null || username.length()>0){
-            System.out.println("check TK: "+oldTaiKoan.toString());
-            System.out.println("check TK: "+oldTaiKoan.getKhachHang().getIdKhachHang());
-            khachhang getKH = khachhangRePo.findByIdKhachHang(oldTaiKoan.getKhachHang().getIdKhachHang());
-            donHang.setKhachHang(getKH);
+        if (username != null && !username.isEmpty()) {
+            taikhoan oldTaiKoan = taikhoanRepo.findByUsername(username);
+            if(username!= null || username.length()>0){
+                System.out.println("check TK: "+oldTaiKoan.toString());
+                System.out.println("check TK: "+oldTaiKoan.getKhachHang().getIdKhachHang());
+                khachhang getKH = khachhangRePo.findByIdKhachHang(oldTaiKoan.getKhachHang().getIdKhachHang());
+                donHang.setKhachHang(getKH);
+            }
         }
+//        taikhoan oldTaiKoan = taikhoanRepo.findByUsername(username);
+//        if(username!= null || username.length()>0){
+//            System.out.println("check TK: "+oldTaiKoan.toString());
+//            System.out.println("check TK: "+oldTaiKoan.getKhachHang().getIdKhachHang());
+//            khachhang getKH = khachhangRePo.findByIdKhachHang(oldTaiKoan.getKhachHang().getIdKhachHang());
+//            donHang.setKhachHang(getKH);
+//        }
 
         //ngày
         LocalDate localDate = LocalDate.now();
@@ -310,15 +319,17 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
         HoaDon hoaDon = new HoaDon();
         String nameCustorm = null;
 
-        taikhoan oldTaiKoan = taikhoanRepo.findByUsername(username);
-        if(oldTaiKoan!= null){
-            System.out.println("check TK: "+oldTaiKoan.toString());
-            //System.out.println("check TK: "+oldTaiKoan.getNhanVien().getIdNhanVien());
+        if(username == null || username ==""){
+            taikhoan oldTaiKoan = taikhoanRepo.findByUsername(username);
+            if(oldTaiKoan!= null){
+                System.out.println("check TK: "+oldTaiKoan.toString());
+                //System.out.println("check TK: "+oldTaiKoan.getNhanVien().getIdNhanVien());
 //            nhanvien getNV = nhanVienRepo.findById(oldTaiKoan.getNhanVien().getIdNhanVien()).get();
 //            hoaDon.setNhanVien(getNV);
-            khachhang khachhang = khachhangRePo.findByIdKhachHang(oldTaiKoan.getKhachHang().getIdKhachHang());
-            nameCustorm = khachhang.getHoTen();
-            hoaDon.setKhachHang(khachhang);
+                khachhang khachhang = khachhangRePo.findByIdKhachHang(oldTaiKoan.getKhachHang().getIdKhachHang());
+                nameCustorm = khachhang.getHoTen();
+                hoaDon.setKhachHang(khachhang);
+            }
         }
 
         DonHang donHang = donHangRepo.findById(hoaDonOnlineRequestDTO.getIdDonHang()).get();
