@@ -47,7 +47,9 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Integer> {
                                       @Param("idSanPham") Integer idSanPham);
 
     @Query(nativeQuery = true, value = """
-    SELECT DISTINCT sp.id_san_pham, sp.ma, sp.ten, sp.trang_thai, sp.create_date, sp.create_by, sp.update_date, sp.update_by
+    SELECT DISTINCT sp.id_san_pham, sp.ma, sp.ten, sp.trang_thai, sp.create_date, sp.create_by, 
+                    sp.update_date, sp.update_by, sp.mo_ta, sp.id_thuong_hieu, sp.id_kieu_dang, 
+                    sp.id_chat_lieu, sp.id_xuat_xu
     FROM san_pham sp
     JOIN san_pham_chi_tiet spct ON sp.id_san_pham = spct.id_san_pham
     WHERE NOT EXISTS (

@@ -17,7 +17,6 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/admin/dot-giam-gia")
 public class DotGiamGiaController {
-
     @Autowired
     private DotGiamGiaServiceImpl dotGiamGiaService;
 
