@@ -70,6 +70,12 @@ public class SanPhamChiTietRestController {
         return ResponseEntity.ok(ms);
     }
 
+    @GetMapping("/san-pham/chi-tiet/get-all-by/{idSanPham}")
+    public ResponseEntity<?> getAllByIdSanPham(@PathVariable Integer idSanPham) {
+        List<SanPhamChiTiet> ms = sanPhamChiTietService.getAllByIdSanPham(idSanPham);
+        return ResponseEntity.ok(ms);
+    }
+
 
     @GetMapping("/admin/chitietsanpham/{idSanPhamChiTiet}")
     public ResponseEntity<Integer> getSanPhamChiTietId(@PathVariable Integer idSanPhamChiTiet) {
