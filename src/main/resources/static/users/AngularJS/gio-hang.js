@@ -607,6 +607,8 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
         $http.get("/api/provinces").then(function (response){
             console.log("check res: ",response);
             $scope.provinces = response.data;
+            // $scope.districts =[];
+            // $scope.wards =[];
         }).catch(function (errors) {
             console.error("có lỗi xảy ra: ",errors)
         })
@@ -614,10 +616,10 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
 
     $scope.getDisTricts = function (){
         console.log($scope.selectedProvince)
-        if($scope.selectedProvince === null || $scope.selectedProvince ===""){
-            alert("Chưa chọn tỉnh Thành Phố")
-            return;
-        }
+        // if($scope.selectedProvince === null || $scope.selectedProvince ===""){
+        //     alert("Chưa chọn tỉnh Thành Phố")
+        //     return;
+        // }
 
         var url = "/api/districts/" + $scope.selectedProvince.ProvinceID;
         console.log(url)
@@ -631,10 +633,10 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
 
     $scope.getWard = function (){
         console.log($scope.selectedDistrict)
-        if($scope.selectedDistricts === null || $scope.selectedDistricts ===""){
-            alert("Chưa chọn tỉnh Thành Phố")
-            return;
-        }
+        // if($scope.selectedDistricts === null || $scope.selectedDistricts ===""){
+        //     alert("Chưa chọn tỉnh Thành Phố")
+        //     return;
+        // }
 
         var url = "/api/ward/" + $scope.selectedDistricts;
         console.log(url)
@@ -648,18 +650,18 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
 
     $scope.feeShippingApi = function (){
         console.log($scope.selectedProvince)
-        if($scope.selectedProvince === null || $scope.selectedProvince ===""){
-            alert("Chưa chọn tỉnh Thành Phố")
-            return;
-        }
-        if($scope.selectedDistricts === null || $scope.selectedDistricts ===""){
-            alert("Chưa chọn Quận-Huyện")
-            return;
-        }
-        if($scope.selectedWards === null || $scope.selectedWards ===""){
-            alert("Chưa chọn Phường-Xã")
-            return;
-        }
+        // if($scope.selectedProvince === null || $scope.selectedProvince ===""){
+        //     alert("Chưa chọn tỉnh Thành Phố")
+        //     return;
+        // }
+        // if($scope.selectedDistricts === null || $scope.selectedDistricts ===""){
+        //     alert("Chưa chọn Quận-Huyện")
+        //     return;
+        // }
+        // if($scope.selectedWards === null || $scope.selectedWards ===""){
+        //     alert("Chưa chọn Phường-Xã")
+        //     return;
+        // }
 
         $scope.shippingData = {
             service_type_id: 2,
