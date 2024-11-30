@@ -264,9 +264,7 @@
                                         alert('Không tìm thấy ID đợt giảm giá!');
                                         return;
                                     }
-
                                     const selectedProductIds = [];
-
                                     // Collect the selected product IDs
                                     document.querySelectorAll('input[type="checkbox"]:checked').forEach((checkbox) => {
                                         const productId = checkbox.getAttribute('data-product-id');
@@ -274,14 +272,13 @@
                                             selectedProductIds.push(Number(productId));  // Chuyển thành số nếu cần
                                         }
                                     });
-
                                     // Log mảng ID sản phẩm đã chọn
                                     console.log('Selected product IDs:', selectedProductIds);
-
                                     if (selectedProductIds.length === 0) {
-                                        alert('Vui lòng chọn ít nhất một sản phẩm!');
+                                        alertify.error('Vui lòng chọn ít nhất một sản phẩm!');
                                         return;
                                     }
+
 
                                     try {
                                         // Call the API to add selected products to the discount campaign
@@ -295,10 +292,23 @@
 
                                         const data = await response.json();
                                         if (response.ok) {
-                                            alert('Thêm sản phẩm vào đợt giảm giá thành công!');
-                                            location.reload();
+                                            alertify.confirm(
+                                                "Xác nhận", // Tiêu đề
+                                                "Thêm sản phẩm vào đợt giảm giá thành công!", // Nội dung
+                                                function () {
+                                                    // Nếu chọn "Có", tải lại trang sau khi thông báo
+                                                    alertify.success('Thêm thành công.');
+                                                    setTimeout(function() {
+                                                        location.reload(); // Tải lại trang sau 1 giây
+                                                    }, 1100); // Chờ 1 giây sau khi hiển thị thông báo
+                                                },
+                                                function () {
+                                                    // Nếu chọn "Không"
+                                                    alertify.warning("Hủy");
+                                                }
+                                            );
                                         } else {
-                                            alert('Lỗi khi thêm sản phẩm: ' + data.message);
+                                            alertify.error('Lỗi khi thêm sản phẩm: ' + data.message); // Hiển thị thông báo lỗi
                                         }
 
                                     } catch (error) {
@@ -328,4 +338,6 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 </body>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
 </html>

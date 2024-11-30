@@ -35,9 +35,9 @@
 
                 <div class="row">
 
-                    </div> <!-- end col -->
-                </div> <!-- end row -->
-            </div>
+                </div> <!-- end col -->
+            </div> <!-- end row -->
+        </div>
         <button type="button" class="btn btn-primary" style="margin-left: 100px; margin-bottom: 20px" data-toggle="modal" data-target="#createDiscountModal">
             Tạo Đợt Giảm Giá
         </button>
@@ -54,7 +54,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form th:action="@{/admin/dot-giam-gia/create}" method="post">
+                        <form th:action="@{/admin/dot-giam-gia/create}" method="post" onsubmit="showAlertify(event)">
 
                             <div class="form-group">
                                 <label>Chọn kiểu giảm giá:</label>
@@ -99,6 +99,15 @@
     </div>
 
     <script>
+        function showAlertify(event) {
+            event.preventDefault(); // Ngăn việc gửi form ngay lập tức
+            alertify.success('Đợt giảm giá đã được tạo thành công!'); // Hiển thị thông báo thành công
+            setTimeout(() => {
+                event.target.submit(); // Gửi form sau khi hiển thị thông báo
+            }, 2000); // Đợi 2 giây trước khi gửi form
+        }
+
+
         function toggleDiscountFields() {
             var discountType = document.querySelector('input[name="discountType"]:checked').value;
             var percentField = document.getElementById("percentField");
@@ -155,26 +164,29 @@
         </table>
     </div>
 
-<style>
-    .text-warning {
-        color: #FFC107; /* Màu vàng */
-    }
+    <style>
+        .text-warning {
+            color: #FFC107; /* Màu vàng */
+        }
 
-    .text-success {
-        color: #28A745; /* Màu xanh lá */
-    }
+        .text-success {
+            color: #28A745; /* Màu xanh lá */
+        }
 
-    .text-danger {
-        color: #DC3545; /* Màu đỏ */
-    }
-</style>
-            <!-- container-fluid -->
-        </div>
-        <!-- End Page-content -->
-        </div>
-    </div>
+        .text-danger {
+            color: #DC3545; /* Màu đỏ */
+        }
+    </style>
+    <!-- container-fluid -->
+</div>
+<!-- End Page-content -->
+</div>
+</div>
 </div>
 <!-- end main content-->
 </body>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+
 
 </html>
