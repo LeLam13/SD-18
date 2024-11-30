@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +31,7 @@ public class ChatLieuRestController {
     @GetMapping("/admin/chat-lieu/find-all")
     public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") int page,
                                      @RequestParam(defaultValue = "5") int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("idChatLieu").descending());
         Page<ChatLieu> cl = chatLieuService.findAll(pageable); // Phân trang
         return ResponseEntity.ok(cl); // Trả về trang hiện tại cùng dữ liệu
     }
@@ -77,5 +78,13 @@ public class ChatLieuRestController {
         return ResponseEntity.ok("");
     }
 
+    @GetMapping("/admin/chat-lieu/search")
+    public ResponseEntity<?> search(@RequestParam String query,
+                                    @RequestParam(defaultValue = "0") int page,
+                                    @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("idChatLieu").descending());
+        Page<ChatLieu> ms = chatLieuService.search(query,pageable); // Phân trang
+        return ResponseEntity.ok(ms); // Trả về trang hiện tại cùng dữ liệu
+    }
 
 }
