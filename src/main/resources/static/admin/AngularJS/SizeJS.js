@@ -5,16 +5,20 @@ app.controller("size-ctrl" ,function ($scope, $http){
     $scope.size = 4; // Số lượng bản ghi trên mỗi trang
     $scope.totalPages = 0; // Tổng số trang
     $scope.pageInput = 1; // Giá trị nhập từ ô input
-
+    $scope.searchQuery = ""; // Lưu từ khóa tìm kiếm
 
     $scope.findAll = function () {
-        var url = `/admin/size/find-all?page=${$scope.page}&size=${$scope.size}`;
-        $http.get(url).then(resp => {
-            $scope.items = resp.data.content;
-            $scope.totalPages = resp.data.totalPages; // Cập nhật tổng số trang
-        }).catch(error => {
-            console.log(error);
-        });
+        if ($scope.searchQuery && $scope.searchQuery.trim() !== "") {
+            $scope.search(); // Gọi hàm tìm kiếm nếu có từ khóa
+        } else {
+            var url = `/admin/size/find-all?page=${$scope.page}&size=${$scope.size}`;
+            $http.get(url).then(resp => {
+                $scope.items = resp.data.content;
+                $scope.totalPages = resp.data.totalPages; // Cập nhật tổng số trang
+            }).catch(error => {
+                console.log(error);
+            });
+        }
     };
 
 
@@ -202,6 +206,29 @@ app.controller("size-ctrl" ,function ($scope, $http){
                 console.log("error", error);
             })
         }
+    }
+    $scope.search = function () {
+        const url = `/admin/size/search?page=${$scope.page}&size=${$scope.size}&query=${encodeURIComponent($scope.searchQuery)}`;
+        $http.get(url).then(resp => {
+            $scope.items = resp.data.content;
+            $scope.totalPages = resp.data.totalPages;
+        }).catch(error => {
+            console.error("Lỗi khi tìm kiếm:", error);
+        });
+    };
+
+
+// Lắng nghe sự kiện khi nhấn Enter trong ô input
+    $scope.handleKeyPress = function (event) {
+        if (event.key === "Enter") {
+            $scope.page = 0; // Reset về trang đầu tiên khi tìm kiếm
+            $scope.search();
+        }
+    };
+
+    $scope.reload = function () {
+        $scope.searchQuery="";
+        $scope.findAll();
     }
 })
 

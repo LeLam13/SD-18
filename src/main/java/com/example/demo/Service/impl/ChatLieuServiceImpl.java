@@ -3,6 +3,7 @@ package com.example.demo.Service.impl;
 import com.example.demo.Service.ChatLieuService;
 import com.example.demo.dto.request.ChatLieuRequestDTO;
 import com.example.demo.entity.ChatLieu;
+import com.example.demo.entity.MauSac;
 import com.example.demo.repo.ChatLieuRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -71,5 +72,8 @@ public class ChatLieuServiceImpl implements ChatLieuService {
         return null;
     }
 
-
+    @Override
+    public Page<ChatLieu> search(String query, Pageable pageable) {
+        return chatLieuRepo.searchIgnoreCaseAndDiacritics(query, pageable);
+    }
 }

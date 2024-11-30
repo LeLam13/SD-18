@@ -27,4 +27,6 @@ public interface XuatXuService {
 
     public XuatXu deleteXuatXu(Integer idXuatXu);
 
+    public Page<XuatXu> search(String query, Pageable pageable);
+
 }

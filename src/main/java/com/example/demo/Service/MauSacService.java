@@ -25,4 +25,5 @@ public interface MauSacService {
 
     public MauSac deleteMauSac(Integer idMauSac);
 
+    public Page<MauSac> search(String query, Pageable pageable);
 }
