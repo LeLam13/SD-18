@@ -157,11 +157,11 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
             soLuong: $scope.spct.soLuong,
             giaBan: $scope.spct.giaBan,
             idMauSac: $scope.spct.idMauSac.idMauSac,
-            idThuongHieu: $scope.spct.idThuongHieu.idThuongHieu,
-            idKieuDang: $scope.spct.idKieuDang.idKieuDang,
-            idChatLieu: $scope.spct.idChatLieu.idChatLieu,
+            // idThuongHieu: $scope.spct.idThuongHieu.idThuongHieu,
+            // idKieuDang: $scope.spct.idKieuDang.idKieuDang,
+            // idChatLieu: $scope.spct.idChatLieu.idChatLieu,
             idKichCo: $scope.spct.idKichCo.idKichCo,
-            idXuatXu: $scope.spct.idXuatXu.idXuatXu,
+            // idXuatXu: $scope.spct.idXuatXu.idXuatXu,
             idHinhAnh:$scope.spct.idHinhAnh.idHinhAnh
         }
         $http.post(url, updateSPCT).then(function (r) {

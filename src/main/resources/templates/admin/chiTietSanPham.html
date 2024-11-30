@@ -6,7 +6,7 @@
 <head>
 
     <meta charset="utf-8"/>
-    <title>ALLDY SNEAKER | Màu Sắc</title>
+    <title>Eighteen Polo | Màu Sắc</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta content="Premium Multipurpose Admin & Dashboard Template" name="description"/>
     <meta content="Themesbrand" name="author"/>
@@ -277,7 +277,7 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <script>document.write(new Date().getFullYear())</script>
-                        © ALLDY SNEAKER.
+                        © Eighteen Polo.
                     </div>
 
                 </div>
@@ -339,13 +339,13 @@
                                         <label class="form-label">Số Lượng</label>
                                         <input type="text" ng-model="spct.soLuong" class="form-control">
                                     </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Thương Hiệu</label>
-                                        <select id="thuongHieu" class="form-control"
-                                                ng-model="spct.idThuongHieu"
-                                                ng-options="thuongHieu as thuongHieu.ten for thuongHieu in thuongHieu track by thuongHieu.idThuongHieu">
-                                        </select>
-                                    </div>
+<!--                                    <div class="mb-3">-->
+<!--                                        <label class="form-label">Thương Hiệu</label>-->
+<!--                                        <select id="thuongHieu" class="form-control"-->
+<!--                                                ng-model="spct.idSanPham.idThuongHieu"-->
+<!--                                                ng-options="thuongHieu as thuongHieu.ten for thuongHieu in thuongHieu track by thuongHieu.idThuongHieu">-->
+<!--                                        </select>-->
+<!--                                    </div>-->
                                 </div>
                                 <div class="col-md-4">
                                     <div class="mb-3">
@@ -364,29 +364,29 @@
                                                 ng-options="kichCo as kichCo.ten for kichCo in kichCo track by kichCo.idKichCo">
                                         </select>
                                     </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Chất Liệu</label>
-                                        <select id="chatLieu" class="form-control"
-                                                ng-model="spct.idChatLieu"
-                                                ng-options="chatLieu as chatLieu.ten for chatLieu in chatLieu track by chatLieu.idChatLieu">
-                                        </select>
-                                    </div>
+<!--                                    <div class="mb-3">-->
+<!--                                        <label class="form-label">Chất Liệu</label>-->
+<!--                                        <select id="chatLieu" class="form-control"-->
+<!--                                                ng-model="spct.idSanPham.idChatLieu"-->
+<!--                                                ng-options="chatLieu as chatLieu.ten for chatLieu in chatLieu track by chatLieu.idChatLieu">-->
+<!--                                        </select>-->
+<!--                                    </div>-->
                                 </div>
                                 <div class="col-md-4">
-                                    <div class="mb-3">
-                                        <label class="form-label">Kiểu Dáng</label>
-                                        <select id="kieuDang" class="form-control"
-                                                ng-model="spct.idKieuDang"
-                                                ng-options="kieuDang as kieuDang.ten for kieuDang in kieuDang track by kieuDang.idKieuDang">
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Xuất Xứ</label>
-                                        <select id="xuatXu" class="form-control"
-                                                ng-model="spct.idXuatXu"
-                                                ng-options="xuatXu as xuatXu.ten for xuatXu in xuatXu track by xuatXu.idXuatXu">
-                                        </select>
-                                    </div>
+<!--                                    <div class="mb-3">-->
+<!--                                        <label class="form-label">Kiểu Dáng</label>-->
+<!--                                        <select id="kieuDang" class="form-control"-->
+<!--                                                ng-model="spct.idSanPham.idKieuDang"-->
+<!--                                                ng-options="kieuDang as kieuDang.ten for kieuDang in kieuDang track by kieuDang.idKieuDang">-->
+<!--                                        </select>-->
+<!--                                    </div>-->
+<!--                                    <div class="mb-3">-->
+<!--                                        <label class="form-label">Xuất Xứ</label>-->
+<!--                                        <select id="xuatXu" class="form-control"-->
+<!--                                                ng-model="spct.idSanPham.idXuatXu"-->
+<!--                                                ng-options="xuatXu as xuatXu.ten for xuatXu in xuatXu track by xuatXu.idXuatXu">-->
+<!--                                        </select>-->
+<!--                                    </div>-->
                                 </div>
                             </div>
                         </div>
@@ -450,7 +450,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Thương Hiệu</label>
-                                        <input type="text" ng-model="spct.idThuongHieu.ten" class="form-control"
+                                        <input type="text" ng-model="spct.idSanPham.idThuongHieu.ten" class="form-control"
                                                readonly>
                                     </div>
                                 </div>
@@ -465,17 +465,17 @@
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Chất Liệu</label>
-                                        <input type="text" ng-model="spct.idChatLieu.ten" class="form-control" readonly>
+                                        <input type="text" ng-model="spct.idSanPham.idChatLieu.ten" class="form-control" readonly>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="mb-3">
                                         <label class="form-label">Kiểu Dáng</label>
-                                        <input type="text" ng-model="spct.idKieuDang.ten" class="form-control" readonly>
+                                        <input type="text" ng-model="spct.idSanPham.idKieuDang.ten" class="form-control" readonly>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Xuất Xứ</label>
-                                        <input type="text" ng-model="spct.idXuatXu.ten" class="form-control" readonly>
+                                        <input type="text" ng-model="spct.idSanPham.idXuatXu.ten" class="form-control" readonly>
                                     </div>
                                 </div>
                                 <!-- Hàng thứ hai: Người cập nhật, Trạng thái -->
