@@ -3,6 +3,7 @@ package com.example.demo.rest;
 import com.example.demo.Service.SanPhamService;
 import com.example.demo.dto.request.MauSacRequestDTO;
 import com.example.demo.dto.request.SanPhamRequestDTO;
+import com.example.demo.dto.request.SanPhamWithImageDto;
 import com.example.demo.entity.MauSac;
 import com.example.demo.entity.SanPham;
 import com.example.demo.entity.SanPhamChiTiet;
@@ -29,6 +30,26 @@ public class SanPhamRestController {
 
     @Autowired
     private SanPhamChiTietRepo sanPhamChiTietRepo;
+
+    @GetMapping("/san-pham/find-all")
+    public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") int page,
+                                                   @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("idSanPham").descending());
+        Page<SanPham> sp = sanPhamService.findAllWithStatistics(pageable); // Sử dụng service đã bổ sung thống kê
+        return ResponseEntity.ok(sp); // Trả về dữ liệu phân trang kèm thống kê
+    }
+
+//    @GetMapping("/san-pham/find-all")
+//    public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") int page,
+//                                     @RequestParam(defaultValue = "5") int size) {
+//        Pageable pageable = PageRequest.of(page, size, Sort.by("idSanPham").descending());
+//
+//        // Gọi service để lấy danh sách sản phẩm kèm hình ảnh
+//        Page<SanPhamWithImageDto> spWithImage = sanPhamService.findAllWithImages(pageable);
+//
+//        return ResponseEntity.ok(spWithImage); // Trả về dữ liệu phân trang theo DTO
+//    }
+
 
     @GetMapping("/admin/san-pham/find-all")
     public ResponseEntity<?> findAllWithStatistics(@RequestParam(defaultValue = "0") int page,
@@ -89,6 +110,13 @@ public class SanPhamRestController {
     @PostMapping("/admin/san-pham/update/{ma}")
     public ResponseEntity<?> updateSanPham(@RequestBody SanPhamRequestDTO sanPhamRequestDTO) {
         sanPhamService.updateSanPham(sanPhamRequestDTO);
+        return ResponseEntity.ok(sanPhamRequestDTO);
+    }
+
+    @PostMapping("/admin/san-pham/updateByID/{idSanPham}")
+    public ResponseEntity<?> updateSanPhamTheoID(@PathVariable("idSanPham") Integer idSanPham,
+                                                 @RequestBody SanPhamRequestDTO sanPhamRequestDTO) {
+        sanPhamService.updateSanPhamTheoID(idSanPham,sanPhamRequestDTO);
         return ResponseEntity.ok(sanPhamRequestDTO);
     }
 

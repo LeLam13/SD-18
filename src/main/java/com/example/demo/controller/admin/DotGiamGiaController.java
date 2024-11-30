@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 @Controller
 @RequestMapping("/admin/dot-giam-gia")
 public class DotGiamGiaController {
+
     @Autowired
     private DotGiamGiaServiceImpl dotGiamGiaService;
 
@@ -145,6 +146,9 @@ public class DotGiamGiaController {
                 return "admin/updatedgg";
             }
         }
+
+
+
         // Cập nhật thông tin giảm giá
         if ("percent".equals(discountType)) {
             dotGiamGia.setGiamGia(giamGiaPercent);
@@ -162,12 +166,7 @@ public class DotGiamGiaController {
 
         // Gọi phương thức update trong service để cập nhật dữ liệu
         dotGiamGiaService.updateDotGiamGia(dotGiamGia);
-        // Thêm độ trễ 1 giây (1000ms) trước khi chuyển hướng về danh sách
-        try {
-            Thread.sleep(1100);  // Delay 1 giây
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
         // Chuyển hướng về danh sách sau khi cập nhật
         return "redirect:/admin/dot-giam-gia";
     }

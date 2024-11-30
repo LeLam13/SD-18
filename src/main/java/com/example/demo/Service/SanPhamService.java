@@ -1,6 +1,7 @@
 package com.example.demo.Service;
 
 import com.example.demo.dto.request.SanPhamRequestDTO;
+import com.example.demo.dto.request.SanPhamWithImageDto;
 import com.example.demo.entity.SanPham;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +11,8 @@ import java.util.List;
 
 @Service
 public interface SanPhamService {
+//    public Page<SanPhamWithImageDto> findAllWithImages(Pageable pageable);
+
     List<SanPham> getAll();
 
     Page<SanPham> findAll(Pageable pageable);
@@ -19,6 +22,8 @@ public interface SanPhamService {
     SanPham getSanPham(String ma);
 
     SanPham updateSanPham(SanPhamRequestDTO sanPhamRequestDTO);
+
+    SanPham updateSanPhamTheoID(Integer idSanPham,SanPhamRequestDTO sanPhamRequestDTO);
 
     SanPham updateTrangThai(Integer idSanPham);
 

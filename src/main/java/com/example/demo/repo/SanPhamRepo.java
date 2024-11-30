@@ -1,5 +1,6 @@
 package com.example.demo.repo;
 
+import com.example.demo.dto.request.SanPhamWithImageDto;
 import com.example.demo.entity.SanPham;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,7 +20,6 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Integer> {
     //    List<SanPham> findByIdSanPham(Integer idSanPham);
 
 
-
     SanPham findByMa(String ma);
 
     SanPham findByIdSanPham(Integer idSanPham);
@@ -32,6 +32,7 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Integer> {
             WHERE ggspct.id_giam_gia = :id
             """)
     List<SanPham> findAllByDotGiamGia(@Param("id") Integer id);
+
     @Modifying
     @Transactional
     @Query(nativeQuery = true, value = """
@@ -49,7 +50,7 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Integer> {
     @Query(nativeQuery = true, value = """
     SELECT DISTINCT sp.id_san_pham, sp.ma, sp.ten, sp.trang_thai, sp.create_date, sp.create_by, 
                     sp.update_date, sp.update_by, sp.mo_ta, sp.id_thuong_hieu, sp.id_kieu_dang, 
-                    sp.id_chat_lieu, sp.id_xuat_xu
+                    sp.id_chat_lieu, sp.id_xuat_xu,sp.id_hinh_anh
     FROM san_pham sp
     JOIN san_pham_chi_tiet spct ON sp.id_san_pham = spct.id_san_pham
     WHERE NOT EXISTS (
@@ -71,9 +72,15 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Integer> {
     List<Object[]> getInventoryByProduct();
 
 
-
     @Query("SELECT s FROM SanPham s WHERE LOWER(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(s.ten, 'á', 'a'), 'à', 'a'), 'ả', 'a'), 'ã', 'a'), 'ạ', 'a'), 'ă', 'a'), 'â', 'a')) LIKE LOWER(CONCAT('%', :ten, '%'))")
     List<SanPham> findByName(@Param("ten") String ten);
+
+
+//    @Query("SELECT new com.example.demo.dto.request.SanPhamWithImageDto(sp.idSanPham, sp.tenSanPham, h.tenHinhAnh) " +
+//            "FROM SanPham sp " +
+//            "JOIN SanPhamChiTiet ct ON sp.idSanPham = ct.idSanPham" +
+//            "JOIN HinhAnh h ON ct.idHinhAnh = h.idHinhAnh")
+//    Page<SanPhamWithImageDto> findAllWithImages(Pageable pageable);
 
 }
 

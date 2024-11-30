@@ -1,4 +1,3 @@
-
 var app = angular.module("nhan-vien", []);
 app.controller("nhan-vien-ctrl", function ($scope, $http) {
 
@@ -94,11 +93,11 @@ app.controller("nhan-vien-ctrl", function ($scope, $http) {
 
     $scope.update = function (idNhanVien) {
         if ($scope.hoTen == undefined || $scope.hoTen.length == 0) {
-            alertify.error("Vui lòng nhập họ tên!");
+            document.getElementById("eHoTen").innerText = "Vui lòng nhập họ tên!!!";
             return;
         }
         if ($scope.hoTen.length > 100) {
-            alertify.error("Họ tên tối đa 100 ký tự!");
+            document.getElementById("eHoTen").innerText = "Họ tên tối đa 100 ký tự!!!";
             return;
         }
         var url = "/admin/nhan-vien/update" + "/" + idNhanVien;
@@ -110,46 +109,28 @@ app.controller("nhan-vien-ctrl", function ($scope, $http) {
             soCanCuocCongDan: $scope.soCanCuocCongDan,
             diaChi: $scope.diaChi,
             gioiTinh: $scope.gioiTinh,
-            email: $scope.email,
+            email: $scope.email,  // Thêm trường email
         };
 
-        // Gửi yêu cầu POST lên server
         $http.post(url, updateNhanVien).then(function (response) {
-            alertify.success("Cập nhật nhân viên thành công!");
-            $scope.findAll(); // Tải lại danh sách
+            alertify.success("Cập nhật nhân viên thành công")
+            $scope.findAll(); // Tải lại trang để xem các thay đổi
         }).catch(function (error) {
-            // Xử lý lỗi khi email đã tồn tại
-            if (error.data && error.data.message === "Email đã tồn tại!") {
-                alertify.error("Email đã tồn tại, vui lòng thử lại!");
-            } else {
-                alertify.error("Cập nhật không thành công!");
-            }
             console.log("Cập nhật không thành công:", error);
         });
     };
 
-
-
     // Hàm xóa mềm nhân viên
     $scope.softDelete = function (idNhanVien) {
-        alertify.confirm(
-            "Xác nhận xóa",
-            "Bạn có chắc chắn muốn xóa nhân viên này không?",
-            function () {
-                var url = `/admin/nhan-vien/delete/${idNhanVien}`;
-                $http.post(url).then(function (response) {
-                    alertify.success("Xóa nhân viên thành công!");
-                    $scope.findAll(); // Tải lại danh sách
-                }).catch(function (error) {
-                    alertify.error("Xóa không thành công!");
-                    console.log("Xóa không thành công:", error);
-                });
-            },
-            function () {
-                alertify.error("Hủy xóa!");
-            }
-        );
+        if (confirm("Bạn có chắc chắn muốn xóa nhân viên này không?")) {
+            var url = `/admin/nhan-vien/delete/${idNhanVien}`;
+            $http.post(url).then(function (response) {
+                alert("Xóa nhân viên thành công!");
+                $scope.findAll(); // Tải lại danh sách nhân viên
+            }).catch(function (error) {
+                console.log("Xóa không thành công:", error);
+            });
+        }
     };
-;
 
 });

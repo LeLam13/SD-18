@@ -12,6 +12,8 @@ import java.util.List;
 @Repository
 public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
 
+    List<HoaDon> findByKhachHang_IdKhachHang(Integer idKhachHang);
+
     @Query(value = "SELECT * FROM hoa_don WHERE ma_hoa_don LIKE %:maHoaDon%", nativeQuery = true)
     List<HoaDon> findByMaHoaDonContaining(String maHoaDon);
 

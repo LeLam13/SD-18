@@ -20,4 +20,5 @@ public class SanPhamRequestDTO {
     private Integer idKieuDang;
     private Integer idChatLieu;
     private Integer idXuatXu;
+    private Integer idHinhAnh;
 }

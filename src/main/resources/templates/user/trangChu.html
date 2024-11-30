@@ -15,26 +15,26 @@
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
 
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/images/icons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/images/icons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/images/icons/favicon-16x16.png">
-    <link rel="manifest" href="assets/images/icons/site.webmanifest">
-    <link rel="mask-icon" href="assets/images/icons/safari-pinned-tab.svg" color="#666666">
-    <link rel="shortcut icon" href="assets/images/icons/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/icons/favicon-16x16.png">
+    <link rel="manifest" href="/assets/images/icons/site.webmanifest">
+    <link rel="mask-icon" href="/assets/images/icons/safari-pinned-tab.svg" color="#666666">
+    <link rel="shortcut icon" href="/assets/images/icons/favicon.ico">
     <meta name="apple-mobile-web-app-title" content="Molla">
     <meta name="application-name" content="Molla">
     <meta name="msapplication-TileColor" content="#cc9966">
-    <meta name="msapplication-config" content="assets/images/icons/browserconfig.xml">
+    <meta name="msapplication-config" content="/assets/images/icons/browserconfig.xml">
     <meta name="theme-color" content="#ffffff">
-    <link rel="stylesheet" href="assets/vendor/line-awesome/line-awesome/line-awesome/css/line-awesome.min.css">
+    <link rel="stylesheet" href="/assets/vendor/line-awesome/line-awesome/line-awesome/css/line-awesome.min.css">
     <!-- Plugins CSS File -->
-    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="assets/css/plugins/owl-carousel/owl.carousel.css">
-    <link rel="stylesheet" href="assets/css/plugins/magnific-popup/magnific-popup.css">
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/plugins/owl-carousel/owl.carousel.css">
+    <link rel="stylesheet" href="/assets/css/plugins/magnific-popup/magnific-popup.css">
     <!-- Main CSS File -->
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="stylesheet" href="assets/css/plugins/nouislider/nouislider.css">
-    <link rel="stylesheet" href="assets/css/demos/demo-11.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/plugins/nouislider/nouislider.css">
+    <link rel="stylesheet" href="/assets/css/demos/demo-11.css">
 
     <!--    Bootstrap 5-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -163,8 +163,8 @@
         font-weight: bold;  /* Làm chữ đậm */
     }
 
-
 </style>
+
 <body>
 <div class="page-wrapper" ng-app="gio-hang" ng-controller="gio-hang-ctrl">
     <div class="marquee-container">
@@ -179,36 +179,34 @@
             <span>🎁 Đơn từ 500k: Tặng Boxer Cao Cấp Trị Giá 99K</span>
         </div>
     </div>
-
-
     <header class="header header-7">
         <div class="header-middle sticky-header">
             <div class="container">
                 <div class="header-left">
-                    <a href="trang-chu" class="logo">
-                        <img src="assets/img/img.png" alt="Eighteen Polo Logo" width="60" height="25">
+                    <a ng-click="viewHome()" style="cursor: pointer;" class="logo">
+                        <img src="/assets/img/img.png" alt="Eighteen Polo Logo" width="60" height="25">
                     </a>
                     <a class="tenlogo" href="trang-chu">Eighteen Polo</a>
                 </div><!-- End .header-left -->
 
                 <div class="header-right">
                     <nav class="main-nav">
-                        <ul  class="tenmenu">
+                        <ul class="tenmenu">
                             <li class="megamenu-container active">
                             <li>
-                                <a href="trang-chu" >Trang Chủ</a>
+                                <a ng-click="viewHome()" class="sf-with-ul" style="cursor: pointer;">Trang Chủ</a>
                             </li>
                             <li>
-                                <a href="category.html" >Sản Phẩm</a>
+                                <a href="category.html" class="sf-with-ul">Sản Phẩm</a>
                             </li>
                             <li>
-                                <a href="/don-hang-khach" >Đơn Hàng</a>
+                                <a href="/don-hang-khach" class="sf-with-ul">Đơn Hàng</a>
                             </li>
                             <li>
-                                <a href="blog.html" >Giới Thiệu</a>
+                                <a href="blog.html" class="sf-with-ul">Giới Thiệu</a>
                             </li>
                             <li>
-                                <a href="elements-list.html" >Liên Hệ</a>
+                                <a href="elements-list.html" class="sf-with-ul">Liên Hệ</a>
                             </li>
                         </ul><!-- End .menu -->
                     </nav><!-- End .main-nav -->
@@ -252,7 +250,7 @@
 
                                     <figure class="product-image-container">
                                         <a href="product.html" class="product-image">
-                                            <img src="assets/images/products/cart/product-1.jpg" alt="product">
+                                            <img src="/assets/images/products/cart/product-1.jpg" alt="product">
                                         </a>
                                     </figure>
                                     <a href="#" ng-click="removeLocalStorage(item.sanPhamChiTiet.idSanPhamChiTiet)"
@@ -283,8 +281,7 @@
                             <!-- Hiển thị "Xin Chào, [Tên Người Dùng]" khi người dùng đã đăng nhập -->
                             <span th:if="${#authentication.principal != 'anonymousUser'}">
             <i class="icon-user"></i>
-            <span class="user-name">Xin Chào: <span th:text="${#authentication.name}"></span>
-            </span>
+            <span class="user-name">Xin Chào: <span th:text="${#authentication.name}"></span></span>
         </span>
 
                             <!-- Hiển thị icon người dùng khi chưa đăng nhập -->
@@ -298,7 +295,7 @@
                         <!-- Nội dung dropdown -->
                         <div class="dropdown-menu dropdown-menu-right">
                             <!-- Thông tin cá nhân -->
-                            <a href="/thong-tin-kh" class="dropdown-item">
+                            <a href="/profile" class="dropdown-item">
                                 <i class="icon-user"></i> Thông tin cá nhân
                             </a>
 
@@ -334,18 +331,19 @@
                             }
                         }
                     }'>
-                <div class="intro-slide" style="background-image: url(assets/img/anh5.webp);">
+                <div class="intro-slide" style="background-image: url(/assets/img/anh3.png);">
                     <div class="container intro-content">
-                        <h3 class="intro-title highlighted-text">Ngày Hội Black Friday</h3><!-- End .h3 intro-subtitle -->
-                        <h1 class="intro-title highlighted-text">Tất cả <br>Giảm 50%</h1><!-- End .intro-title -->
+                        <h3 class="intro-subtitle text-primary">SEASONAL PICKS</h3><!-- End .h3 intro-subtitle -->
+                        <h1 class="intro-title">Get All <br>The Good Stuff</h1><!-- End .intro-title -->
+
                         <a href="category.html" class="btn btn-outline-primary-2">
-                            <span>Mua ngay</span>
+                            <span>DISCOVER MORE</span>
                             <i class="icon-long-arrow-right"></i>
                         </a>
                     </div><!-- End .intro-content -->
                 </div><!-- End .intro-slide -->
 
-                <div class="intro-slide" style="background-image: url(assets/img/anh6.webp);">
+                <div class="intro-slide" style="background-image: url(/assets/img/anh2.png);">
                     <div class="container intro-content">
                         <h3 class="intro-subtitle text-primary">all at 50% off</h3><!-- End .h3 intro-subtitle -->
                         <h1 class="intro-title text-white">The Most Beautiful <br>Novelties In Our Shop</h1>
@@ -361,10 +359,7 @@
 
             <span class="slider-loader"></span><!-- End .slider-loader -->
         </div><!-- End .intro-slider-container -->
-
         <h2 class="dssp">Danh Sách Sản Phẩm</h2>
-
-
         <div class="container">
             <div class="toolbox toolbox-filter">
                 <div class="toolbox-left">
@@ -383,7 +378,6 @@
             </div><!-- End .filter-toolbox -->
 
             <div class="widget-filter-area" id="product-filter-area">
-                <a href="#" class="widget-filter-clear">Clean All</a>
 
                 <div class="filter-area-wrapper">
                     <div class="row">
@@ -453,12 +447,12 @@
                             </div>
                         </div>
                         <li>
-                            <button class="btn btn-danger" type="button" style="float: left"
-                                    ng-click="clearFilter()">Bỏ lọc
-                            </button>
-                            <button class="btn btn-primary" type="button" style="float: right"
-                                    ng-click="filter(filterData)">Lọc
-                            </button>
+                        <button class="btn btn-danger" type="button" style="float: left"
+                                ng-click="clearFilter()">Bỏ lọc
+                        </button>
+                        <button class="btn btn-primary" type="button" style="float: right"
+                                ng-click="filter(filterData)">Lọc
+                        </button>
                         </li>
                     </div><!-- End .row -->
                 </div><!-- End .filter-area-wrapper -->
@@ -471,72 +465,41 @@
                      ng-repeat="products in listProducts"
                      style="border: 1px solid #ddd; border-radius: 8px; text-align: center; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); background-color: #fff; padding: 16px; display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
                     <div class="product product-4" style="width: 100%;">
-                        <!-- Ảnh sản phẩm -->
+                        <!-- Hiển thị ảnh sản phẩm -->
                         <div class="product-media"
                              style="width: 100%; aspect-ratio: 4 / 3; background-color: #f9f9f9; border-radius: 8px; overflow: hidden; display: flex; justify-content: center; align-items: center; position: relative;">
-                            <a href="product.html"
+                            <a
                                style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;">
                                 <img
                                         ng-src="/assets/img/{{products.idHinhAnh.ten}}"
-                                        alt="Ảnh"
+                                        alt="Ảnh không tồn tại"
                                         style="max-width: 100%; max-height: 100%; object-fit: contain;">
                             </a>
-
-                            <!-- Nút Add to Wishlist -->
-                            <div class="product-action-vertical"
-                                 style="position: absolute; top: 8px; right: 8px; display: flex; flex-direction: column; gap: 8px;">
-                                <a href="#"
-                                   class="btn-product-icon btn-wishlist btn-expandable"
-                                   style="background-color: #fff; border: 1px solid #ddd; border-radius: 50%; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center; cursor: pointer;">
-                                    <span>Add to Wishlist</span>
-                                </a>
-                            </div><!-- End .product-action-vertical -->
-
-                            <!-- Nút Quick View -->
-                            <div class="product-action"
-                                 style="position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);">
-                                <a href="popup/quickView.html"
-                                   class="btn-product btn-quickview"
-                                   title="Quick view"
-                                   style="
-            padding: 8px 16px;
-            background: linear-gradient(135deg, #f0f0f0, #d9d9d9);
-            color: #333;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 0.875rem;
-            text-decoration: none;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-            display: inline-block;
-        ">
-                                    Quick View
-                                </a>
-                            </div>
-                            <!-- End .product-action -->
                         </div><!-- End .product-media -->
 
                         <!-- Tên sản phẩm -->
                         <div class="product-body" style="margin-top: 16px;">
                             <h3 class="product-title" style="margin-bottom: 8px; font-size: 1rem; font-weight: 500;">
-                                <a>{{products.idSanPham.ten}}</a>
+                                <a>{{products.ten}}</a>
                             </h3>
 
                             <!-- Mã màu và tên màu nằm cạnh nhau -->
                             <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px;">
-                                <!-- Màu sắc -->
-                                <div style="width: 30px; height: 30px; background-color: {{products.idMauSac.ma}}; border: 1px solid #000; border-radius: 50%;"></div>
-                                <!-- Tên màu -->
-                                <span>{{products.idMauSac.ten}}</span>
+<!--                                &lt;!&ndash; Màu sắc &ndash;&gt;-->
+<!--                                <div style="width: 30px; height: 30px; background-color: {{products.idMauSac.ma}}; border: 1px solid #000; border-radius: 50%;"></div>-->
+<!--                                &lt;!&ndash; Tên màu &ndash;&gt;-->
+<!--                                <span>{{products.idMauSac.ten}}</span>-->
                             </div>
                         </div><!-- End .product-body -->
 
                         <!-- Nút thêm vào giỏ hàng -->
+<!--                        ng-click="addProductIntocart(products.idSanPhamChiTiet)"-->
                         <div class="product-action t-2">
-                            <button ng-click="addProductIntocart(products.idSanPhamChiTiet)"
+                            <button
+                                    ng-click="viewChiTiet(products.idSanPham)"
                                     class="btn-product btn-cart"
                                     style="padding: 8px 16px; font-size: 0.875rem; border: none; background-color: #007bff; color: #fff; border-radius: 4px; cursor: pointer;">
-                                <span>Add to Cart</span>
+                                <span>Mua Hàng</span>
                             </button>
                         </div><!-- End .product-action -->
                     </div><!-- End .product -->
@@ -590,26 +553,27 @@
 
 <script src="/users/AngularJS/gio-hang.js"></script>
 <script src="/users/AngularJS/don-hang-khach.js"></script>
+<script src="/users/AngularJS/SanPhamChiTiet.js"></script>
 <!--<script src="/users/AngularJS/DonHangOnline.js"></script>-->
 <!--<script src="/admin/AngularJS/MauSacJS.js"></script>-->
 
 <!-- Plugins JS File -->
-<script src="assets/js/jquery.min.js"></script>
-<script src="assets/js/bootstrap.bundle.min.js"></script>
-<script src="assets/js/jquery.hoverIntent.min.js"></script>
-<script src="assets/js/jquery.waypoints.min.js"></script>
-<script src="assets/js/superfish.min.js"></script>
-<script src="assets/js/owl.carousel.min.js"></script>
-<script src="assets/js/imagesloaded.pkgd.min.js"></script>
-<script src="assets/js/isotope.pkgd.min.js"></script>
-<script src="assets/js/wNumb.js"></script>
-<script src="assets/js/nouislider.min.js"></script>
-<script src="assets/js/bootstrap-input-spinner.js"></script>
-<script src="assets/js/jquery.magnific-popup.min.js"></script>
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/jquery.hoverIntent.min.js"></script>
+<script src="/assets/js/jquery.waypoints.min.js"></script>
+<script src="/assets/js/superfish.min.js"></script>
+<script src="/assets/js/owl.carousel.min.js"></script>
+<script src="/assets/js/imagesloaded.pkgd.min.js"></script>
+<script src="/assets/js/isotope.pkgd.min.js"></script>
+<script src="/assets/js/wNumb.js"></script>
+<script src="/assets/js/nouislider.min.js"></script>
+<script src="/assets/js/bootstrap-input-spinner.js"></script>
+<script src="/assets/js/jquery.magnific-popup.min.js"></script>
 
 <!-- Main JS File -->
-<script src="assets/js/main.js"></script>
-<script src="assets/js/demos/demo-11.js"></script>
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/demos/demo-11.js"></script>
 
 <script th:src="@{/admin/assets/libs/bootstrap/js/bootstrap.bundle.min.js}"></script>
 <a href="https://m.me/547997145053868" target="_blank" class="messenger-chat">
@@ -672,6 +636,8 @@
     };
 </script>
 
-
 </body>
+
+
+<!-- Mirrored from portotheme.com/html/molla/index-11.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 30 Oct 2024 05:28:28 GMT -->
 </html>

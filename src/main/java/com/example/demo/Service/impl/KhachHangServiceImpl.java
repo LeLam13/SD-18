@@ -1,11 +1,17 @@
 package com.example.demo.Service.impl;
 
 import com.example.demo.Service.KhachHangService;
+import com.example.demo.dto.reponse.DonHangChiTietResponseDTO;
 import com.example.demo.dto.reponse.KhachHangResponseDTO;
+import com.example.demo.dto.reponse.LichSuMuaHangResponseDTO;
 import com.example.demo.dto.request.KhachHangRequestDTO;
+import com.example.demo.entity.HoaDon;
+import com.example.demo.entity.HoaDonChiTiet;
 import com.example.demo.entity.khachhang;
 import com.example.demo.entity.taikhoan;
 import com.example.demo.entity.vaitro;
+import com.example.demo.repo.HoaDonChiTietRepo;
+import com.example.demo.repo.HoaDonRepo;
 import com.example.demo.repo.khachhangRePo;
 import com.example.demo.repo.taikhoanRepo;
 import com.example.demo.repo.vaitroRepo;
@@ -18,6 +24,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -29,7 +36,13 @@ public class KhachHangServiceImpl implements KhachHangService {
     private khachhangRePo khachHangRepo;
 
     @Autowired
+    private HoaDonRepo hoaDonRepo;
+
+    @Autowired
     private taikhoanRepo taikhoanRepo;
+
+    @Autowired
+    private HoaDonChiTietRepo hoaDonChiTietRepo;
 
     @Autowired
     private vaitroRepo vaitroRepo;
@@ -58,8 +71,19 @@ public class KhachHangServiceImpl implements KhachHangService {
     }
 
     @Override
-    public Page<KhachHangResponseDTO> getAllKhachHangPaged(Pageable pageable) {
-        return khachHangRepo.findAll(pageable).map(this::convertToResponseDTO);
+    public Page<KhachHangResponseDTO> getAllKhachHangPaged(String searchQuery, Pageable pageable) {
+        Page<khachhang> khachHangPage;
+
+        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+            // Nếu có từ khóa tìm kiếm, gọi phương thức tìm kiếm tùy chỉnh
+            khachHangPage = khachHangRepo.findBySearchQuery(searchQuery, pageable);
+        } else {
+            // Nếu không có từ khóa, trả về toàn bộ danh sách
+            khachHangPage = khachHangRepo.findAll(pageable);
+        }
+
+        // Áp dụng map để chuyển đổi từ Entity sang DTO
+        return khachHangPage.map(this::convertToResponseDTO);
     }
 
     @Override
@@ -145,6 +169,38 @@ public class KhachHangServiceImpl implements KhachHangService {
         }
 
         return entity;
+    }
+
+    @Override
+    public List<LichSuMuaHangResponseDTO> getLichSuMuaHang(Integer idKhachHang) {
+        List<HoaDon> hoaDonList = hoaDonRepo.findByKhachHang_IdKhachHang(idKhachHang);
+        List<LichSuMuaHangResponseDTO> responseList = new ArrayList<>();
+
+        for (HoaDon hoaDon : hoaDonList) {
+            LichSuMuaHangResponseDTO dto = new LichSuMuaHangResponseDTO();
+            dto.setMaHoaDon(hoaDon.getMaHoaDon());
+            dto.setNgayMua(hoaDon.getCreateDate());
+            dto.setTongTien(hoaDon.getTongTien());
+
+            List<HoaDonChiTiet> chiTietList = hoaDonChiTietRepo.findByHoaDon_IdHoaDon(hoaDon.getIdHoaDon());
+            List<DonHangChiTietResponseDTO> chiTietDTOList = new ArrayList<>();
+
+            for (HoaDonChiTiet chiTiet : chiTietList) {
+                DonHangChiTietResponseDTO chiTietDTO = new DonHangChiTietResponseDTO();
+                chiTietDTO.setIdDonHangChiTiet(chiTiet.getIdHoaDonChiTiet());
+                chiTietDTO.setMaDonHangChiTiet(chiTiet.getMaHoaDonChiTiet());
+                chiTietDTO.setSoLuong(chiTiet.getSoLuong());
+                chiTietDTO.setGiaBan(chiTiet.getDonGia());
+                chiTietDTO.setTenSanPham(chiTiet.getSanPhamChiTiet().getIdSanPham().getTen());
+                chiTietDTO.setIdSanPham(chiTiet.getSanPhamChiTiet().getIdSanPhamChiTiet());
+                chiTietDTOList.add(chiTietDTO);
+            }
+
+            dto.setChiTietSanPham(chiTietDTOList);
+            responseList.add(dto);
+        }
+
+        return responseList;
     }
 
     // Helper method to convert khachhang entity to KhachHangResponseDTO
