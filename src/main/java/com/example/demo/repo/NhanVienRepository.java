@@ -31,5 +31,5 @@ public interface NhanVienRepository extends JpaRepository<nhanvien, Integer> {
             @Param("soDienThoai") String soDienThoai,
             Pageable pageable);
 
-
+    nhanvien findByTaikhoanUsername(String username);
 }

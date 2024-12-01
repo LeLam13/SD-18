@@ -4,11 +4,13 @@ package com.example.demo.Service.impl;
 import com.example.demo.Service.NhanVienService;
 import com.example.demo.dto.request.NhanVienRequetsDTO;
 import com.example.demo.entity.nhanvien;
+import com.example.demo.entity.taikhoan;
 import com.example.demo.repo.NhanVienRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -86,4 +88,11 @@ public class NhanVienServiceImpl implements NhanVienService {
         return nhanVienRepository.findByMaNhanVienContainingOrHoTenContainingOrSoDienThoaiContainingOrderByTrangThai(
                 keyword, keyword, keyword, pageable);
     }
+
+    public nhanvien findByUsername(String username) {
+        return nhanVienRepository.findByTaikhoanUsername(username);
+    }
+
+
+
 }
