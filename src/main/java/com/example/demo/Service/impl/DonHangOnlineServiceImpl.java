@@ -91,12 +91,14 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
             khuyenMaiRepo.save(khuyenMai);
         }
 
-        taikhoan oldTaiKoan = taikhoanRepo.findByUsername(username);
-        if(username!= null || username.length()>0){
-            System.out.println("check TK: "+oldTaiKoan.toString());
-            System.out.println("check TK: "+oldTaiKoan.getKhachHang().getIdKhachHang());
-            khachhang getKH = khachhangRePo.findByIdKhachHang(oldTaiKoan.getKhachHang().getIdKhachHang());
-            donHang.setKhachHang(getKH);
+        if (username != null && !username.isEmpty()) {
+            taikhoan oldTaiKoan = taikhoanRepo.findByUsername(username);
+            if(username!= null || username.length()>0){
+                System.out.println("check TK: "+oldTaiKoan.toString());
+                System.out.println("check TK: "+oldTaiKoan.getKhachHang().getIdKhachHang());
+                khachhang getKH = khachhangRePo.findByIdKhachHang(oldTaiKoan.getKhachHang().getIdKhachHang());
+                donHang.setKhachHang(getKH);
+            }
         }
 
         //ngày

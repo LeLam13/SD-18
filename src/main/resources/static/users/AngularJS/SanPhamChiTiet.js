@@ -97,7 +97,7 @@ app.controller('ctsp-ctrl', function ($scope, $http) {
         }
     };
 
-
+    $scope.idSanPhamChiTiet1 = null;
 // Hàm lọc theo kích cỡ
     $scope.filterBySize = function (size) {
         $scope.selectedSize = size; // Cập nhật kích cỡ đã chọn
@@ -113,6 +113,7 @@ app.controller('ctsp-ctrl', function ($scope, $http) {
             $scope.soLuong = filteredItem.soLuong;
         }
         console.log("filteredItem",filteredItem)
+        $scope.idSanPhamChiTiet1 = filteredItem.idSanPhamChiTiet;
     };
 
 

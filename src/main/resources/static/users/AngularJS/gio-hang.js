@@ -141,17 +141,17 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
 
     $scope.getUserName = function (){
         $http.get("/lay-tai-khoan").then(function (response){
-            console.log("check user: ",response);
+            console.log("check user1: ",response);
             $scope.username = response.data;
-            // if (!$scope.username) {
-            //     $scope.loadFromLocalStorage();
-            //     console.log("username null");
-            // } else {
-            //     console.log("username not null",$scope.username);
-            //     $scope.getCart();
-            // }
+            if (!$scope.username) {
+                $scope.loadFromLocalStorage();
+                console.log("username null");
+            } else {
+                console.log("username not null",$scope.username);
+                $scope.getCart();
+            }
 
-            $scope.getCart();
+            //$scope.getCart();
         }).catch(function (errors) {
             console.error("có lỗi xảy ra: ",errors)
         })
@@ -228,27 +228,6 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
             userName: $scope.username
         }
 
-        // if(!$scope.cart || $scope.cart.length ===0){
-        //     //tạo giỏ hàng
-        //     var dataCart = angular.copy($scope.cartData);
-        //     $http({
-        //         method: 'POST',
-        //         url: '/gio-hang/them-moi',
-        //         data: dataCart,
-        //         headers: {
-        //             'Content-Type': 'application/json'
-        //         },
-        //         transformRequest: function(data) {
-        //             return JSON.stringify(data);
-        //         }
-        //     }) .then(function(response) {
-        //         console.log("check cart when create: ",response);
-        //         idGioHang = response.data.idGioHang;
-        //         $scope.cart = response.data;
-        //     }).catch(function(error) {
-        //         console.error('Có lỗi xảy ra:', error);
-        //     });
-        // }
         //tạo giỏ hàng chi tiết
         //kiểm tra xem có sản phẩm chưa
         if(!$scope.items || $scope.items.length === 0){
@@ -386,11 +365,18 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
                 this.saveToLocalStorage();
             }else{
                 $http.get(`/danh-sach-san-pham/${id}`).then(response =>{
-                    response.data.qty = 1;
-                    response.data.soLuong = 1;
-                    console.log("check log get id: ",response.data)
-                    $scope.items.push(response.data);
-                    this.saveToLocalStorage();
+                    // response.data.qty = 1;
+                    // response.data.soLuong = 1;
+                    // console.log("check log get id: ",response.data)
+                    // $scope.items.push(response.data);
+                    // this.saveToLocalStorage();
+                    let cleanData = JSON.parse(JSON.stringify(response.data)); // Loại bỏ getter/setter
+                    cleanData.qty = 1;
+                    cleanData.soLuong = 1;
+                    console.log("Clean data:", cleanData);
+                    $scope.items.push(cleanData); // Lưu dữ liệu sạch vào mảng
+                    console.log("Updated $scope.items:", $scope.items);
+                    $scope.saveToLocalStorage(); // Gọi hàm lưu trữ
                 });
             }
         }else {
@@ -438,7 +424,12 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
     }
 
     $scope.saveToLocalStorage = function (){
-        var json = JSON.stringify(angular.copy(this.items));
+        let cleanedItems = $scope.items.map(item => JSON.parse(JSON.stringify(item))); // Loại bỏ getter/setter từ từng phần tử
+        console.log("Cleaned items:", cleanedItems);
+        let json = JSON.stringify(cleanedItems);
+        console.log("Final JSON data:", json);
+        // var json = JSON.stringify(angular.copy(this.items));
+        // console.log("check this.items",json);
         localStorage.setItem("cart",json);
     }
 
@@ -523,28 +514,24 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
             // $scope.username = response.data;
             $scope.username = response.data;
             console.log("check user after setting: ", $scope.username);
-            // if(!$scope.username){
-            //     console.log("check user: null");
-            //     $('#hoVaTen').val('');
-            //     $('#email').val('');
-            //     $('#soDienThoai').val('');
-            //     $scope.loadFromLocalStorage();
-            // }else {
-            //     console.log("check user view gio hang: not null",$scope.username);
-            //     //hiển thị thông tin khách hàng khi đăng nhập
-            //     $('#hoVaTen').val(response.data.hoTen);
-            //     $('#email').val(response.data.email);
-            //     $('#soDienThoai').val(response.data.soDienThoai);
-            //
-            //     //lấy giỏ hàng chi tiết
-            //     $scope.itemsOrder =[];
-            //     $scope.getCart();
-            // }
-            $('#hoVaTen').val(response.data.hoTen);
-            $('#email').val(response.data.email);
-            $('#soDienThoai').val(response.data.soDienThoai);
-            $scope.itemsOrder =[];
-            $scope.getCart();
+            if(!$scope.username){
+                console.log("check user: null");
+                $('#hoVaTen').val('');
+                $('#email').val('');
+                $('#soDienThoai').val('');
+                $scope.loadFromLocalStorage();
+                // $rootScope.$broadcast('cartUpdated');
+            }else {
+                console.log("check user view gio hang: not null",$scope.username);
+                //hiển thị thông tin khách hàng khi đăng nhập
+                $('#hoVaTen').val(response.data.hoTen);
+                $('#email').val(response.data.email);
+                $('#soDienThoai').val(response.data.soDienThoai);
+
+                //lấy giỏ hàng chi tiết
+                $scope.itemsOrder =[];
+                $scope.getCartGH();
+            }
         }).catch(function (errors) {
             console.error("có lỗi xảy ra: ",errors)
         })
@@ -608,6 +595,10 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
         localStorage.setItem("cart",json);
     }
 
+    $scope.clearLocalStorage1 = function (){
+        $scope.itemsOrder=[];
+        this.saveToLocalStorage();
+    }
     $scope.loadFromLocalStorage = function (){
         var json = localStorage.getItem("cart");
         $scope.itemsOrder = json ? JSON.parse(json) : [];
@@ -884,9 +875,16 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
         }) .then(function(response) {
             console.log("check fee order when create: ",response);
             //xoá giỏ hàng chi tiết
-            $scope.deleteCartDetail(response);
+            if(!$scope.username){
+                $scope.clearLocalStorage1();
+            }else {
+                $scope.deleteCartDetail(response);
+                $scope.getCart();
+            }
             $scope.createInvoince(response);
-            $scope.getCart();
+            // $scope.deleteCartDetail(response);
+            // $scope.createInvoince(response);
+            // $scope.getCartGH();
             $scope.showNotification('Đặt hàng Thành công!','success')
             if(response.data.phuongThucThanhToan.idPhuongThucThanhToan ===2){
                 $scope.showVNPay(response);
