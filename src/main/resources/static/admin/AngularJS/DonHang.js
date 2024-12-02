@@ -444,8 +444,10 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
         console.log('check in hoá đơn:');
         $http.get("/hoa-don/invoice/"+idHoaDon).then(function (response) {
             console.log('thanh cong:', response);
+            $scope.showNotification("In hoá đơn thành công!","success");
         }).catch(function (errors) {
             console.error('Có lỗi xảy ra:', errors);
+            $scope.showNotification("In hoá đơn thất bại!","error");
         })
     }
 

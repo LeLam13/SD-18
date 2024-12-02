@@ -375,12 +375,16 @@ public class HoaDonServiceImpl implements HoaDonService {
             Text tong = new Text("Tổng Hoá Đơn").setFont(pdfFont);
             Paragraph paragraphTong = new Paragraph().add(tong);
             Table threeColTable3 = new Table(threeColumnWidth);
+
             threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(10f));
             if(getHoaDon.getPhiVanChuyen() >0){
-                threeColTable3.addCell(new Cell().add("Phỉ Ship").setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
+                threeColTable3.addCell(new Cell().add("Phí Ship").setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
                 threeColTable3.addCell(new Cell().add(String.valueOf(getHoaDon.getPhiVanChuyen())).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
             }
+
+            threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(15f));
             threeColTable3.addCell(new Cell().add(paragraphTong).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
+
             threeColTable3.addCell(new Cell().add(String.valueOf(totalSum)).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
             document.add(threeColTable3);
             document.add(tableDivider);

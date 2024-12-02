@@ -456,6 +456,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
                 $scope.showNotification('Xoá Đơn Hàng Thành Công!','success');
             }).catch(function (errors){
                 console.error('Có lỗi xảy ra:', errors);
+                $scope.showNotification('Xoá Đơn Hàng Thất BẠi!','error');
             })
 
         }
@@ -713,8 +714,10 @@ app.controller("banhang-ctrl", function ($scope, $http) {
                 console.log('response.data has data',response.data);
                 $scope.printerInvoice(response.data.idHoaDon);
             }
+            $scope.showNotification("In hoá đơn thành công!","success");
         }).catch(function (errors) {
             console.error('Có lỗi xảy ra:', errors);
+            $scope.showNotification("In hoá đơn thất bại!","error");
         })
 
     }
@@ -724,6 +727,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
             console.log('thanh cong:', response);
         }).catch(function (errors) {
             console.error('Có lỗi xảy ra:', errors);
+
         })
     }
 
