@@ -86,6 +86,7 @@ app.controller('ctsp-ctrl', function ($scope, $http) {
         } else {
             // Nếu không có kích cỡ, hãy đặt lại giá và số lượng
             $scope.price = null;
+            $scope.giaGiam = null;
             $scope.soLuong = null;
         }
 
@@ -93,6 +94,7 @@ app.controller('ctsp-ctrl', function ($scope, $http) {
         if (filteredItems.length > 0) {
             const firstItem = filteredItems[0];
             $scope.price = firstItem.giaBan;
+            $scope.giaGiam=firstItem.soTienGiam;
             $scope.soLuong = firstItem.soLuong;
         }
     };
@@ -110,6 +112,7 @@ app.controller('ctsp-ctrl', function ($scope, $http) {
 
         if (filteredItem) {
             $scope.price = filteredItem.giaBan;
+            $scope.giaGiam=filteredItem.soTienGiam;
             $scope.soLuong = filteredItem.soLuong;
         }
 

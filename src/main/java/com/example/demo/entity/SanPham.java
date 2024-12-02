@@ -70,10 +70,8 @@ public class SanPham {
     @JoinColumn(name = "id_xuat_xu")
     private XuatXu idXuatXu;
 
-    @ManyToOne
-    @JoinColumn(name = "id_hinh_anh")
-    private HinhAnh idHinhAnh;
-
+    @Transient
+    private String hinhAnh;
 
     @Transient
     private Integer totalSold;
