@@ -3,6 +3,7 @@ package com.example.demo.Service.impl;
 import com.example.demo.Service.KieuDangService;
 import com.example.demo.dto.request.KieuDangRequestDTO;
 import com.example.demo.entity.KieuDang;
+import com.example.demo.entity.MauSac;
 import com.example.demo.repo.KieuDangRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -73,5 +74,9 @@ public class KieuDangServiceImpl implements KieuDangService {
         return null;
     }
 
+    @Override
+    public Page<KieuDang> search(String query, Pageable pageable) {
+        return kieuDangRepo.searchIgnoreCaseAndDiacritics(query, pageable);
+    }
 
 }

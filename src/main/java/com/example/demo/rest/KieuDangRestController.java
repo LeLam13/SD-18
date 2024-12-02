@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,7 +42,7 @@ public class KieuDangRestController {
     @GetMapping("/admin/kieu-dang/find-all")
     public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") int page,
                                      @RequestParam(defaultValue = "5") int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("idKieuDang").descending());
         Page<KieuDang> kd = kieuDangService.findAll(pageable); // Phân trang
         return ResponseEntity.ok(kd); // Trả về trang hiện tại cùng dữ liệu
     }
@@ -65,7 +66,7 @@ public class KieuDangRestController {
     }
 
     @PostMapping("/admin/kieu-dang/updateTT/{idKieuDang}")
-    public ResponseEntity<?> updateTrangThai(@PathVariable("ma") Integer idKieuDang) {
+    public ResponseEntity<?> updateTrangThai(@PathVariable("idKieuDang") Integer idKieuDang) {
         kieuDangService.updateTrangThai(idKieuDang);
         return ResponseEntity.ok("");
     }
@@ -74,5 +75,14 @@ public class KieuDangRestController {
     public ResponseEntity<?> KieuDang(@PathVariable("idKieuDang") Integer idKieuDang) {
         kieuDangService.deleteKieuDang(idKieuDang);
         return ResponseEntity.ok("");
+    }
+
+    @GetMapping("/admin/kieu-dang/search")
+    public ResponseEntity<?> search(@RequestParam String query,
+                                    @RequestParam(defaultValue = "0") int page,
+                                    @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("idKieuDang").descending());
+        Page<KieuDang> ms = kieuDangService.search(query,pageable); // Phân trang
+        return ResponseEntity.ok(ms); // Trả về trang hiện tại cùng dữ liệu
     }
 }

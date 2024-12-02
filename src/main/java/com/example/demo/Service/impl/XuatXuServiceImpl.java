@@ -2,6 +2,7 @@ package com.example.demo.Service.impl;
 
 import com.example.demo.Service.XuatXuService;
 import com.example.demo.dto.request.XuatXuRequestDTO;
+import com.example.demo.entity.MauSac;
 import com.example.demo.entity.XuatXu;
 import com.example.demo.repo.XuatXuRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +71,9 @@ public class XuatXuServiceImpl implements XuatXuService {
         xuatXuRepo.deleteById(idXuatXu);
         return null;
     }
-
+    @Override
+    public Page<XuatXu> search(String query, Pageable pageable) {
+        return xuatXuRepo.searchIgnoreCaseAndDiacritics(query, pageable);
+    }
 
 }

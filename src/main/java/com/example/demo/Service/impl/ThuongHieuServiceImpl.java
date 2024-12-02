@@ -2,6 +2,7 @@ package com.example.demo.Service.impl;
 
 import com.example.demo.Service.ThuongHieuService;
 import com.example.demo.dto.request.ThuongHieuRequestDTO;
+import com.example.demo.entity.MauSac;
 import com.example.demo.entity.ThuongHieu;
 import com.example.demo.repo.ThuongHieuRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,5 +71,10 @@ public class ThuongHieuServiceImpl implements ThuongHieuService {
     public ThuongHieu deleteThuongHieu(Integer idThuongHieu) {
         thuongHieuRepo.deleteById(idThuongHieu);
         return null;
+    }
+
+    @Override
+    public Page<ThuongHieu> search(String query, Pageable pageable) {
+        return thuongHieuRepo.searchIgnoreCaseAndDiacritics(query, pageable);
     }
 }

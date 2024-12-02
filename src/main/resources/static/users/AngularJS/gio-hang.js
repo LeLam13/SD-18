@@ -369,11 +369,11 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
                 $http.get(`/danh-sach-san-pham/${id}`).then(response =>{
                     // response.data.qty = 1;
                     // response.data.soLuong = 1;
+
                     // console.log("check /danh-sach-san-pham/${id}: ",response.data)
                     // $scope.items.push(response.data);
                     // console.log("check /danh-sach-san-pham/${id1}: ",$scope.items)
                     // this.saveToLocalStorage();
-
                     let cleanData = JSON.parse(JSON.stringify(response.data)); // Loại bỏ getter/setter
                     cleanData.qty = 1;
                     cleanData.soLuong = 1;
@@ -533,7 +533,11 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
                 $('#hoVaTen').val('');
                 $('#email').val('');
                 $('#soDienThoai').val('');
+
                 $scope.loadFromLocalStorage1();
+
+                //$scope.loadFromLocalStorage();
+
                 // $rootScope.$broadcast('cartUpdated');
             }else {
                 console.log("check user view gio hang: not null",$scope.username);
@@ -608,6 +612,7 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
         var json = JSON.stringify(angular.copy(this.itemsOrder));
         localStorage.setItem("cart",json);
     }
+
 
     $scope.loadFromLocalStorage1 = function (){
         var json = localStorage.getItem("cart");
@@ -896,6 +901,8 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
             }else {
                 $scope.deleteCartDetail(response);
                 $scope.getCartGH();
+                //$scope.getCart();
+
             }
             $scope.createInvoince(response);
             // $scope.deleteCartDetail(response);

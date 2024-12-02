@@ -11,9 +11,10 @@ import java.util.List;
 @Repository
 public interface HoaDonChiTietRepo extends JpaRepository<HoaDonChiTiet, Integer> {
 
+    List<HoaDonChiTiet> findByHoaDon_IdHoaDon(Integer idHoaDon);
+
     @Query("SELECT d FROM HoaDonChiTiet d WHERE d.hoaDon.idHoaDon = :idHoaDonChiTiet")
     List<HoaDonChiTiet> findById1(Integer idHoaDonChiTiet);
-
 
     @Query("SELECT SUM(hd.tongTien) FROM HoaDon hd")
     Float getTotalRevenue();

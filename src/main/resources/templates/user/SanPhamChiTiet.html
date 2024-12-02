@@ -13,6 +13,78 @@
             padding: 5px; /* Khoảng cách giữa viền và ảnh */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Đổ bóng nhẹ */
         }
+
+        .box-border {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* CSS cho các nút */
+        .custom-button {
+            display: inline-flex; /* Để căn giữa và căn chỉnh chữ */
+            justify-content: center; /* Căn giữa nội dung ngang */
+            align-items: center; /* Căn giữa nội dung dọc */
+            width: 60px; /* Chiều rộng cố định */
+            height: 60px; /* Chiều cao cố định (hình vuông) */
+            margin: 7px; /* Khoảng cách giữa các nút */
+            border-radius: 8px; /* Bo góc mềm mại */
+            background-color: white; /* Màu nền trắng */
+            color: black; /* Màu chữ đen */
+            text-decoration: none; /* Loại bỏ gạch chân */
+            font-weight: 600; /* Tạo độ đậm cho chữ */
+            border: 1px solid #ddd; /* Viền mỏng */
+            transition: all 0.2s ease; /* Hiệu ứng khi hover hoặc active */
+            box-sizing: border-box; /* Đảm bảo kích thước chính xác */
+            text-align: center; /* Căn giữa chữ */
+            overflow: hidden; /* Đảm bảo không bị tràn chữ ra ngoài */
+            white-space: nowrap; /* Ngăn chữ bị xuống dòng */
+            line-height: 1; /* Căn chỉnh dòng chữ */
+            font-size: 100%; /* Kích thước chữ mặc định */
+            transform: scale(1); /* Mặc định không thu nhỏ chữ */
+            transform-origin: center; /* Đảm bảo chữ thu nhỏ từ giữa */
+        }
+
+        /* Hiệu ứng hover */
+        .custom-button:hover {
+            background-color: #f0f0f0; /* Màu nền khi hover */
+            text-decoration: none; /* Loại bỏ gạch chân khi hover */
+            border: 3px solid black; /* Viền đen khi hover */
+        }
+
+        /* Hiệu ứng active (khi nhấn) */
+        .custom-button:active {
+            transform: scale(0.95); /* Hiệu ứng nhấn */
+            background-color: #e0e0e0; /* Màu nền khi nhấn */
+            border: 3px solid black; /* Viền đen khi nhấn */
+        }
+
+        /* Thêm viền đen cho nút đang được chọn */
+        .custom-button.selected {
+            border: 1px solid black; /* Viền đen khi được chọn */
+            background-color: #f0f0f0; /* Màu nền khi được chọn */
+        }
+
+        /* Giới hạn chữ trong nút, sử dụng dấu ba chấm nếu chữ quá dài */
+        .custom-button span {
+            font-size: 1em; /* Kích thước chữ tự động thay đổi */
+            text-overflow: ellipsis; /* Nếu chữ quá dài, sẽ có dấu ba chấm */
+        }
+
+        .mtext-105 {
+            font-size: 3em; /* Tăng kích thước chữ */
+            font-weight: bold; /* In đậm */
+            font-style: italic; /* In nghiêng */
+        }
+
+        .text-danger {
+            font-size: 2em; /* Tăng kích thước chữ */
+            font-weight: bold; /* Đảm bảo chữ đậm */
+        }
+
+
     </style>
 </head>
 <!-- Thêm SweetAlert2 -->
@@ -44,9 +116,12 @@
                         <div class="wrap-slick3 flex-sb flex-w">
                             <div class="slick3 gallery-lb">
                                 <div class="item-slick3">
-                                    <div class="wrap-pic-w pos-relative custom-border">
+                                    <div class="wrap-pic-w pos-relative custom-border"
+                                         style="width: 400px; height: 400px;">
                                         <img ng-src="/assets/img/{{filteredItems[0].idHinhAnh.ten}}"
-                                             alt="Ảnh không tồn tại" style="height: 550px">
+                                             alt="Ảnh không tồn tại"
+                                             class="img-fluid"
+                                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px;">
                                     </div>
                                 </div>
                             </div>
@@ -54,7 +129,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-6 col-lg-5">
+                <div class="col-md-6 col-lg-5 box-border" >
                     <div class="p-r-50 p-t-5 p-lr-0-lg">
                         <div class="d-flex align-content-center">
                             <h4 class="mtext-105 cl2 js-name-detail p-b-14 me-2">
@@ -67,7 +142,7 @@
                             <div class="row p-b-10">
                                 <div class="col-12">
                                     <div class="price-container">
-                                        <h5 class="text-danger" ng-if="price">Giá: {{price | currency}}</h5>
+                                        <h5 class="text-danger" ng-if="price">Giá: {{price}}</h5>
                                         <h5 class="text-danger" ng-if="!price">Liên hệ để biết giá</h5>
                                     </div>
                                 </div>
@@ -82,31 +157,35 @@
                             </div>
                         </div>
 
-                        <!-- Màu sắc -->
-                        <div>
+                        <!-- Màu Sắc -->
+                        <div class="mt-3">
                             <h5>Màu Sắc:</h5>
-                            <div class="btn-group" role="group">
-                                <!-- Nút cho từng màu sắc -->
-                                <button class="btn btn-primary" ng-repeat="mau in uniqueColors"
-                                        ng-click="filterByColor(mau)"
-                                        ng-class="{'active': selectedColor && selectedColor.idMauSac === mau.idMauSac}">
-                                    {{mau.ten}}
-                                </button>
+                            <div class="button-group">
+                                <a href="javascript:void(0);"
+                                   class="custom-button"
+                                   ng-repeat="mau in uniqueColors"
+                                   ng-click="filterByColor(mau)"
+                                   ng-class="{'selected': selectedColor && selectedColor.idMauSac === mau.idMauSac}">
+                                    <span>{{mau.ten}}</span>
+                                </a>
                             </div>
                         </div>
 
-                        <!-- Kích cỡ -->
+                        <!-- Kích Cỡ -->
                         <div class="mt-3">
                             <h5>Kích Cỡ:</h5>
-                            <div class="btn-group" role="group">
-                                <!-- Nút cho từng kích cỡ -->
-                                <button class="btn btn-secondary" ng-repeat="size in filteredSizes"
-                                        ng-click="filterBySize(size)"
-                                        ng-class="{'active': selectedSize && selectedSize.idKichCo === size.idKichCo}">
-                                    {{size.ten}}
-                                </button>
+                            <div class="button-group">
+                                <a href="javascript:void(0);"
+                                   class="custom-button"
+                                   ng-repeat="size in filteredSizes"
+                                   ng-click="filterBySize(size)"
+                                   ng-class="{'selected': selectedSize && selectedSize.idKichCo === size.idKichCo}">
+                                    <span>{{size.ten}}</span>
+                                </a>
                             </div>
                         </div>
+
+
 
 
                         <!-- Thêm vào giỏ hàng -->
@@ -174,33 +253,25 @@
                                 <div class="how-pos2 p-lr-15-md">
                                     <table class="table mb-0 table-bordered">
                                         <tbody>
-                                        <tr ng-if="product.idThuongHieu.length>0">
+                                        <tr ng-if="filteredItems.idThuongHieu.length>0">
                                             <th scope="row" style="width: 400px;">Thương hiệu</th>
-                                            <td>{{product.idThuongHieu}}</td>
+                                            <td>{{filteredItems.idThuongHieu.ten}}</td>
                                         </tr>
-                                        <tr ng-if="product.dongSanPham.length>0">
-                                            <th scope="row">Dòng sản phẩm</th>
-                                            <td>{{product.dongSanPham}}</td>
-                                        </tr>
-                                        <tr ng-if="product.mauSac.length>0">
-                                            <th scope="row">Màu sắc</th>
-                                            <td>{{product.mauSac}}</td>
-                                        </tr>
-                                        <tr ng-if="product.idXuatXu.length>0">
+                                        <tr ng-if="filteredItems.idXuatXu.length>0">
                                             <th scope="row">Xuất xứ</th>
-                                            <td>{{product.idXuatXu}}</td>
+                                            <td>{{filteredItems.idXuatXu.ten}}</td>
                                         </tr>
-                                        <tr ng-if="product.idChatLieu.length>0">
+                                        <tr ng-if="filteredItems.idChatLieu.length>0">
                                             <th scope="row">Chất liệu</th>
-                                            <td>{{product.idChatLieu}}</td>
+                                            <td>{{filteredItems.idChatLieu.ten}}</td>
                                         </tr>
-                                        <tr ng-if="product.kieuDang.length>0">
+                                        <tr ng-if="item.kieuDang.length>0">
                                             <th scope="row">Kiểu dáng</th>
-                                            <td>{{product.idKieuDang}}</td>
+                                            <td>{{filteredItems.idKieuDang.ten}}</td>
                                         </tr>
-                                        <tr ng-if="product.moTa.length>0">
+                                        <tr ng-if="item.moTa.length>0">
                                             <th scope="row">Mô tả</th>
-                                            <td>{{product.moTa}}</td>
+                                            <td>{{filteredItems.moTa}}</td>
                                         </tr>
                                         </tbody>
                                     </table>

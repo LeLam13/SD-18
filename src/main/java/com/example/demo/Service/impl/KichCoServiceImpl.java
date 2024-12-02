@@ -3,6 +3,7 @@ package com.example.demo.Service.impl;
 import com.example.demo.Service.KichCoService;
 import com.example.demo.dto.request.KichCoRequestDTO;
 import com.example.demo.entity.KichCo;
+import com.example.demo.entity.MauSac;
 import com.example.demo.repo.KichCoRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -71,5 +72,8 @@ public class KichCoServiceImpl implements KichCoService {
         return null;
     }
 
-
+    @Override
+    public Page<KichCo> search(String query, Pageable pageable) {
+        return kichCoRepo.searchIgnoreCaseAndDiacritics(query, pageable);
+    }
 }

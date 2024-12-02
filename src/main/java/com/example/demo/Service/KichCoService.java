@@ -4,6 +4,7 @@ import com.example.demo.dto.request.KichCoRequestDTO;
 import com.example.demo.dto.request.MauSacRequestDTO;
 import com.example.demo.entity.KichCo;
 import com.example.demo.entity.MauSac;
+import com.example.demo.entity.XuatXu;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -23,8 +24,10 @@ public interface KichCoService {
 
     public KichCo getKichCo(String ma);
 
-    public KichCo updateTrangThai(Integer idMauSac);
+    public KichCo updateTrangThai(Integer idKichCo);
 
-    public KichCo deleteKichCo(Integer idMauSac);
+    public KichCo deleteKichCo(Integer idKichCo);
+
+    public Page<KichCo> search(String query, Pageable pageable);
 
 }

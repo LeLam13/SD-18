@@ -6,6 +6,7 @@ import com.example.demo.entity.MauSac;
 import com.example.demo.repo.MauSacRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -71,6 +72,12 @@ public class MauSacServiceImpl implements MauSacService {
         mauSacRepo.deleteById(idMauSac);
         return null;
     }
+
+    @Override
+    public Page<MauSac> search(String query, Pageable pageable) {
+        return mauSacRepo.searchIgnoreCaseAndDiacritics(query, pageable);
+    }
+
 
 
 }

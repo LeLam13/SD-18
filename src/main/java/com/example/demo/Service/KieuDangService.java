@@ -26,4 +26,6 @@ public interface KieuDangService {
    public KieuDang updateTrangThai(Integer idKieuDang);
 
    public KieuDang deleteKieuDang(Integer idKieuDang);
+
+   public Page<KieuDang> search(String query, Pageable pageable);
 }

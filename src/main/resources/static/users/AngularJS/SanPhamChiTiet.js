@@ -112,7 +112,10 @@ app.controller('ctsp-ctrl', function ($scope, $http) {
             $scope.price = filteredItem.giaBan;
             $scope.soLuong = filteredItem.soLuong;
         }
+
         console.log("filteredItem size",filteredItem)
+        console.log("filteredItem",filteredItem)
+
         $scope.idSanPhamChiTiet1 = filteredItem.idSanPhamChiTiet;
     };
 

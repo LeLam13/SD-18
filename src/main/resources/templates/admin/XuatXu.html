@@ -4,7 +4,23 @@
       layout:decorate="~{/admin/index}">
 
 <head>
-    <title>ALLDY SNEAKER | Xuất Xứ</title>
+    <title>Eighteen Polo | Xuất Xứ</title>
+    <style>
+        /* CSS cho nút Làm Mới với màu xám */
+        .btn-refresh {
+            background-color: #6c757d;  /* Màu nền xám */
+            border-color: #6c757d;      /* Màu viền xám */
+            color: white;               /* Màu chữ trắng */
+        }
+
+        .btn-refresh:hover {
+            background-color: #5a6368;  /* Màu nền khi hover (màu xám đậm hơn) */
+            border-color: #4e555b;      /* Màu viền khi hover */
+            color: white;               /* Chữ trắng khi hover */
+        }
+
+
+    </style>
 </head>
 
 <body data-topbar="dark">
@@ -46,11 +62,15 @@
                                         </button>
                                     </div>
                                     <div class="col-6 nav justify-content-end ">
-                                        <!--                                        <form action="" class="d-flex">-->
-                                        <!--                                            <input class="form-control me-2" name="name" type="text"-->
-                                        <!--                                                   placeholder="Search">-->
-                                        <!--                                            <button class="btn btn-primary" type="submit">Search</button>-->
-                                        <!--                                        </form>-->
+                                        <div class="me-2">
+                                            <input class="form-control"
+                                                   ng-model="searchQuery"
+                                                   ng-keypress="handleKeyPress($event)"
+                                                   placeholder="Nhập mã hoặc tên">
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-refresh" ng-click="reload()">Làm Mới</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -167,7 +187,7 @@
                 <div class="row">
                     <div class="col-sm-6">
                         <script>document.write(new Date().getFullYear())</script>
-                        © ALLDY SNEAKER.
+                        © Eighteen Polo.
                     </div>
                     <!--                    <div class="col-sm-6">-->
                     <!--                        <div class="text-sm-end d-none d-sm-block">-->

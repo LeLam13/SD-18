@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -41,7 +42,7 @@ public class ThuongHieuRestController {
     @GetMapping("/admin/thuong-hieu/find-all")
     public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") int page,
                                      @RequestParam(defaultValue = "5") int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size, Sort.by("idThuongHieu").descending());
         Page<ThuongHieu> th = thuongHieuService.findAll(pageable); // Phân trang
         return ResponseEntity.ok(th); // Trả về trang hiện tại cùng dữ liệu
     }
@@ -65,7 +66,7 @@ public class ThuongHieuRestController {
     }
 
     @PostMapping("/admin/thuong-hieu/updateTT/{idThuongHieu}")
-    public ResponseEntity<?> updateTrangThai(@PathVariable("ma") Integer idThuongHieu) {
+    public ResponseEntity<?> updateTrangThai(@PathVariable("idThuongHieu") Integer idThuongHieu) {
         thuongHieuService.updateTrangThai(idThuongHieu);
         return ResponseEntity.ok("");
     }
@@ -74,5 +75,14 @@ public class ThuongHieuRestController {
     public ResponseEntity<?> ThuongHieu(@PathVariable("idThuongHieu") Integer idThuongHieu) {
         thuongHieuService.deleteThuongHieu(idThuongHieu);
         return ResponseEntity.ok("");
+    }
+
+    @GetMapping("/admin/thuong-hieu/search")
+    public ResponseEntity<?> search(@RequestParam String query,
+                                    @RequestParam(defaultValue = "0") int page,
+                                    @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("idThuongHieu").descending());
+        Page<ThuongHieu> ms = thuongHieuService.search(query,pageable); // Phân trang
+        return ResponseEntity.ok(ms); // Trả về trang hiện tại cùng dữ liệu
     }
 }
