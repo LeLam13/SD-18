@@ -1,6 +1,7 @@
 package com.example.demo.repo;
 
 import com.example.demo.entity.khachhang;
+import com.example.demo.entity.nhanvien;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,4 +32,8 @@ public interface khachhangRePo extends JpaRepository<khachhang, Integer> {
             "LOWER(k.hoTen) LIKE LOWER(CONCAT('%', :searchQuery, '%')) OR " +
             "LOWER(k.soDienThoai) LIKE LOWER(CONCAT('%', :searchQuery, '%'))")
     Page<khachhang> findBySearchQuery(@Param("searchQuery") String searchQuery, Pageable pageable);
+
+    khachhang findByTaikhoanUsername(String username);
+
+
 }

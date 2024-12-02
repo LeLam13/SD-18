@@ -8,6 +8,7 @@ import com.example.demo.dto.request.KhachHangRequestDTO;
 import com.example.demo.entity.HoaDon;
 import com.example.demo.entity.HoaDonChiTiet;
 import com.example.demo.entity.khachhang;
+import com.example.demo.entity.nhanvien;
 import com.example.demo.entity.taikhoan;
 import com.example.demo.entity.vaitro;
 import com.example.demo.repo.HoaDonChiTietRepo;
@@ -217,5 +218,9 @@ public class KhachHangServiceImpl implements KhachHangService {
         responseDTO.setUsernameTaiKhoan(
                 entity.getTaikhoan() != null ? entity.getTaikhoan().getUsername() : null);
         return responseDTO;
+    }
+
+    public khachhang findByUsername(String username) {
+        return khachHangRepo.findByTaikhoanUsername(username);
     }
 }
