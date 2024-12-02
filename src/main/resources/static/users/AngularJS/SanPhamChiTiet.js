@@ -9,7 +9,7 @@ app.controller('ctsp-ctrl', function ($scope, $http) {
     const pathName = window.location.pathname.split('/');
     var idSanPham = pathName[pathName.length - 1];
 
-    console.log(idSanPham);
+    console.log("check ID:idSanPham/ - ",idSanPham);
 
     // $scope.listChiTietProducts = function () {
     //     $http.get("/san-pham/chi-tiet/get-all-by/" + idSanPham).then(function (response) {
@@ -51,7 +51,7 @@ app.controller('ctsp-ctrl', function ($scope, $http) {
 
             // Lọc theo màu sắc và kích cỡ mặc định
             $scope.filterByColor($scope.selectedColor);
-
+            console.log("$scope.filterData: --- /",$scope.filterData);
         }).catch(function (err) {
             console.error("Error fetching data:", err);
         });
@@ -112,7 +112,10 @@ app.controller('ctsp-ctrl', function ($scope, $http) {
             $scope.price = filteredItem.giaBan;
             $scope.soLuong = filteredItem.soLuong;
         }
+
+        console.log("filteredItem size",filteredItem)
         console.log("filteredItem",filteredItem)
+
         $scope.idSanPhamChiTiet1 = filteredItem.idSanPhamChiTiet;
     };
 

@@ -159,7 +159,7 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
 
     $scope.getCart = function (){
         $http.get("/gio-hang/lay-theo-user").then(function (response){
-            console.log("check gio hang11: ",response.data);
+            console.log("check gio hang: ",response.data);
             idGioHang = response.data.idGioHang;
             //$scope.cart = response.data;
             if (response.data) {
@@ -356,19 +356,23 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
     }
 
     $scope.addProductIntocart= function (id){
-        //alert("add OK");
+        //console.log("item $scope.items1 --- ",$scope.items);
         if (!$scope.username){
-            var item = $scope.items.find(item=>item.idSanPhamChiTiet == id);
+            var item = $scope.items.find(item=>item.idSanPhamChiTiet === id);
+            console.log("item addProductIntocart --- ",item);
             if(item){
                 item.qty++;
                 item.soLuong++;
+                console.log("addProductIntocart ",item);
                 this.saveToLocalStorage();
             }else{
                 $http.get(`/danh-sach-san-pham/${id}`).then(response =>{
                     // response.data.qty = 1;
                     // response.data.soLuong = 1;
-                    // console.log("check log get id: ",response.data)
+
+                    // console.log("check /danh-sach-san-pham/${id}: ",response.data)
                     // $scope.items.push(response.data);
+                    // console.log("check /danh-sach-san-pham/${id1}: ",$scope.items)
                     // this.saveToLocalStorage();
                     let cleanData = JSON.parse(JSON.stringify(response.data)); // Loại bỏ getter/setter
                     cleanData.qty = 1;
@@ -380,6 +384,7 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
                 });
             }
         }else {
+            console.log("$scope.createCartWithUsername(id)")
             $scope.createCartWithUsername(id);
         }
 
@@ -391,7 +396,13 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
     }
 
     $scope.$on('cartUpdated', function() {
+        console.log("cartUpdated");
         $scope.getCart();
+        if(!$scope.username){
+            $scope.loadFromLocalStorage();
+            $scope.count();
+        }
+        //$scope.count();
     });
 
     $scope.clearLocalStorage = function (){
@@ -442,10 +453,15 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
 
     //load dữ liệu
     $scope.getAllProduct();
-    //$scope.loadFromLocalStorage();
 
     $scope.getUserName();
 });
+
+
+
+
+
+//view giỏ hàng
 
 app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$rootScope) {
     $scope.generateRandomString = function(length) {
@@ -508,10 +524,8 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
     }
 
     //user
-    $scope.getUser = function (){
+    $scope.getUserGH = function (){
         $http.get("/lay-tai-khoan").then(function (response){
-            //console.log("check user: ",response);
-            // $scope.username = response.data;
             $scope.username = response.data;
             console.log("check user after setting: ", $scope.username);
             if(!$scope.username){
@@ -519,7 +533,11 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
                 $('#hoVaTen').val('');
                 $('#email').val('');
                 $('#soDienThoai').val('');
-                $scope.loadFromLocalStorage();
+
+                $scope.loadFromLocalStorage1();
+
+                //$scope.loadFromLocalStorage();
+
                 // $rootScope.$broadcast('cartUpdated');
             }else {
                 console.log("check user view gio hang: not null",$scope.username);
@@ -537,7 +555,7 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
         })
     }
     //lấy giỏ hàng
-    $scope.getCart = function (){
+    $scope.getCartGH = function (){
         $http.get("/gio-hang/lay-theo-user").then(function (response){
             console.log("check gio hang: ",response.data);
             $scope.cart = response.data;
@@ -590,25 +608,29 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
         }, 3000);
     };
 
-    $scope.saveToLocalStorage = function (){
+    $scope.saveToLocalStorage1 = function (){
         var json = JSON.stringify(angular.copy(this.itemsOrder));
         localStorage.setItem("cart",json);
     }
 
-    $scope.clearLocalStorage1 = function (){
-        $scope.itemsOrder=[];
-        this.saveToLocalStorage();
-    }
-    $scope.loadFromLocalStorage = function (){
+
+    $scope.loadFromLocalStorage1 = function (){
         var json = localStorage.getItem("cart");
         $scope.itemsOrder = json ? JSON.parse(json) : [];
         console.log("check itemOrder: ",$scope.itemsOrder);
+    }
+
+    $scope.clearLocalStorage1 = function (){
+        $scope.itemsOrder=[];
+        this.saveToLocalStorage1();
     }
 
     $scope.getProvinces = function (){
         $http.get("/api/provinces").then(function (response){
             console.log("check res: ",response);
             $scope.provinces = response.data;
+            // $scope.districts =[];
+            // $scope.wards =[];
         }).catch(function (errors) {
             console.error("có lỗi xảy ra: ",errors)
         })
@@ -616,10 +638,10 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
 
     $scope.getDisTricts = function (){
         console.log($scope.selectedProvince)
-        if($scope.selectedProvince === null || $scope.selectedProvince ===""){
-            alert("Chưa chọn tỉnh Thành Phố")
-            return;
-        }
+        // if($scope.selectedProvince === null || $scope.selectedProvince ===""){
+        //     alert("Chưa chọn tỉnh Thành Phố")
+        //     return;
+        // }
 
         var url = "/api/districts/" + $scope.selectedProvince.ProvinceID;
         console.log(url)
@@ -633,10 +655,10 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
 
     $scope.getWard = function (){
         console.log($scope.selectedDistrict)
-        if($scope.selectedDistricts === null || $scope.selectedDistricts ===""){
-            alert("Chưa chọn tỉnh Thành Phố")
-            return;
-        }
+        // if($scope.selectedDistricts === null || $scope.selectedDistricts ===""){
+        //     alert("Chưa chọn tỉnh Thành Phố")
+        //     return;
+        // }
 
         var url = "/api/ward/" + $scope.selectedDistricts;
         console.log(url)
@@ -650,18 +672,18 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
 
     $scope.feeShippingApi = function (){
         console.log($scope.selectedProvince)
-        if($scope.selectedProvince === null || $scope.selectedProvince ===""){
-            alert("Chưa chọn tỉnh Thành Phố")
-            return;
-        }
-        if($scope.selectedDistricts === null || $scope.selectedDistricts ===""){
-            alert("Chưa chọn Quận-Huyện")
-            return;
-        }
-        if($scope.selectedWards === null || $scope.selectedWards ===""){
-            alert("Chưa chọn Phường-Xã")
-            return;
-        }
+        // if($scope.selectedProvince === null || $scope.selectedProvince ===""){
+        //     alert("Chưa chọn tỉnh Thành Phố")
+        //     return;
+        // }
+        // if($scope.selectedDistricts === null || $scope.selectedDistricts ===""){
+        //     alert("Chưa chọn Quận-Huyện")
+        //     return;
+        // }
+        // if($scope.selectedWards === null || $scope.selectedWards ===""){
+        //     alert("Chưa chọn Phường-Xã")
+        //     return;
+        // }
 
         $scope.shippingData = {
             service_type_id: 2,
@@ -745,8 +767,7 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
         let sumAmount =$scope.totalPromotionAmountAfter() + $scope.getFeeShip();
         return sumAmount;
     }
-    //load table gio hàng
-    $scope.loadFromLocalStorage();
+
 
     //tạo đơn hàng
     $scope.createOrderOnline = function (){
@@ -879,7 +900,9 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
                 $scope.clearLocalStorage1();
             }else {
                 $scope.deleteCartDetail(response);
-                $scope.getCart();
+                $scope.getCartGH();
+                //$scope.getCart();
+
             }
             $scope.createInvoince(response);
             // $scope.deleteCartDetail(response);
@@ -938,10 +961,17 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
 
     $scope.updateQuantityPlus = function (details){
         console.log("check Quantity: ",details);
+        var checkIdSanPhamChiTiet = null;
+        if(!$scope.username){
+            checkIdSanPhamChiTiet = details.idSanPhamChiTiet;
+        }else {
+            checkIdSanPhamChiTiet = details.sanPhamChiTiet.idSanPhamChiTiet;
+        }
         $scope.dataUpdateProduct ={
             maDonHangChiTiet: $scope.generateRandomString(8),
             idĐonHangChiTiet: details.idGioHangChiTiet,
-            idSanPhamChiTiet: details.sanPhamChiTiet.idSanPhamChiTiet,
+            // idSanPhamChiTiet: details.sanPhamChiTiet.idSanPhamChiTiet,
+            idSanPhamChiTiet:checkIdSanPhamChiTiet,
             idGioHang:details.gioHang.idGioHang,
             soLuong: '1'
         }
@@ -1013,7 +1043,7 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
         if (!$scope.username){
             var index = this.items.findIndex(item => item.sanPhamChiTiet.idSanPhamChiTiet == id);
             $scope.items.splice(index,1);
-            this.saveToLocalStorage();
+            this.saveToLocalStorage1();
         }else {
             var item = this.items.find(item=>item.sanPhamChiTiet.idSanPhamChiTiet === id);
             console.log('check delete index: ',item)
@@ -1152,11 +1182,13 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
 
     }
 
+    //load table gio hàng
+    $scope.loadFromLocalStorage1();
 
     //load dữ liệu
     $scope.hideNotification();
     $scope.getProvinces();
-    $scope.getUser();
+    $scope.getUserGH();
     $scope.getAllProduct();
     $scope.hideErrrorsMes();
 })

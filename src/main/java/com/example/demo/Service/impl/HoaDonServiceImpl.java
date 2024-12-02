@@ -27,6 +27,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.io.File;
+import java.io.InputStream;
+import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -201,8 +203,21 @@ public class HoaDonServiceImpl implements HoaDonService {
     @Override
     public String  printerInvoice(Integer id)   {
         try{
+            HoaDon getHoaDon = hoaDonRepo.findById(id).get();
+            if(getHoaDon == null){
+                System.out.println("không tìm thấy hoá đơn");
+                throw  new RuntimeException("không tìm thấy hoá đơn");
+            }
 //            String pdfFilePath  = "C:\\Users\\Admin\\Desktop\\TTS-XUONG\\invoice.pdf";
-            String pdfFilePath = "C:\\Users\\Admin\\Desktop\\TTS-XUONG\\invoice1.pdf";
+            String folderPath = Paths.get("src", "main", "resources", "images").toAbsolutePath().toString();
+            String pdfFilePath = folderPath + File.separator + getHoaDon.getMaHoaDon() + ".pdf";
+
+            // Tạo thư mục nếu chưa tồn tại
+            File folder = new File(folderPath);
+            if (!folder.exists()) {
+                folder.mkdirs();
+            }
+            //String pdfFilePath = "images"+getHoaDon.getMaHoaDon()+".pdf";
             File file = new File(pdfFilePath);
             if (file.exists()) {
                 file.delete(); // Xóa tệp nếu tồn tại
@@ -222,12 +237,6 @@ public class HoaDonServiceImpl implements HoaDonService {
 //            image.setOpacity(0.1f);
 //            document.add(image);
 
-            HoaDon getHoaDon = hoaDonRepo.findById(id).get();
-            if(getHoaDon == null){
-                System.out.println("không tìm thấy hoá đơn");
-                throw  new RuntimeException("không tìm thấy hoá đơn");
-            }
-
 
             float threecol = 190f;
             float towcol= 185f;
@@ -237,8 +246,10 @@ public class HoaDonServiceImpl implements HoaDonService {
             float columnWidths[] = {threecol*3}; // Define table column widths
             float threeColumnWidth[] ={threecol,threecol,threecol};
 
-            String fontPath = "C:\\Windows\\Fonts\\times.ttf";
-            PdfFont pdfFont = PdfFontFactory.createFont(fontPath, PdfEncodings.IDENTITY_H, true);
+//            String fontPath = "C:\\Windows\\Fonts\\times.ttf";
+//            PdfFont pdfFont = PdfFontFactory.createFont(fontPath, PdfEncodings.IDENTITY_H, true);
+            InputStream fontStream = HoaDonServiceImpl.class.getClassLoader().getResourceAsStream("fonts/times.ttf");
+            PdfFont pdfFont = PdfFontFactory.createFont(fontStream.readAllBytes(), PdfEncodings.IDENTITY_H, true);
             Paragraph paragraph = new Paragraph("\n");
 
             // Title

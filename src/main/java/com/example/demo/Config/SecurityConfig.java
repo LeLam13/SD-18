@@ -32,6 +32,8 @@ public class SecurityConfig {
                         .requestMatchers("/guest/**").permitAll()
                         .requestMatchers("/admin/**").hasAnyRole("ADMIN", "STAFF")
                         .requestMatchers("/user/**").hasRole("USER")
+
+//                        .requestMatchers("/don-hang-khach","/gio-hang").authenticated()
                         .requestMatchers("/don-hang-khach").authenticated()
                         .anyRequest().permitAll()
                 )

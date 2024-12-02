@@ -207,37 +207,21 @@ public class QuanLyDonHangOnlineServiceImpl implements QuanLyDonHangOnlineServic
         taikhoan oldTaiKoan = taikhoanRepo.findByUsername(username);
         if(oldTaiKoan!= null){
             System.out.println("check TK: "+oldTaiKoan.toString());
-            System.out.println("check TK: "+oldTaiKoan.getNhanVien().getIdNhanVien());
-            nhanvien getNV = nhanVienRepo.findById(oldTaiKoan.getNhanVien().getIdNhanVien()).get();
-            donHang.setNhanVien(getNV);
-
+//            System.out.println("check TK: "+oldTaiKoan.getNhanVien().getIdNhanVien());
+            if(oldTaiKoan.getNhanVien() != null){
+                nhanvien getNV = nhanVienRepo.findById(oldTaiKoan.getNhanVien().getIdNhanVien()).get();
+                donHang.setNhanVien(getNV);
+                donHang.setUpdateBy(getNV.getHoTen());
+            }
         }
 
         if(donHang == null){
             throw new RuntimeException("Không tìm thấy đơn hàng!");
         }
-
-//        int currentTrangThaiId = donHang.getTrangThai().getIdTrangThai();
-//
-//        if (currentTrangThaiId == 1) {
-//            TrangThai trangThai = trangThaiRepo.findById(7).orElse(null);
-//            donHang.setTrangThai(trangThai);
-//        } else if (currentTrangThaiId == 7) {
-//            TrangThai trangThai = trangThaiRepo.findById(2).orElse(null);
-//            donHang.setTrangThai(trangThai);
-//        } else if (currentTrangThaiId == 2) {
-//            TrangThai trangThai = trangThaiRepo.findById(3).orElse(null);
-//            donHang.setTrangThai(trangThai);
-//        } else if (currentTrangThaiId == 3) {
-//            TrangThai trangThai = trangThaiRepo.findById(5).orElse(null);
-//            donHang.setTrangThai(trangThai);
-//        }
         TrangThai trangThai = trangThaiRepo.findById(6).orElse(null);
-            donHang.setTrangThai(trangThai);
-//        if(donHang.getTrangThai().getIdTrangThai() ==3){
-//            TrangThai trangThai = trangThaiRepo.findById(4).get();
-//            donHang.setTrangThai(trangThai);
-//        }
+        donHang.setTrangThai(trangThai);
+        LocalDate localDate = LocalDate.now();
+        donHang.setUpdateDate(localDate);
 
         donHang.setGhiChu(donHangOnlineStatusRequestDTO.getGhiChu());
         donHangRepo.save(donHang);
@@ -381,9 +365,14 @@ public class QuanLyDonHangOnlineServiceImpl implements QuanLyDonHangOnlineServic
             document.add(twoColTable3);
 
             document.add(divider2);
-            Text textProduct1 = new Text("Danh Sách Sản Phẩm").setFont(pdfFont).setFontSize(12f).setBold();
-            Paragraph productPara1 = new Paragraph(textProduct1);
-            document.add(productPara1);
+            Table twoColTable5 = new Table(towColumwidth);
+            twoColTable5.addCell(getCell10fleft("Tên Khách Hàng:",true));
+            twoColTable5.addCell(getCell10fleft(text2,true));
+//            twoColTable2.addCell(getCell10fleft("Coding Errors",false));
+            twoColTable5.addCell(getCell10fleft(textHoTen,false));
+            twoColTable5.addCell(getCell10fleft(textMaHD,false));
+            twoColTable5.setWidthPercent(100);
+            document.add(twoColTable5);
 
             Table tableDivider = new Table(columnWidths);
             Border dbg = new DashedBorder(Color.GRAY,0.5f);
@@ -433,10 +422,18 @@ public class QuanLyDonHangOnlineServiceImpl implements QuanLyDonHangOnlineServic
             document.add(new Paragraph("\n"));
             document.add(divider.setBorder(new SolidBorder(Color.GRAY,1)).setMarginBottom(15f));
 
+//            Table tb = new Table(columnWidths);
+//            tb.addCell(new Cell().add("Tems and conditition")).setBold().setBorder(Border.NO_BORDER);
+//            tb.addCell(new Cell().add("1.Tems")).setBorder(Border.NO_BORDER);
+//            tb.addCell(new Cell().add("2.Tems")).setBorder(Border.NO_BORDER);
+//            document.add(tb);
             Table tb = new Table(columnWidths);
-            tb.addCell(new Cell().add("Tems and conditition")).setBold().setBorder(Border.NO_BORDER);
-            tb.addCell(new Cell().add("1.Tems")).setBorder(Border.NO_BORDER);
-            tb.addCell(new Cell().add("2.Tems")).setBorder(Border.NO_BORDER);
+            Cell cell1 = new Cell().add("Terms and Conditions").setBold().setBorder(Border.NO_BORDER);
+            tb.addCell(cell1);
+            Cell cell2 = new Cell().add("1. Terms").setBorder(Border.NO_BORDER);
+            tb.addCell(cell2);
+            Cell cell3 = new Cell().add("2. Terms").setBorder(Border.NO_BORDER);
+            tb.addCell(cell3);
             document.add(tb);
 
 

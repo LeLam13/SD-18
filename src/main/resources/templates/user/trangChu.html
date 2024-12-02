@@ -183,11 +183,20 @@
         <div class="header-middle sticky-header">
             <div class="container">
                 <div class="header-left">
+
+                    <a href="trang-chu" class="logo">
+
                     <a ng-click="viewHome()" style="cursor: pointer;" class="logo">
+
                         <img src="/assets/img/img.png" alt="Eighteen Polo Logo" width="60" height="25">
                     </a>
+
+                    </a>
+
                     <a class="tenlogo" href="trang-chu">Eighteen Polo</a>
+
                 </div><!-- End .header-left -->
+
 
                 <div class="header-right">
                     <nav class="main-nav">
@@ -498,8 +507,13 @@
                         <!-- Nút thêm vào giỏ hàng -->
 <!--                        ng-click="addProductIntocart(products.idSanPhamChiTiet)"-->
                         <div class="product-action t-2">
+
+<!--&lt;!&ndash;                            <a href="/view-san-pham-chi-tiet/{{products.idSanPhamChiTiet}}"> Add to Cart</a>&ndash;&gt;-->
+<!--                            <button ng-click="addProductIntocart(products.idSanPhamChiTiet)"-->
+
                             <button
                                     ng-click="viewChiTiet(products.idSanPham)"
+
                                     class="btn-product btn-cart"
                                     style="padding: 8px 16px; font-size: 0.875rem; border: none; background-color: #007bff; color: #fff; border-radius: 4px; cursor: pointer;">
                                 <span>Mua Hàng</span>

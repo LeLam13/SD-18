@@ -213,6 +213,10 @@
                 font-size: 14px;
             }
 
+            .col-8,#title-email,#title-address{
+                font-size: 14px;
+            }
+
         </style>
         <div class="row" ng-controller="donhanguser-ctrl">
             <div class="container-fluid">
@@ -265,12 +269,30 @@
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-2">
+                            <button type="button" id="cancel-order" class="btn btn-danger" ng-click="showModalConfirm()">Huỷ</button>
+                        </div>
+                    </div>
                 </div>
 
 <!--                Danh sách các đơn hàng của user-->
                 <div class="row">
                     <div class="table-responsive">
-                        <h3>Danh Sách Đơn Hàng</h3>
+                        <div class="row">
+                            <div class="col-6">
+                                <h3>Danh Sách Đơn Hàng</h3>
+                            </div>
+                            <div class="col-6">
+                                <div class="mb-3">
+                                    <input type="text" id="search-order"
+                                           ng-model="inputData"
+                                           ng-model-options="{ debounce: 500 }"
+                                           ng-change="searchOrder(inputData)"
+                                           class="form-control" placeholder="Tìm kiếm theo mã đơn hàng">
+                                </div>
+                            </div>
+                        </div>
                         <table class="table">
                             <thead>
                             <tr>
@@ -375,7 +397,7 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="row">
-                                        <div class="col-4">Email:</div>
+                                        <div class="col-4" id="title-email">Email:</div>
                                         <div class="col-8" id="email-khach-hang"></div>
                                     </div>
 
@@ -391,7 +413,7 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="row">
-                                        <div class="col-4">Địa Chỉ:</div>
+                                        <div class="col-4" id="title-address">Địa Chỉ:</div>
                                         <div class="col-8" id="dia-chi-khach-hang"></div>
                                     </div>
                                 </div>
@@ -400,17 +422,17 @@
                     </div>
                 </div>
 
-                <div class="row">
+                <div class="row" style="margin-bottom: 10px">
                     <div class="table-responsive">
                         <div class="row">
                             <div class="col-8">
                                 <h3>Đơn Hàng Chi Tiết</h3>
                             </div>
-                            <div class="col-4">
-                                <button type="button" class="btn btn-info">
-                                    <i class="bi bi-pencil-square">Cập Nhật</i>
-                                </button>
-                            </div>
+<!--                            <div class="col-4">-->
+<!--                                <button type="button" class="btn btn-info">-->
+<!--                                    <i class="bi bi-pencil-square">Cập Nhật</i>-->
+<!--                                </button>-->
+<!--                            </div>-->
                         </div>
                         <div class="row">
                             <table class="table">
@@ -455,7 +477,50 @@
                 </div>
             </div>
 
+                <!-- Modal cập nhật trạng thái đơn hàng -->
+                <div class="modal fade" id="modal-status" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Lý Do Huỷ Đơn</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="mb-3">
+                                        <label for="ghi-chu" class="form-label">Ghi Chú</label>
+                                        <textarea class="form-control" id="ghi-chu" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button ng-click="cancelOrderStatus()" type="button" class="btn btn-primary">Cập Nhật</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                <!-- Modal -->
+                <div id="confirmModal" class="modal fade" tabindex="-1" role="dialog">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Xác nhận</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Bạn có chắc chắn muốn huỷ đơn hàng này không?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary col-2" data-dismiss="modal">Hủy</button>
+                                <button type="button" class="btn btn-danger col-2" ng-click="showModalCancel()">Xóa</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
 
         </div>
