@@ -81,4 +81,7 @@ public class SanPham {
     @Transient
     private Integer totalInventory;
 
+    @Transient
+    private Float minGiaBan;
+
 }

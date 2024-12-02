@@ -200,7 +200,7 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
     }
 
     $scope.getAllProduct = function () {
-        $http.get(`/san-pham/find-all?page=${$scope.page}&size=${$scope.size}`).then(function (response) {
+        $http.get(`/san-pham/find-all-san-pham?page=${$scope.page}&size=${$scope.size}`).then(function (response) {
             $scope.listProducts = response.data.content;
             $scope.totalPages = response.data.totalPages;
             console.log("Danh sách sản phẩm:", $scope.listProducts);

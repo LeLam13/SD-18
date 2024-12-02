@@ -278,44 +278,44 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
 
 
     $scope.create = function () {
-        if (idSanPham) {
-            $http.get("/admin/san-pham/get/" + idSanPham).then(response => {
-                let sanPham = response.data;
-                // Kiểm tra từng giá trị và gán vào scope
-                $scope.checkXuatXu = sanPham.idXuatXu && sanPham.idXuatXu.idXuatXu ? sanPham.idXuatXu.idXuatXu : null;
-                $scope.checkChatLieu = sanPham.idChatLieu && sanPham.idChatLieu.idChatLieu ? sanPham.idChatLieu.idChatLieu : null;
-                $scope.checkKieuDang = sanPham.idKieuDang && sanPham.idKieuDang.idKieuDang ? sanPham.idKieuDang.idKieuDang : null;
-                $scope.checkThuongHieu = sanPham.idThuongHieu && sanPham.idThuongHieu.idThuongHieu ? sanPham.idThuongHieu.idThuongHieu : null;
-
-
-                // Nếu một trong bốn giá trị là null, thực hiện cập nhật
-                if (!$scope.checkXuatXu || !$scope.checkChatLieu || !$scope.checkKieuDang || !$scope.checkThuongHieu) {
-                    // Lấy idHinhAnh đầu tiên từ table màu sắc
-                    let firstTable = $scope.tables[0]; // lấy table màu sắc đầu tiên (nếu có)
-                    var firstHinhAnh = {ten: firstTable.img ? firstTable.img.imageSrc : null};
-                    $scope.getHinhAnh(firstHinhAnh).then(function (hinhAnh) {
-                        let idHinhAnh = hinhAnh && hinhAnh.idHinhAnh ? hinhAnh.idHinhAnh : null;
-
-                        let updateSanPham = {
-                            idSanPham: idSanPham,
-                            idXuatXu: $scope.selectedXuatXu || null,
-                            idChatLieu: $scope.selectedChatLieu || null,
-                            idKieuDang: $scope.selectedKieuDang || null,
-                            idThuongHieu: $scope.selectedThuongHieu || null,
-                            idHinhAnh: idHinhAnh
-                        };
-
-                        $http.post("/admin/san-pham/updateByID/" + idSanPham, updateSanPham).then(function (response) {
-                            console.log("Sản phẩm được cập nhật:", response.data);
-                        }).catch(function (error) {
-                            console.error("Cập nhật sản phẩm không thành công:", error);
-                        });
-                    })
-                }
-            }).catch(error => {
-                console.error("Failed to fetch product details:", error);
-            });
-        }
+        // if (idSanPham) {
+        //     $http.get("/admin/san-pham/get/" + idSanPham).then(response => {
+        //         let sanPham = response.data;
+        //         // Kiểm tra từng giá trị và gán vào scope
+        //         $scope.checkXuatXu = sanPham.idXuatXu && sanPham.idXuatXu.idXuatXu ? sanPham.idXuatXu.idXuatXu : null;
+        //         $scope.checkChatLieu = sanPham.idChatLieu && sanPham.idChatLieu.idChatLieu ? sanPham.idChatLieu.idChatLieu : null;
+        //         $scope.checkKieuDang = sanPham.idKieuDang && sanPham.idKieuDang.idKieuDang ? sanPham.idKieuDang.idKieuDang : null;
+        //         $scope.checkThuongHieu = sanPham.idThuongHieu && sanPham.idThuongHieu.idThuongHieu ? sanPham.idThuongHieu.idThuongHieu : null;
+        //
+        //
+        //         // Nếu một trong bốn giá trị là null, thực hiện cập nhật
+        //         if (!$scope.checkXuatXu || !$scope.checkChatLieu || !$scope.checkKieuDang || !$scope.checkThuongHieu) {
+        //             // Lấy idHinhAnh đầu tiên từ table màu sắc
+        //             let firstTable = $scope.tables[0]; // lấy table màu sắc đầu tiên (nếu có)
+        //             var firstHinhAnh = {ten: firstTable.img ? firstTable.img.imageSrc : null};
+        //             $scope.getHinhAnh(firstHinhAnh).then(function (hinhAnh) {
+        //                 let idHinhAnh = hinhAnh && hinhAnh.idHinhAnh ? hinhAnh.idHinhAnh : null;
+        //
+        //                 let updateSanPham = {
+        //                     idSanPham: idSanPham,
+        //                     idXuatXu: $scope.selectedXuatXu || null,
+        //                     idChatLieu: $scope.selectedChatLieu || null,
+        //                     idKieuDang: $scope.selectedKieuDang || null,
+        //                     idThuongHieu: $scope.selectedThuongHieu || null,
+        //                     idHinhAnh: idHinhAnh
+        //                 };
+        //
+        //                 $http.post("/admin/san-pham/updateByID/" + idSanPham, updateSanPham).then(function (response) {
+        //                     console.log("Sản phẩm được cập nhật:", response.data);
+        //                 }).catch(function (error) {
+        //                     console.error("Cập nhật sản phẩm không thành công:", error);
+        //                 });
+        //             })
+        //         }
+        //     }).catch(error => {
+        //         console.error("Failed to fetch product details:", error);
+        //     });
+        // }
 
         // Phần kiểm tra lỗi và xử lý tạo sản phẩm chi tiết giữ nguyên như trước
         $scope.tables.forEach(function (table) {
@@ -338,23 +338,23 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
                             : "Số lượng phải lớn hơn 0";
                         hasError = true;
                     }
-                    if (sizeForm.giaNhap <= 0 || sizeForm.giaNhap == null) {
-                        sizeForm.errorMessages.giaNhap = sizeForm.giaNhap == null
-                            ? "Giá nhập không được để trống"
-                            : "Giá nhập phải lớn hơn 0";
-                        hasError = true;
-                    }
+                    // if (sizeForm.giaNhap <= 0 || sizeForm.giaNhap == null) {
+                    //     sizeForm.errorMessages.giaNhap = sizeForm.giaNhap == null
+                    //         ? "Giá nhập không được để trống"
+                    //         : "Giá nhập phải lớn hơn 0";
+                    //     hasError = true;
+                    // }
                     if (sizeForm.giaBan <= 0 || sizeForm.giaBan == null) {
                         sizeForm.errorMessages.giaBan = sizeForm.giaBan == null
                             ? "Giá bán không được để trống"
                             : "Giá bán phải lớn hơn 0";
                         hasError = true;
                     }
-                    if (sizeForm.giaNhap >= sizeForm.giaBan) {
-                        sizeForm.errorMessages.giaNhap = "Giá nhập phải nhỏ hơn giá bán";
-                        sizeForm.errorMessages.giaBan = "Giá bán phải lớn hơn giá nhập";
-                        hasError = true;
-                    }
+                    // if (sizeForm.giaNhap >= sizeForm.giaBan) {
+                    //     sizeForm.errorMessages.giaNhap = "Giá nhập phải nhỏ hơn giá bán";
+                    //     sizeForm.errorMessages.giaBan = "Giá bán phải lớn hơn giá nhập";
+                    //     hasError = true;
+                    // }
                 }
             });
         });
@@ -386,7 +386,7 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
                             idKichCo: size.idKichCo,
                             idSanPham: idSanPham,
                             soLuong: sizeForm.soLuong,
-                            giaNhap: sizeForm.giaNhap,
+                            // giaNhap: sizeForm.giaNhap,
                             giaBan: sizeForm.giaBan,
                             idHinhAnh: table.idHinhAnh
                         };

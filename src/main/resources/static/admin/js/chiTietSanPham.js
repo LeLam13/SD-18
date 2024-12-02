@@ -160,8 +160,8 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
             // idThuongHieu: $scope.spct.idThuongHieu.idThuongHieu,
             // idKieuDang: $scope.spct.idKieuDang.idKieuDang,
             // idChatLieu: $scope.spct.idChatLieu.idChatLieu,
-            idKichCo: $scope.spct.idKichCo.idKichCo,
             // idXuatXu: $scope.spct.idXuatXu.idXuatXu,
+            idKichCo: $scope.spct.idKichCo.idKichCo,
             idHinhAnh:$scope.spct.idHinhAnh.idHinhAnh
         }
         $http.post(url, updateSPCT).then(function (r) {

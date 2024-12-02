@@ -7,6 +7,7 @@ import com.example.demo.entity.ChatLieu;
 import com.example.demo.entity.HinhAnh;
 import com.example.demo.entity.KieuDang;
 import com.example.demo.entity.SanPham;
+import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.entity.ThuongHieu;
 import com.example.demo.entity.XuatXu;
 import com.example.demo.repo.ChatLieuRepo;
@@ -94,10 +95,42 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
     @Override
+    public Page<SanPham> findAllSanPham(Pageable pageable) {
+        Page<SanPham> sanPhams = sanPhamRepo.findByTrangThaiWithChiTiet(pageable);
+
+        sanPhams.forEach(sanPham -> {
+            // Lấy sản phẩm chi tiết có giá nhỏ nhất
+            List<SanPhamChiTiet> chiTietList = sanPhamChiTietRepo.findCheapestProductDetail(sanPham.getIdSanPham());
+            SanPhamChiTiet cheapestDetail = chiTietList.isEmpty() ? null : chiTietList.get(0);
+            // Gán giá nhỏ nhất
+            sanPham.setMinGiaBan(cheapestDetail != null ? cheapestDetail.getGiaBan() : null); // Gán giá trị nếu có
+        });
+
+        return sanPhams;
+    }
+
+    @Override
     public SanPham createSanPham(SanPhamRequestDTO sanPhamRequestDTO) {
         SanPham sp = new SanPham();
         sp.setMa(sanPhamRequestDTO.getMa());
         sp.setTen(sanPhamRequestDTO.getTen());
+
+        ChatLieu chatLieu = chatLieuRepo.findByIdChatLieu(sanPhamRequestDTO.getIdChatLieu());
+        sp.setIdChatLieu(chatLieu);
+
+        XuatXu xuatXu = xuatXuRepo.findByIdXuatXu(sanPhamRequestDTO.getIdXuatXu());
+        sp.setIdXuatXu(xuatXu);
+
+        KieuDang kieuDang = kieuDangRepo.findByIdKieuDang(sanPhamRequestDTO.getIdKieuDang());
+        sp.setIdKieuDang(kieuDang);
+
+        ThuongHieu thuongHieu = thuongHieuRepo.findByIdThuongHieu(sanPhamRequestDTO.getIdThuongHieu());
+        sp.setIdThuongHieu(thuongHieu);
+
+        HinhAnh hinhAnh = hinhAnhRepo.findByIdHinhAnh(sanPhamRequestDTO.getIdHinhAnh());
+        sp.setIdHinhAnh(hinhAnh);
+
+        sp.setMoTa(sanPhamRequestDTO.getMoTa());
         sp.setCreateDate(date);
         sp.setTrangThai(true);
         return sanPhamRepo.save(sp);
@@ -107,6 +140,23 @@ public class SanPhamServiceImpl implements SanPhamService {
     public SanPham updateSanPham(SanPhamRequestDTO sanPhamRequestDTO) {
         SanPham ms = sanPhamRepo.findByMa(sanPhamRequestDTO.getMa());
         ms.setTen(sanPhamRequestDTO.getTen());
+
+        ChatLieu chatLieu = chatLieuRepo.findByIdChatLieu(sanPhamRequestDTO.getIdChatLieu());
+        ms.setIdChatLieu(chatLieu);
+
+        XuatXu xuatXu = xuatXuRepo.findByIdXuatXu(sanPhamRequestDTO.getIdXuatXu());
+        ms.setIdXuatXu(xuatXu);
+
+        KieuDang kieuDang = kieuDangRepo.findByIdKieuDang(sanPhamRequestDTO.getIdKieuDang());
+        ms.setIdKieuDang(kieuDang);
+
+        ThuongHieu thuongHieu = thuongHieuRepo.findByIdThuongHieu(sanPhamRequestDTO.getIdThuongHieu());
+        ms.setIdThuongHieu(thuongHieu);
+
+        HinhAnh hinhAnh = hinhAnhRepo.findByIdHinhAnh(sanPhamRequestDTO.getIdHinhAnh());
+        ms.setIdHinhAnh(hinhAnh);
+
+        ms.setMoTa(sanPhamRequestDTO.getMoTa());
         ms.setUpdateDate(date);
         return sanPhamRepo.save(ms);
     }

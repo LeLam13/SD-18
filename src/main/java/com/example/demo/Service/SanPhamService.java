@@ -31,4 +31,6 @@ public interface SanPhamService {
 
     // Hàm bổ sung
     Page<SanPham> findAllWithStatistics(Pageable pageable); // Tìm tất cả sản phẩm kèm số lượng tồn và đã bán
+
+    Page<SanPham> findAllSanPham(Pageable pageable);
 }
