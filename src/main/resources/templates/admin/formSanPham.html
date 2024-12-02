@@ -52,117 +52,48 @@
                         </div>
 
                         <!-- Two Columns for Remaining Attributes -->
-                        <div class="row">
-
-
-                            <div class="col-sm-6">
-
-                                <div class="mb-3 m-4">
-                                    <label for="xuatXu">Xuất xứ</label>
-
-                                    <!-- Dropdown luôn hiển thị -->
-                                    <select id="xuatXu"
-                                            class="form-control"
-                                            ng-model="selectedXuatXu" ng-change="onXuatXuChange()">
-                                        <option value="" disabled selected>Chọn xuất xứ</option>
-                                        <option ng-repeat="x in xuatXu" ng-value="x.idXuatXu">
-                                            {{x.ten}}
-                                        </option>
-                                    </select>
-                                </div>
-
-
-                                <div class="mb-3 m-4">
-                                    <label for="chatLieu">Chất liệu</label>
-
-
-                                    <!-- Dropdown nếu chưa chọn giá trị -->
-                                    <select id="chatLieu"
-                                            class="form-control"
-                                            ng-model="selectedChatLieu">
-                                        <option value="" disabled selected>Chọn chất liệu</option>
-                                        <option ng-repeat="c in chatLieu" ng-value="c.idChatLieu">
-                                            {{c.ten}}
-                                        </option>
-                                    </select>
-                                </div>
-
-                            </div>
-
-                            <div class="col-sm-6">
-
-                                <div class="mb-3 m-4">
-                                    <label for="thuongHieu">Thương Hiệu</label>
-
-                                    <!-- Dropdown nếu chưa chọn giá trị -->
-                                    <select id="thuongHieu"
-                                            class="form-control"
-                                            ng-model="selectedThuongHieu">
-                                        <option value="" disabled selected>Chọn thương hiệu</option>
-                                        <option ng-repeat="t in thuongHieu" ng-value="t.idThuongHieu">
-                                            {{t.ten}}
-                                        </option>
-                                    </select>
-                                </div>
-
-                                <div class="mb-3 m-4">
-                                    <label for="kieuDang">Kiểu dáng</label>
-
-                                    <!-- Dropdown nếu chưa chọn giá trị -->
-                                    <select id="kieuDang"
-                                            class="form-control"
-                                            ng-model="selectedKieuDang">
-                                        <option value="" disabled selected>Chọn kiểu dáng</option>
-                                        <option ng-repeat="k in kieuDang" ng-value="k.idKieuDang">
-                                            {{k.ten}}
-                                        </option>
-                                    </select>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="row justify-content-center w-100">
-                <div class="col-9">
-                    <div class="card">
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <!-- Chọn màu sắc -->
-                                <div class="mb-3 m-4">
-                                    <label>Màu Sắc: </label>
-                                    <input type="text" ng-model="colorSearch" placeholder="Nhập màu để tìm kiếm"
-                                           ng-change="autoSelectColor()">
-                                    <select class="form-control" ng-model="selectedMauSac" multiple
-                                            ng-change="selectColor()">
-                                        <option ng-repeat="mau in mauSac | filter:colorFilterFunction" ng-value="mau">
-                                            {{ mau.ten
-                                            }}
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <!-- Chọn kích cỡ -->
-                                <div class="mb-3 m-4">
-                                    <label>Kích Cỡ: </label>
-                                    <input type="text" ng-model="sizeSearch" placeholder="Nhập kích cỡ để tìm kiếm"
-                                           ng-change="autoSelectSize()">
-                                    <select class="form-control" ng-model="selectedKichCo" multiple
-                                            ng-change="selectSize()">
-                                        <option ng-repeat="size in kichCo | filter:sizeFilterFunction" ng-value="size">
-                                            {{ size.ten
-                                            }}
-                                        </option>
-                                    </select>
+                        <div class="row justify-content-center w-100">
+                            <div class="col-9">
+                                <div class="card">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <!-- Chọn màu sắc -->
+                                            <div class="mb-3 m-4">
+                                                <label>Màu Sắc: </label>
+                                                <input type="text" ng-model="colorSearch" placeholder="Nhập màu để tìm kiếm"
+                                                       ng-change="autoSelectColor()">
+                                                <select class="form-control" ng-model="selectedMauSac" multiple
+                                                        ng-change="selectColor()">
+                                                    <option ng-repeat="mau in mauSac | filter:colorFilterFunction" ng-value="mau">
+                                                        {{ mau.ten
+                                                        }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <!-- Chọn kích cỡ -->
+                                            <div class="mb-3 m-4">
+                                                <label>Kích Cỡ: </label>
+                                                <input type="text" ng-model="sizeSearch" placeholder="Nhập kích cỡ để tìm kiếm"
+                                                       ng-change="autoSelectSize()">
+                                                <select class="form-control" ng-model="selectedKichCo" multiple
+                                                        ng-change="selectSize()">
+                                                    <option ng-repeat="size in kichCo | filter:sizeFilterFunction" ng-value="size">
+                                                        {{ size.ten
+                                                        }}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+
             <div class="row p-3 m-5">
                 <div class="col-12">
                     <div class="card">
@@ -179,7 +110,7 @@
                                     </th>
                                     <th>Kích Cỡ</th>
                                     <th>Số lượng</th>
-                                    <th>Giá nhập</th>
+<!--                                    <th>Giá nhập</th>-->
                                     <th>Giá bán</th>
                                     <th>Xóa</th>
                                 </tr>
@@ -198,15 +129,15 @@
                                             {{ form[table.mau.idMauSac][size.idKichCo].errorMessages.soLuong }}
                                         </div>
                                     </td>
-                                    <td><input ng-model="form[table.mau.idMauSac][size.idKichCo].giaNhap"
-                                               type="number"
-                                               ng-change="updateAllSelectedValues('giaNhap', form[table.mau.idMauSac][size.idKichCo].giaNhap, table)">
-                                        <!-- Hiển thị lỗi giá nhập -->
-                                        <div ng-show="form[table.mau.idMauSac][size.idKichCo].errorMessages.giaNhap"
-                                             class="text-danger">
-                                            {{ form[table.mau.idMauSac][size.idKichCo].errorMessages.giaNhap }}
-                                        </div>
-                                    </td>
+<!--                                    <td><input ng-model="form[table.mau.idMauSac][size.idKichCo].giaNhap"-->
+<!--                                               type="number"-->
+<!--                                               ng-change="updateAllSelectedValues('giaNhap', form[table.mau.idMauSac][size.idKichCo].giaNhap, table)">-->
+<!--                                        &lt;!&ndash; Hiển thị lỗi giá nhập &ndash;&gt;-->
+<!--                                        <div ng-show="form[table.mau.idMauSac][size.idKichCo].errorMessages.giaNhap"-->
+<!--                                             class="text-danger">-->
+<!--                                            {{ form[table.mau.idMauSac][size.idKichCo].errorMessages.giaNhap }}-->
+<!--                                        </div>-->
+<!--                                    </td>-->
                                     <td><input ng-model="form[table.mau.idMauSac][size.idKichCo].giaBan"
                                                type="number"
                                                ng-change="updateAllSelectedValues('giaBan', form[table.mau.idMauSac][size.idKichCo].giaBan, table)">

@@ -112,7 +112,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             chiTiet.setTrangThai(true);
             // Thực hiện ánh xạ các thuộc tính khác từ DTO vào chiTiet
             chiTiet.setSoLuong(dto.getSoLuong());
-            chiTiet.setGiaNhap(dto.getGiaNhap());
+//            chiTiet.setGiaNhap(dto.getGiaNhap());
             chiTiet.setGiaBan(dto.getGiaBan());
 
             // Gán đối tượng MauSac từ repository

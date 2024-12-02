@@ -129,7 +129,12 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
     @Query("SELECT pd FROM SanPhamChiTiet pd JOIN pd.dotGiamGiaList p WHERE p.idGiamGia = :promotionId")
     Page<SanPhamChiTiet> findByPromotionId(@Param("promotionId") Integer promotionId, Pageable pageable);
 
-    @Query("SELECT s FROM SanPhamChiTiet s WHERE s.idSanPham.idSanPham = :idSanPham")
+    @Query("SELECT s FROM SanPhamChiTiet s WHERE s.idSanPham.idSanPham = :idSanPham AND s.trangThai = true")
     List<SanPhamChiTiet> findAllByIdSanPham(@Param("idSanPham") Integer idSanPham);
+
+    @Query("SELECT sp FROM SanPhamChiTiet sp WHERE sp.idSanPham.idSanPham = :idSanPham AND sp.trangThai = true ORDER BY sp.giaBan ASC")
+    List<SanPhamChiTiet> findCheapestProductDetail(@Param("idSanPham") Integer idSanPham);
+
+
 }
 
