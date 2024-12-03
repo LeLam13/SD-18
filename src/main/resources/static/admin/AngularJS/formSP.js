@@ -377,6 +377,9 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
 
         Promise.all(promises).then(function () {
             $scope.tables.forEach(function (table) {
+                // Đảm bảo chỉ sử dụng hình ảnh của table hiện tại
+                var tableHinhAnh = table.idHinhAnh;
+
                 table.size.forEach(function (size) {
                     var sizeForm = $scope.form[table.mau.idMauSac][size.idKichCo];
                     if (sizeForm) {
@@ -388,7 +391,7 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
                             soLuong: sizeForm.soLuong,
                             // giaNhap: sizeForm.giaNhap,
                             giaBan: sizeForm.giaBan,
-                            idHinhAnh: table.idHinhAnh
+                            idHinhAnh: tableHinhAnh // Sử dụng idHinhAnh từ table hiện tại
                         };
                         SanPhamChiTietList.push(SanPhamChiTiet);
                     }
@@ -514,7 +517,7 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
 
         // Cập nhật tên file vào imageSrc của bảng
         table.img = table.img || {}; // Đảm bảo img tồn tại
-        table.img.imageSrc = file.name;
+        // table.img.imageSrc = file.name;
 
         // Cập nhật mảng $scope.tables
         for (let i = 0; i < $scope.tables.length; i++) {

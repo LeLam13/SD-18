@@ -101,10 +101,20 @@ public class SanPhamServiceImpl implements SanPhamService {
         sanPhams.forEach(sanPham -> {
             // Lấy sản phẩm chi tiết có giá nhỏ nhất
             List<SanPhamChiTiet> chiTietList = sanPhamChiTietRepo.findCheapestProductDetail(sanPham.getIdSanPham());
-            SanPhamChiTiet cheapestDetail = chiTietList.isEmpty() ? null : chiTietList.get(0);
+
+            // Lọc danh sách để chỉ giữ các mục có idHinhAnh không null
+            SanPhamChiTiet cheapestDetail = chiTietList.stream()
+                    .filter(chiTiet -> chiTiet.getIdHinhAnh() != null)
+                    .findFirst() // Lấy mục đầu tiên sau khi lọc
+                    .orElse(null);
+
             // Gán giá nhỏ nhất
-            sanPham.setMinGiaBan(cheapestDetail != null ? cheapestDetail.getGiaBan() : null); // Gán giá trị nếu có
+            sanPham.setMinGiaBan(cheapestDetail != null ? cheapestDetail.getGiaBan() : null);
+
+            // Gán hình ảnh nếu tồn tại
+            sanPham.setHinhAnh(cheapestDetail != null ? cheapestDetail.getIdHinhAnh().getTen() : null);
         });
+
 
         return sanPhams;
     }
@@ -127,8 +137,8 @@ public class SanPhamServiceImpl implements SanPhamService {
         ThuongHieu thuongHieu = thuongHieuRepo.findByIdThuongHieu(sanPhamRequestDTO.getIdThuongHieu());
         sp.setIdThuongHieu(thuongHieu);
 
-        HinhAnh hinhAnh = hinhAnhRepo.findByIdHinhAnh(sanPhamRequestDTO.getIdHinhAnh());
-        sp.setIdHinhAnh(hinhAnh);
+//        HinhAnh hinhAnh = hinhAnhRepo.findByIdHinhAnh(sanPhamRequestDTO.getIdHinhAnh());
+//        sp.setIdHinhAnh(hinhAnh);
 
         sp.setMoTa(sanPhamRequestDTO.getMoTa());
         sp.setCreateDate(date);
@@ -153,8 +163,8 @@ public class SanPhamServiceImpl implements SanPhamService {
         ThuongHieu thuongHieu = thuongHieuRepo.findByIdThuongHieu(sanPhamRequestDTO.getIdThuongHieu());
         ms.setIdThuongHieu(thuongHieu);
 
-        HinhAnh hinhAnh = hinhAnhRepo.findByIdHinhAnh(sanPhamRequestDTO.getIdHinhAnh());
-        ms.setIdHinhAnh(hinhAnh);
+//        HinhAnh hinhAnh = hinhAnhRepo.findByIdHinhAnh(sanPhamRequestDTO.getIdHinhAnh());
+//        ms.setIdHinhAnh(hinhAnh);
 
         ms.setMoTa(sanPhamRequestDTO.getMoTa());
         ms.setUpdateDate(date);
@@ -177,8 +187,8 @@ public class SanPhamServiceImpl implements SanPhamService {
         ThuongHieu thuongHieu = thuongHieuRepo.findByIdThuongHieu(sanPhamRequestDTO.getIdThuongHieu());
         ms.setIdThuongHieu(thuongHieu);
 
-        HinhAnh hinhAnh = hinhAnhRepo.findByIdHinhAnh(sanPhamRequestDTO.getIdHinhAnh());
-        ms.setIdHinhAnh(hinhAnh);
+//        HinhAnh hinhAnh = hinhAnhRepo.findByIdHinhAnh(sanPhamRequestDTO.getIdHinhAnh());
+//        ms.setIdHinhAnh(hinhAnh);
 
 
         ms.setUpdateDate(date);

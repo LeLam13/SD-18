@@ -83,7 +83,7 @@ app.controller('ctrl', function ($scope, $http) {
             idChatLieu: $scope.selectedChatLieu || null,
             idKieuDang: $scope.selectedKieuDang || null,
             idThuongHieu: $scope.selectedThuongHieu || null,
-            idHinhAnh:$scope.idHinhAnhCr. idHinhAnh,
+            // idHinhAnh:$scope.idHinhAnhCr. idHinhAnh,
             moTa: $scope.moTa
 
         }
@@ -169,7 +169,7 @@ app.controller('ctrl', function ($scope, $http) {
                     idChatLieu: $scope.sp.idChatLieu.idChatLieu,
                     idKieuDang: $scope.sp.idKieuDang.idKieuDang,
                     idThuongHieu: $scope.sp.idThuongHieu.idThuongHieu,
-                    idHinhAnh: $scope.sp.idHinhAnh.idHinhAnh,
+                    // idHinhAnh: $scope.sp.idHinhAnh.idHinhAnh,
                     moTa: $scope.sp.moTa
                 }
 

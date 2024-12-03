@@ -70,6 +70,7 @@
                                     <th>STT</th>
                                     <th>Mã</th>
                                     <th>Tên Áo</th>
+                                    <th>Số lượng</th>
                                     <th>Ngày Tạo</th>
                                     <th>Trạng Thái</th>
                                     <th>Thao Tác</th>
@@ -127,6 +128,7 @@
                                     <td>{{ page * size + $index + 1 }}</td>
                                     <td>{{p.ma}}</td>
                                     <td>{{p.ten}}</td>
+                                    <td>{{p.totalInventory || 0}}</td>
                                     <td>{{p.createDate | date:'yyyy-MM-dd'}}</td>
                                     <!--                                    <td>{{p.totalInventory || 0}}</td>-->
                                     <!--                                    <td>{{p.totalSold || 0}}</td>-->
@@ -225,38 +227,39 @@
                                     <!-- Modal body -->
                                     <div class="modal-body">
                                         <div class="row g-3">
-                                            <div class="col-md-6">
-                                                <img ng-src="/assets/img/{{sp.idHinhAnh.ten ? sp.idHinhAnh.ten : 'default.png'}}"
-                                                     alt="Ảnh sản phẩm"
-                                                     class="img-thumbnail"
-                                                     style="width: 240px; height: 240px; object-fit: cover; cursor: pointer;"
-                                                     ng-click="triggerFileInput(sp.idSanPham)"/>
+<!--                                            <div class="col-md-6">-->
+<!--                                                <img ng-src="/assets/img/{{sp.idHinhAnh.ten ? sp.idHinhAnh.ten : 'default.png'}}"-->
+<!--                                                     alt="Ảnh sản phẩm"-->
+<!--                                                     class="img-thumbnail"-->
+<!--                                                     style="width: 240px; height: 240px; object-fit: cover; cursor: pointer;"-->
+<!--                                                     ng-click="triggerFileInput(sp.idSanPham)"/>-->
 
-                                                <input type="file" id="formFile-{{sp.idSanPham}}" class="d-none"
-                                                       onchange="angular.element(this).scope().onFileSelected1(event)">
-                                            </div>
+<!--                                                <input type="file" id="formFile-{{sp.idSanPham}}" class="d-none"-->
+<!--                                                       onchange="angular.element(this).scope().onFileSelected1(event)">-->
+<!--                                            </div>-->
                                             <div class="col-md-6">
-                                                <div class="mb-5">
-                                                    <label class="form-label">Mã</label>
-                                                    <input
-                                                            type="text"
-                                                            ng-model="ma"
-                                                            class="form-control"
-                                                            readonly
-                                                    />
-                                                    <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
-                                                </div>
-                                                <div class="mb-5">
-                                                    <label class="form-label">Tên Sản Phẩm</label>
-                                                    <input
-                                                            type="text"
-                                                            ng-model="sp.ten"
-                                                            class="form-control"
-                                                            onfocus="document.getElementById('eTenMauUd').innerText = ''"
-                                                    />
-                                                    <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
-                                                    <i id="eTenMauUd" style="color: red" class="er"></i>
-                                                </div>
+
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Mã</label>
+                                                <input
+                                                        type="text"
+                                                        ng-model="ma"
+                                                        class="form-control"
+                                                        readonly
+                                                />
+                                                <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Tên Sản Phẩm</label>
+                                                <input
+                                                        type="text"
+                                                        ng-model="sp.ten"
+                                                        class="form-control"
+                                                        onfocus="document.getElementById('eTenMauUd').innerText = ''"
+                                                />
+                                                <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
+                                                <i id="eTenMauUd" style="color: red" class="er"></i>
                                             </div>
                                             <div class="row">
                                                 <div class="col-sm-6">
@@ -352,32 +355,33 @@
                                     <!-- Modal body -->
                                     <div class="modal-body">
                                         <div class="row g-3">
-                                            <div class="col-md-6">
-                                                <!-- Ảnh hiển thị -->
-                                                <img ng-src="/assets/img/{{selectedImage ? selectedImage : 'default.png'}}"
-                                                     alt="Ảnh sản phẩm"
-                                                     class="img-thumbnail"
-                                                     style="width: 240px; height: 240px; object-fit: cover; cursor: pointer;"
-                                                     ng-click="triggerFileInputCr()"/>
+<!--                                            <div class="col-md-6">-->
+<!--                                                &lt;!&ndash; Ảnh hiển thị &ndash;&gt;-->
+<!--                                                <img ng-src="/assets/img/{{selectedImage ? selectedImage : 'default.png'}}"-->
+<!--                                                     alt="Ảnh sản phẩm"-->
+<!--                                                     class="img-thumbnail"-->
+<!--                                                     style="width: 240px; height: 240px; object-fit: cover; cursor: pointer;"-->
+<!--                                                     ng-click="triggerFileInputCr()"/>-->
 
-                                                <!-- Input file để chọn ảnh -->
-                                                <input type="file"
-                                                       id="fileInput"
-                                                       class="d-none"
-                                                       onchange="angular.element(this).scope().onFileSelectedCr(event)"/>
-                                            </div>
+<!--                                                &lt;!&ndash; Input file để chọn ảnh &ndash;&gt;-->
+<!--                                                <input type="file"-->
+<!--                                                       id="fileInput"-->
+<!--                                                       class="d-none"-->
+<!--                                                       onchange="angular.element(this).scope().onFileSelectedCr(event)"/>-->
+<!--                                            </div>-->
                                             <div class="col-md-6">
-                                                <div class="mb-3">
-                                                    <label class="form-label">Tên Sản Phẩm</label>
-                                                    <input
-                                                            type="text"
-                                                            ng-model="ten"
-                                                            class="form-control"
-                                                            onfocus="document.getElementById('eTenMau').innerText = ''"
-                                                    />
-                                                    <i id="eTenMau" style="color: red" class="er"></i>
-                                                    <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
-                                                </div>
+
+                                            </div>
+                                            <div class="mb-3">
+                                                <label class="form-label">Tên Sản Phẩm</label>
+                                                <input
+                                                        type="text"
+                                                        ng-model="ten"
+                                                        class="form-control"
+                                                        onfocus="document.getElementById('eTenMau').innerText = ''"
+                                                />
+                                                <i id="eTenMau" style="color: red" class="er"></i>
+                                                <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                                             </div>
                                             <div class="row">
 
