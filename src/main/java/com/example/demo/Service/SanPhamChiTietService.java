@@ -31,4 +31,6 @@ public interface SanPhamChiTietService {
     public SanPhamChiTiet updateTrangThai(Integer idSanPhamChiTiet);
 
     Page<SanPhamChiTiet> filterProducts(FilterRequestDTO filterRequest,Pageable pageable);
+
+    public SanPhamChiTiet updateNhapHang(SanPhamChiTietRequestDTO sanPhamChiTietRequestDTO);
 }

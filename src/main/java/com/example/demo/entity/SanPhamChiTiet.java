@@ -64,8 +64,8 @@ public class SanPhamChiTiet {
     @Column(name = "so_luong")
     private Integer soLuong;
 
-//    @Column(name = "gia_nhap")
-//    private Float giaNhap;
+    @Column(name = "gia_nhap")
+    private Float giaNhap;
 
     @Column(name = "gia_ban")
     private Float giaBan;

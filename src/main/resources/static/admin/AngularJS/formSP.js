@@ -338,23 +338,23 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
                             : "Số lượng phải lớn hơn 0";
                         hasError = true;
                     }
-                    // if (sizeForm.giaNhap <= 0 || sizeForm.giaNhap == null) {
-                    //     sizeForm.errorMessages.giaNhap = sizeForm.giaNhap == null
-                    //         ? "Giá nhập không được để trống"
-                    //         : "Giá nhập phải lớn hơn 0";
-                    //     hasError = true;
-                    // }
+                    if (sizeForm.giaNhap <= 0 || sizeForm.giaNhap == null) {
+                        sizeForm.errorMessages.giaNhap = sizeForm.giaNhap == null
+                            ? "Giá nhập không được để trống"
+                            : "Giá nhập phải lớn hơn 0";
+                        hasError = true;
+                    }
                     if (sizeForm.giaBan <= 0 || sizeForm.giaBan == null) {
                         sizeForm.errorMessages.giaBan = sizeForm.giaBan == null
                             ? "Giá bán không được để trống"
                             : "Giá bán phải lớn hơn 0";
                         hasError = true;
                     }
-                    // if (sizeForm.giaNhap >= sizeForm.giaBan) {
-                    //     sizeForm.errorMessages.giaNhap = "Giá nhập phải nhỏ hơn giá bán";
-                    //     sizeForm.errorMessages.giaBan = "Giá bán phải lớn hơn giá nhập";
-                    //     hasError = true;
-                    // }
+                    if (sizeForm.giaNhap >= sizeForm.giaBan) {
+                        sizeForm.errorMessages.giaNhap = "Giá nhập phải nhỏ hơn giá bán";
+                        sizeForm.errorMessages.giaBan = "Giá bán phải lớn hơn giá nhập";
+                        hasError = true;
+                    }
                 }
             });
         });
@@ -389,7 +389,7 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
                             idKichCo: size.idKichCo,
                             idSanPham: idSanPham,
                             soLuong: sizeForm.soLuong,
-                            // giaNhap: sizeForm.giaNhap,
+                            giaNhap: sizeForm.giaNhap,
                             giaBan: sizeForm.giaBan,
                             idHinhAnh: tableHinhAnh // Sử dụng idHinhAnh từ table hiện tại
                         };
