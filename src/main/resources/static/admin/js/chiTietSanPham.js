@@ -220,6 +220,13 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
         window.location.href = '/admin/san-pham/formAdd/' + idSanPham;
     };
 
+    $scope.navigateToHistory = function () {
+        window.location.href = '/admin/lich-su-nhap-hang/add/' + idSanPham;
+    };
+
+    $scope.navigateToViewHistory = function () {
+        window.location.href = '/admin/lich-su-nhap-hang/view/' + idSanPham;
+    };
 
     // Hàm lọc sản phẩm
     $scope.filter = function (filterData) {
@@ -314,11 +321,11 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
                     };
 
                     return $http.post("/admin/hinh-anh/add", addHinhAnh).then(function (addResponse) {
-                            return $http.get("/admin/hinh-anh", {params: {ten: HinhAnh.ten}}).then(function (getResponse) {
-                                console.log("Dữ liệu ảnh mới với ID:", getResponse.data);
-                                return getResponse.data; // Trả về dữ liệu ảnh mới với idHinhAnh
-                            });
+                        return $http.get("/admin/hinh-anh", {params: {ten: HinhAnh.ten}}).then(function (getResponse) {
+                            console.log("Dữ liệu ảnh mới với ID:", getResponse.data);
+                            return getResponse.data; // Trả về dữ liệu ảnh mới với idHinhAnh
                         });
+                    });
                 } else {
                     return existingImage;  // Trả về ảnh đã có
                 }
@@ -379,6 +386,62 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
         });
     };
 
+
+    $scope.getThuocTinhCT = function () {
+        $http.get("/admin/mau-sac/get-all").then(r => {
+            $scope.mauSacCT = r.data;
+        }).catch(e => console.log(e))
+
+
+        $http.get("/admin/size/get-all").then(r => {
+            $scope.kichCoCT = r.data;
+        }).catch(e => console.log(e))
+    }
+    $scope.updateByNhap = function () {
+        var NhapHang = {
+            idSanPham: idSanPham,
+            ma: $scope.generateRandomString(8),
+            soLuongNhap: $scope.soLuongNhap,
+            giaNhapNhap: $scope.giaNhapNhap,
+            idMauSacNhap: $scope.idMauSacNhap.idMauSac,
+            idKichCoNhap: $scope.idKichCoNhap.idKichCo
+        }
+        $http.post("/admin/lich-su-nhap-hang/add", NhapHang).then(r => {
+            var upDateCT = {
+                idSanPham: idSanPham,
+                soLuong: $scope.soLuongNhap,
+                giaNhap: $scope.giaNhapNhap,
+                idMauSac: $scope.idMauSacNhap.idMauSac,
+                idKichCo: $scope.idKichCoNhap.idKichCo
+            }
+            $http.post("/admin/san-pham/chi-tiet/updateNhap", upDateCT).then(r => {
+                alert("Them thanh cong");
+                $scope.viewChiTiet();
+            })
+        }).catch(function (err) {
+            console.error("Lỗi khi gọi :", err);
+        });
+    }
+
+    $scope.viewChiTiet = function () {
+        // Chuyển hướng đến trang chi tiết sản phẩm
+        location.href = `/admin/san-pham/` + idSanPham;
+    };
+
+
+    $scope.lichSu = [];
+    $scope.getLichSuNhap = function () {
+        $http.get(`/admin/lich-su-nhap-hang/` + idSanPham + `/find-all?page=${$scope.page}&size=${$scope.size}`)
+            .then(function (response) {
+                $scope.lichSu = response.data.content;
+                $scope.totalPages = response.data.totalPages;
+                console.log("check lich su:", $scope.lichSu)
+            }).catch(error => {
+            console.log(error);
+        });
+    }
+
+    $scope.getLichSuNhap();
 
 // Hàm kiểm tra sự tồn tại của các giá trị
     $scope.checkIfExists = function () {

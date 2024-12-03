@@ -126,6 +126,13 @@ public class SanPhamChiTietRestController {
         Page<SanPhamChiTiet> filteredProducts = sanPhamChiTietService.filterProducts(filterData,pageable);
         return ResponseEntity.ok(filteredProducts);
     }
+
+    @PostMapping("/admin/san-pham/chi-tiet/updateNhap")
+    public ResponseEntity<?> updateNhapHang(@RequestBody SanPhamChiTietRequestDTO sanPhamChiTietRequestDTO) {
+        sanPhamChiTietService.updateNhapHang(sanPhamChiTietRequestDTO);
+        return ResponseEntity.ok(sanPhamChiTietRequestDTO);
+    }
+
 }
 
 
