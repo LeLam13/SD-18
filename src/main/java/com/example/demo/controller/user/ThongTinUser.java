@@ -1,5 +1,7 @@
 package com.example.demo.controller.user;
 
+import com.example.demo.Service.KhachHangService;
+import com.example.demo.dto.reponse.LichSuMuaHangResponseDTO;
 import com.example.demo.entity.khachhang;
 import com.example.demo.entity.nhanvien;
 import com.example.demo.entity.taikhoan;
@@ -15,22 +17,53 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
 import java.time.LocalDate;
+import java.util.List;
 
 @Controller
 public class ThongTinUser {
     @Autowired
     private khachhangRePo khachHangRepo;
+
+    @Autowired
+    private KhachHangService khachHangService;
     @Autowired
     private com.example.demo.repo.taikhoanRepo taikhoanRepo;
+
     @GetMapping("thongtinuser")
     public String trangChu(Model model, Principal principal) {
-        // Lấy tên người dùng (username) từ Spring Security
-        String username = principal.getName();
-        // Tìm thông tin nhân viên từ cơ sở dữ liệu dựa trên username
-        khachhang khachhang = khachHangRepo.findByUsername(username);
-        // Thêm thông tin nhân viên vào model để hiển thị trên trang Thymeleaf
-        model.addAttribute("khachHang", khachhang);
-        return "/user/ThongTinKhachHang";
+        try {
+            // Lấy tên người dùng (username) từ Spring Security
+            String username = principal.getName();
+
+            // Tìm thông tin khách hàng từ cơ sở dữ liệu dựa trên username
+            khachhang khachhang = khachHangRepo.findByUsername(username);
+            if (khachhang == null) {
+                model.addAttribute("error", "Không tìm thấy khách hàng với username: " + username);
+                return "/user/ThongTinKhachHang"; // Trả về trang lỗi nếu không tìm thấy khách hàng
+            }
+
+            // Chuyển idKhachHang sang Integer nếu cần (ví dụ nếu idKhachHang là String hoặc
+            // Long)
+            Integer idKhachHang = Integer.parseInt(khachhang.getIdKhachHang().toString()); // Nếu idKhachHang là String
+            // Hoặc nếu idKhachHang là kiểu Long
+            // Integer idKhachHang = ((Long) khachhang.getIdKhachHang()).intValue();
+
+            // Lấy lịch sử mua hàng của khách hàng
+            List<LichSuMuaHangResponseDTO> lichSuMuaHangList = khachHangService.getLichSuMuaHang(idKhachHang);
+            System.out.println(lichSuMuaHangList); // Debugging to check if purchaseHistory has all required data
+
+            // Thêm thông tin khách hàng và lịch sử mua hàng vào model
+            model.addAttribute("khachHang", khachhang);
+            model.addAttribute("purchaseHistory", lichSuMuaHangList);
+
+            return "/user/ThongTinKhachHang"; // Trả về trang ThongTinKhachHang
+        } catch (NumberFormatException e) {
+            model.addAttribute("error", "Lỗi khi chuyển đổi ID khách hàng.");
+            return "/user/ThongTinKhachHang";
+        } catch (Exception e) {
+            model.addAttribute("error", "Có lỗi xảy ra khi xử lý yêu cầu.");
+            return "/user/ThongTinKhachHang";
+        }
     }
 
     @PostMapping("/updatekhachhang")
@@ -100,7 +133,6 @@ public class ThongTinUser {
             return "/user/ThongTinKhachHang";
         }
 
-
         if (khachhang.getNgaySinh() == null) {
             model.addAttribute("error", "Ngày sinh không được để trống!");
             model.addAttribute("khachHang", khachhang);
@@ -128,7 +160,5 @@ public class ThongTinUser {
 
         return "redirect:/thongtinuser";
     }
-
-
 
 }
