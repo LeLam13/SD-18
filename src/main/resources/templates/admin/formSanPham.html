@@ -110,7 +110,7 @@
                                     </th>
                                     <th>Kích Cỡ</th>
                                     <th>Số lượng</th>
-<!--                                    <th>Giá nhập</th>-->
+                                    <th>Giá nhập</th>
                                     <th>Giá bán</th>
                                     <th>Xóa</th>
                                 </tr>
@@ -129,15 +129,15 @@
                                             {{ form[table.mau.idMauSac][size.idKichCo].errorMessages.soLuong }}
                                         </div>
                                     </td>
-<!--                                    <td><input ng-model="form[table.mau.idMauSac][size.idKichCo].giaNhap"-->
-<!--                                               type="number"-->
-<!--                                               ng-change="updateAllSelectedValues('giaNhap', form[table.mau.idMauSac][size.idKichCo].giaNhap, table)">-->
-<!--                                        &lt;!&ndash; Hiển thị lỗi giá nhập &ndash;&gt;-->
-<!--                                        <div ng-show="form[table.mau.idMauSac][size.idKichCo].errorMessages.giaNhap"-->
-<!--                                             class="text-danger">-->
-<!--                                            {{ form[table.mau.idMauSac][size.idKichCo].errorMessages.giaNhap }}-->
-<!--                                        </div>-->
-<!--                                    </td>-->
+                                    <td><input ng-model="form[table.mau.idMauSac][size.idKichCo].giaNhap"
+                                               type="number"
+                                               ng-change="updateAllSelectedValues('giaNhap', form[table.mau.idMauSac][size.idKichCo].giaNhap, table)">
+                                        <!-- Hiển thị lỗi giá nhập -->
+                                        <div ng-show="form[table.mau.idMauSac][size.idKichCo].errorMessages.giaNhap"
+                                             class="text-danger">
+                                            {{ form[table.mau.idMauSac][size.idKichCo].errorMessages.giaNhap }}
+                                        </div>
+                                    </td>
                                     <td><input ng-model="form[table.mau.idMauSac][size.idKichCo].giaBan"
                                                type="number"
                                                ng-change="updateAllSelectedValues('giaBan', form[table.mau.idMauSac][size.idKichCo].giaBan, table)">
