@@ -1,5 +1,5 @@
 var app = angular.module("banhang-app", [])
-app.controller("banhang-ctrl", function ($scope, $http) {
+app.controller("banhang-ctrl", function ($scope, $http,$sce) {
     //tao random ma don hang
     $scope.generateRandomString = function(length) {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
@@ -409,7 +409,21 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         var sdt = $('#sdt-khach-hang').val();
 
         if(sdt === null || sdt ===""){
-            $scope.showErrrorsMes("Chưa nhập số điện thoại");
+            $scope.showErrrorsMes("Không để trống số điện thoại!");
+            return;
+        }
+
+        if(sdt.length <10 || sdt >11){
+            $scope.showErrrorsMes("Số điện thoại Không đúng định dạng!");
+            return;
+        }
+
+        if (/^\d+$/.test(sdt)) {
+            // Nếu chỉ chứa số
+            console.log("Số điện thoại hợp lệ.");
+        } else {
+            // Nếu có ký tự không phải số
+            $scope.showErrrorsMes("Số điện thoại Không hợp lệ!");
             return;
         }
 
