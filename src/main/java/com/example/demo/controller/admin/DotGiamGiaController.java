@@ -114,48 +114,70 @@ public class DotGiamGiaController {
     @PostMapping("/update")
     public String updateDotGiamGia(@RequestParam("idGiamGia") Integer idGiamGia,
                                    @RequestParam("discountType") String discountType,
-                                   @RequestParam(value = "giamGiaPercent", required = false) Double giamGiaPercent,
-                                   @RequestParam(value = "giamGiaAmount", required = false) Double giamGiaAmount,
+                                   @RequestParam(value = "giamGiaPercent", required = false) String giamGiaPercentStr,
+                                   @RequestParam(value = "giamGiaAmount", required = false) String giamGiaAmountStr,
                                    @RequestParam("thoiGianBatDau") LocalDateTime thoiGianBatDau,
                                    @RequestParam("thoiGianKetThuc") LocalDateTime thoiGianKetThuc,
-                                   Model model
-                                   ) {
+                                   Model model) {
+
         DotGiamGia dotGiamGia = dotGiamGiaService.getDotGiamGiaById(idGiamGia);
+
+        // Kiểm tra nếu ngày bắt đầu lớn hơn ngày kết thúc
         if (thoiGianBatDau.isAfter(thoiGianKetThuc)) {
             model.addAttribute("error2", "Ngày bắt đầu không được lớn hơn ngày kết thúc.");
-            model.addAttribute("dotGiamGia", dotGiamGia); // Truyền lại đối tượng để điền dữ liệu vào form
-            return "admin/updatedgg"; // Trả về trang cập nhật
+            model.addAttribute("dotGiamGia", dotGiamGia);
+            return "admin/updatedgg";
         }
 
+        // Kiểm tra nếu thời gian đã thay đổi
+        boolean isThoiGianChanged = !dotGiamGia.getThoiGianBatDau().equals(thoiGianBatDau) || !dotGiamGia.getThoiGianKetThuc().equals(thoiGianKetThuc);
 
+        if (isThoiGianChanged) {
+            // Tìm các đợt giảm giá đang hoạt động có thời gian trùng lặp với thời gian bắt đầu và kết thúc mới
+            List<DotGiamGia> overlappingPromotions = dotGiamGiaService.findOverlappingPromotionsExceptCurrent(thoiGianBatDau, thoiGianKetThuc,idGiamGia);
 
-        // Lấy tất cả các đợt giảm giá đang diễn ra hoặc sắp diễn ra
-        List<DotGiamGia> activeDotGiamGiaList = dotGiamGiaService.getActiveDotGiamGiaList();
-
-// Kiểm tra ngày bắt đầu của đợt giảm giá mới (thoiGianBatDau) không được nhỏ hơn ngày kết thúc của bất kỳ đợt giảm giá nào đang diễn ra
-        for (DotGiamGia activeDotGiamGia : activeDotGiamGiaList) {
-            // Bỏ qua kiểm tra với chính đợt giảm giá đang cập nhật
-            if (!activeDotGiamGia.getIdGiamGia().equals(dotGiamGia.getIdGiamGia()) && thoiGianBatDau.isBefore(activeDotGiamGia.getThoiGianKetThuc())) {
-                // Thêm thông báo lỗi vào model nếu ngày bắt đầu của đợt giảm giá mới nhỏ hơn ngày kết thúc của đợt giảm giá đang diễn ra
-                model.addAttribute("error2", "Ngày bắt đầu của đợt giảm giá mới phải lớn hơn ngày kết thúc của đợt giảm giá hiện tại.");
-
-                // Truyền lại đối tượng DotGiamGia để giữ lại dữ liệu trong form
-                model.addAttribute("dotGiamGia", dotGiamGia);
-
-                // Trả về trang cập nhật
-                return "admin/updatedgg";
+            // Kiểm tra nếu có đợt giảm giá trùng lặp với đợt giảm giá hiện tại
+            for (DotGiamGia activeDotGiamGia : overlappingPromotions) {
+                // Kiểm tra không phải là chính đợt giảm giá đang cập nhật
+                if (!activeDotGiamGia.getIdGiamGia().equals(dotGiamGia.getIdGiamGia())) {
+                    // Ngày bắt đầu của đợt giảm giá mới phải lớn hơn ngày kết thúc của đợt giảm giá hiện tại
+                    model.addAttribute("error2", "Thời gian của đợt giảm giá không được trùng thời gian lên đợt giảm giá khác");
+                    model.addAttribute("dotGiamGia", dotGiamGia);
+                    return "admin/updatedgg"; // Trả về trang cập nhật
+                }
             }
         }
-
-
-
-        // Cập nhật thông tin giảm giá
+        // Kiểm tra phần trăm giảm giá nếu là giảm giá theo phần trăm
         if ("percent".equals(discountType)) {
-            dotGiamGia.setGiamGia(giamGiaPercent);
-            dotGiamGia.setLoaiGiamGia(0); // Giảm giá theo %
-        } else {
-            dotGiamGia.setGiamGia(giamGiaAmount);
-            dotGiamGia.setLoaiGiamGia(1); // Giảm giá theo tiền
+            try {
+                Double giamGiaPercent = Double.parseDouble(giamGiaPercentStr); // Chuyển đổi từ String sang Double
+                if (giamGiaPercent < 0 || giamGiaPercent > 100) {
+                    model.addAttribute("error2", "Giảm giá theo phần trăm phải nằm trong khoảng từ 0 đến 100.");
+                    model.addAttribute("dotGiamGia", dotGiamGia);
+                    return "admin/updatedgg";
+                }
+                dotGiamGia.setGiamGia(giamGiaPercent);
+                dotGiamGia.setLoaiGiamGia(0); // Giảm giá theo %
+            } catch (NumberFormatException e) {
+                model.addAttribute("error2", "Giảm giá theo phần trăm phải là một số hợp lệ.");
+                model.addAttribute("dotGiamGia", dotGiamGia);
+                return "admin/updatedgg";
+            }
+        } else { // Giảm giá theo tiền
+            try {
+                Double giamGiaAmount = Double.parseDouble(giamGiaAmountStr); // Chuyển đổi từ String sang Double
+                if (giamGiaAmount < 0) {
+                    model.addAttribute("error2", "Giảm giá theo tiền không được là số âm.");
+                    model.addAttribute("dotGiamGia", dotGiamGia);
+                    return "admin/updatedgg";
+                }
+                dotGiamGia.setGiamGia(giamGiaAmount);
+                dotGiamGia.setLoaiGiamGia(1); // Giảm giá theo tiền
+            } catch (NumberFormatException e) {
+                model.addAttribute("error2", "Giảm giá theo tiền phải là một số hợp lệ.");
+                model.addAttribute("dotGiamGia", dotGiamGia);
+                return "admin/updatedgg";
+            }
         }
 
         dotGiamGia.setThoiGianBatDau(thoiGianBatDau);
