@@ -377,8 +377,8 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
 
         //ngày tháng người tạo hoá đơn
         LocalDate localDate = LocalDate.now();
-        donHang.setCreateDate(localDate);
-        donHang.setCreateBy(nameCustorm);
+        hoaDon.setCreateDate(localDate);
+        hoaDon.setCreateBy(nameCustorm);
 
         hoaDonRepo.save(hoaDon);
 

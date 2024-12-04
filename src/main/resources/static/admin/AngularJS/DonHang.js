@@ -444,8 +444,10 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
         console.log('check in hoá đơn:');
         $http.get("/hoa-don/invoice/"+idHoaDon).then(function (response) {
             console.log('thanh cong:', response);
+            $scope.showNotification("In hoá đơn thành công!","success");
         }).catch(function (errors) {
             console.error('Có lỗi xảy ra:', errors);
+            $scope.showNotification("In hoá đơn thất bại!","error");
         })
     }
 
@@ -498,4 +500,54 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
     //load data
     $scope.getAllOrderOnline();
     $scope.hideStep();
+
+    var intervalPromiseDH; // Biến quản lý $interval
+    var controlTimeout;    // Biến quản lý $timeout
+    var intervalTime = 1500; // Thời gian lặp lại $interval
+    var pauseTime = 3000;   // Thời gian tạm dừng $interval
+    var resumeTime = 2000;  // Thời gian để khởi động lại
+    $scope.startAutoCheckOrder = function() {
+        // Hàm quản lý chu kỳ chạy và dừng
+        function manageInterval() {
+            // Khởi động $interval nếu chưa có
+            if (!intervalPromiseDH) {
+                intervalPromiseDH = $interval(function() {
+                    $scope.getAllOrderOnline();
+                    console.log("Đang kiểm tra danh sách đơn hàng...");
+                }, intervalTime); // Sử dụng thời gian lặp lại được cấu hình
+                console.log("Đã bắt đầu tự động kiểm tra danh sách đơn hàng.");
+            }
+
+            // Tạm dừng sau pauseTime
+            $timeout(function() {
+                if (intervalPromiseDH) {
+                    $interval.cancel(intervalPromiseDH);
+                    intervalPromiseDH = null;
+                    console.log("Tạm dừng tự động kiểm tra sau " + pauseTime + "ms.");
+                }
+
+                // Khởi động lại sau resumeTime
+                controlTimeout = $timeout(manageInterval, resumeTime); // Sử dụng thời gian khởi động lại được cấu hình
+            }, pauseTime); // Sử dụng thời gian tạm dừng được cấu hình
+        }
+
+        // Bắt đầu chu kỳ
+        manageInterval();
+    };
+    $scope.startAutoCheckOrder();
+
+    // Hủy $interval và $timeout khi controller bị hủy
+    $scope.$on('$destroy', function() {
+        if (intervalPromiseDH) {
+            $interval.cancel(intervalPromiseDH);
+            intervalPromiseDH = null;
+            console.log("Đã dừng $interval khi chuyển trang.");
+        }
+        if (controlTimeout) {
+            $timeout.cancel(controlTimeout);
+            controlTimeout = null;
+            console.log("Đã dừng $timeout khi chuyển trang.");
+        }
+    });
+
 })

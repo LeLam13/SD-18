@@ -839,9 +839,324 @@ app.controller(
       return feeShipping;
     };
     //tính tổng thanh toán
+<<<<<<< HEAD
     $scope.sumAmount = function () {
       let sumAmount = $scope.totalPromotionAmountAfter() + $scope.getFeeShip();
       return sumAmount;
+=======
+    $scope.sumAmount = function (){
+        let sumAmount =$scope.totalPromotionAmountAfter() + $scope.getFeeShip();
+        return sumAmount;
+    }
+
+
+    //tạo đơn hàng
+    $scope.createOrderOnline = function (){
+        // Lấy tên tỉnh/thành phố đã chọn
+        var selectedProvinceName = $scope.selectedProvince ? $scope.selectedProvince.ProvinceName : '';
+
+        // Tìm quận/huyện đã chọn
+        var selectedDistrict = $scope.districts.find(d => d.DistrictID == $scope.selectedDistricts); // Sử dụng == thay vì ===
+        var selectedDistrictName = selectedDistrict ? selectedDistrict.DistrictName : '';
+
+        // Tìm xã/phường đã chọn
+        var selectedWard = $scope.wards.find(w => w.WardCode === $scope.selectedWards);
+        var selectedWardName = selectedWard ? selectedWard.WardName : '';
+
+        var diaChiNhan =$('#soNha').val()+ "-" + selectedWardName+ "-" + selectedDistrictName  + "-" + selectedProvinceName ;
+
+        if(selectedDistrictName === null && selectedProvinceName == null && selectedWardName === null
+           && $('#hoVaTen').val() === null && $('#soDienThoai').val() == null && $('#email').val() == null
+        ){
+            $scope.showNotification('Chưa nhập thông tin khách hàng!','error');
+            return;
+        }
+        if($('#hoVaTen').val() === null || $('#hoVaTen').val() === ""){
+            // $scope.showNotification('Chưa nhập họ tên khách hàng!','error');
+            $('#messHoTen').text('Chưa nhập họ tên !');
+            $('#messHoTen').show();
+            return;
+        }
+        if ($('#email').val() === null || $('#email').val() === "") {
+            //$scope.showNotification('Chưa nhập Email khách hàng!','error');
+            $('#messEmail').text('Chưa nhập email !');
+            $('#messEmail').show();
+            return;
+        } else {
+            // Kiểm tra email có hợp lệ không
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if ( emailRegex.test($('#email').val()) ) {
+                $('#messEmail').text('');
+                $('#messEmail').hide();
+            } else {
+                //$scope.showNotification('Email Không hợp lệ!','error');
+                $('#messEmail').text('Email không hợp lệ!');
+                $('#messEmail').show();
+                return;
+            }
+        }
+        if($('#soDienThoai').val() === null || $('#soDienThoai').val() === ""){
+            //$scope.showNotification('Chưa nhập số điện thoại khách hàng!','error');
+            $('#messSDT').text('Chưa nhập số điện thoại !');
+            $('#messSDT').show();
+            return;
+        }else {
+            const phoneRegex = /^(0[0-9]{8,10})$/;
+            if ( phoneRegex.test($('#soDienThoai').val()) ) {
+                $('#messSDT').text('');
+                $('#messSDT').hide();
+            } else {
+                //$scope.showNotification('Số điện thoại không hợp lệ!','error');
+                $('#messSDT').text('Số điện thoại không hợp lệ!');
+                $('#messSDT').show();
+                return;
+            }
+        }
+        if($('#soNha').val() === null || $('#soNha').val()===""){
+            $('#messSoNha').text('Chưa nhập địa chỉ nhà!');
+            $('#messSoNha').show();
+            return;
+        }
+        if(selectedProvinceName === null || selectedProvinceName===""){
+            $('#messThanhPho').text('Chưa chọn tỉnh - thành phố!');
+            $('#messThanhPho').show();
+            return;
+        }
+        if(selectedDistrictName === null || selectedDistrictName===""){
+            $('#messQuan').text('Chưa chon quận - huyện!');
+            $('#messQuan').show();
+            return;
+        }
+        if(selectedWardName === null || selectedWardName===""){
+            $('#messPhuong').text('Chưa chọn phường - xã !');
+            $('#messPhuong').show();
+            return;
+        }
+        let trangThaiThanhToan = false;
+        // if($scope.paymentMethod === 2){
+        //     trangThaiThanhToan = true;
+        // }
+
+
+        $scope.orderData ={
+            maDonHang: $scope.generateRandomString(8),
+            tenKhachHang: $('#hoVaTen').val(),
+            soDienThoaiKhachHang: $('#soDienThoai').val(),
+            diaChiKhachHang: diaChiNhan,
+            emailKhachHang: $('#email').val(),
+            tongTien: $scope.getSum(),
+            tongTienKhuyenMai: $scope.promotionAmount(),
+            tongTienSauKhuyenMai: $scope.totalPromotionAmountAfter(),
+            tongTienThanhToan: $scope.sumAmount(),
+            phiVanChuyen: $scope.getFeeShip(),
+            ghiChu: $('#ghi-chu').val(),
+            trangThaiThanhToan: trangThaiThanhToan,
+            idTrangThai: 1,
+            idPhuongThucThanhToan: $scope.paymentMethod,
+            idKhuyenMai: $scope.khuyenMaiById.idKhuyenMai != null ? $scope.khuyenMaiById.idKhuyenMai : null,
+            // orderDetail: $scope.itemsOrder
+            orderDetail: $scope.username ? $scope.itemsOrder.map(item => ({
+                soLuong: item.soLuong,
+                giaBan: item.giaBan,
+                idDonHang: "", // Đảm bảo truyền đúng id đơn hàng nếu cần
+                idSanPhamChiTiet: item.sanPhamChiTiet.idSanPhamChiTiet
+            })) : $scope.itemsOrder
+        };
+        console.log("check createOrederOnline: ",$scope.orderData);
+        var dataOrder = angular.copy($scope.orderData);
+        $http({
+            method: 'POST',
+            url: '/don-hang-online/them-moi',
+            data: dataOrder,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            transformRequest: function(data) {
+                return JSON.stringify(data);
+            }
+        }) .then(function(response) {
+            console.log("check fee order when create: ",response);
+            //xoá giỏ hàng chi tiết
+            if(!$scope.username){
+                $scope.clearLocalStorage1();
+            }else {
+                $scope.deleteCartDetail(response);
+                $scope.getCartGH();
+                //$scope.getCart();
+
+            }
+            $scope.createInvoince(response);
+            // $scope.deleteCartDetail(response);
+            // $scope.createInvoince(response);
+            // $scope.getCartGH();
+            $scope.showNotification('Đặt hàng Thành công!','success')
+            if(response.data.phuongThucThanhToan.idPhuongThucThanhToan ===2){
+                $scope.showVNPay(response);
+            }
+
+        }).catch(function(error) {
+            $scope.showNotification('Đặt Hàng Thất Bại!','error')
+            console.error('Có lỗi xảy ra:', error);
+        });
+
+    }
+    //chuyển trang thanh toán
+    $scope.showVNPay = function (response){
+        $scope.dataVNPay ={
+            idDonHang:response.data.idDonHang
+        }
+        $http.post('/create-payment', $scope.dataInvoice)
+            .then(function(response) {
+                const paymentUrl = response.data.paymentUrl;
+                console.log("Redirecting to VNPay:", paymentUrl);
+                window.location.href = paymentUrl; // Redirect to VNPay
+            })
+            .catch(function(error) {
+                console.error('Có lỗi xảy ra:', error);
+            });
+    }
+    //xoa gio hang chi tiet
+    $scope.deleteCartDetail = function (response){
+        console.log("$scope.cart.idGioHang: ",idGioHang);
+        $http.delete("/gio-hang/xoa-gio-hang-chi-tiet/"+ idGioHang).then(function (response) {
+            console.log("Xoá giỏ hàng chi tiết thành công!");
+            $rootScope.$broadcast('cartUpdated');
+        }).catch(function (errors) {
+            console.error('Có lỗi xảy ra:', errors);
+        })
+    }
+
+    //tăng số lượng
+    $scope.soLuongPlus = function (orderProduct){
+        console.log("orderProduct1: ",orderProduct)
+        var product = $scope.itemsOrder.find(item=>item.idSanPhamChiTiet === orderProduct.idSanPhamChiTiet);
+        console.log("orderProduct2: ",product)
+        if(product){
+            // product.qty++;
+            // product.soLuong++;
+            product.soLuong = parseInt(product.soLuong) + 1;  // Chuyển thành số nếu cần thiết
+            product.qty = parseInt(product.qty) + 1;  // Chuyển thành số nếu cần thiết
+            $scope.updateQuantityPlus(orderProduct);
+        }
+    }
+
+    $scope.updateQuantityPlus = function (details){
+        console.log("check Quantity: ",details);
+        var checkIdSanPhamChiTiet = null;
+        if(!$scope.username){
+            checkIdSanPhamChiTiet = details.idSanPhamChiTiet;
+        }else {
+            checkIdSanPhamChiTiet = details.sanPhamChiTiet.idSanPhamChiTiet;
+        }
+        $scope.dataUpdateProduct ={
+            maDonHangChiTiet: $scope.generateRandomString(8),
+            idĐonHangChiTiet: details.idGioHangChiTiet,
+            // idSanPhamChiTiet: details.sanPhamChiTiet.idSanPhamChiTiet,
+            idSanPhamChiTiet:checkIdSanPhamChiTiet,
+            idGioHang:details.gioHang.idGioHang,
+            soLuong: '1'
+        }
+        console.log("check Quantity: ",$scope.dataUpdateProduct);
+        var updateProduct = angular.copy($scope.dataUpdateProduct);
+        $http({
+            method: 'PUT',
+            url: '/gio-hang/gio-hang-chi-tiet/so-luong-tang',
+            data: updateProduct,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            transformRequest: function(data) {
+                return JSON.stringify(data);  // Chuyển đối tượng thành chuỗi JSON
+            }
+        }).then(function(response) {
+            //console.log('Sản phẩm thêm thành công');
+            console.log('Sản phẩm thêm: ',response.data);
+            // $scope.getProducts();
+        }).catch(function(error) {
+            console.error('Có lỗi xảy ra:', error);
+        });
+    }
+
+    //Giảm Số Lượng
+    $scope.soLuongReduce = function(orderProduct){
+        var product = $scope.itemsOrder.find(item=>item.idSanPhamChiTiet === orderProduct.idSanPhamChiTiet);
+        if(product.soLuong >1){
+            product.soLuong = parseInt(product.soLuong) - 1;
+            product.qty = parseInt(product.qty) - 1;
+            //this.saveToLocalStorage();
+            $scope.updateQuantityReduce(orderProduct);
+        }
+    }
+
+    $scope.updateQuantityReduce = function (details){
+        $scope.dataUpdateProduct ={
+            maDonHangChiTiet: $scope.generateRandomString(8),
+            idĐonHangChiTiet: details.idGioHangChiTiet,
+            idSanPhamChiTiet: details.sanPhamChiTiet.idSanPhamChiTiet,
+            idGioHang:details.gioHang.idGioHang,
+            soLuong: '1'
+        }
+        console.log("check Quantity: ",$scope.dataUpdateProduct);
+        var updateProductReduce = angular.copy($scope.dataUpdateProduct);
+        $http({
+            method: 'PUT',
+            url: '/gio-hang/gio-hang-chi-tiet/so-luong-giam',
+            data: updateProductReduce,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            transformRequest: function(data) {
+                return JSON.stringify(data);  // Chuyển đối tượng thành chuỗi JSON
+            }
+        }).then(function(response) {
+            //console.log('Sản phẩm thêm thành công');
+            console.log('Sản phẩm thêm: ',response.data);
+            // $scope.getProducts();
+        }).catch(function(error) {
+            console.error('Có lỗi xảy ra:', error);
+        });
+    }
+
+    //giỏ hàng chi tiết
+    $scope.removeLocalStorage = function (id){
+        console.log('check delete: ',id)
+        console.log('check delete: ',$scope.items)
+        if (!$scope.username){
+            var index = this.items.findIndex(item => item.sanPhamChiTiet.idSanPhamChiTiet == id);
+            $scope.items.splice(index,1);
+            this.saveToLocalStorage1();
+        }else {
+            var item = this.items.find(item=>item.sanPhamChiTiet.idSanPhamChiTiet === id);
+            console.log('check delete index: ',item)
+            $http({
+                method: 'DELETE',
+                url: '/gio-hang-chi-tiet/xoa-theo-id-san-pham/' + item.sanPhamChiTiet.idSanPhamChiTiet
+            }).then(function(response) {
+                console.log("Đã xóa sản phẩm khỏi giỏ hàng:", response.data);
+                $scope.getDetailCart(response.data.gioHang.idGioHang);
+            }, function(error) {
+                // Xử lý lỗi
+                console.error("Lỗi khi xóa sản phẩm:", error.data);
+                alert("Không tìm thấy sản phẩm hoặc có lỗi khi xóa!");
+            });
+        }
+    }
+    //$scope.invalidQuantity = false;
+    //kiểm tra số lượng
+    $scope.validateQuantity = function(orderProduct) {
+        // Tìm sản phẩm tương ứng trong listProducts để lấy số lượng có sẵn
+        let availableProduct = $scope.listProducts.find(product => product.idSanPhamChiTiet === orderProduct.sanPhamChiTiet.idSanPhamChiTiet);
+        // console.log("availableProduct1: ",$scope.listProducts);
+        // console.log("availableProduct: ",orderProduct);
+        // Kiểm tra nếu số lượng yêu cầu lớn hơn số lượng có sẵn
+        if (availableProduct && orderProduct.soLuong > availableProduct.soLuong) {
+            orderProduct.invalidQuantity = true;
+        } else {
+            orderProduct.invalidQuantity = false;
+            console.log("check2:")
+            $scope.updateQuantityChange(orderProduct);
+        }
+>>>>>>> feature/banhang
     };
 
     //tạo đơn hàng
