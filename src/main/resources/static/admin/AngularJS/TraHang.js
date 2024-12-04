@@ -372,6 +372,7 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval,$sce, $timeout)
         manageInterval();
     };
     $scope.startAutoCheckOrder();
+
     // Hủy $interval và $timeout khi controller bị hủy
     $scope.$on('$destroy', function() {
         if (intervalPromiseDH) {

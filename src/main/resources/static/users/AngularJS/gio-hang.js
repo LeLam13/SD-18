@@ -852,9 +852,9 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
             return;
         }
         let trangThaiThanhToan = false;
-        if($scope.paymentMethod === 2){
-            trangThaiThanhToan = true;
-        }
+        // if($scope.paymentMethod === 2){
+        //     trangThaiThanhToan = true;
+        // }
 
 
         $scope.orderData ={
