@@ -154,7 +154,37 @@
             .selected {
                 background-color: blue; /* Màu nền khi được chọn */
             }
+            .notification-container {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%); /* Canh giữa màn hình */
+                background-color: rgba(0, 0, 0, 0.7); /* Màu nền trong suốt */
+                color: white;
+                padding: 15px;
+                border-radius: 10px;
+                z-index: 9999; /* Đảm bảo thông báo hiển thị trên cùng */
+                text-align: center; /* Canh chữ ở giữa */
+                max-width: 300px;
+                width: 100%;
+            }
 
+            .notification-content {
+                display: flex;
+                flex-direction: column; /* Chia icon và message theo chiều dọc */
+                align-items: center; /* Canh giữa icon và message */
+            }
+
+            .notification-icon {
+                font-size: 40px; /* Kích thước của icon */
+                margin-bottom: 10px; /* Khoảng cách giữa icon và message */
+            }
+
+            .notification-message {
+                font-size: 16px; /* Kích thước của message */
+                line-height: 1.5;
+                color: white; /* Màu chữ trắng cho message */
+            }
         </style>
         <div class="page-content">
             <div class="container-fluid" ng-app="banhang-app" ng-controller="banhang-ctrl">
@@ -347,10 +377,10 @@
                                     <label class="form-label" >Phiếu giảm giá:</label>
                                     <div class="row">
                                         <div class="col-5">
-                                            <input type="text" id="ma-khuyen-mai" class="form-control">
+                                            <input type="text" id="ma-khuyen-mai" class="form-control" readonly>
                                         </div>
                                         <div class="col-4">
-                                            <input type="text" id="muc-giam-gia" class="form-control">
+                                            <input type="text" id="muc-giam-gia" class="form-control" readonly>
                                         </div>
                                         <div class="col-3">
                                             <button ng-click="openModalKhuyenMai()" type="button" class="btn btn-info">Info</button>
@@ -616,7 +646,7 @@
                                         <td>{{ km.soTienToiThieu}}</td>
                                         <td>{{ km.thoiGianKetThuc}}</td>
                                         <td>
-                                            <button ng-click="getKhuyenmaiById(km.maKhuyenMai)" type="button" class="btn btn-primary bi bi-box-fill"></button>
+                                            <button ng-click="getKhuyenmaiById(km.idKhuyenMai)" type="button" class="btn btn-primary bi bi-box-fill"></button>
                                         </td>
                                     </tr>
                                     </tbody>
