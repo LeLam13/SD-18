@@ -50,7 +50,6 @@
                                         <th>Người Tạo</th>
                                         <th>Ngày Cập Nhật</th>
                                         <th>Người Cập Nhật</th>
-                                        <th>Thao Tác</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -73,11 +72,11 @@
                                         <td>{{ product.createBy }}</td>
                                         <td>{{ product.updateDate | date:'yyyy-MM-dd' }}</td>
                                         <td>{{ product.updateBy }}</td>
-                                        <td>
-                                            <button class="btn btn-danger btn-sm" ng-click="removeFromDiscount(product.idSanPham)">
-                                                Xóa
-                                            </button>
-                                        </td>
+<!--                                        <td>-->
+<!--                                            <button class="btn btn-danger btn-sm" ng-click="removeFromDiscount(product.idSanPham)">-->
+<!--                                                Xóa-->
+<!--                                            </button>-->
+<!--                                        </td>-->
                                     </tr>
                                     </tbody>
                                 </table>
@@ -272,6 +271,7 @@
                                         alert('Không tìm thấy ID đợt giảm giá!');
                                         return;
                                     }
+
                                     const selectedProductIds = [];
                                     // Collect the selected product IDs
                                     document.querySelectorAll('input[type="checkbox"]:checked').forEach((checkbox) => {
@@ -280,6 +280,7 @@
                                             selectedProductIds.push(Number(productId));  // Chuyển thành số nếu cần
                                         }
                                     });
+
                                     // Log mảng ID sản phẩm đã chọn
                                     console.log('Selected product IDs:', selectedProductIds);
                                     if (selectedProductIds.length === 0) {
@@ -287,44 +288,45 @@
                                         return;
                                     }
 
+                                    // Hiển thị hộp thoại xác nhận trước khi gọi API
+                                    alertify.confirm(
+                                        "Xác nhận", // Tiêu đề
+                                        "Bạn có chắc chắn muốn thêm sản phẩm vào đợt giảm giá?", // Nội dung
+                                        async function () {
+                                            // Nếu người dùng chọn "Có"
+                                            try {
+                                                // Call the API to add selected products to the discount campaign
+                                                const response = await fetch(`/admin/dot-giam-gia/${dotGiamGiaId}/add-san-pham`, {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'Content-Type': 'application/json',
+                                                    },
+                                                    body: JSON.stringify(selectedProductIds),
+                                                });
 
-                                    try {
-                                        // Call the API to add selected products to the discount campaign
-                                        const response = await fetch(`/admin/dot-giam-gia/${dotGiamGiaId}/add-san-pham`, {
-                                            method: 'POST',
-                                            headers: {
-                                                'Content-Type': 'application/json',
-                                            },
-                                            body: JSON.stringify(selectedProductIds),
-                                        });
+                                                const data = await response.json();
 
-                                        const data = await response.json();
-                                        if (response.ok) {
-                                            alertify.confirm(
-                                                "Xác nhận", // Tiêu đề
-                                                "Thêm sản phẩm vào đợt giảm giá thành công!", // Nội dung
-                                                function () {
-                                                    // Nếu chọn "Có", tải lại trang sau khi thông báo
-                                                    alertify.success('Thêm thành công.');
-                                                    setTimeout(function() {
+                                                if (response.ok) {
+                                                    alertify.success('Thêm sản phẩm vào đợt giảm giá thành công!');
+                                                    setTimeout(function () {
                                                         location.reload(); // Tải lại trang sau 1 giây
-                                                    }, 1100); // Chờ 1 giây sau khi hiển thị thông báo
-                                                },
-                                                function () {
-                                                    // Nếu chọn "Không"
-                                                    alertify.warning("Hủy");
+                                                    }, 1100);
+                                                } else {
+                                                    alertify.error('Lỗi khi thêm sản phẩm: ' + data.message); // Hiển thị thông báo lỗi
                                                 }
-                                            );
-                                        } else {
-                                            alertify.error('Lỗi khi thêm sản phẩm: ' + data.message); // Hiển thị thông báo lỗi
+                                            } catch (error) {
+                                                console.error('Lỗi khi thêm sản phẩm:', error);
+                                                alertify.error('Đã có lỗi xảy ra khi thêm sản phẩm vào đợt giảm giá!');
+                                            }
+                                        },
+                                        function () {
+                                            // Nếu người dùng chọn "Không"
+                                            alertify.warning("Hủy");
                                         }
-
-                                    } catch (error) {
-                                        console.error('Lỗi khi thêm sản phẩm:', error);
-                                        alert('Đã có lỗi xảy ra khi thêm sản phẩm vào đợt giảm giá!');
-                                    }
+                                    );
                                 }
                             </script>
+
 
                         </div>
                     </div>

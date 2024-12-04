@@ -118,6 +118,7 @@ app.controller('ctrl', function ($scope, $http) {
                         alertify.success("Xóa chi tiết sản phẩm thành công!");
                         // Tải lại danh sách chi tiết sản phẩm sau khi xóa
                         $scope.showProductDetails($scope.selectedProductId);
+                        window.location.reload();
                     })
                     .catch(error => {
                         console.error("Lỗi khi xóa chi tiết sản phẩm:", error);
