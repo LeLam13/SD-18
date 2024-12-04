@@ -354,15 +354,50 @@ app.controller("banhang-ctrl", function ($scope, $http,$sce) {
                 $scope.showNotification('Chưa nhập tên khách nhận!','error');
                 return;
             }
+            var regex = /^[a-zA-ZÀ-ỹ\s]+$/;
+            if (regex.test(tenKhachNhan)) {
+                console.log("Tên khách nhận hợp lệ!");
+            } else {
+                console.log("Tên khách nhận không hợp lệ!");
+                $scope.showNotification("Tên khách nhận không hợp lệ!", "error");
+            }
+
+            if(tenKhachNhan.length <2 || tenKhachNhan.length > 20){
+                $scope.showNotification('Độ dài tên khách nhận không hợp lệ!','error');
+                return;
+            }
+
             if(sdtKhachNhan === null || sdtKhachNhan ===""){
                 $scope.showNotification('Chưa nhập số diện thoại khách nhận!','error');
                 return;
             }
+            var regex1 = /^[0-9]+$/;
+            if (regex1.test(sdtKhachNhan)) {
+                console.log("Số điện thoại hợp lệ!");
+            } else {
+                console.log("Số điện thoại không hợp lệ!");
+                $scope.showNotification("Số diện thoại khách nhận không hợp lệ!", "error");
+            }
+            if(sdtKhachNhan.length <10 || sdtKhachNhan.length > 11){
+                $scope.showNotification('Độ dài số diện thoại khách nhận hợp lệ!','error');
+                return;
+            }
+
             if($('#soNha').val() === null || $('#soNha').val()===""){
-                $('#messSoNha').text('Chưa nhập địa chỉ nhà!');
+                $('#messSoNha').text('Chưa nhập địa chỉ số nhà!');
                 $('#messSoNha').show();
                 return;
             }
+
+            var regex2 = /^[a-zA-Z0-9À-ỹ\s]+$/;
+            if (regex2.test($('#soNha').val())) {
+                console.log("Số nhà hợp lệ!");
+            } else {
+                console.log("Số nhà không hợp lệ!");
+                $('#messSoNha').text('Số nhà không hợp lệ!');
+                $('#messSoNha').show();
+            }
+
             if(selectedProvinceName === null || selectedProvinceName===""){
                 $('#messThanhPho').text('Chưa chọn tỉnh - thành phố!');
                 $('#messThanhPho').show();
