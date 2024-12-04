@@ -23,6 +23,9 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
 
     HoaDon findByMaHoaDon(String maHoaDon);
 
+    @Query("SELECT h FROM HoaDon h WHERE h.donHang.idDonHang = :idDonHang")
+    HoaDon findByDonHangId(@Param("idDonHang") Integer idDonHang);
+
     // Tổng doanh thu
     @Query("SELECT COALESCE(SUM(h.tongTienSauKhuyenMai), 0) FROM HoaDon h")
     Float calculateTotalRevenue();

@@ -904,7 +904,9 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
         //$scope.getCart();
 
       }
-      $scope.createInvoince(response);
+      if($scope.paymentMethod ===1){
+        $scope.createInvoince(response);
+      }
       // $scope.deleteCartDetail(response);
       // $scope.createInvoince(response);
       // $scope.getCartGH();
@@ -924,7 +926,8 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
     $scope.dataVNPay ={
       idDonHang:response.data.idDonHang
     }
-    $http.post('/create-payment', $scope.dataInvoice)
+    //$scope.dataInvoice
+    $http.post('/create-payment', $scope.dataVNPay)
         .then(function(response) {
           const paymentUrl = response.data.paymentUrl;
           console.log("Redirecting to VNPay:", paymentUrl);
@@ -1037,22 +1040,27 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
   }
 
   //giỏ hàng chi tiết
-  $scope.removeLocalStorage = function (id){
+  $scope.removeLocalStorage1 = function (id){
     console.log('check delete: ',id)
-    console.log('check delete: ',$scope.items)
+    //console.log('check delete: ',$scope.items)
     if (!$scope.username){
-      var index = this.items.findIndex(item => item.sanPhamChiTiet.idSanPhamChiTiet == id);
-      $scope.items.splice(index,1);
+      var index = this.items.findIndex(item => item.idSanPhamChiTiet == id);
+      console.log('check delete index not: ',index);
+      $scope.itemsOrder.splice(index,1);
       this.saveToLocalStorage1();
+      $rootScope.$broadcast('cartUpdated');
     }else {
-      var item = this.items.find(item=>item.sanPhamChiTiet.idSanPhamChiTiet === id);
-      console.log('check delete index: ',item)
+      console.log('check delete itemsOrder: ',$scope.itemsOrder);
+      var item = this.itemsOrder.find(item=>item.sanPhamChiTiet.idSanPhamChiTiet === id.sanPhamChiTiet.idSanPhamChiTiet
+      );
+      console.log('check delete index: ',item);
       $http({
         method: 'DELETE',
         url: '/gio-hang-chi-tiet/xoa-theo-id-san-pham/' + item.sanPhamChiTiet.idSanPhamChiTiet
       }).then(function(response) {
         console.log("Đã xóa sản phẩm khỏi giỏ hàng:", response.data);
         $scope.getDetailCart(response.data.gioHang.idGioHang);
+        $rootScope.$broadcast('cartUpdated');
       }, function(error) {
         // Xử lý lỗi
         console.error("Lỗi khi xóa sản phẩm:", error.data);

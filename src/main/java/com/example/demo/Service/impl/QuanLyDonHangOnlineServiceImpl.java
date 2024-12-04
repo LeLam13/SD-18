@@ -82,6 +82,13 @@ public class QuanLyDonHangOnlineServiceImpl implements QuanLyDonHangOnlineServic
         }
 
         TrangThai trangThai = trangThaiRepo.findById(donHangOnlineStatusRequestDTO.getIdTrangThai()).orElse(null);
+        if(trangThai.getIdTrangThai() ==5){
+            HoaDon hoaDon = hoaDonRepo.findByDonHangId(donHang.getIdDonHang());
+            hoaDon.setTrangThaiThanhToan(true);
+            hoaDonRepo.save(hoaDon);
+
+            donHang.setTrangThaiThanhToan(true);
+        }
         donHang.setTrangThai(trangThai);
 //        int currentTrangThaiId = donHang.getTrangThai().getIdTrangThai();
 //        if (currentTrangThaiId == 1) {
@@ -102,9 +109,15 @@ public class QuanLyDonHangOnlineServiceImpl implements QuanLyDonHangOnlineServic
 //            TrangThai trangThai = trangThaiRepo.findById(4).get();
 //            donHang.setTrangThai(trangThai);
 //        }
+        LocalDate localDate = LocalDate.now();
+        donHang.setUpdateDate(localDate);
+        donHang.setUpdateBy(oldTaiKoan.getNhanVien().getHoTen());
+
 
         donHang.setGhiChu(donHangOnlineStatusRequestDTO.getGhiChu());
         donHangRepo.save(donHang);
+
+        //cập nhật trạng thái hoá đơn
         return donHang;
     }
 
