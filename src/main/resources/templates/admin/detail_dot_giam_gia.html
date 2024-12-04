@@ -3,6 +3,10 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/admin/index}">
 <head>
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    </head>
+
     <title>ALLDY SNEAKER | Thêm sản phẩm vào đợt giảm giá</title>
     <style>
         .imgProduct {
@@ -176,19 +180,23 @@
                             </table>
 
                             <!-- Pagination -->
-                            <nav aria-label="Page navigation" class="d-flex justify-content-center mt-3">
+                            <nav aria-label="Page navigation" class="d-flex justify-content-end mt-3">
                                 <ul class="pagination">
                                     <li class="page-item" ng-class="{ 'disabled': page === 0 }">
-                                        <a class="page-link" href="" ng-click="previousPage()">&#8592; Trang trước</a>
-                                    </li>
-                                    <li class="page-item disabled">
-                                        <span class="page-link">Trang {{ page + 1 }} / {{ totalPages }}</span>
+                                        <a class="page-link" href="" ng-click="previousPage()">
+                                            <span aria-hidden="true" class="me-2">&lt;</span> <!-- Add margin to the left -->
+                                        </a>
                                     </li>
                                     <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 }">
-                                        <a class="page-link" href="" ng-click="nextPage()">Trang sau &#8594;</a>
+                                        <a class="page-link" href="" ng-click="nextPage()">
+                                            <span aria-hidden="true" class="ms-2">&gt;</span> <!-- Add margin to the right -->
+                                        </a>
                                     </li>
                                 </ul>
                             </nav>
+
+
+
 
                             <!-- Selected Product Details -->
                             <div ng-if="selectedProducts.length > 0">

@@ -40,15 +40,13 @@ public class DonHangServiceImpl implements DonHangService {
         return sanPhamChiTietRepo.findAll();
     }
 
-
-
     @Override
     public DonHang createDonHAng(DonHangRequestDTO donHangDTO, String username) {
         DonHang newDonHang = new DonHang();
         taikhoan oldTaiKoan = taikhoanRepo.findByUsername(username);
-        if(oldTaiKoan!= null){
-            System.out.println("check TK: "+oldTaiKoan.toString());
-            System.out.println("check TK: "+oldTaiKoan.getNhanVien().getIdNhanVien());
+        if (oldTaiKoan != null) {
+            System.out.println("check TK: " + oldTaiKoan.toString());
+            System.out.println("check TK: " + oldTaiKoan.getNhanVien().getIdNhanVien());
 
             newDonHang.setMaDonHang(donHangDTO.getMaDonHang());
             newDonHang.setTrangThaiThanhToan(donHangDTO.getTrangThaiThanhToan());
@@ -73,18 +71,19 @@ public class DonHangServiceImpl implements DonHangService {
 
     @Override
     public DonHangChiTiet updateDonHangChitiet(DonHangChiTietRequestDTO chitietRequestDTO) {
-        DonHangChiTiet oldDonHangCT = donHangChiTietRepo.findBySanPhamID(chitietRequestDTO.getIdSanPhamChiTiet(),chitietRequestDTO.getIdĐonHang());
+        DonHangChiTiet oldDonHangCT = donHangChiTietRepo.findBySanPhamID(chitietRequestDTO.getIdSanPhamChiTiet(),
+                chitietRequestDTO.getIdĐonHang());
 
-        //số lượng cập nhật > sô lượng có
+        // số lượng cập nhật > sô lượng có
         SanPhamChiTiet oldSacPhamCT = sanPhamChiTietRepo.findById(chitietRequestDTO.getIdSanPhamChiTiet()).get();
         if (oldSacPhamCT.getSoLuong() < chitietRequestDTO.getSoLuong()) {
             throw new RuntimeException("Số lượng sản phẩm không đủ!");
         }
-        //cập nhật số lượng của sản phẩm chi tiết
+        // cập nhật số lượng của sản phẩm chi tiết
         oldSacPhamCT.setSoLuong(oldSacPhamCT.getSoLuong() - chitietRequestDTO.getSoLuong());
         sanPhamChiTietRepo.save(oldSacPhamCT);
 
-        //cập nhật số lượng đon hàng chi tiết
+        // cập nhật số lượng đon hàng chi tiết
         oldDonHangCT.setIdDonHangChiTiet(oldDonHangCT.getIdDonHangChiTiet());
         Integer soLuong = oldDonHangCT.getSoLuong() + chitietRequestDTO.getSoLuong();
         oldDonHangCT.setSoLuong(soLuong);
@@ -95,7 +94,7 @@ public class DonHangServiceImpl implements DonHangService {
     public DonHangChiTiet createDonHangChitiet(DonHangChiTietRequestDTO chitietRequestDTO) {
         SanPhamChiTiet oldSanPhamCT = sanPhamChiTietRepo.findById(chitietRequestDTO.getIdSanPhamChiTiet())
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm chi tiết!"));
-        //cập nhật lại số lượng sản phẩm
+        // cập nhật lại số lượng sản phẩm
         if (oldSanPhamCT.getSoLuong() < chitietRequestDTO.getSoLuong()) {
             throw new RuntimeException("Số lượng sản phẩm không đủ!");
         }
@@ -103,7 +102,7 @@ public class DonHangServiceImpl implements DonHangService {
         oldSanPhamCT.setSoLuong(oldSanPhamCT.getSoLuong() - chitietRequestDTO.getSoLuong());
         sanPhamChiTietRepo.save(oldSanPhamCT);
 
-        //tạo đơn hàng chi tiết mới
+        // tạo đơn hàng chi tiết mới
         DonHangChiTiet newDonHangCT = new DonHangChiTiet();
 
         newDonHangCT.setMaDonHangChiTiet(chitietRequestDTO.getMaDonHangChiTiet());
@@ -120,7 +119,7 @@ public class DonHangServiceImpl implements DonHangService {
 
     @Override
     public boolean deleDonHangChiTiet(Integer id) {
-        if(donHangChiTietRepo.existsById(id)){
+        if (donHangChiTietRepo.existsById(id)) {
             DonHangChiTiet donHangChiTiet = donHangChiTietRepo.findById(id)
                     .orElseThrow(() -> new RuntimeException("Không tìm thấy đơn hàng chi tiết!"));
 
@@ -130,7 +129,7 @@ public class DonHangServiceImpl implements DonHangService {
 
             // Lưu sản phẩm chi tiết sau khi cập nhật lại số lượng
             sanPhamChiTietRepo.save(sanPhamChiTiet);
-            //xoá đơn hàng
+            // xoá đơn hàng
             donHangChiTietRepo.deleteById(id);
             return true;
         }
@@ -139,7 +138,7 @@ public class DonHangServiceImpl implements DonHangService {
 
     @Override
     public boolean deleDonHang(Integer id) {
-        //xoá đơn hàng
+        // xoá đơn hàng
         Optional<DonHang> optionalDonHang = donHangRepo.findById(id);
         if (optionalDonHang.isPresent()) {
             List<DonHangChiTiet> chiTietDonHangList = donHangChiTietRepo.findByDonHangId(id);
@@ -151,10 +150,10 @@ public class DonHangServiceImpl implements DonHangService {
                 sanPhamChiTietRepo.save(sanPham);
             }
 
-            //Xoá các chi tiết đơn hàng
+            // Xoá các chi tiết đơn hàng
             donHangChiTietRepo.deleteByDonHangId(id);
 
-            //Xoá đơn hàng
+            // Xoá đơn hàng
             donHangRepo.deleteById(id);
             return true;
         }
@@ -169,7 +168,7 @@ public class DonHangServiceImpl implements DonHangService {
     @Override
     public KhachHangResponseDTO getKhachHangById(Integer id) {
         khachhang kh = khachhangRePo.findById(id).get();
-        KhachHangResponseDTO  responseDTO = new KhachHangResponseDTO();
+        KhachHangResponseDTO responseDTO = new KhachHangResponseDTO();
         responseDTO.setId_khach_hang(kh.getIdKhachHang());
         responseDTO.setMaKhachHang(kh.getMaKhachHang());
         responseDTO.setDiaChi(kh.getDiaChi());
@@ -179,7 +178,7 @@ public class DonHangServiceImpl implements DonHangService {
     }
 
     @Override
-    public khachhang addKhachHang(KhachHangRequestDTO khachHangRequestDTO,String username) {
+    public khachhang addKhachHang(KhachHangRequestDTO khachHangRequestDTO, String username) {
         taikhoan oldTaiKoan = taikhoanRepo.findByUsername(username);
         if (oldTaiKoan == null) {
             throw new RuntimeException("Không tìm thấy tài khoản");
@@ -206,11 +205,11 @@ public class DonHangServiceImpl implements DonHangService {
     @Override
     public DonHang updateDonHangKH(Integer idDH, Integer id) {
         khachhang oldKhachHang = khachhangRePo.findById(id).get();
-        if(oldKhachHang == null){
+        if (oldKhachHang == null) {
             throw new RuntimeException("Không tìm thấy khách hàng");
         }
         DonHang oldDonHang = donHangRepo.findById(idDH).get();
-        if(oldDonHang == null){
+        if (oldDonHang == null) {
             throw new RuntimeException("Không tìm thấy đơn hàng");
         }
         oldDonHang.setKhachHang(oldKhachHang);
@@ -223,7 +222,7 @@ public class DonHangServiceImpl implements DonHangService {
     }
 
     @Override
-    public  List<khachhang> searchKhachHang(String sdt) {
+    public List<khachhang> searchKhachHang(String sdt) {
         return khachhangRePo.findBySoDienThoai(sdt);
     }
 
@@ -235,18 +234,19 @@ public class DonHangServiceImpl implements DonHangService {
     @Override
     public DonHangChiTiet updateQuntityPlus(DonHangChiTietRequestDTO donHangChiTietRequestDTO) {
 
-        DonHangChiTiet oldDonHangCT = donHangChiTietRepo.findBySanPhamID(donHangChiTietRequestDTO.getIdSanPhamChiTiet(),donHangChiTietRequestDTO.getIdĐonHang());
+        DonHangChiTiet oldDonHangCT = donHangChiTietRepo.findBySanPhamID(donHangChiTietRequestDTO.getIdSanPhamChiTiet(),
+                donHangChiTietRequestDTO.getIdĐonHang());
 
-        //số lượng cập nhật > sô lượng có
+        // số lượng cập nhật > sô lượng có
         SanPhamChiTiet oldSacPhamCT = sanPhamChiTietRepo.findById(donHangChiTietRequestDTO.getIdSanPhamChiTiet()).get();
         if (oldSacPhamCT.getSoLuong() < donHangChiTietRequestDTO.getSoLuong()) {
             throw new RuntimeException("Số lượng sản phẩm không đủ!");
         }
-        //cập nhật số lượng của sản phẩm chi tiết
+        // cập nhật số lượng của sản phẩm chi tiết
         oldSacPhamCT.setSoLuong(oldSacPhamCT.getSoLuong() - donHangChiTietRequestDTO.getSoLuong());
         sanPhamChiTietRepo.save(oldSacPhamCT);
 
-        //cập nhật số lượng đon hàng chi tiết
+        // cập nhật số lượng đon hàng chi tiết
         oldDonHangCT.setIdDonHangChiTiet(oldDonHangCT.getIdDonHangChiTiet());
         Integer soLuong = oldDonHangCT.getSoLuong() + donHangChiTietRequestDTO.getSoLuong();
         oldDonHangCT.setSoLuong(soLuong);
@@ -256,18 +256,19 @@ public class DonHangServiceImpl implements DonHangService {
 
     @Override
     public DonHangChiTiet updateQuntityReduce(DonHangChiTietRequestDTO donHangChiTietRequestDTO) {
-        DonHangChiTiet oldDonHangCT = donHangChiTietRepo.findBySanPhamID(donHangChiTietRequestDTO.getIdSanPhamChiTiet(),donHangChiTietRequestDTO.getIdĐonHang());
+        DonHangChiTiet oldDonHangCT = donHangChiTietRepo.findBySanPhamID(donHangChiTietRequestDTO.getIdSanPhamChiTiet(),
+                donHangChiTietRequestDTO.getIdĐonHang());
 
-        //số lượng cập nhật > sô lượng có
+        // số lượng cập nhật > sô lượng có
         SanPhamChiTiet oldSacPhamCT = sanPhamChiTietRepo.findById(donHangChiTietRequestDTO.getIdSanPhamChiTiet()).get();
         if (oldSacPhamCT.getSoLuong() < donHangChiTietRequestDTO.getSoLuong()) {
             throw new RuntimeException("Số lượng sản phẩm không đủ!");
         }
-        //cập nhật số lượng của sản phẩm chi tiết
+        // cập nhật số lượng của sản phẩm chi tiết
         oldSacPhamCT.setSoLuong(oldSacPhamCT.getSoLuong() + donHangChiTietRequestDTO.getSoLuong());
         sanPhamChiTietRepo.save(oldSacPhamCT);
 
-        //cập nhật số lượng đon hàng chi tiết
+        // cập nhật số lượng đon hàng chi tiết
         oldDonHangCT.setIdDonHangChiTiet(oldDonHangCT.getIdDonHangChiTiet());
         Integer soLuong = oldDonHangCT.getSoLuong() - donHangChiTietRequestDTO.getSoLuong();
         oldDonHangCT.setSoLuong(soLuong);
@@ -282,6 +283,12 @@ public class DonHangServiceImpl implements DonHangService {
     }
 
     @Override
+    public List<KhuyenMai> getAllKhuyenMaiOrder() {
+        List<KhuyenMai> khuyenMai = khuyenMaiRepo.findByTrangThaiTrue();
+        return khuyenMai;
+    }
+
+    @Override
     public KhuyenMai getKhuyenMaiById(Integer id) {
         KhuyenMai khuyenMai = khuyenMaiRepo.findById(id).get();
         return khuyenMai;
@@ -289,27 +296,28 @@ public class DonHangServiceImpl implements DonHangService {
 
     @Override
     public DonHangChiTiet updateCartDetailChange(DonHangChiTietRequestDTO donHangChiTietRequestDTO) {
-        DonHangChiTiet oldDonHangCT = donHangChiTietRepo.findBySanPhamChiTietIdAndDonHangId(donHangChiTietRequestDTO.getIdSanPhamChiTiet(),donHangChiTietRequestDTO.getIdĐonHang());
+        DonHangChiTiet oldDonHangCT = donHangChiTietRepo.findBySanPhamChiTietIdAndDonHangId(
+                donHangChiTietRequestDTO.getIdSanPhamChiTiet(), donHangChiTietRequestDTO.getIdĐonHang());
 
-        //số lượng cập nhật > sô lượng có
+        // số lượng cập nhật > sô lượng có
         SanPhamChiTiet oldSacPhamCT = sanPhamChiTietRepo.findById(donHangChiTietRequestDTO.getIdSanPhamChiTiet()).get();
         if (oldSacPhamCT.getSoLuong() < donHangChiTietRequestDTO.getSoLuong()) {
             throw new RuntimeException("Số lượng sản phẩm không đủ!");
         }
-        //cập nhật số lượng của sản phẩm chi tiết
-        int soLuongChange=0;
-        if(donHangChiTietRequestDTO.getSoLuong() > oldDonHangCT.getSoLuong()){
-            soLuongChange= donHangChiTietRequestDTO.getSoLuong()- oldDonHangCT.getSoLuong();
+        // cập nhật số lượng của sản phẩm chi tiết
+        int soLuongChange = 0;
+        if (donHangChiTietRequestDTO.getSoLuong() > oldDonHangCT.getSoLuong()) {
+            soLuongChange = donHangChiTietRequestDTO.getSoLuong() - oldDonHangCT.getSoLuong();
             oldSacPhamCT.setSoLuong(oldSacPhamCT.getSoLuong() - soLuongChange);
-        }else {
+        } else {
             soLuongChange = oldDonHangCT.getSoLuong() - donHangChiTietRequestDTO.getSoLuong();
             oldSacPhamCT.setSoLuong(oldSacPhamCT.getSoLuong() + soLuongChange);
         }
 
-        //oldSacPhamCT.setSoLuong(oldSacPhamCT.getSoLuong() - soLuongChange);
+        // oldSacPhamCT.setSoLuong(oldSacPhamCT.getSoLuong() - soLuongChange);
         sanPhamChiTietRepo.save(oldSacPhamCT);
 
-        //cập nhật số lượng đon hàng chi tiết
+        // cập nhật số lượng đon hàng chi tiết
         oldDonHangCT.setIdDonHangChiTiet(oldDonHangCT.getIdDonHangChiTiet());
         oldDonHangCT.setSoLuong(donHangChiTietRequestDTO.getSoLuong());
         donHangChiTietRepo.save(oldDonHangCT);

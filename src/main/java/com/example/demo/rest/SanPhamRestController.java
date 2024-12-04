@@ -18,7 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class SanPhamRestController {
@@ -36,6 +38,14 @@ public class SanPhamRestController {
                                                    @RequestParam(defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by("idSanPham").descending());
         Page<SanPham> sp = sanPhamService.findAllWithStatistics(pageable); // Sử dụng service đã bổ sung thống kê
+        return ResponseEntity.ok(sp); // Trả về dữ liệu phân trang kèm thống kê
+    }
+
+    @GetMapping("/san-pham/find-all-san-pham")
+    public ResponseEntity<?> findAllSanPham(@RequestParam(defaultValue = "0") int page,
+                                                   @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("idSanPham").descending());
+        Page<SanPham> sp = sanPhamService.findAllSanPham(pageable); // Sử dụng service đã bổ sung thống kê
         return ResponseEntity.ok(sp); // Trả về dữ liệu phân trang kèm thống kê
     }
 
@@ -125,4 +135,12 @@ public class SanPhamRestController {
         sanPhamService.updateTrangThai(idSanPham);
         return ResponseEntity.ok("");
     }
+    @GetMapping("/admin/san-pham/check-duplicate")
+    public ResponseEntity<Map<String, Boolean>> checkDuplicate(
+            @RequestParam String ten,
+            @RequestParam(required = false) String ma) {
+        boolean exists = sanPhamRepo.existsByTenIgnoreCaseAndMaNot(ten, ma);
+        return ResponseEntity.ok(Collections.singletonMap("exists", exists));
+    }
+
 }

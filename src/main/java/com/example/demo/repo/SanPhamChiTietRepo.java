@@ -79,7 +79,7 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
 
     SanPhamChiTiet findByIdSanPhamChiTiet(Integer idSanPhamChiTiet);
 
-    Page<SanPhamChiTiet> findAll(Specification<SanPhamChiTiet> spec,Pageable pageable);
+    Page<SanPhamChiTiet> findAll(Specification<SanPhamChiTiet> spec, Pageable pageable);
 
 //    SanPhamChiTiet findFirstBySanPhamId(Integer idSanPham);
 
@@ -117,19 +117,36 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
 
 
     @Query(nativeQuery = true, value = """
-    SELECT spct.*
-    FROM san_pham_chi_tiet spct
-    JOIN san_pham sp ON sp.id_san_pham = spct.id_san_pham
-    JOIN giam_gia_san_pham_chi_tiet ggspct ON ggspct.id_san_pham_chi_tiet = spct.id_san_pham_chi_tiet
-    WHERE sp.id_san_pham = :idSanPham
-      AND ggspct.id_giam_gia = :idGiamGia
-    """)
+            SELECT spct.*
+            FROM san_pham_chi_tiet spct
+            JOIN san_pham sp ON sp.id_san_pham = spct.id_san_pham
+            JOIN giam_gia_san_pham_chi_tiet ggspct ON ggspct.id_san_pham_chi_tiet = spct.id_san_pham_chi_tiet
+            WHERE sp.id_san_pham = :idSanPham
+              AND ggspct.id_giam_gia = :idGiamGia
+            """)
     List<SanPhamChiTiet> findAllBySanPhamAndDotGiamGia(@Param("idSanPham") Integer idSanPham, @Param("idGiamGia") Integer idGiamGia);
 
     @Query("SELECT pd FROM SanPhamChiTiet pd JOIN pd.dotGiamGiaList p WHERE p.idGiamGia = :promotionId")
     Page<SanPhamChiTiet> findByPromotionId(@Param("promotionId") Integer promotionId, Pageable pageable);
 
-    @Query("SELECT s FROM SanPhamChiTiet s WHERE s.idSanPham.idSanPham = :idSanPham")
+    @Query("SELECT s FROM SanPhamChiTiet s WHERE s.idSanPham.idSanPham = :idSanPham AND s.trangThai = true")
     List<SanPhamChiTiet> findAllByIdSanPham(@Param("idSanPham") Integer idSanPham);
+
+    @Query("SELECT sp FROM SanPhamChiTiet sp WHERE sp.idSanPham.idSanPham = :idSanPham AND sp.trangThai = true ORDER BY sp.giaBan ASC")
+    List<SanPhamChiTiet> findCheapestProductDetail(@Param("idSanPham") Integer idSanPham);
+
+    @Query("""
+                SELECT sp 
+                FROM SanPhamChiTiet sp 
+                WHERE sp.idSanPham.idSanPham = :idSanPham 
+                  AND sp.idMauSac.idMauSac = :idMauSac
+                  AND sp.idKichCo.idKichCo = :idKichCo        
+            """)
+    SanPhamChiTiet findCheapestProductDetail(
+            @Param("idSanPham") Integer idSanPham,
+            @Param("idMauSac") Integer idMauSac,
+            @Param("idKichCo") Integer idKichCo
+    );
+
 }
 

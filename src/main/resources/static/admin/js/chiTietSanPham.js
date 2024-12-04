@@ -112,27 +112,57 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
 
         // Kiểm tra từng trường (chỉ cần kiểm tra các trường có giá trị hợp lệ)
         if ($scope.spct.idMauSac && $scope.spct.idMauSac.idMauSac) {
-            checks.push($http.get("/admin/san-pham/chi-tiet", { params: { idMauSac: $scope.spct.idMauSac.idMauSac, excludeId: $scope.spct.ma } }));
+            checks.push($http.get("/admin/san-pham/chi-tiet", {
+                params: {
+                    idMauSac: $scope.spct.idMauSac.idMauSac,
+                    excludeId: $scope.spct.ma
+                }
+            }));
         }
 
         if ($scope.spct.idThuongHieu && $scope.spct.idThuongHieu.idThuongHieu) {
-            checks.push($http.get("/admin/san-pham/chi-tiet", { params: { idThuongHieu: $scope.spct.idThuongHieu.idThuongHieu, excludeId: $scope.spct.ma } }));
+            checks.push($http.get("/admin/san-pham/chi-tiet", {
+                params: {
+                    idThuongHieu: $scope.spct.idThuongHieu.idThuongHieu,
+                    excludeId: $scope.spct.ma
+                }
+            }));
         }
 
         if ($scope.spct.idKieuDang && $scope.spct.idKieuDang.idKieuDang) {
-            checks.push($http.get("/admin/san-pham/chi-tiet", { params: { idKieuDang: $scope.spct.idKieuDang.idKieuDang, excludeId: $scope.spct.ma } }));
+            checks.push($http.get("/admin/san-pham/chi-tiet", {
+                params: {
+                    idKieuDang: $scope.spct.idKieuDang.idKieuDang,
+                    excludeId: $scope.spct.ma
+                }
+            }));
         }
 
         if ($scope.spct.idChatLieu && $scope.spct.idChatLieu.idChatLieu) {
-            checks.push($http.get("/admin/san-pham/chi-tiet", { params: { idChatLieu: $scope.spct.idChatLieu.idChatLieu, excludeId: $scope.spct.ma } }));
+            checks.push($http.get("/admin/san-pham/chi-tiet", {
+                params: {
+                    idChatLieu: $scope.spct.idChatLieu.idChatLieu,
+                    excludeId: $scope.spct.ma
+                }
+            }));
         }
 
         if ($scope.spct.idKichCo && $scope.spct.idKichCo.idKichCo) {
-            checks.push($http.get("/admin/san-pham/chi-tiet", { params: { idKichCo: $scope.spct.idKichCo.idKichCo, excludeId: $scope.spct.ma } }));
+            checks.push($http.get("/admin/san-pham/chi-tiet", {
+                params: {
+                    idKichCo: $scope.spct.idKichCo.idKichCo,
+                    excludeId: $scope.spct.ma
+                }
+            }));
         }
 
         if ($scope.spct.idXuatXu && $scope.spct.idXuatXu.idXuatXu) {
-            checks.push($http.get("/admin/san-pham/chi-tiet", { params: { idXuatXu: $scope.spct.idXuatXu.idXuatXu, excludeId: $scope.spct.ma } }));
+            checks.push($http.get("/admin/san-pham/chi-tiet", {
+                params: {
+                    idXuatXu: $scope.spct.idXuatXu.idXuatXu,
+                    excludeId: $scope.spct.ma
+                }
+            }));
         }
 
         // Kiểm tra tất cả các giá trị cùng một lúc
@@ -157,12 +187,12 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
             soLuong: $scope.spct.soLuong,
             giaBan: $scope.spct.giaBan,
             idMauSac: $scope.spct.idMauSac.idMauSac,
-            idThuongHieu: $scope.spct.idThuongHieu.idThuongHieu,
-            idKieuDang: $scope.spct.idKieuDang.idKieuDang,
-            idChatLieu: $scope.spct.idChatLieu.idChatLieu,
+            // idThuongHieu: $scope.spct.idThuongHieu.idThuongHieu,
+            // idKieuDang: $scope.spct.idKieuDang.idKieuDang,
+            // idChatLieu: $scope.spct.idChatLieu.idChatLieu,
+            // idXuatXu: $scope.spct.idXuatXu.idXuatXu,
             idKichCo: $scope.spct.idKichCo.idKichCo,
-            idXuatXu: $scope.spct.idXuatXu.idXuatXu,
-            idHinhAnh:$scope.spct.idHinhAnh.idHinhAnh
+            idHinhAnh: $scope.spct.idHinhAnh.idHinhAnh
         }
         $http.post(url, updateSPCT).then(function (r) {
             alert("Update thành công");
@@ -190,6 +220,13 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
         window.location.href = '/admin/san-pham/formAdd/' + idSanPham;
     };
 
+    $scope.navigateToHistory = function () {
+        window.location.href = '/admin/lich-su-nhap-hang/add/' + idSanPham;
+    };
+
+    $scope.navigateToViewHistory = function () {
+        window.location.href = '/admin/lich-su-nhap-hang/view/' + idSanPham;
+    };
 
     // Hàm lọc sản phẩm
     $scope.filter = function (filterData) {
@@ -212,7 +249,7 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
 
             // Hiển thị số bộ lọc đang được áp dụng
             if (Object.keys(filterData).length > 1) {
-                document.getElementById('lengthFilter').innerText = Object.keys(filterData).length-1;
+                document.getElementById('lengthFilter').innerText = Object.keys(filterData).length - 1;
             } else {
                 document.getElementById('lengthFilter').innerText = "";
             }
@@ -238,9 +275,7 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
     };
 
 
-
-
-    $scope.getTextColor = function(color) {
+    $scope.getTextColor = function (color) {
         // Kiểm tra độ sáng của màu nền để chọn màu chữ (đen hoặc trắng)
         var r = parseInt(color.substring(1, 3), 16);
         var g = parseInt(color.substring(3, 5), 16);
@@ -274,7 +309,7 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
             return Promise.resolve(null);  // Trả về null nếu không có tên
         }
 
-        return $http.get("/admin/hinh-anh", { params: { ten: HinhAnh.ten } })
+        return $http.get("/admin/hinh-anh", {params: {ten: HinhAnh.ten}})
             .then(function (response) {
                 console.log("API trả về:", response.data);
                 const existingImage = response.data;
@@ -285,11 +320,12 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
                         ten: HinhAnh.ten
                     };
 
-                    return $http.post("/admin/hinh-anh/add", addHinhAnh)
-                        .then(function (addResponse) {
-                            console.log("Dữ liệu ảnh mới:", addResponse.data);
-                            return addResponse.data;
+                    return $http.post("/admin/hinh-anh/add", addHinhAnh).then(function (addResponse) {
+                        return $http.get("/admin/hinh-anh", {params: {ten: HinhAnh.ten}}).then(function (getResponse) {
+                            console.log("Dữ liệu ảnh mới với ID:", getResponse.data);
+                            return getResponse.data; // Trả về dữ liệu ảnh mới với idHinhAnh
                         });
+                    });
                 } else {
                     return existingImage;  // Trả về ảnh đã có
                 }
@@ -313,7 +349,7 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
 
     $scope.onFileSelected1 = function (event) {
         console.log("File selection initiated.");
-        console.log("check obj",$scope.spct);
+        console.log("check obj", $scope.spct);
         // Lấy file từ input
         var file = event.target.files[0];
         if (!file) {
@@ -327,7 +363,7 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
         $scope.selectedFileName = file.name;
         console.log("File được chọn:", $scope.selectedFileName);
 
-        var HinhAnh = { ten: file.name };
+        var HinhAnh = {ten: file.name};
         console.log("HinhAnh được chọn:", HinhAnh);
         // Gọi hàm kiểm tra xem HinhAnh đã tồn tại hay chưa
         $scope.getHinhAnh(HinhAnh).then(function (result) {
@@ -351,33 +387,89 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
     };
 
 
+    $scope.getThuocTinhCT = function () {
+        $http.get("/admin/mau-sac/get-all").then(r => {
+            $scope.mauSacCT = r.data;
+        }).catch(e => console.log(e))
+
+
+        $http.get("/admin/size/get-all").then(r => {
+            $scope.kichCoCT = r.data;
+        }).catch(e => console.log(e))
+    }
+    $scope.updateByNhap = function () {
+        var NhapHang = {
+            idSanPham: idSanPham,
+            ma: $scope.generateRandomString(8),
+            soLuongNhap: $scope.soLuongNhap,
+            giaNhapNhap: $scope.giaNhapNhap,
+            idMauSacNhap: $scope.idMauSacNhap.idMauSac,
+            idKichCoNhap: $scope.idKichCoNhap.idKichCo
+        }
+        $http.post("/admin/lich-su-nhap-hang/add", NhapHang).then(r => {
+            var upDateCT = {
+                idSanPham: idSanPham,
+                soLuong: $scope.soLuongNhap,
+                giaNhap: $scope.giaNhapNhap,
+                idMauSac: $scope.idMauSacNhap.idMauSac,
+                idKichCo: $scope.idKichCoNhap.idKichCo
+            }
+            $http.post("/admin/san-pham/chi-tiet/updateNhap", upDateCT).then(r => {
+                alert("Them thanh cong");
+                $scope.viewChiTiet();
+            })
+        }).catch(function (err) {
+            console.error("Lỗi khi gọi :", err);
+        });
+    }
+
+    $scope.viewChiTiet = function () {
+        // Chuyển hướng đến trang chi tiết sản phẩm
+        location.href = `/admin/san-pham/` + idSanPham;
+    };
+
+
+    $scope.lichSu = [];
+    $scope.getLichSuNhap = function () {
+        $http.get(`/admin/lich-su-nhap-hang/` + idSanPham + `/find-all?page=${$scope.page}&size=${$scope.size}`)
+            .then(function (response) {
+                $scope.lichSu = response.data.content;
+                $scope.totalPages = response.data.totalPages;
+                console.log("check lich su:", $scope.lichSu)
+            }).catch(error => {
+            console.log(error);
+        });
+    }
+
+    $scope.getLichSuNhap();
+
 // Hàm kiểm tra sự tồn tại của các giá trị
     $scope.checkIfExists = function () {
         var checks = [];
 
         // Kiểm tra từng trường
         if ($scope.spct.idMauSac && $scope.spct.idMauSac.idMauSac) {
-            checks.push($http.get("/admin/mau-sac", { params: { idMauSac: $scope.spct.idMauSac.idMauSac } }));
+            checks.push($http.get("/admin/mau-sac", {params: {idMauSac: $scope.spct.idMauSac.idMauSac}}));
         }
 
         if ($scope.spct.idThuongHieu && $scope.spct.idThuongHieu.idThuongHieu) {
-            checks.push($http.get("/admin/thuong-hieu", { params: { idThuongHieu: $scope.spct.idThuongHieu.idThuongHieu } }));
+            checks.push($http.get("/admin/thuong-hieu", {params: {idThuongHieu: $scope.spct.idThuongHieu.idThuongHieu}}));
         }
 
         if ($scope.spct.idKieuDang && $scope.spct.idKieuDang.idKieuDang) {
-            checks.push($http.get("/admin/kieu-dang", { params: { idKieuDang: $scope.spct.idKieuDang.idKieuDang } }));
+            checks.push($http.get("/admin/kieu-dang", {params: {idKieuDang: $scope.spct.idKieuDang.idKieuDang}}));
         }
 
         if ($scope.spct.idChatLieu && $scope.spct.idChatLieu.idChatLieu) {
-            checks.push($http.get("/admin/chat-lieu", { params: { idChatLieu: $scope.spct.idChatLieu.idChatLieu } }));
+            checks.push($http.get("/admin/chat-lieu", {params: {idChatLieu: $scope.spct.idChatLieu.idChatLieu}}));
         }
 
         if ($scope.spct.idKichCo && $scope.spct.idKichCo.idKichCo) {
-            checks.push($http.get("/admin/kich-co", { params: { idKichCo: $scope.spct.idKichCo.idKichCo } }));
+            checks.push($http.get("/admin/kich-co", {params: {idKichCo: $scope.spct.idKichCo.idKichCo}}));
         }
 
         if ($scope.spct.idXuatXu && $scope.spct.idXuatXu.idXuatXu) {
-            checks.push($http.get("/admin/xuat-xu", { params: { idXuatXu: $scope.spct.idXuatXu.idXuatXu } }));
+            checks.push($http.get("/admin/xuat-xu", {params: {idXuatXu: $scope.spct.idXuatXu.idXuatXu}}));
         }
 
         // Kiểm tra tất cả các giá trị cùng một lúc

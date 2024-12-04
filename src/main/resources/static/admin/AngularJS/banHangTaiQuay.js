@@ -1,5 +1,5 @@
 var app = angular.module("banhang-app", [])
-app.controller("banhang-ctrl", function ($scope, $http,$sce) {
+app.controller("banhang-ctrl", function ($scope, $http,$sce,$timeout) {
     //tao random ma don hang
     $scope.generateRandomString = function(length) {
         const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';

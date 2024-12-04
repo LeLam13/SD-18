@@ -1,6 +1,7 @@
 package com.example.demo.controller.admin;
 
 import com.example.demo.Service.impl.EmailService;
+import com.example.demo.Service.impl.NhanVienServiceImpl;
 import com.example.demo.dto.request.NhanVienRequetsDTO;
 import com.example.demo.entity.nhanvien;
 import com.example.demo.entity.taikhoan;
@@ -12,10 +13,15 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.security.Principal;
 
 
 @Controller
@@ -32,7 +38,10 @@ public class NhanVienController {
     private NhanVienRepository nhanVienRepository;
 
     @Autowired
-    private EmailService emailService; // Thêm Autowired cho EmailService
+    private EmailService emailService;
+
+    @Autowired
+    private NhanVienServiceImpl nhanVienService;
 
     BCryptPasswordEncoder pe = new BCryptPasswordEncoder(); // Khởi tạo BCryptPasswordEncoder
 
@@ -42,9 +51,91 @@ public class NhanVienController {
     }
 
     @GetMapping("thong-tin-ca-nhan")
-    public String getUserDetail(){
-        return "admin/thongTinUser";
+    public String getUserDetail(Model model, Principal principal) {
+        // Lấy tên người dùng (username) từ Spring Security
+        String username = principal.getName();
+
+        // Tìm thông tin nhân viên từ cơ sở dữ liệu dựa trên username
+        nhanvien nhanVien = nhanVienService.findByUsername(username);
+
+        // Thêm thông tin nhân viên vào model để hiển thị trên trang Thymeleaf
+        model.addAttribute("nhanVien", nhanVien);
+
+        return "admin/thongTinUser"; // Trả về view thongTinUser
     }
+
+    @PostMapping("/updateUser")
+    public String updateUserAndNhanVien(
+            @RequestParam(required = false) String email,
+            @RequestParam(required = false) String password,
+            @RequestParam(required = false) Boolean trangthai,
+            @ModelAttribute nhanvien nhanVien,
+            Principal principal,
+            Model model) {
+
+        String username = principal.getName();
+
+        taikhoan existingTaiKhoan = taikhoanRepo.findById(username)
+                .orElseThrow(() -> new IllegalArgumentException("Tài khoản không tồn tại!"));
+
+        if (email != null && !email.isEmpty()) {
+            if (!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+                model.addAttribute("error", "Email không hợp lệ!");
+                model.addAttribute("nhanVien", nhanVien); // Giữ lại dữ liệu
+                return "admin/thongTinUser";
+            }
+
+            boolean emailExists = taikhoanRepo.existsByEmail(email);
+            if (emailExists && !email.equals(existingTaiKhoan.getEmail())) {
+                model.addAttribute("error", "Email đã tồn tại trên hệ thống!");
+                nhanvien nhanVienFromDB = nhanVienRepository.findByTaikhoanUsername(username);
+                model.addAttribute("nhanVien", nhanVienFromDB); // Giữ lại thông tin nhân viên
+                return "admin/thongTinUser";
+            }
+
+            existingTaiKhoan.setEmail(email);
+        }
+
+        if (password != null && !password.isEmpty()) {
+            if (password.length() < 6) {
+                model.addAttribute("error", "Mật khẩu phải có ít nhất 6 ký tự!");
+                model.addAttribute("nhanVien", nhanVien);
+                return "admin/thongTinUser";
+            }
+            existingTaiKhoan.setPassword(password);
+        }
+
+        if (trangthai != null) {
+            existingTaiKhoan.setTrangthai(trangthai);
+        }
+
+        taikhoanRepo.save(existingTaiKhoan);
+
+        nhanvien existingNhanVien = nhanVienRepository.findByTaikhoanUsername(username);
+        if (existingNhanVien != null) {
+            if (nhanVien.getHoTen() == null || nhanVien.getHoTen().isEmpty()) {
+                model.addAttribute("error", "Họ tên không được để trống!");
+                model.addAttribute("nhanVien", existingNhanVien);
+                return "admin/thongTinUser";
+            }
+            existingNhanVien.setHoTen(nhanVien.getHoTen());
+            existingNhanVien.setGioiTinh(nhanVien.getGioiTinh());
+            existingNhanVien.setNgaySinh(nhanVien.getNgaySinh());
+            existingNhanVien.setSoDienThoai(nhanVien.getSoDienThoai());
+            existingNhanVien.setDiaChi(nhanVien.getDiaChi());
+
+            nhanVienRepository.save(existingNhanVien);
+        }
+
+        return "redirect:/admin/nhan-vien/thong-tin-ca-nhan";
+    }
+
+
+
+
+
+
+
 
     @PostMapping("/addEmployee")
     public String addEmployee(NhanVienRequetsDTO dto, RedirectAttributes redirectAttributes) {

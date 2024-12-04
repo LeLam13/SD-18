@@ -57,7 +57,7 @@ public class SanPhamChiTietRestController {
             @PathVariable Integer idSanPham,
             @PathVariable Integer idGG,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "5") int size) {
+            @RequestParam(defaultValue = "10000") int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<SanPhamChiTiet> sp = sanPhamChiTietRepo.findSanPhamChiTietNotInDotGiamGia(idSanPham,idGG, pageable); // Assuming this is your service method
         System.out.println("sp:" + sp);
@@ -126,6 +126,13 @@ public class SanPhamChiTietRestController {
         Page<SanPhamChiTiet> filteredProducts = sanPhamChiTietService.filterProducts(filterData,pageable);
         return ResponseEntity.ok(filteredProducts);
     }
+
+    @PostMapping("/admin/san-pham/chi-tiet/updateNhap")
+    public ResponseEntity<?> updateNhapHang(@RequestBody SanPhamChiTietRequestDTO sanPhamChiTietRequestDTO) {
+        sanPhamChiTietService.updateNhapHang(sanPhamChiTietRequestDTO);
+        return ResponseEntity.ok(sanPhamChiTietRequestDTO);
+    }
+
 }
 
 

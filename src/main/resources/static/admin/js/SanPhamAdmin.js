@@ -1,62 +1,16 @@
 var app = angular.module('product-admin', []);
 app.controller('ctrl', function ($scope, $http) {
 
-
-    // $scope.items =[];
-    // $scope.form ={};
-    // $scope.filterDto = {};
-    // $scope.page = 0;  // Trang hiện tại
-    // $scope.size = 4; // Số lượng bản ghi trên mỗi trang
-    // $scope.totalPages = 0; // Tổng số trang
-    // $scope.pageInput = 1; // Giá trị nhập từ ô input
-    // var isfilter = false;
-
-    //
-    //
-    // $http.get("/admin/san-pham/get-all").then(r => {
-    //     $scope.items = r.data.content;
-    //     $scope.totalPage = r.data.totalPages;
-    //     $scope.getPageNumbers(r.data.totalPages)
-    //     $scope.filterData = {}
-    // }).catch(e => console.log(e))
-    //
-    // $scope.getAll = function (pageNumber){
-    //     $scope.pageNumber = pageNumber;
-    //     //
-    //     // let pagination = document.getElementsByClassName("pagination")[0]
-    //     // let pageItem = pagination.getElementsByClassName("pageNumber")
-    //
-    //     // pageItem.forEach(p => {
-    //     //     p.getElementsByTagName("a")[0].className = "page-link"
-    //     // })
-    //     //
-    //     // document.getElementById(pageNumber+"").getElementsByTagName("a")[0].className = "page-link active"
-    //
-    //     if(!isfilter){
-    //         $http.get("/admin/san-pham/get-all?pageNumber="+pageNumber).then(r => {
-    //             $scope.items = r.data.content;
-    //             // $scope.filterData = {}
-    //         }).catch(e => console.log(e))
-    //     }else{
-    //         $http.post("/admin/san-pham/filter?pageNumber="+pageNumber,$scope.filterDto).then(r => {
-    //             $scope.items = r.data.content;
-    //         }).catch(e => console.log(e))
-    //     }
-    // }
-    //
-    // $scope.getPageNumbers = function (totalPages){
-    //     $scope.pageNumbers = []
-    //     for (let i = 0; i< totalPages;i++){
-    //         $scope.pageNumbers.push(i);
-    //     }
-    // }
-
     $scope.items = []
     $scope.page = 0;  // Trang hiện tại
     $scope.size = 4; // Số lượng bản ghi trên mỗi trang
     $scope.totalPages = 0; // Tổng số trang
     $scope.pageInput = 1; // Giá trị nhập từ ô input
-
+    $scope.selectedChatLieu = "";
+    $scope.selectedKieuDang = "";
+    $scope.selectedThuongHieu = "";
+    $scope.selectedXuatXu = "";
+    $scope.moTa = "";
 
     $scope.findAll = function () {
         var url = `/admin/san-pham/find-all?page=${$scope.page}&size=${$scope.size}`;
@@ -124,7 +78,14 @@ app.controller('ctrl', function ($scope, $http) {
     $scope.create = function () {
         var SanPham = {
             ma: $scope.generateRandomString(8),
-            ten: $scope.ten
+            ten: $scope.ten,
+            idXuatXu: $scope.selectedXuatXu || null,
+            idChatLieu: $scope.selectedChatLieu || null,
+            idKieuDang: $scope.selectedKieuDang || null,
+            idThuongHieu: $scope.selectedThuongHieu || null,
+            // idHinhAnh:$scope.idHinhAnhCr. idHinhAnh,
+            moTa: $scope.moTa
+
         }
 
         // Kiểm tra tính hợp lệ của tên
@@ -170,27 +131,19 @@ app.controller('ctrl', function ($scope, $http) {
 
     $scope.getSanPham = function (ma) {
         var url = "/admin/san-pham/chiTiet" + "/" + ma;
-        console.log(url)
         $http.get(url).then(function (r) {
             console.log(r.data)
-            let SanPham = r.data;
-            $scope.idSanPham = SanPham.idSanPham;
-            $scope.ma = SanPham.ma;
-            $scope.ten = SanPham.ten;
-            $scope.createBy = SanPham.createBy;
-            $scope.createDate = SanPham.createDate;
-            $scope.updateDate = SanPham.updateDate;
-            $scope.updateBy = SanPham.updateBy;
-            $scope.trangThai = SanPham.trangThai;
+            $scope.sp = r.data;
+            $scope.ma= $scope.sp.ma
         })
     }
 
     $scope.update = function (ma) {
-        if ($scope.ten == undefined || $scope.ten.length == 0) {
+        if ($scope.sp.ten == undefined || $scope.sp.ten.length == 0) {
             document.getElementById("eTenMauUd").innerText = "Vui lòng nhập tên!!!";
             return
         }
-        if ($scope.ten.length > 100) {
+        if ($scope.sp.ten.length > 100) {
             document.getElementById("eTenMauUd").innerText = "Tên tối đa 100 ký tự!!!";
             return
         }
@@ -199,7 +152,7 @@ app.controller('ctrl', function ($scope, $http) {
             var existingSanPham = response.data;
             var tenTonTai = false;
             angular.forEach(existingSanPham, function (item) {
-                if (item.ten.toLowerCase() === $scope.ten.toLowerCase() && item.ma !== ma) {
+                if (item.ten.toLowerCase() === $scope.sp.ten.toLowerCase() && item.ma !== ma) {
                     tenTonTai = true;
                 }
             });
@@ -211,7 +164,13 @@ app.controller('ctrl', function ($scope, $http) {
                 var url = "/admin/san-pham/update" + "/" + ma;
                 var updateSanPham = {
                     ma: ma,
-                    ten: $scope.ten
+                    ten: $scope.sp.ten,
+                    idXuatXu: $scope.sp.idXuatXu.idXuatXu,
+                    idChatLieu: $scope.sp.idChatLieu.idChatLieu,
+                    idKieuDang: $scope.sp.idKieuDang.idKieuDang,
+                    idThuongHieu: $scope.sp.idThuongHieu.idThuongHieu,
+                    // idHinhAnh: $scope.sp.idHinhAnh.idHinhAnh,
+                    moTa: $scope.sp.moTa
                 }
 
                 $http.post(url, updateSanPham).then(function (r) {
@@ -300,6 +259,145 @@ app.controller('ctrl', function ($scope, $http) {
     }
 
     $scope.getPropertiesInFilter();
+
+
+
+    $scope.getHinhAnh = function (HinhAnh) {
+        console.log("getHinhAnh gọi với:", HinhAnh);
+
+        if (!HinhAnh || !HinhAnh.ten) {
+            console.log("Không có tên ảnh.");
+            return Promise.resolve(null);  // Trả về null nếu không có tên
+        }
+
+        return $http.get("/admin/hinh-anh", { params: { ten: HinhAnh.ten } })
+            .then(function (response) {
+                console.log("API trả về:", response.data);
+                const existingImage = response.data;
+
+                if (!existingImage) {
+                    var addHinhAnh = {
+                        ma: $scope.generateRandomString(8),
+                        ten: HinhAnh.ten
+                    };
+
+                    return $http.post("/admin/hinh-anh/add", addHinhAnh)
+                        .then(function (addResponse) {
+                            console.log("Dữ liệu ảnh mới:", addResponse.data);
+                            return addResponse.data;
+                        });
+                } else {
+                    return existingImage;  // Trả về ảnh đã có
+                }
+            })
+            .catch(function (err) {
+                console.error("Lỗi khi gọi API:", err);
+                return Promise.resolve(null);  // Đảm bảo Promise vẫn trả về, không gây lỗi
+            });
+    };
+
+    $scope.triggerFileInput = function (idSanPham) {
+        // Tìm thẻ input file tương ứng và kích hoạt click
+        const fileInput = document.getElementById("formFile-" + idSanPham);
+        if (fileInput) {
+            fileInput.click();
+        } else {
+            console.error("Không tìm thấy input file với id:", idSanPham);
+        }
+    };
+
+    $scope.onFileSelected1 = function (event) {
+        console.log("File selection initiated.");
+        console.log("check obj",$scope.sp);
+        // Lấy file từ input
+        var file = event.target.files[0];
+        if (!file) {
+            console.warn("Không có tệp nào được chọn.");
+            $scope.selectedFileName = null; // Xoá biến tạm
+            $scope.$applyAsync();
+            return;
+        }
+
+        // Lưu tên file vào biến tạm
+        $scope.selectedFileName = file.name;
+        console.log("File được chọn:", $scope.selectedFileName);
+
+        var HinhAnh = { ten: file.name };
+        console.log("HinhAnh được chọn:", HinhAnh);
+        // Gọi hàm kiểm tra xem HinhAnh đã tồn tại hay chưa
+        $scope.getHinhAnh(HinhAnh).then(function (result) {
+            console.log("check result:", result);
+            if (result) {
+                // Nếu tìm thấy, gán idHinhAnh vào sp
+                $scope.sp.idHinhAnh = result;
+                console.log("Tìm thấy idHinhAnh:", $scope.sp.idHinhAnh);
+            } else {
+                // Nếu không tìm thấy, xử lý khác (ví dụ: thông báo lỗi)
+                console.warn("Hình ảnh không tồn tại trong cơ sở dữ liệu.");
+                $scope.sp.idHinhAnh = null;
+            }
+
+            $scope.$applyAsync(); // Cập nhật view
+        }).catch(function (err) {
+            console.error("Lỗi khi gọi getHinhAnh:", err);
+            $scope.sp.idHinhAnh = null;
+            $scope.$applyAsync();
+        });
+    };
+
+
+    $scope.selectedImage = {}; // Lưu ảnh được chọn
+    $scope.idHinhAnhCr="";
+
+    $scope.triggerFileInputCr = function () {
+        const fileInput = document.getElementById('fileInput');
+        if (fileInput) {
+            fileInput.click();
+        } else {
+            console.error("Không tìm thấy input file.");
+        }
+    };
+
+    $scope.onFileSelectedCr = function (event) {
+        console.log("File selection initiated.");
+
+        // Lấy file từ input
+        var file = event.target.files[0];
+        if (!file) {
+            console.warn("Không có tệp nào được chọn.");
+            $scope.selectedImage = null; // Xóa biến tạm
+            $scope.$applyAsync();
+            return;
+        }
+
+        // Lưu tên file vào biến tạm
+        $scope.selectedImage = file.name;
+        console.log("File được chọn:", $scope.selectedImage);
+
+        var HinhAnh = { ten: file.name };
+        console.log("HinhAnh được chọn:", HinhAnh);
+
+        // Gọi hàm kiểm tra xem HinhAnh đã tồn tại hay chưa
+        $scope.getHinhAnh(HinhAnh).then(function (result) {
+            console.log("check result:", result);
+            if (result) {
+                // Nếu tìm thấy, gán idHinhAnh vào newProduct (thay vì $scope.sp)
+                $scope.idHinhAnhCr = result;
+                console.log("Tìm thấy idHinhAnh:", $scope.idHinhAnhCr);
+            } else {
+                // Nếu không tìm thấy, xử lý khác (ví dụ: thông báo lỗi)
+                console.warn("Hình ảnh không tồn tại trong cơ sở dữ liệu.");
+                $scope.idHinhAnhCr = null;
+            }
+
+            $scope.$applyAsync(); // Cập nhật view
+        }).catch(function (err) {
+            console.error("Lỗi khi gọi getHinhAnh:", err);
+            $scope.idHinhAnhCr = null;  // Đảm bảo không bị null
+            $scope.$applyAsync();
+        });
+    };
+
 
     // $scope.filter = function (filterData) {
     //     for (const [key, value] of Object.entries(filterData)) {

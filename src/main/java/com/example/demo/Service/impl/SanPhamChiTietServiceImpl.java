@@ -3,6 +3,7 @@ package com.example.demo.Service.impl;
 import com.example.demo.Service.SanPhamChiTietService;
 
 import com.example.demo.dto.request.FilterRequestDTO;
+import com.example.demo.dto.request.LichSuNhapHangRequestDTO;
 import com.example.demo.dto.request.MauSacRequestDTO;
 import com.example.demo.dto.request.SanPhamChiTietRequestDTO;
 import com.example.demo.dto.request.SanPhamRequestDTO;
@@ -10,6 +11,7 @@ import com.example.demo.entity.ChatLieu;
 import com.example.demo.entity.HinhAnh;
 import com.example.demo.entity.KichCo;
 import com.example.demo.entity.KieuDang;
+import com.example.demo.entity.LichSuNhapHang;
 import com.example.demo.entity.MauSac;
 import com.example.demo.entity.SanPham;
 import com.example.demo.entity.SanPhamChiTiet;
@@ -189,7 +191,6 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         Specification<SanPhamChiTiet> spec = Specification.where(null);
 
 
-
 //        if (filterRequest.getTen() != null && !filterRequest.getTen().isEmpty()) {
 //            // Lấy danh sách các sản phẩm theo tên
 //            String tenKhongDau = removeAccents(filterRequest.getTen());
@@ -267,6 +268,28 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
                 .replaceAll("[ýỳỷỹỵ]", "y")
                 .replaceAll("[đ]", "d")
                 .replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+    }
+
+    @Override
+    public SanPhamChiTiet updateNhapHang(SanPhamChiTietRequestDTO sanPhamChiTietRequestDTO) {
+        SanPham sanPham = sanPhamRepo.findByIdSanPham(sanPhamChiTietRequestDTO.getIdSanPham());
+        Integer idSanPham = sanPham.getIdSanPham();
+
+        MauSac mauSac = mauSacRepo.findByIdMauSac(sanPhamChiTietRequestDTO.getIdMauSac());
+        Integer idMauSac = mauSac.getIdMauSac();
+
+        KichCo kichCo = kichCoRepo.findByIdKichCo(sanPhamChiTietRequestDTO.getIdKichCo());
+        Integer idKichCo = kichCo.getIdKichCo();
+
+        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepo.findCheapestProductDetail(idSanPham, idMauSac, idKichCo);
+        Integer soLuongMoi = sanPhamChiTietRequestDTO.getSoLuong();
+        Integer soLuongCu = sanPhamChiTiet.getSoLuong();
+
+        sanPhamChiTiet.setGiaNhap(sanPhamChiTietRequestDTO.getGiaNhap());
+        sanPhamChiTiet.setSoLuong(soLuongMoi + soLuongCu);
+
+        sanPhamChiTiet.setUpdateDate(date);
+        return sanPhamChiTietRepo.save(sanPhamChiTiet);
     }
 
 }

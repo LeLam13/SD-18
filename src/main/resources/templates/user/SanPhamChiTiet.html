@@ -24,34 +24,30 @@
 
         /* CSS cho các nút */
         .custom-button {
-            display: inline-flex; /* Để căn giữa và căn chỉnh chữ */
+            display: inline-flex; /* Để căn giữa nội dung */
             justify-content: center; /* Căn giữa nội dung ngang */
             align-items: center; /* Căn giữa nội dung dọc */
-            width: 60px; /* Chiều rộng cố định */
-            height: 60px; /* Chiều cao cố định (hình vuông) */
+            width: 50px; /* Chiều rộng nút */
+            height: 50px; /* Chiều cao nút (hình vuông) */
             margin: 7px; /* Khoảng cách giữa các nút */
             border-radius: 8px; /* Bo góc mềm mại */
-            background-color: white; /* Màu nền trắng */
-            color: black; /* Màu chữ đen */
+            color: black; /* Màu chữ mặc định */
             text-decoration: none; /* Loại bỏ gạch chân */
-            font-weight: 600; /* Tạo độ đậm cho chữ */
-            border: 1px solid #ddd; /* Viền mỏng */
-            transition: all 0.2s ease; /* Hiệu ứng khi hover hoặc active */
+            border: 1px solid #000; /* Viền đen */
+            transition: all 0.2s ease; /* Hiệu ứng hover */
             box-sizing: border-box; /* Đảm bảo kích thước chính xác */
-            text-align: center; /* Căn giữa chữ */
-            overflow: hidden; /* Đảm bảo không bị tràn chữ ra ngoài */
-            white-space: nowrap; /* Ngăn chữ bị xuống dòng */
-            line-height: 1; /* Căn chỉnh dòng chữ */
-            font-size: 100%; /* Kích thước chữ mặc định */
-            transform: scale(1); /* Mặc định không thu nhỏ chữ */
-            transform-origin: center; /* Đảm bảo chữ thu nhỏ từ giữa */
+            text-align: center; /* Căn giữa nội dung */
+            overflow: hidden; /* Đảm bảo không bị tràn nội dung */
+        }
+
+        /* Trạng thái chọn */
+        .custom-button.selected {
+            border: 2px solid black; /* Viền đậm khi được chọn */
         }
 
         /* Hiệu ứng hover */
         .custom-button:hover {
-            background-color: #f0f0f0; /* Màu nền khi hover */
-            text-decoration: none; /* Loại bỏ gạch chân khi hover */
-            border: 3px solid black; /* Viền đen khi hover */
+            filter: brightness(1); /* Làm tối màu khi hover */
         }
 
         /* Hiệu ứng active (khi nhấn) */
@@ -61,11 +57,6 @@
             border: 3px solid black; /* Viền đen khi nhấn */
         }
 
-        /* Thêm viền đen cho nút đang được chọn */
-        .custom-button.selected {
-            border: 1px solid black; /* Viền đen khi được chọn */
-            background-color: #f0f0f0; /* Màu nền khi được chọn */
-        }
 
         /* Giới hạn chữ trong nút, sử dụng dấu ba chấm nếu chữ quá dài */
         .custom-button span {
@@ -142,6 +133,7 @@
                             <div class="row p-b-10">
                                 <div class="col-12">
                                     <div class="price-container">
+
                                         <h5 class="text-danger" ng-if="price">Giá: {{price}}</h5>
                                         <h5 class="text-danger" ng-if="!price">Liên hệ để biết giá</h5>
                                     </div>
@@ -165,8 +157,8 @@
                                    class="custom-button"
                                    ng-repeat="mau in uniqueColors"
                                    ng-click="filterByColor(mau)"
+                                   ng-style="{'background-color': mau.ma}"
                                    ng-class="{'selected': selectedColor && selectedColor.idMauSac === mau.idMauSac}">
-                                    <span>{{mau.ten}}</span>
                                 </a>
                             </div>
                         </div>
@@ -186,20 +178,14 @@
                         </div>
 
 
-
-
                         <!-- Thêm vào giỏ hàng -->
-                        <div class="p-t-3">
+                        <div class="p-t-3 mt-3">
                             <div class="row p-b-10">
                                 <div class="size-600 flex-w flex-m respon6-next">
                                     <div class="col-5">
                                         <button ng-click="addProductIntocart(idSanPhamChiTiet1)"
                                                 class="flex-c-m stext-80 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 mb-2">
                                             Thêm vào giỏ hàng
-                                        </button>
-                                        <button ng-click="muaNgay()"
-                                                class="flex-c-m stext-80 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04">
-                                            Mua Ngay
                                         </button>
                                     </div>
                                 </div>
@@ -208,27 +194,27 @@
                     </div>
                 </div>
                 <!--    /////////Modal đăng nhập-->
-                <div class="modal fade" id="dangNhap" tabindex="-1" role="dialog"
-                     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLongTitle">Thông Báo</h5>
-                            </div>
-                            <div class="modal-body">
-                                Đăng nhập để sử dụng tính năng!
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                                        onclick="$('#dangNhap').modal('hide')">Trở về
-                                </button>
-                                <button ng-click="login()" class="btn btn-primary text-white">Đăng nhập</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+<!--                <div class="modal fade" id="dangNhap" tabindex="-1" role="dialog"-->
+<!--                     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">-->
+<!--                    <div class="modal-dialog modal-dialog-centered" role="document">-->
+<!--                        <div class="modal-content">-->
+<!--                            <div class="modal-header">-->
+<!--                                <h5 class="modal-title" id="exampleModalLongTitle">Thông Báo</h5>-->
+<!--                            </div>-->
+<!--                            <div class="modal-body">-->
+<!--                                Đăng nhập để sử dụng tính năng!-->
+<!--                            </div>-->
+<!--                            <div class="modal-footer">-->
+<!--                                <button type="button" class="btn btn-secondary" data-dismiss="modal"-->
+<!--                                        onclick="$('#dangNhap').modal('hide')">Trở về-->
+<!--                                </button>-->
+<!--                                <button ng-click="login()" class="btn btn-primary text-white">Đăng nhập</button>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
 
-                <div class="bor10 p-t-43 p-b-40">
+                <div class="bor10 p-t-43 p-b-40 mt-5">
                     <!-- Tab01 -->
                     <div class="tab01">
                         <!-- Nav tabs -->
@@ -238,12 +224,6 @@
                                    role="tab">Thông tin chi
                                     tiết</a>
                             </li>
-
-                            <!--                            <li class="nav-item p-b-10">-->
-                            <!--                                <a class="nav-link" style="padding: 10px" data-toggle="tab" href="#reviews"-->
-                            <!--                                    role="tab">Đánh-->
-                            <!--                                    giá</a>-->
-                            <!--                            </li>-->
                         </ul>
 
                         <!-- Tab panes -->
@@ -253,149 +233,31 @@
                                 <div class="how-pos2 p-lr-15-md">
                                     <table class="table mb-0 table-bordered">
                                         <tbody>
-                                        <tr ng-if="filteredItems.idThuongHieu.length>0">
+                                        <tr>
                                             <th scope="row" style="width: 400px;">Thương hiệu</th>
-                                            <td>{{filteredItems.idThuongHieu.ten}}</td>
+                                            <td>{{filteredItems[0].idSanPham.idThuongHieu.ten}}</td>
                                         </tr>
-                                        <tr ng-if="filteredItems.idXuatXu.length>0">
+                                        <tr>
                                             <th scope="row">Xuất xứ</th>
-                                            <td>{{filteredItems.idXuatXu.ten}}</td>
+                                            <td>{{filteredItems[0].idSanPham.idXuatXu.ten}}</td>
                                         </tr>
-                                        <tr ng-if="filteredItems.idChatLieu.length>0">
+                                        <tr>
                                             <th scope="row">Chất liệu</th>
-                                            <td>{{filteredItems.idChatLieu.ten}}</td>
+                                            <td>{{filteredItems[0].idSanPham.idChatLieu.ten}}</td>
                                         </tr>
-                                        <tr ng-if="item.kieuDang.length>0">
+                                        <tr >
                                             <th scope="row">Kiểu dáng</th>
-                                            <td>{{filteredItems.idKieuDang.ten}}</td>
+                                            <td>{{filteredItems[0].idSanPham.idKieuDang.ten}}</td>
                                         </tr>
-                                        <tr ng-if="item.moTa.length>0">
+                                        <tr>
                                             <th scope="row">Mô tả</th>
-                                            <td>{{filteredItems.moTa}}</td>
+                                            <td>{{filteredItems[0].idSanPham.moTa}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
 
-                            <!-- - -->
-
-                            <!-- - -->
-                            <div class="tab-pane fade" id="reviews" role="tabpanel">
-                                <div class="row">
-                                    <div class="col-sm-10 col-md-8 col-lg-9 m-lr-auto">
-                                        <div class="p-b-10 p-t-10 m-lr-15-sm d-flex align-items-center bg-light"
-                                             ng-if="nhanXet.haveContent">
-                                            <div class="col-lg-3 text-center">
-                                                <span style="font-size: 30px;color: orange">{{nhanXet.avg}}/5</span>
-                                                <div id="rater-step"></div>
-                                            </div>
-                                            <div class="col-lg-9 ">
-                                                <button class="btn" ng-click="nhanXet.init()" name="filterNhanXet"
-                                                        id="all"
-                                                        style="background-color: lightgray;color: white; border: 2px solid whitesmoke;width: 110px">
-                                                    Tất cả
-                                                </button>
-                                                <button class="btn" ng-click="nhanXet.filterByRate(5)"
-                                                        name="filterNhanXet" id="rate5"
-                                                        style="background-color: white;border: 2px solid whitesmoke;width: 110px">
-                                                    5 Sao ({{nhanXet.rates.rate5 == undefined ? 0 :
-                                                        nhanXet.rates.rate5}})
-                                                </button>
-                                                <button class="btn" ng-click="nhanXet.filterByRate(4)"
-                                                        name="filterNhanXet" id="rate4"
-                                                        style="background-color: white;border: 2px solid whitesmoke;width: 110px">
-                                                    4 Sao ({{nhanXet.rates.rate4 == undefined ? 0 :
-                                                        nhanXet.rates.rate4}})
-                                                </button>
-                                                <button class="btn" ng-click="nhanXet.filterByRate(3)"
-                                                        name="filterNhanXet" id="rate3"
-                                                        style="background-color: white;border: 2px solid whitesmoke;width: 110px">
-                                                    3 Sao ({{nhanXet.rates.rate3 == undefined ? 0 :
-                                                        nhanXet.rates.rate3}})
-                                                </button>
-                                                <button class="btn" ng-click="nhanXet.filterByRate(2)"
-                                                        name="filterNhanXet" id="rate2"
-                                                        style="background-color: white;border: 2px solid whitesmoke;width: 110px">
-                                                    2 Sao ({{nhanXet.rates.rate2 == undefined ? 0 :
-                                                        nhanXet.rates.rate2}})
-                                                </button>
-                                                <button class="btn" ng-click="nhanXet.filterByRate(1)"
-                                                        name="filterNhanXet" id="rate1"
-                                                        style="background-color: white;border: 2px solid whitesmoke;width: 110px">
-                                                    1 Sao ({{nhanXet.rates.rate1 == undefined ? 0 :
-                                                        nhanXet.rates.rate1}})
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="p-b-10 p-t-10 m-lr-15-sm">
-                                            <span ng-if="nhanXet.totalElement == 0"
-                                                  style="width: 100%;font-weight: bold;display: inline-block;text-align: center">Chưa
-                                                có đánh giá</span>
-
-                                            <!-- Review -->
-                                            <div class="flex-w flex-t p-b-5 p-t-5 d-flex align-items-center"
-                                                 ng-repeat="n in nhanXet.contents"
-                                                 style="border-bottom: 1px solid grey">
-                                                <div class="wrap-pic-s size-109 bor0 of-hidden m-r-18 m-t-6">
-                                                    <img src="/image/loadImageUser/{{n.khachHang.username}}"
-                                                         alt="AVATAR">
-                                                </div>
-
-
-                                                <div class="size-207">
-                                                    <div class="flex-w flex-sb-m p-b-5">
-                                                        <span class=" cl2 p-r-20" style="font-weight: bold">
-                                                            {{n.khachHang.hoVaTen}}
-                                                        </span>
-
-                                                        <div class="fs-18">
-                                                            <div class="d-flex justify-content-end">
-                                                                <span class="cl11 d-flex">
-                                                                    <span ng-repeat="r in nhanXet.rating">
-                                                                        <i ng-if="r <= n.rating"
-                                                                           class="zmdi zmdi-star"></i>
-                                                                        <i ng-if="r > n.rating"
-                                                                           class="zmdi zmdi-star-outline"></i>
-                                                                    </span>
-                                                                </span>
-                                                            </div>
-                                                            <span class="cl6" style="font-size: 11px;display: grid">
-                                                                {{n.thoiGian | date:'yyyy-MM-dd HH:mm'}} | size :
-                                                                {{n.chiTietSanPhamDtoResponse.size}}
-                                                            </span>
-                                                        </div>
-                                                    </div>
-
-                                                    <span class="cl2 p-r-20" style="font-weight: bold">
-                                                        {{n.tieuDe}}
-                                                    </span>
-
-                                                    <p class="cl6">
-                                                        {{n.noiDung}}
-                                                    </p>
-                                                </div>
-                                                <hr>
-                                            </div>
-
-                                        </div>
-                                        <div class="row mt-3">
-                                            <!-- Pagination -->
-                                            <div class="col-12  d-flex justify-content-end ">
-                                                <span ng-repeat="p in nhanXet.pageNumbers" class="">
-                                                    <span ng-if="p==nhanXet.pageNumber"
-                                                          class="active-pagination1 flex-c-m how-pagination1 trans-04 m-all-7 ">{{p
-                                                    + 1}}</span>
-                                                    <span ng-if="p!=nhanXet.pageNumber"
-                                                          class="flex-c-m how-pagination1 trans-04 m-all-7 "
-                                                          style="cursor: pointer" ng-click="nhanXet.get(p)">{{p +
-                                                    1}}</span>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>

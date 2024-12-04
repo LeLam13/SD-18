@@ -44,4 +44,12 @@ public class KhuyenMai {
 
     @Column(name = "so_tien_toi_thieu", nullable = false)
     private Integer soTienToiThieu; // Điều kiện áp dụng: số tiền tối thiểu
+
+    @PostLoad
+    public void checkTrangThai() {
+        // Nếu thoiGianKetThuc đã qua, tự động set trangThai = false
+        if (this.getThoiGianKetThuc().before(new Date())) {
+            this.setTrangThai(false);
+        }
+    }
 }

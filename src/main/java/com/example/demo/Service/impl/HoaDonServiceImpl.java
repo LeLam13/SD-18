@@ -66,7 +66,7 @@ public class HoaDonServiceImpl implements HoaDonService {
 
     @Override
     public Page<HoaDon> getAllHoaDons(Pageable pageable) {
-        return hoaDonRepo.findAll(pageable);
+        return hoaDonRepo.findAllByTrangThaiThanhToan(pageable);
     }
     @Override
     public List<HoaDon> searchHoaDonsByMaHoaDon(String maHoaDon) {

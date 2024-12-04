@@ -118,9 +118,22 @@ public class DotGiamGiaServiceImpl {
         dotGiamGiaRepository.save(dotGiamGia);
         return dotGiamGia;
     }
+    public List<DotGiamGia> getUpcomingDotGiamGiaList() {
+        LocalDateTime currentDate = LocalDateTime.now();
+        return dotGiamGiaRepository.findUpcomingDotGiamGia(currentDate);
+    }
 
-
-
+    // Hàm tìm đợt giảm giá trùng lặp
+    public List<DotGiamGia> findOverlappingPromotions(LocalDateTime startDate, LocalDateTime endDate) {
+        return dotGiamGiaRepository.findOverlappingPromotions(startDate, endDate);
+    }
+    public List<DotGiamGia> findOverlappingPromotionsExceptCurrent(
+            LocalDateTime startDate,
+            LocalDateTime endDate,
+            Integer currentId
+    ) {
+        return dotGiamGiaRepository.findOverlappingPromotionsExceptCurrent(startDate, endDate, currentId);
+    }
 
 
     // Áp dụng giảm giá
