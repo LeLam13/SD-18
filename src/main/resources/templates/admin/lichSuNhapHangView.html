@@ -63,7 +63,7 @@
                                     <thead>
                                     <tr>
                                         <th>STT</th>
-                                        <th>Id SP Chi Tiết</th>
+                                        <th>Tên Sản Phẩm</th>
                                         <th>Màu Sắc</th>
                                         <th>Kích Cỡ</th>
                                         <th>Số Lượng</th>
@@ -78,7 +78,7 @@
 
                                     <tr ng-repeat="kc in lichSu">
                                         <td>{{ page * size + $index + 1 }}</td>
-                                        <td>{{kc.idSanPhamChiTiet.idSanPhamChiTiet}}</td>
+                                        <td>{{kc.idSanPhamChiTiet.idSanPham.ten}}</td>
                                         <td>
                                             <div style="display: flex; align-items: center; gap: 10px;">
                                                 <div style="width: 30px; height: 30px; background-color: {{kc.idSanPhamChiTiet.idMauSac.ma}}; border: 1px solid #000; border-radius: 50%;"></div>
