@@ -43,4 +43,6 @@ public interface DonHangOnlineService {
     void deleCartDetailByIdGioHang(Integer id);
 
     DonHang findByID(Integer idDonHang);
+
+    DonHang findByMaDonHang(String txnRef);
 }

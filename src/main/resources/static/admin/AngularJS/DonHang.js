@@ -119,6 +119,7 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
 
             $scope.getAllOrderOnline();
             $('#trang-thai').text(response.data.trangThai.tenTrangThai);
+            $('#trang-thai-thanh-toan').text(response.data.trangThaiThanhToan ? "Đã thanh toán" : "Chưa thanh toán");
             // $('#modal-status').modal('hide');
             $scope.showNotification('Cập Nhật trạng Thái Thành công!','success');
         }).catch(function(error) {
@@ -403,6 +404,7 @@ app.controller("donhang-ctrl", function ($scope, $http,$sce,$timeout,$interval) 
                         }
 
                         $('#trang-thai').text(response.data.trangThai.tenTrangThai);
+
                     }
                 })
                 .catch(function(error) {

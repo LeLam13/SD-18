@@ -130,8 +130,11 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
 
             // Giả sử bạn có phương thức để tìm SanPhamChiTiet từ id
             SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepo.findById(dto.getIdSanPhamChiTiet()).get();
-            donHangChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
+           //cập nhật số lượng khi đặt hàng
+            sanPhamChiTiet.setSoLuong(sanPhamChiTiet.getSoLuong() - dto.getSoLuong());
+            sanPhamChiTietRepo.save(sanPhamChiTiet);
 
+            donHangChiTiet.setSanPhamChiTiet(sanPhamChiTiet);
             donHangChiTietRepo.save(donHangChiTiet);
         }
         return donHang;
@@ -371,14 +374,20 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
         //ghi chu
         hoaDon.setGhiChu(donHang.getGhiChu());
         //trang thai thanh toan
-        hoaDon.setTrangThaiThanhToan(donHang.getTrangThaiThanhToan());
+        if(donHang.getPhuongThucThanhToan().getIdPhuongThucThanhToan() ==2){
+            hoaDon.setTrangThaiThanhToan(true);
+            donHang.setTrangThaiThanhToan(true);
+            donHangRepo.save(donHang);
+        }else {
+            hoaDon.setTrangThaiThanhToan(donHang.getTrangThaiThanhToan());
+        }
         //phuong thuc nhan
         hoaDon.setPhuongThucNhan(donHang.getPhuongThucNhan());
 
         //ngày tháng người tạo hoá đơn
         LocalDate localDate = LocalDate.now();
         hoaDon.setCreateDate(localDate);
-        hoaDon.setCreateBy(nameCustorm);
+        hoaDon.setCreateBy(donHang.getKhachHang().getHoTen());
 
         hoaDonRepo.save(hoaDon);
 
@@ -409,6 +418,11 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
     @Override
     public DonHang findByID(Integer idDonHang) {
         return donHangRepo.findById(idDonHang).get();
+    }
+
+    @Override
+    public DonHang findByMaDonHang(String txnRef) {
+        return donHangRepo.findByMaDonHang(txnRef);
     }
 
 }
