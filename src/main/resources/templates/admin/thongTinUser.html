@@ -8,7 +8,7 @@
 </head>
 <style></style>
 <body data-topbar="dark">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/css/bootstrap.min.css">
 <!-- ============================================================== -->
 <!-- Start right Content here -->
 <!-- ============================================================== -->
@@ -22,78 +22,78 @@
         </style>
         <div class="row d-flex justify-content-center">
             <div class="col-10">
-                <form action="/admin/nhan-vien/updateUser" method="post">
-                    <!-- Hiển thị thông báo lỗi -->
-                    <div th:if="${error}" style="color: red;">
-                        <p th:text="${error}"></p>
-                    </div>
+                <div class="container mt-5">
+                    <form action="/admin/nhan-vien/updateUser" method="post" class="needs-validation" novalidate>
+                        <!-- Hiển thị thông báo lỗi -->
+                        <div th:if="${error}" class="alert alert-danger">
+                            <p th:text="${error}"></p>
+                        </div>
 
-                    <!-- Họ và tên -->
-                    <div>
-                        <label>Họ và tên:</label>
-                        <input type="text" name="hoTen" th:value="${nhanVien.hoTen}"  />
-                    </div>
+                        <!-- Họ và tên -->
+                        <div class="mb-3">
+                            <label for="hoTen" class="form-label">Họ và tên:</label>
+                            <input type="text" class="form-control" id="hoTen" name="hoTen" th:value="${nhanVien.hoTen}" required />
+                        </div>
 
-                    <!-- Giới tính -->
-                    <div>
-                        <label>Giới tính:</label>
-                        <select name="gioiTinh">
-                            <option value="Nam" th:selected="${nhanVien.gioiTinh == 'Nam'}">Nam</option>
-                            <option value="Nữ" th:selected="${nhanVien.gioiTinh == 'Nữ'}">Nữ</option>
-                        </select>
-                    </div>
+                        <!-- Giới tính -->
+                        <div class="mb-3">
+                            <label for="gioiTinh" class="form-label">Giới tính:</label>
+                            <select class="form-select" id="gioiTinh" name="gioiTinh" required>
+                                <option value="Nam" th:selected="${nhanVien.gioiTinh == 'Nam'}">Nam</option>
+                                <option value="Nữ" th:selected="${nhanVien.gioiTinh == 'Nữ'}">Nữ</option>
+                            </select>
+                        </div>
 
-                    <!-- Ngày sinh -->
-                    <div>
-                        <label>Ngày sinh:</label>
-                        <input type="date" name="ngaySinh" th:value="${nhanVien.ngaySinh}" required id="ngaySinh" />
-                        <div id="ngaySinhError" style="color: red; display: none;">Ngày sinh không được là ngày trong tương lai!</div>
-                    </div>
+                        <!-- Ngày sinh -->
+                        <div class="mb-3">
+                            <label for="ngaySinh" class="form-label">Ngày sinh:</label>
+                            <input type="date" class="form-control" id="ngaySinh" name="ngaySinh" th:value="${nhanVien.ngaySinh}" required />
+                            <div id="ngaySinhError" class="text-danger d-none">Ngày sinh không được là ngày trong tương lai!</div>
+                        </div>
 
-                    <script>
-                        // JavaScript validation cho Ngày sinh
-                        document.getElementById('ngaySinh').addEventListener('change', function() {
-                            var ngaySinhInput = this.value;
-                            var currentDate = new Date().toISOString().split('T')[0]; // Lấy ngày hiện tại
+                        <!-- JavaScript validation cho Ngày sinh -->
+                        <script>
+                            document.getElementById('ngaySinh').addEventListener('change', function () {
+                                var ngaySinhInput = this.value;
+                                var currentDate = new Date().toISOString().split('T')[0];
 
-                            // Kiểm tra nếu ngày sinh là ngày trong tương lai
-                            if (ngaySinhInput > currentDate) {
-                                document.getElementById('ngaySinhError').style.display = 'block'; // Hiển thị lỗi
-                                this.setCustomValidity("Ngày sinh không được là ngày trong tương lai!");
-                            } else {
-                                document.getElementById('ngaySinhError').style.display = 'none'; // Ẩn lỗi
-                                this.setCustomValidity(""); // Xóa lỗi
-                            }
-                        });
-                    </script>
+                                if (ngaySinhInput > currentDate) {
+                                    document.getElementById('ngaySinhError').classList.remove('d-none');
+                                    this.setCustomValidity("Ngày sinh không được là ngày trong tương lai!");
+                                } else {
+                                    document.getElementById('ngaySinhError').classList.add('d-none');
+                                    this.setCustomValidity("");
+                                }
+                            });
+                        </script>
 
+                        <!-- Số điện thoại -->
+                        <div class="mb-3">
+                            <label for="soDienThoai" class="form-label">Số điện thoại:</label>
+                            <input type="text" class="form-control" id="soDienThoai" name="soDienThoai"
+                                   th:value="${nhanVien.soDienThoai}" required
+                                   pattern="^0[0-9]{9}$"
+                                   title="Số điện thoại phải bắt đầu bằng 0 và có 10 chữ số" />
+                        </div>
 
-                    <!-- Số điện thoại -->
-                    <div>
-                        <label>Số điện thoại:</label>
-                        <input type="text" name="soDienThoai"
-                               th:value="${nhanVien.soDienThoai}"
-                               required
-                               pattern="^0[0-9]{9}$"
-                               title="Số điện thoại phải bắt đầu bằng 0 và có 10 chữ số " />
-                    </div>
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email:</label>
+                            <input type="email" class="form-control" id="email" name="email"
+                                   th:value="${nhanVien.taikhoan.email}" required />
+                        </div>
 
-                    <!-- Email -->
-                    <div>
-                        <label>Email:</label>
-                        <input type="email" name="email"
-                               th:value="${nhanVien.taikhoan.email}"
-                               required />
-                    </div>
+                        <!-- Địa chỉ -->
+                        <div class="mb-3">
+                            <label for="diaChi" class="form-label">Địa chỉ:</label>
+                            <input type="text" class="form-control" id="diaChi" name="diaChi"
+                                   th:value="${nhanVien.diaChi}" required />
+                        </div>
 
-                    <!-- Địa chỉ -->
-                    <div>
-                        <label>Địa chỉ:</label>
-                        <input type="text" name="diaChi" th:value="${nhanVien.diaChi}" required />
-                    </div>
-                    <!-- Submit button -->
-                    <button type="submit">Cập nhật thông tin</button>
-                </form>
+                        <!-- Submit button -->
+                        <button type="submit" class="btn btn-primary">Cập nhật thông tin</button>
+                    </form>
+                </div>
 
 
             </div>
