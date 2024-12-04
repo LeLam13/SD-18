@@ -1,9 +1,18 @@
+<<<<<<< HEAD
 var app = angular.module("banhang-app", []);
 app.controller("banhang-ctrl", function ($scope, $http) {
   //tao random ma don hang
   $scope.generateRandomString = function (length) {
     const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
     let result = "";
+=======
+var app = angular.module("banhang-app", [])
+app.controller("banhang-ctrl", function ($scope, $http,$sce) {
+    //tao random ma don hang
+    $scope.generateRandomString = function(length) {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let result = '';
+>>>>>>> feature/banhang
 
     for (let i = 0; i < length; i++) {
       const randomIndex = Math.floor(Math.random() * characters.length);
@@ -234,6 +243,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
       return;
     }
 
+<<<<<<< HEAD
     //kiểm tra đã tồn tại sản phẩm chưa
     var productWithId = $scope.productDetails.find(
       (item) => item.idSanPham === idSanPhamChiTiet
@@ -292,6 +302,133 @@ app.controller("banhang-ctrl", function ($scope, $http) {
         })
         .catch(function (error) {
           console.error("Có lỗi xảy ra:", error);
+=======
+        var selectedProvinceName = $scope.selectedProvince ? $scope.selectedProvince.ProvinceName : '';
+
+        // Tìm quận/huyện đã chọn
+        var selectedDistrict = $scope.districts.find(d => d.DistrictID == $scope.selectedDistricts); // Sử dụng == thay vì ===
+        var selectedDistrictName = selectedDistrict ? selectedDistrict.DistrictName : '';
+
+        // Tìm xã/phường đã chọn
+        var selectedWard = $scope.wards.find(w => w.WardCode === $scope.selectedWards);
+        var selectedWardName = selectedWard ? selectedWard.WardName : '';
+
+        var diaChiKhachNhan =$('#soNha').val()+ "-" + selectedWardName+ "-" + selectedDistrictName  + "-" + selectedProvinceName ;
+
+
+        console.log("check id khach hàng1: ",$scope.khachHangById);
+        var trangThai = 5;
+        if($scope.shippingMethod===2){
+            trangThai=1;
+        }
+        $scope.hoaDonData ={
+            maHoaDon: $scope.generateRandomString(8),
+            idKhuyenMai: phieuGiamGia,
+            idTrangThai: trangThai,//trạng thái của hoá đơn hoàn thành
+            idPhuongThucThanhToan: phuongThucThanhToan,
+            idDonHang: $scope.selectedId,
+            idKhachHang: $scope.khachHangById.id_khach_hang,
+            tenKhachHang: nameKH,
+            tongTien: tongTien,
+            tongTienKhuyenMai: $scope.getTienGiam(),
+            tongTienSauKhuyenMai: $scope.getTienKhachPTra(),
+            phiVanChuyen: $scope.getFeeShip(),
+            tongTienThanhToan: $scope.tongTienTHanhToan(),
+            ghiChu: ghiChu,
+            tenKhachNhan: tenKhachNhan,
+            soDienThoaiKhachNhan: sdtKhachNhan,
+            diaChiKhachNhan: diaChiKhachNhan,
+            phuongThucNhan: $scope.shippingMethod,
+            loaiDonHang: '1'
+        }
+        console.log("check data hoa đon: ",$scope.hoaDonData);
+        if($scope.hoaDonData.idDonHang === null){
+            $scope.showNotification('Chưa Chọn đơn Hàng!','error');
+            return;
+        }
+
+        if(khachThanhToan === null || khachThanhToan ==0){
+            $scope.showNotification('Chưa Nhập tiền khách thanh toán!','error');
+            return;
+        }
+
+        if (isNaN(khachThanhToan) || khachThanhToan === "") {
+            $scope.showNotification('Giá trị thanh toán không hợp lệ. Vui lòng nhập số!','error');
+            return;
+        }
+
+        khachThanhToan = parseFloat(khachThanhToan);
+
+        if (khachThanhToan < ($scope.getTienKhachPTra()+$scope.getFeeShip())) {
+            $scope.showNotification('Khách chưa thanh toán đủ tiền!','error');
+            return;
+        }
+
+        var sdt = $('#sdtKH').val();
+        if(nameKH === "" || sdt === "") {
+            $scope.showNotification('Chưa Chọn Khách Hàng!','error');
+            return;
+        }
+
+        if ($scope.productDetails && $scope.productDetails.length === 0) {
+            $scope.showNotification('Chưa chọn sản phẩm!','error');
+            return;
+        }
+
+        if($scope.shippingMethod ==='2'){
+            if(tenKhachNhan === null || tenKhachNhan ===""){
+                $scope.showNotification('Chưa nhập tên khách nhận!','error');
+                return;
+            }
+            if(sdtKhachNhan === null || sdtKhachNhan ===""){
+                $scope.showNotification('Chưa nhập số diện thoại khách nhận!','error');
+                return;
+            }
+            if($('#soNha').val() === null || $('#soNha').val()===""){
+                $('#messSoNha').text('Chưa nhập địa chỉ nhà!');
+                $('#messSoNha').show();
+                return;
+            }
+            if(selectedProvinceName === null || selectedProvinceName===""){
+                $('#messThanhPho').text('Chưa chọn tỉnh - thành phố!');
+                $('#messThanhPho').show();
+                return;
+            }
+            if(selectedDistrictName === null || selectedDistrictName===""){
+                $('#messQuan').text('Chưa chon quận - huyện!');
+                $('#messQuan').show();
+                return;
+            }
+            if(selectedWardName === null || selectedWardName===""){
+                $('#messPhuong').text('Chưa chọn phường - xã !');
+                $('#messPhuong').show();
+                return;
+            }
+        }
+        //console.log("check log upadteghg: ",$scope.hoaDonData);
+        var hoaDonData = angular.copy($scope.hoaDonData);
+
+        $http({
+            method: 'POST',
+            url: '/hoa-don/them-moi',
+            data: hoaDonData,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            transformRequest: function(data) {
+                return JSON.stringify(data);
+            }
+        }) .then(function(response) {
+            console.log('Hoá Đơn DATA:', response.data);
+            idHoaDoncheck = response.data.idHoaDon;
+            $scope.getKhachHang();
+            // alert("Lưu Hoá Đơn Thành Công!");
+            $('#printer').show();
+            $scope.showNotification('Lưu Hoá Đơn Thành Công!','success');
+        }).catch(function(error) {
+            console.error('Có lỗi xảy ra khách hàng DATA:', error);
+            $scope.showNotification('Lưu Hoá Đơn Thất Bại!','error');
+>>>>>>> feature/banhang
         });
     }
     console.log("check Data spct", $scope.dataProduct);
@@ -309,9 +446,30 @@ app.controller("banhang-ctrl", function ($scope, $http) {
     var tenKhachNhan = $("#nameKHNhan").val();
     var sdtKhachNhan = $("#sdtKHNhan").val();
 
+<<<<<<< HEAD
     var selectedProvinceName = $scope.selectedProvince
       ? $scope.selectedProvince.ProvinceName
       : "";
+=======
+        if(sdt === null || sdt ===""){
+            $scope.showErrrorsMes("Không để trống số điện thoại!");
+            return;
+        }
+
+        if(sdt.length <10 || sdt >11){
+            $scope.showErrrorsMes("Số điện thoại Không đúng định dạng!");
+            return;
+        }
+
+        if (/^\d+$/.test(sdt)) {
+            // Nếu chỉ chứa số
+            console.log("Số điện thoại hợp lệ.");
+        } else {
+            // Nếu có ký tự không phải số
+            $scope.showErrrorsMes("Số điện thoại Không hợp lệ!");
+            return;
+        }
+>>>>>>> feature/banhang
 
     // Tìm quận/huyện đã chọn
     var selectedDistrict = $scope.districts.find(
@@ -341,6 +499,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
     if ($scope.shippingMethod === 2) {
       trangThai = 1;
     }
+<<<<<<< HEAD
     $scope.hoaDonData = {
       maHoaDon: $scope.generateRandomString(8),
       idKhuyenMai: phieuGiamGia,
@@ -360,6 +519,91 @@ app.controller("banhang-ctrl", function ($scope, $http) {
       diaChiKhachNhan: diaChiKhachNhan,
       phuongThucNhan: $scope.shippingMethod,
       loaiDonHang: "1",
+=======
+
+    //xoá đơn hàng
+    $scope.deleteDonHang = function (id){
+        if(confirm("Bạn có muôna xoá đơn hàng?")){
+            $http.delete('/don-hang/don-hang/xoa/'+id).then(function (response){
+                console.log('Đã xoá thành công đơn hang: ',response);
+                //$scope.selectOrder(selectedId);
+                $scope.getDonHang();
+                $scope.productDetails =[];
+                $scope.getProducts();
+                $scope.showNotification('Xoá Đơn Hàng Thành Công!','success');
+            }).catch(function (errors){
+                console.error('Có lỗi xảy ra:', errors);
+                $scope.showNotification('Xoá Đơn Hàng Thất BẠi!','error');
+            })
+
+        }
+    }
+
+    //xoá đơn hàng chi tiết
+    $scope.deleteDonHangChiTiet = function (id, idSP){
+        // alert("Show: "+id);
+        if(confirm("Bạn Có muốn Xoá sản phẩm khỏi đơn hàng không?")){
+            $http.delete('/don-hang/don-hang-chi-tiet/xoa/' + id).then(function (response){
+                console.log('Đã xóa đơn hàng chi tiết thành công:', response);
+                $scope.selectOrder(selectedId);
+                var productInScope = $scope.products.find(item => item.idSanPhamChiTiet === idSP);
+                if (productInScope) {
+                    productInScope.soLuong++;
+                } else {
+                    console.error('Không tìm thấy sản phẩm với id:', id);
+                }
+            }).catch(function (errors){
+                console.error('Có lỗi xảy ra:', errors);
+            })
+        }
+    }
+
+    //tìm kiếm khách hàng
+    $scope.searchKhachHang = function (){
+        var sdt = $('#sdt-khach-hang').val();
+        if(sdt === null || sdt ===""){
+            $scope.getKhachHang();
+        }else {
+            $http.get("/don-hang/khach-hang/tim-kiem", {
+                params: { sdt: sdt }  // Truyền `sdt` dưới dạng query parameter
+            }).then(function (response) {
+                $scope.khachHang = [];
+                console.log("Check kH search: ",response.data);
+                $scope.khachHang = response.data;
+            }).catch(function (errors) {
+                console.error('Có lỗi xảy ra:', errors);
+            });
+        }
+    }
+
+    //tìm kiếm sản phẩm
+    $scope.inputData = "";
+    $scope.searchSanPham = function (){
+        var searchData = $('#search-product').val();
+        if(searchData === null || searchData ===""){
+            $scope.getProducts();
+        }else {
+            $http.get("/don-hang/san-pham-chi-tiet/tim-kiem", {
+                params: { tenSanPham: searchData }  // Truyền `sdt` dưới dạng query parameter
+            }).then(function (response) {
+                $scope.products = [];
+                console.log("Check PD search: ",response.data);
+                $scope.products = response.data;
+            }).catch(function (errors) {
+                console.error('Có lỗi xảy ra:', errors);
+            });
+        }
+    }
+
+
+    //show-modal-khach
+    $scope.openModal = function() {
+        if(selectedId === null){
+            $scope.showNotification("Chưa chọn đơn hàng!","error");
+            return;
+        }
+        $('#show-modal-khach').modal('show');
+>>>>>>> feature/banhang
     };
     console.log("check data hoa đon: ", $scope.hoaDonData);
     if ($scope.hoaDonData.idDonHang === null) {
@@ -510,8 +754,172 @@ app.controller("banhang-ctrl", function ($scope, $http) {
           $scope.getProducts();
           $scope.showNotification("Xoá Đơn Hàng Thành Công!", "success");
         })
+<<<<<<< HEAD
         .catch(function (errors) {
           console.error("Có lỗi xảy ra:", errors);
+=======
+    }
+    $scope.getKhuyenmaiById = function (id){
+        $http.get("/don-hang/khuyen-mai/"+id).then(function (response) {
+            console.log('khuyen mai by id:', response.data);
+            $scope.khuyenMaiById = response.data;
+            $('#ma-khuyen-mai').val(response.data.maKhuyenMai);
+            if(response.data.mucGiamGia < 100){
+                $('#muc-giam-gia').val(response.data.mucGiamGia + '%');
+            }else {
+                $('#muc-giam-gia').val(response.data.mucGiamGia);
+            }
+
+            // $('#show-modal-khach').modal('hide');
+        }).catch(function (errors) {
+            console.error('Có lỗi xảy ra:', errors);
+        })
+    }
+
+
+    //in hoá đơn
+    $scope.printer = function (){
+        // if($scope.selectedId === null){
+        //     return ;
+        // }
+        console.log('hoa dơn get id:', idHoaDoncheck);
+        $http.get("/hoa-don/get-invoice/"+idHoaDoncheck).then(function (response) {
+            console.log('response.data has data',response.data);
+            if (response.data && response.data.idHoaDon) {
+                console.log('response.data has data',response.data);
+                $scope.printerInvoice(response.data.idHoaDon);
+            }
+            $('#printer').hide();
+            $scope.showNotification("In hoá đơn thành công!","success");
+        }).catch(function (errors) {
+            console.error('Có lỗi xảy ra:', errors);
+            $scope.showNotification("In hoá đơn thất bại!","error");
+        })
+
+    }
+    $scope.printerInvoice = function (idHoaDon){
+        console.log('check in hoá đơn:');
+        $http.get("/hoa-don/invoice/"+idHoaDon).then(function (response) {
+            console.log('thanh cong:', response);
+        }).catch(function (errors) {
+            console.error('Có lỗi xảy ra:', errors);
+
+        })
+    }
+
+    //ẩn thông báo
+    $scope.hideErrrorsMes = function (){
+        $('#erroresMessage').hide();
+    }
+    //ẩn thông báo
+    $scope.hideErrrorsMes1 = function (){
+        $('#erroresMessage1').hide();
+    }
+    //hiện thông báo
+    $scope.showErrrorsMes = function (message){
+        $('#showMessage').text(message);
+        $('#erroresMessage').show();
+
+        setTimeout(() => {
+            $('#erroresMessage').hide();
+        }, 2000);
+    }
+    //hiện thông báo
+    $scope.showErrrorsMes1 = function (message){
+        $('#showMessage1').text(message);
+        $('#erroresMessage1').show();
+
+        setTimeout(() => {
+            $('#erroresMessage1').hide();
+        }, 2000);
+    }
+
+
+
+    $scope.getProvinces = function (){
+        $http.get("/api/provinces").then(function (response){
+            console.log("check res: ",response);
+            $scope.provinces = response.data;
+        }).catch(function (errors) {
+            console.error("có lỗi xảy ra: ",errors)
+        })
+    }
+
+    $scope.getDisTricts = function (){
+        console.log($scope.selectedProvince)
+        if($scope.selectedProvince === null || $scope.selectedProvince ===""){
+            alert("Chưa chọn tỉnh Thành Phố")
+            return;
+        }
+
+        var url = "/api/districts/" + $scope.selectedProvince.ProvinceID;
+        console.log(url)
+        $http.get(url).then(function (response){
+            console.log("check res: ",response);
+            $scope.districts = response.data;
+        }).catch(function (errors) {
+            console.error("có lỗi xảy ra: ",errors)
+        })
+    }
+
+    $scope.getWard = function (){
+        console.log($scope.selectedDistrict)
+        if($scope.selectedDistricts === null || $scope.selectedDistricts ===""){
+            alert("Chưa chọn tỉnh Thành Phố")
+            return;
+        }
+
+        var url = "/api/ward/" + $scope.selectedDistricts;
+        console.log(url)
+        $http.get(url).then(function (response){
+            console.log("check res: ",response);
+            $scope.wards = response.data;
+        }).catch(function (errors) {
+            console.error("có lỗi xảy ra: ",errors)
+        })
+    }
+
+    $scope.feeShippingApi = function (){
+        console.log($scope.selectedProvince)
+        if($scope.selectedProvince === null || $scope.selectedProvince ===""){
+            alert("Chưa chọn tỉnh Thành Phố")
+            return;
+        }
+        if($scope.selectedDistricts === null || $scope.selectedDistricts ===""){
+            alert("Chưa chọn Quận-Huyện")
+            return;
+        }
+        if($scope.selectedWards === null || $scope.selectedWards ===""){
+            alert("Chưa chọn Phường-Xã")
+            return;
+        }
+
+        $scope.shippingData = {
+            service_type_id: 2,
+            from_district_id: $scope.fromDistrictId,
+            from_ward_code: "13010",
+            // to_province_id: $scope.selectedProvince.ProvinceID,
+            to_district_id: $scope.selectedDistricts,
+            to_ward_code: $scope.selectedWards,
+            weight: 2000
+        };
+        var dataShipping = angular.copy($scope.shippingData);
+        $http({
+            method: 'POST',
+            url: '/api/fee',
+            data: dataShipping,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            transformRequest: function(data) {
+                return JSON.stringify(data);  // Chuyển đối tượng thành chuỗi JSON
+            }
+        }) .then(function(response) {
+            console.log("check fee shipping: ",response);
+            $scope.feeShipping = response.data;
+        }).catch(function(error) {
+            console.error('Có lỗi xảy ra:', error);
+>>>>>>> feature/banhang
         });
     }
   };
@@ -958,6 +1366,7 @@ app.controller("banhang-ctrl", function ($scope, $http) {
     return feeShipping;
   };
 
+<<<<<<< HEAD
   $scope.validateQuantity = function (details) {
     // console.log("Products:", $scope.products);
     // console.log("Details:", details);
@@ -1057,3 +1466,18 @@ app.controller("banhang-ctrl", function ($scope, $http) {
   $("#messQuan").hide();
   $("#messPhuong").hide();
 });
+=======
+    //load data product when run
+    $scope.getProducts();
+    $scope.getDonHang();
+    $scope.getKhachHang();
+    $scope.hideErrrorsMes();
+    $scope.hideErrrorsMes1();
+    $scope.getProvinces();
+    $('#messSoNha').hide();
+    $('#messThanhPho').hide();
+    $('#messQuan').hide();
+    $('#messPhuong').hide();
+    $('#printer').hide();
+})
+>>>>>>> feature/banhang
