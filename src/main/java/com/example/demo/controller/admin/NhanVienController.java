@@ -77,14 +77,16 @@ public class NhanVienController {
 
         taikhoan existingTaiKhoan = taikhoanRepo.findById(username)
                 .orElseThrow(() -> new IllegalArgumentException("Tài khoản không tồn tại!"));
-
+        // Kiểm tra định dạng email
         if (email != null && !email.isEmpty()) {
-            if (!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
-                model.addAttribute("error", "Email không hợp lệ!");
-                model.addAttribute("nhanVien", nhanVien); // Giữ lại dữ liệu
+            String emailRegex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+            if (!email.matches(emailRegex)) {
+                model.addAttribute("error", "Email không đúng định dạng!");
+                nhanvien nhanVienFromDB = nhanVienRepository.findByTaikhoanUsername(username);
+                model.addAttribute("nhanVien", nhanVienFromDB); // Giữ lại thông tin nhân viên
                 return "admin/thongTinUser";
             }
-
+        }
             boolean emailExists = taikhoanRepo.existsByEmail(email);
             if (emailExists && !email.equals(existingTaiKhoan.getEmail())) {
                 model.addAttribute("error", "Email đã tồn tại trên hệ thống!");
@@ -94,7 +96,7 @@ public class NhanVienController {
             }
 
             existingTaiKhoan.setEmail(email);
-        }
+
 
         if (password != null && !password.isEmpty()) {
             if (password.length() < 6) {
