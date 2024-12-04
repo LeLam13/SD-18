@@ -396,7 +396,8 @@ app.controller("banhang-ctrl", function ($scope, $http,$sce) {
             console.log('Hoá Đơn DATA:', response.data);
             idHoaDoncheck = response.data.idHoaDon;
             $scope.getKhachHang();
-            alert("Lưu Hoá Đơn Thành Công!");
+            // alert("Lưu Hoá Đơn Thành Công!");
+            $('#printer').show();
             $scope.showNotification('Lưu Hoá Đơn Thành Công!','success');
         }).catch(function(error) {
             console.error('Có lỗi xảy ra khách hàng DATA:', error);
@@ -728,6 +729,7 @@ app.controller("banhang-ctrl", function ($scope, $http,$sce) {
                 console.log('response.data has data',response.data);
                 $scope.printerInvoice(response.data.idHoaDon);
             }
+            $('#printer').hide();
             $scope.showNotification("In hoá đơn thành công!","success");
         }).catch(function (errors) {
             console.error('Có lỗi xảy ra:', errors);
@@ -964,4 +966,5 @@ app.controller("banhang-ctrl", function ($scope, $http,$sce) {
     $('#messThanhPho').hide();
     $('#messQuan').hide();
     $('#messPhuong').hide();
+    $('#printer').hide();
 })
