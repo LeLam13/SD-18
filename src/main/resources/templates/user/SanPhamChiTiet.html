@@ -1,11 +1,26 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/user/trangChu}">
-
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{/user/trangChu}"
+>
 <head>
-    <meta charset="UTF-8">
-    <title>Sản phẩm chi tiết</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8" />
+    <title>Thông Tin Khách Hàng</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+    />
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+</head>
+<body data-topbar="dark">
+<div layout:fragment="contentUser" class="bg-light py-5">
     <style>
         .custom-border {
             border: 3px solid #3498db; /* Màu xanh da trời */
@@ -77,29 +92,15 @@
 
 
     </style>
-</head>
-<!-- Thêm SweetAlert2 -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-<body>
-<div style="margin-top: 10px" class="main-content" ng-controller="ctsp-ctrl"
-     layout:fragment="contentUser">
     <style>
         .header-cart-buttons {
             display: flex;
             justify-content: center;
         }
     </style>
-
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0/css/bootstrap.css" rel="stylesheet">
-    <!--    <link rel="stylesheet" type="text/css"  href="/userStyle/css/rating.scss">-->
-    <link rel="stylesheet" href="/css/style.css">
-    <script src="/js/app.js"></script>
-
-
     <!-- Product Detail -->
     <section class="sec-product-detail bg0 p-t-65 ">
-        <div class="container">
+        <div class="container"  ng-controller="ctsp-ctrl">
             <!-- Chỉ hiển thị một sản phẩm duy nhất theo màu sắc và kích cỡ đã chọn -->
             <div class="row" ng-if="filteredItems.length > 0">
                 <div class="col-md-6 col-lg-7 p-b-30">
@@ -193,26 +194,7 @@
                         </div>
                     </div>
                 </div>
-                <!--    /////////Modal đăng nhập-->
-<!--                <div class="modal fade" id="dangNhap" tabindex="-1" role="dialog"-->
-<!--                     aria-labelledby="exampleModalCenterTitle" aria-hidden="true">-->
-<!--                    <div class="modal-dialog modal-dialog-centered" role="document">-->
-<!--                        <div class="modal-content">-->
-<!--                            <div class="modal-header">-->
-<!--                                <h5 class="modal-title" id="exampleModalLongTitle">Thông Báo</h5>-->
-<!--                            </div>-->
-<!--                            <div class="modal-body">-->
-<!--                                Đăng nhập để sử dụng tính năng!-->
-<!--                            </div>-->
-<!--                            <div class="modal-footer">-->
-<!--                                <button type="button" class="btn btn-secondary" data-dismiss="modal"-->
-<!--                                        onclick="$('#dangNhap').modal('hide')">Trở về-->
-<!--                                </button>-->
-<!--                                <button ng-click="login()" class="btn btn-primary text-white">Đăng nhập</button>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
+
 
                 <div class="bor10 p-t-43 p-b-40 mt-5">
                     <!-- Tab01 -->
@@ -265,103 +247,8 @@
 
         </div>
     </section>
-
-    <!-- //---------------------------------------------------------------- -->
-    <div class="modal fade" id="huongDanChonSize" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-         aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Hướng Dẫn Chọn Size</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="d-flex justify-content-between">
-                        <h5 style="font-size: 17px">Độ dài bàn chân:</h5>
-                        <h5 style="font-size: 17px"> {{lengthFoot}} CM </h5>
-                    </div>
-                    <input type="range" class="form-range" min="20" max="32" step="0.5" ng-model="lengthFoot"
-                           onchange="angular.element(this).scope().getSizePhuHop()" style="width: 100%;"
-                           ng-change="showLength()">
-                    <h5 style="font-size: 17px">Size phù hợp là: {{size}}</h5>
-                    <hr>
-                    <img src="/image/loadImage/user/lengthFoot.jpg "
-                         style="width: 70%; height: 150px; margin-left: 15%;" class="text-center"/>
-                    <p class="text-center font-italic">Hướng dẫn đo chiều dài bàn chân</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- Related Products -->
-    <section class="sec-relate-product bg0 p-t-45 p-b-105">
-        <div class="container">
-            <div class="p-b-45">
-                <h3 class="cl5 txt-center">
-                    SẢN PHẨM TƯƠNG TỰ
-                </h3>
-            </div>
-
-            <!-- Slide2 -->
-            <div class="">
-                <div class="d-flex justify-content-center">
-                    <!--                    ////-->
-                    <div class="p-l-15 p-r-15 p-t-15 p-b-15" ng-repeat="p in productsTuongTu" style="width: 250px">
-                        <!-- Block2 -->
-                        <div class="block2">
-                            <div class="block2-pic hov-img0">
-                                <img src="/image/loadImage/product/{{p.anh[0]}}" style="width: 100%;height: 200px"
-                                     ng-if="p.anh.length>0">
-                                <img src="/image/loadImage/product/default.png" style="width: 100%;height: 200px"
-                                     ng-if="p.anh.length==0">
-
-                                <a href="/chi-tiet-san-pham/{{p.ma}}"
-                                   class="block2-btn flex-c-m stext-103 cl2 size-102 bg0 bor2 hov-btn1 p-lr-15 trans-04 js-show-modal1">
-                                    Xem chi tiết
-                                </a>
-                            </div>
-
-                            <div class="block2-txt flex-w flex-t p-t-14">
-                                <div class="block2-txt-child1 flex-col-l ">
-                                    <a href="/chi-tiet-san-pham/{{p.ma}}" style="font-weight: bold; font-size: 15px; width:200px;
-                                                                                white-space: nowrap;
-                                                                                overflow: hidden;
-                                                                                text-overflow: ellipsis;"
-                                       class="stext-104 cl4 hov-cl1 trans-04 js-name-b2 p-b-6">
-                                        {{p.ten}}
-                                    </a>
-
-                                    <span class="stext-105 cl3" ng-if="p.mucGiam!=null">
-                                            <span>
-                                                <del>{{p.giaBan | currency: "" : 1}}đ</del>
-                                            </span>
-                                            <b ng-if="p.loaiGiam == 'TIEN'"
-                                               style="font-weight: bold;font-size: 15px;">{{p.giaBan - p.mucGiam |
-                                            currency: "" : 1}}đ</b>
-                                            <b ng-if="p.loaiGiam == 'PHAN TRAM'"
-                                               style="font-weight: bold;font-size: 15px;">{{p.giaBan - ((p.mucGiam /
-                                                    100) * p.giaBan) | currency: "" : 1}}đ</b>
-                                        </span>
-                                    <span class="stext-105 cl3" ng-if="p.mucGiam==null">
-                                            <p>{{p.giaBan | currency: "" : 1}}đ</p>
-                                        </span>
-                                </div>
-
-                                <div class="block2-txt-child2 flex-r p-t-3">
-                                    <i ng-if="maSpInDSYT.includes(p.ma) == false" id="{{p.ma}}" class="far fa-heart"
-                                       ng-click="addDSYT(p.ma)"></i>
-                                    <i ng-if="maSpInDSYT.includes(p.ma) == true" id="{{p.ma}}" class="fas fa-heart"
-                                       ng-click="addDSYT(p.ma)"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 </div>
-</body>
 
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
 </html>
