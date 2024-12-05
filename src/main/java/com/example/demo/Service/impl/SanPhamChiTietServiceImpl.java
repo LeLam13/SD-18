@@ -26,6 +26,7 @@ import com.example.demo.repo.SanPhamChiTietRepo;
 import com.example.demo.repo.SanPhamRepo;
 import com.example.demo.repo.ThuongHieuRepo;
 import com.example.demo.repo.XuatXuRepo;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -281,7 +282,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         KichCo kichCo = kichCoRepo.findByIdKichCo(sanPhamChiTietRequestDTO.getIdKichCo());
         Integer idKichCo = kichCo.getIdKichCo();
 
-        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepo.findCheapestProductDetail(idSanPham, idMauSac, idKichCo);
+        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepo.findCheapestProduct(idSanPham, idMauSac, idKichCo);
         Integer soLuongMoi = sanPhamChiTietRequestDTO.getSoLuong();
         Integer soLuongCu = sanPhamChiTiet.getSoLuong();
 
@@ -292,4 +293,22 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         return sanPhamChiTietRepo.save(sanPhamChiTiet);
     }
 
+    @Override
+    public SanPhamChiTiet checkEx(Integer idSanPham, Integer idMauSac, Integer idKichCo) {
+        SanPhamChiTiet productDetails = sanPhamChiTietRepo.findCheapestProduct(idSanPham, idMauSac, idKichCo);
+        return sanPhamChiTietRepo.findCheapestProduct(idSanPham, idMauSac, idKichCo);
+    }
+
+    @Override
+    public SanPhamChiTiet updateBySize(SanPhamChiTietRequestDTO sanPhamChiTietRequestDTO) {
+        SanPhamChiTiet productDetails = sanPhamChiTietRepo.findCheapestProduct(sanPhamChiTietRequestDTO.getIdSanPham(), sanPhamChiTietRequestDTO.getIdMauSac(), sanPhamChiTietRequestDTO.getIdKichCo());
+        productDetails.setGiaNhap(sanPhamChiTietRequestDTO.getGiaNhap());
+        productDetails.setUpdateDate(date);
+        productDetails.setGiaBan(sanPhamChiTietRequestDTO.getGiaBan());
+        Integer soLuongCu = productDetails.getSoLuong();
+        Integer soLuongMoi = sanPhamChiTietRequestDTO.getSoLuong();
+        productDetails.setSoLuong(soLuongMoi + soLuongCu);
+
+        return sanPhamChiTietRepo.save(productDetails);
+    }
 }

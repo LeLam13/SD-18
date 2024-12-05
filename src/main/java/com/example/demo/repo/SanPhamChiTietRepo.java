@@ -142,11 +142,25 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
                   AND sp.idMauSac.idMauSac = :idMauSac
                   AND sp.idKichCo.idKichCo = :idKichCo        
             """)
-    SanPhamChiTiet findCheapestProductDetail(
+    SanPhamChiTiet findCheapestProduct(
             @Param("idSanPham") Integer idSanPham,
             @Param("idMauSac") Integer idMauSac,
             @Param("idKichCo") Integer idKichCo
     );
+
+    @Query("""
+    SELECT sp
+    FROM SanPhamChiTiet sp
+    WHERE sp.idSanPham.idSanPham = :idSanPham
+      AND sp.idMauSac.idMauSac = :idMauSac
+      AND sp.idKichCo.idKichCo = :idKichCo
+""")
+    List<SanPhamChiTiet> findCheckEx(
+            @Param("idSanPham") Integer idSanPham,
+            @Param("idMauSac") Integer idMauSac,
+            @Param("idKichCo") Integer idKichCo
+    );
+
 
 }
 

@@ -13,15 +13,15 @@
     <style>
         /* CSS cho nút Làm Mới với màu xám */
         .btn-refresh {
-            background-color: #6c757d;  /* Màu nền xám */
-            border-color: #6c757d;      /* Màu viền xám */
-            color: white;               /* Màu chữ trắng */
+            background-color: #6c757d; /* Màu nền xám */
+            border-color: #6c757d; /* Màu viền xám */
+            color: white; /* Màu chữ trắng */
         }
 
         .btn-refresh:hover {
-            background-color: #5a6368;  /* Màu nền khi hover (màu xám đậm hơn) */
-            border-color: #4e555b;      /* Màu viền khi hover */
-            color: white;               /* Chữ trắng khi hover */
+            background-color: #5a6368; /* Màu nền khi hover (màu xám đậm hơn) */
+            border-color: #4e555b; /* Màu viền khi hover */
+            color: white; /* Chữ trắng khi hover */
         }
 
 
@@ -70,20 +70,24 @@
                                 <form action="/action_page.php" method="get">
                                     <div class="mb-3">
                                         <label class="form-label">Màu Sắc:</label>
-                                        <select id="mauSac" class="form-control"
+                                        <select id="mauSacCT" class="form-control"
                                                 ng-model="idMauSacNhap"
-                                                ng-options="mauSac as mauSac.ten for mauSac in mauSac track by mauSac.idMauSac">
+                                                ng-change="updateKichCo()"
+                                                ng-options="mauSacCT as mauSacCT.ten for mauSacCT in mauSacCT track by mauSacCT.idMauSac">
+                                            <option value="" disabled selected>Chọn màu sắc</option>
                                         </select>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Kích Cỡ:</label>
-                                        <select id="kichCo" class="form-control"
+                                        <select id="kichCoCT" class="form-control"
                                                 ng-model="idKichCoNhap"
-                                                ng-options="kichCo as kichCo.ten for kichCo in kichCo track by kichCo.idKichCo">
+                                                ng-options="kichCoCT as kichCoCT.ten for kichCoCT in filteredKichCo track by kichCoCT.idKichCo">
+                                            <option value="" disabled selected>Chọn kích cỡ</option>
                                         </select>
                                     </div>
+
                                     <div class="mb-3">
-                                        <label class="form-label">Giá Bán</label>
+                                        <label class="form-label">Giá Nhập</label>
                                         <input type="number" ng-model="giaNhapNhap" class="form-control">
                                     </div>
                                     <div class="mb-3">
@@ -125,16 +129,12 @@
         <!--    modal update-->
 
 
-
-
-
         <!--    modal save-->
 
     </div>
 
 </div>
 <!-- Modal UPdate Quantity -->
-
 
 
 <!-- end main content-->
