@@ -2,6 +2,8 @@ package com.example.demo.dto.request;
 
 import lombok.Data;
 
+import java.time.LocalDate;
+
 @Data
 public class UserSignupRequestDTO {
     private String username;     // Tên đăng nhập
@@ -10,5 +12,6 @@ public class UserSignupRequestDTO {
     private String hoTen;        // Họ và tên
     private String soDienThoai;  // Số điện thoại
     private String diaChi;       // Địa chỉ
-    private boolean gioiTinh;    // Giới tính
+    private boolean gioiTinh;
+    private LocalDate ngaySinh;
 }

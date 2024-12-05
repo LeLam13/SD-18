@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
+
 @Controller
 public class SampleController {
 
@@ -43,26 +45,61 @@ public class SampleController {
     @PostMapping("/signup/customer")
     public String signupCustomer(@ModelAttribute UserSignupRequestDTO dto, Model model) {
         this.dto = dto;
-        // Kiểm tra tính hợp lệ
+
+        // Validate tất cả các trường không được trống
         if (dto.getUsername() == null || dto.getUsername().isEmpty()) {
             model.addAttribute("errorMessage", "Username không được để trống.");
-            return "signup"; // Quay lại trang đăng ký với thông báo lỗi
+            return "signup";
         }
         if (dto.getPassword() == null || dto.getPassword().isEmpty()) {
             model.addAttribute("errorMessage", "Password không được để trống.");
-            return "signup"; // Quay lại trang đăng ký với thông báo lỗi
+            return "signup";
+        }
+        if (dto.getEmail() == null || dto.getEmail().isEmpty()) {
+            model.addAttribute("errorMessage", "Email không được để trống.");
+            return "signup";
+        }
+        if (dto.getHoTen() == null || dto.getHoTen().isEmpty()) {
+            model.addAttribute("errorMessage", "Họ tên không được để trống.");
+            return "signup";
+        }
+        if (dto.getSoDienThoai() == null || dto.getSoDienThoai().isEmpty()) {
+            model.addAttribute("errorMessage", "Số điện thoại không được để trống.");
+            return "signup";
+        }
+        if (dto.getDiaChi() == null || dto.getDiaChi().isEmpty()) {
+            model.addAttribute("errorMessage", "Địa chỉ không được để trống.");
+            return "signup";
+        }
+
+        // Validate số điện thoại
+        if (!dto.getSoDienThoai().matches("^0\\d{9}$")) {
+            model.addAttribute("errorMessage", "Số điện thoại phải bắt đầu bằng 0 và có 10 số.");
+            return "signup";
+        }
+
+        // Validate email đúng định dạng
+        if (!dto.getEmail().matches("^[\\w-\\.]+@[\\w-]+\\.[a-z]{2,4}$")) {
+            model.addAttribute("errorMessage", "Email không đúng định dạng.");
+            return "signup";
+        }
+
+        // Validate ngày sinh không được là ngày trong tương lai
+        if (dto.getNgaySinh().isAfter(LocalDate.now())) {
+            model.addAttribute("errorMessage", "Ngày sinh không được là ngày trong tương lai.");
+            return "signup";
         }
 
         // Kiểm tra tên đăng nhập đã tồn tại
         if (taikhoanRepo.existsByUsername(dto.getUsername())) {
             model.addAttribute("errorMessage", "Tên đăng nhập đã tồn tại. Vui lòng chọn tên khác.");
-            return "signup"; // Quay lại trang đăng ký với thông báo lỗi
+            return "signup";
         }
 
         // Kiểm tra email đã tồn tại
         if (taikhoanRepo.existsByEmail(dto.getEmail())) {
             model.addAttribute("errorMessage", "Email đã tồn tại. Vui lòng chọn email khác.");
-            return "signup"; // Quay lại trang đăng ký với thông báo lỗi
+            return "signup";
         }
 
         // Tạo tài khoản mới
@@ -89,10 +126,7 @@ public class SampleController {
 
         // Thiết lập các thuộc tính khác
         khachHang.setHoTen(dto.getHoTen());
-
-        //khachHang.setSoDienThoai(Integer.parseInt(dto.getSoDienThoai()));
-
-
+        khachHang.setNgaySinh(dto.getNgaySinh());
         khachHang.setSoDienThoai(dto.getSoDienThoai());
         khachHang.setDiaChi(dto.getDiaChi());
         khachHang.setGioiTinh(dto.isGioiTinh());
@@ -107,6 +141,7 @@ public class SampleController {
         // Quay lại trang đăng ký với thông báo thành công
         return "signup"; // Trả về trang đăng ký
     }
+
 
 
     @GetMapping("/forgot-password")
