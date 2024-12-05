@@ -30,4 +30,8 @@ public interface KichCoService {
 
     public Page<KichCo> search(String query, Pageable pageable);
 
+    public List<KichCo> getAllbyCT(Integer idSanPham);
+
+    public List<KichCo> getAllbyMS(Integer idSanPham, Integer idMauSac);
+
 }

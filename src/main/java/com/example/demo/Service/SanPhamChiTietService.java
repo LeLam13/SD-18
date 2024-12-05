@@ -33,4 +33,8 @@ public interface SanPhamChiTietService {
     Page<SanPhamChiTiet> filterProducts(FilterRequestDTO filterRequest,Pageable pageable);
 
     public SanPhamChiTiet updateNhapHang(SanPhamChiTietRequestDTO sanPhamChiTietRequestDTO);
+
+    public SanPhamChiTiet checkEx(Integer idSanPham, Integer idMauSac, Integer idKichCo);
+
+    public SanPhamChiTiet updateBySize(SanPhamChiTietRequestDTO sanPhamChiTietRequestDTO);
 }

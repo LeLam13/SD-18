@@ -3,10 +3,30 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/admin/index}">
 <head>
+<<<<<<< HEAD
     <title>Form sản phẩm</title>
+=======
+    <title>Eighteen Polo | Form sản phẩm</title>
+    <style>
+        .button-container {
+            display: flex;
+            align-items: flex-start; /* Căn chỉnh phần tử lên trên cùng */
+            gap: 10px; /* Khoảng cách giữa button và thông báo lỗi */
+        }
+>>>>>>> feature/sanpham
 
+        .text-danger {
+            display: flex;
+            align-items: flex-start; /* Căn chỉnh văn bản lỗi lên trên cùng */
+        }
+
+        .text-danger span {
+            margin-left: 10px; /* Khoảng cách giữa nút và văn bản lỗi */
+        }
+
+    </style>
 </head>
-<style></style>
+
 <body data-topbar="dark">
 
 <!-- ============================================================== -->
@@ -23,15 +43,14 @@
         </style>
         <link th:href="@{/admin/css/fileupload.css}" rel="stylesheet" type="text/css"/>
         <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-<!--        <style>-->
-<!--            .er {-->
-<!--                color: red;-->
-<!--                font-size: 13px;-->
-<!--            }-->
-<!--        </style>-->
-<!--        <link th:href="@{/admin/css/fileupload.css}" rel="stylesheet" type="text/css"/>-->
-<!--        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">-->
-
+        <!--        <style>-->
+        <!--            .er {-->
+        <!--                color: red;-->
+        <!--                font-size: 13px;-->
+        <!--            }-->
+        <!--        </style>-->
+        <!--        <link th:href="@{/admin/css/fileupload.css}" rel="stylesheet" type="text/css"/>-->
+        <!--        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">-->
 
 
         <div class="container-fluid">
@@ -60,11 +79,13 @@
                                             <!-- Chọn màu sắc -->
                                             <div class="mb-3 m-4">
                                                 <label>Màu Sắc: </label>
-                                                <input type="text" ng-model="colorSearch" placeholder="Nhập màu để tìm kiếm"
+                                                <input type="text" ng-model="colorSearch"
+                                                       placeholder="Nhập màu để tìm kiếm"
                                                        ng-change="autoSelectColor()">
                                                 <select class="form-control" ng-model="selectedMauSac" multiple
                                                         ng-change="selectColor()">
-                                                    <option ng-repeat="mau in mauSac | filter:colorFilterFunction" ng-value="mau">
+                                                    <option ng-repeat="mau in mauSac | filter:colorFilterFunction"
+                                                            ng-value="mau">
                                                         {{ mau.ten
                                                         }}
                                                     </option>
@@ -75,11 +96,13 @@
                                             <!-- Chọn kích cỡ -->
                                             <div class="mb-3 m-4">
                                                 <label>Kích Cỡ: </label>
-                                                <input type="text" ng-model="sizeSearch" placeholder="Nhập kích cỡ để tìm kiếm"
+                                                <input type="text" ng-model="sizeSearch"
+                                                       placeholder="Nhập kích cỡ để tìm kiếm"
                                                        ng-change="autoSelectSize()">
                                                 <select class="form-control" ng-model="selectedKichCo" multiple
                                                         ng-change="selectSize()">
-                                                    <option ng-repeat="size in kichCo | filter:sizeFilterFunction" ng-value="size">
+                                                    <option ng-repeat="size in kichCo | filter:sizeFilterFunction"
+                                                            ng-value="size">
                                                         {{ size.ten
                                                         }}
                                                     </option>
@@ -99,8 +122,15 @@
                     <div class="card">
                         <!-- Hiển thị bảng theo từng màu -->
                         <div ng-repeat="table in tables" style="margin-top: 20px;">
-                            <h3 class="m-4">Màu {{table.mau.ten}}</h3>
-                            <table class="table table-striped table-hover dt-responsive  nowrap w-75 m-4">
+                            <!-- Header cho từng màu -->
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin: 0 20px;">
+                                <h3 class="m-4">Màu {{table.mau.ten}}</h3>
+                                <button class="btn btn-danger" ng-click="removeMau(table)">Xóa màu</button>
+                            </div>
+
+                            <!-- Bảng hiển thị thông tin kích cỡ -->
+                            <table class="table table-striped table-hover dt-responsive nowrap w-75 m-4">
+                                <thead>
                                 <tr>
                                     <!-- Checkbox chính để chọn tất cả -->
                                     <th>
@@ -114,13 +144,17 @@
                                     <th>Giá bán</th>
                                     <th>Xóa</th>
                                 </tr>
+                                </thead>
+                                <tbody>
                                 <tr ng-repeat="size in table.size">
-                                    <td><input type="checkbox"
+                                    <td>
+                                        <input type="checkbox"
                                                ng-model="form[table.mau.idMauSac][size.idKichCo].selected"
                                                ng-change="syncSelectedValues(table, size)">
                                     </td>
                                     <td>{{size.ten}}</td>
-                                    <td><input ng-model="form[table.mau.idMauSac][size.idKichCo].soLuong"
+                                    <td>
+                                        <input ng-model="form[table.mau.idMauSac][size.idKichCo].soLuong"
                                                type="number"
                                                ng-change="updateAllSelectedValues('soLuong', form[table.mau.idMauSac][size.idKichCo].soLuong, table)">
                                         <!-- Hiển thị lỗi số lượng -->
@@ -129,7 +163,8 @@
                                             {{ form[table.mau.idMauSac][size.idKichCo].errorMessages.soLuong }}
                                         </div>
                                     </td>
-                                    <td><input ng-model="form[table.mau.idMauSac][size.idKichCo].giaNhap"
+                                    <td>
+                                        <input ng-model="form[table.mau.idMauSac][size.idKichCo].giaNhap"
                                                type="number"
                                                ng-change="updateAllSelectedValues('giaNhap', form[table.mau.idMauSac][size.idKichCo].giaNhap, table)">
                                         <!-- Hiển thị lỗi giá nhập -->
@@ -138,7 +173,8 @@
                                             {{ form[table.mau.idMauSac][size.idKichCo].errorMessages.giaNhap }}
                                         </div>
                                     </td>
-                                    <td><input ng-model="form[table.mau.idMauSac][size.idKichCo].giaBan"
+                                    <td>
+                                        <input ng-model="form[table.mau.idMauSac][size.idKichCo].giaBan"
                                                type="number"
                                                ng-change="updateAllSelectedValues('giaBan', form[table.mau.idMauSac][size.idKichCo].giaBan, table)">
                                         <!-- Hiển thị lỗi giá bán -->
@@ -146,13 +182,32 @@
                                              class="text-danger">
                                             {{ form[table.mau.idMauSac][size.idKichCo].errorMessages.giaBan }}
                                         </div>
+
                                     </td>
+                                    <td>
+                                    <td>
                                     <td>
                                         <button class="btn btn-danger" ng-click="removeSize(table, size)">Xóa</button>
                                     </td>
+                                    <td>
+                                        <div class="button-container">
+                                            <!-- Hiển thị lỗi "Sản phẩm chi tiết đã tồn tại" -->
+                                            <div ng-show="form[table.mau.idMauSac][size.idKichCo].errorMessages.exists"
+                                                 class="text-danger">
+                                                <!-- Nút "Cập nhật" khi có lỗi -->
+                                                <button class="btn btn-warning" ng-click="updateSize(table, size)">Cập
+                                                    nhật
+                                                </button>
+                                                <span>{{ form[table.mau.idMauSac][size.idKichCo].errorMessages.exists
+                                                    }}</span>
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
+                                </tbody>
                             </table>
 
+                            <!-- Upload ảnh cho màu -->
                             <div class="mb-3">
                                 <label for="formFile-{{table.mau.idMauSac}}" class="form-label">
                                     Chọn file ảnh cho màu {{table.mau.ten}}
@@ -162,13 +217,13 @@
                                        data-table="{{table}}"
                                        onchange="angular.element(this).scope().onFileSelected1(event)">
                                 <span>{{ nameFile }}</span>
-                                <!-- Hiển thị ảnh đã chọn -->
                                 <img ng-if="table.img.imageSrc"
                                      ng-src="/assets/img/{{table.img.imageSrc}}"
                                      alt="Ảnh xem trước"
                                      style="width: 100px; height: 100px; object-fit: cover; cursor: pointer;">
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -184,7 +239,7 @@
             <div class="row">
                 <div class="col-sm-6">
                     <script>document.write(new Date().getFullYear())</script>
-                    © ALLDY STORE.
+                    © Eighteen Polo.
                 </div>
                 <div class="col-sm-6">
                     <div class="text-sm-end d-none d-sm-block">

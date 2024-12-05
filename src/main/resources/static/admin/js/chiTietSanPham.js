@@ -388,15 +388,35 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
 
 
     $scope.getThuocTinhCT = function () {
-        $http.get("/admin/mau-sac/get-all").then(r => {
+        $http.get("/admin/mau-sac/get-all-by-chi-tiet/" + idSanPham).then(r => {
             $scope.mauSacCT = r.data;
         }).catch(e => console.log(e))
 
 
-        $http.get("/admin/size/get-all").then(r => {
+        $http.get("/admin/size/get-all-by-chi-tiet/" + idSanPham).then(r => {
             $scope.kichCoCT = r.data;
         }).catch(e => console.log(e))
     }
+
+    $scope.getThuocTinhCT();
+
+    $scope.updateKichCo = function () {
+        if (!$scope.idMauSacNhap) {
+            // Nếu không chọn màu sắc, hiển thị tất cả kích cỡ
+            $scope.filteredKichCo = $scope.kichCoCT;
+            return;
+        }
+
+        const idMauSac = $scope.idMauSacNhap.idMauSac;
+
+        $http.get(`/admin/size/get-all-by-mau-sac/` + idSanPham, {
+            params: { idMauSac: idMauSac}
+        }).then(r => {
+            $scope.filteredKichCo = r.data; // Cập nhật danh sách kích cỡ
+            $scope.idKichCoNhap = null; // Reset lựa chọn kích cỡ
+        }).catch(e => console.log(e));
+    };
+
     $scope.updateByNhap = function () {
         var NhapHang = {
             idSanPham: idSanPham,
