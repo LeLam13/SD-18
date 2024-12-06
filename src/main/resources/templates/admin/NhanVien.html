@@ -1,8 +1,10 @@
 <!doctype html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-
       layout:decorate="~{/admin/index}">
+<head>
+    <title>Eighteen Polo | Nhân Viên</title>
+</head>
 <body data-topbar="dark">
 <div class="main-content" layout:fragment="content">
     <style>
@@ -192,11 +194,7 @@
                                     <input type="email" id="email" name="email" class="form-control" required
                                            th:value="${dto != null ? dto.email : ''}">
                                 </div>
-                                <div class="mb-3">
-                                    <label for="maNhanVien">Mã nhân viên:</label>
-                                    <input type="text" id="maNhanVien" name="maNhanVien" class="form-control" required
-                                           th:value="${dto != null ? dto.maNhanVien : ''}">
-                                </div>
+
                                 <div class="mb-3">
                                     <label for="hoTen">Họ tên nhân viên:</label>
                                     <input type="text" id="hoTen" name="hoTen" class="form-control" required

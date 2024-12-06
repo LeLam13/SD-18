@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.security.Principal;
+import java.time.LocalDate;
 
 
 @Controller
@@ -77,14 +78,16 @@ public class NhanVienController {
 
         taikhoan existingTaiKhoan = taikhoanRepo.findById(username)
                 .orElseThrow(() -> new IllegalArgumentException("Tài khoản không tồn tại!"));
-
+        // Kiểm tra định dạng email
         if (email != null && !email.isEmpty()) {
-            if (!email.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
-                model.addAttribute("error", "Email không hợp lệ!");
-                model.addAttribute("nhanVien", nhanVien); // Giữ lại dữ liệu
+            String emailRegex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
+            if (!email.matches(emailRegex)) {
+                model.addAttribute("error", "Email không đúng định dạng!");
+                nhanvien nhanVienFromDB = nhanVienRepository.findByTaikhoanUsername(username);
+                model.addAttribute("nhanVien", nhanVienFromDB); // Giữ lại thông tin nhân viên
                 return "admin/thongTinUser";
             }
-
+        }
             boolean emailExists = taikhoanRepo.existsByEmail(email);
             if (emailExists && !email.equals(existingTaiKhoan.getEmail())) {
                 model.addAttribute("error", "Email đã tồn tại trên hệ thống!");
@@ -94,7 +97,7 @@ public class NhanVienController {
             }
 
             existingTaiKhoan.setEmail(email);
-        }
+
 
         if (password != null && !password.isEmpty()) {
             if (password.length() < 6) {
@@ -135,24 +138,55 @@ public class NhanVienController {
 
 
 
+    private String generateEmployeeCode() {
+        long count = nhanVienRepository.count(); // Đếm số lượng nhân viên trong bảng
+        String prefix = "NV"; // Tiền tố cho mã nhân viên
+        String uniqueCode = prefix + String.format("%05d", count + 1); // Tạo mã NV00001
+        return uniqueCode;
+    }
 
 
     @PostMapping("/addEmployee")
     public String addEmployee(NhanVienRequetsDTO dto, RedirectAttributes redirectAttributes) {
+        // Kiểm tra username
         if (taikhoanRepo.existsByUsername(dto.getUsername())) {
             redirectAttributes.addFlashAttribute("error", "Tên đăng nhập đã tồn tại");
-            redirectAttributes.addFlashAttribute("dto", dto);  // Lưu dữ liệu đã nhập
-            return "redirect:/admin/nhan-vien"; // Quay lại trang danh sách
+            redirectAttributes.addFlashAttribute("dto", dto);
+            return "redirect:/admin/nhan-vien";
         }
 
-        // Kiểm tra xem email có tồn tại không
+        // Kiểm tra email
         if (taikhoanRepo.existsByEmail(dto.getEmail())) {
             redirectAttributes.addFlashAttribute("error", "Email đã tồn tại");
-            redirectAttributes.addFlashAttribute("dto", dto);  // Lưu dữ liệu đã nhập
-            return "redirect:/admin/nhan-vien"; // Quay lại trang danh sách
+            redirectAttributes.addFlashAttribute("dto", dto);
+            return "redirect:/admin/nhan-vien";
         }
 
-        // Tạo tài khoản và nhân viên như bình thường
+        // Validate số điện thoại
+        if (!dto.getSoDienThoai().matches("^0\\d{9}$")) {
+            redirectAttributes.addFlashAttribute("error", "Số điện thoại phải bắt đầu bằng 0 và có 10 số.");
+            redirectAttributes.addFlashAttribute("dto", dto);
+            return "redirect:/admin/nhan-vien";
+        }
+
+        // Validate ngày sinh
+        if (dto.getNgaySinh().isAfter(LocalDate.now())) {
+            redirectAttributes.addFlashAttribute("error", "Ngày sinh không được là ngày trong tương lai.");
+            redirectAttributes.addFlashAttribute("dto", dto);
+            return "redirect:/admin/nhan-vien";
+        }
+
+        // Validate căn cước công dân
+        if (!dto.getSoCanCuocCongDan().matches("\\d{13}")) {
+            redirectAttributes.addFlashAttribute("error", "Căn cước công dân phải có 13 số.");
+            redirectAttributes.addFlashAttribute("dto", dto);
+            return "redirect:/admin/nhan-vien";
+        }
+
+        // Sinh mã nhân viên
+        String maNhanVien = generateEmployeeCode();
+
+        // Tạo tài khoản
         String rawPassword = RandomStringUtils.randomAlphanumeric(8);
         taikhoan newAccount = new taikhoan();
         newAccount.setUsername(dto.getUsername());
@@ -165,8 +199,9 @@ public class NhanVienController {
         newAccount.setVaiTro(role);
         taikhoanRepo.save(newAccount);
 
+        // Tạo nhân viên
         nhanvien newEmployee = new nhanvien();
-        newEmployee.setMaNhanVien(dto.getMaNhanVien());
+        newEmployee.setMaNhanVien(maNhanVien); // Gán mã tự động
         newEmployee.setHoTen(dto.getHoTen());
         newEmployee.setSoDienThoai(dto.getSoDienThoai());
         newEmployee.setNgaySinh(dto.getNgaySinh());
@@ -177,7 +212,7 @@ public class NhanVienController {
         newEmployee.setTaikhoan(newAccount);
         nhanVienRepository.save(newEmployee);
 
-        // Gửi email với mật khẩu
+        // Gửi email
         String subject = "Thông tin tài khoản của bạn";
         String body = "Chào " + dto.getHoTen() + ",\n\n"
                 + "Tài khoản của bạn đã được tạo thành công.\n"
@@ -186,8 +221,11 @@ public class NhanVienController {
                 + "Vui lòng thay đổi mật khẩu sau khi đăng nhập lần đầu tiên.\n\n"
                 + "Cảm ơn bạn!";
         emailService.sendEmail(dto.getEmail(), subject, body);
+
         return "redirect:/admin/nhan-vien";
     }
+
+
 
 
 

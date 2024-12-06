@@ -189,6 +189,15 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
     };
 
 
+    // Hàm xóa table màu
+    $scope.removeMau = function (table) {
+        const index = $scope.tables.indexOf(table);
+        if (index !== -1) {
+            $scope.tables.splice(index, 1);
+        }
+    };
+
+
     // Hàm xóa hàng dựa trên trạng thái của checkbox
     $scope.removeSize = function (table, size) {
         // Kiểm tra và khởi tạo đối tượng nếu chưa có trong $scope.form
@@ -278,60 +287,14 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
 
 
     $scope.create = function () {
-        // if (idSanPham) {
-        //     $http.get("/admin/san-pham/get/" + idSanPham).then(response => {
-        //         let sanPham = response.data;
-        //         // Kiểm tra từng giá trị và gán vào scope
-        //         $scope.checkXuatXu = sanPham.idXuatXu && sanPham.idXuatXu.idXuatXu ? sanPham.idXuatXu.idXuatXu : null;
-        //         $scope.checkChatLieu = sanPham.idChatLieu && sanPham.idChatLieu.idChatLieu ? sanPham.idChatLieu.idChatLieu : null;
-        //         $scope.checkKieuDang = sanPham.idKieuDang && sanPham.idKieuDang.idKieuDang ? sanPham.idKieuDang.idKieuDang : null;
-        //         $scope.checkThuongHieu = sanPham.idThuongHieu && sanPham.idThuongHieu.idThuongHieu ? sanPham.idThuongHieu.idThuongHieu : null;
-        //
-        //
-        //         // Nếu một trong bốn giá trị là null, thực hiện cập nhật
-        //         if (!$scope.checkXuatXu || !$scope.checkChatLieu || !$scope.checkKieuDang || !$scope.checkThuongHieu) {
-        //             // Lấy idHinhAnh đầu tiên từ table màu sắc
-        //             let firstTable = $scope.tables[0]; // lấy table màu sắc đầu tiên (nếu có)
-        //             var firstHinhAnh = {ten: firstTable.img ? firstTable.img.imageSrc : null};
-        //             $scope.getHinhAnh(firstHinhAnh).then(function (hinhAnh) {
-        //                 let idHinhAnh = hinhAnh && hinhAnh.idHinhAnh ? hinhAnh.idHinhAnh : null;
-        //
-        //                 let updateSanPham = {
-        //                     idSanPham: idSanPham,
-        //                     idXuatXu: $scope.selectedXuatXu || null,
-        //                     idChatLieu: $scope.selectedChatLieu || null,
-        //                     idKieuDang: $scope.selectedKieuDang || null,
-        //                     idThuongHieu: $scope.selectedThuongHieu || null,
-        //                     idHinhAnh: idHinhAnh
-        //                 };
-        //
-        //                 $http.post("/admin/san-pham/updateByID/" + idSanPham, updateSanPham).then(function (response) {
-        //                     console.log("Sản phẩm được cập nhật:", response.data);
-        //                 }).catch(function (error) {
-        //                     console.error("Cập nhật sản phẩm không thành công:", error);
-        //                 });
-        //             })
-        //         }
-        //     }).catch(error => {
-        //         console.error("Failed to fetch product details:", error);
-        //     });
-        // }
-
-        // Phần kiểm tra lỗi và xử lý tạo sản phẩm chi tiết giữ nguyên như trước
-        $scope.tables.forEach(function (table) {
-            table.size.forEach(function (size) {
-                if (!$scope.form[table.mau.idMauSac]) $scope.form[table.mau.idMauSac] = {};
-                if (!$scope.form[table.mau.idMauSac][size.idKichCo]) $scope.form[table.mau.idMauSac][size.idKichCo] = {};
-                $scope.form[table.mau.idMauSac][size.idKichCo].errorMessages = {}; // Reset lỗi cho mỗi ô input
-            });
-        });
-
-        // Kiểm tra lỗi nhập liệu
         var hasError = false;
+
+        // Kiểm tra lỗi cho từng table và từng size
         $scope.tables.forEach(function (table) {
             table.size.forEach(function (size) {
-                var sizeForm = $scope.form[table.mau.idMauSac][size.idKichCo];
+                var sizeForm = $scope.form[table.mau.idMauSac] && $scope.form[table.mau.idMauSac][size.idKichCo];
                 if (sizeForm) {
+                    // Kiểm tra lỗi cho từng input
                     if (sizeForm.soLuong <= 0 || sizeForm.soLuong == null) {
                         sizeForm.errorMessages.soLuong = sizeForm.soLuong == null
                             ? "Số lượng không được để trống"
@@ -359,57 +322,129 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
             });
         });
 
+        // Nếu có lỗi, không tiếp tục xử lý
         if (hasError) return;
 
-        // Xử lý thêm sản phẩm chi tiết nếu không có lỗi
-        var SanPhamChiTietList = [];
-        var promises = [];
+        // Kiểm tra sự tồn tại của sản phẩm chi tiết trong cơ sở dữ liệu
+        var checkExistPromises = [];
         $scope.tables.forEach(function (table) {
-            var HinhAnh = {ten: table.img ? table.img.imageSrc : null};
-            var promise = $scope.getHinhAnh(HinhAnh).then(function (hinhAnh) {
-                table.idHinhAnh = hinhAnh && hinhAnh.idHinhAnh ? hinhAnh.idHinhAnh : null;
-            }).catch(function (err) {
-                console.error("Lỗi khi xử lý ảnh:", err);
-                table.idHinhAnh = null;
-            });
-            promises.push(promise);
-        });
-
-        Promise.all(promises).then(function () {
-            $scope.tables.forEach(function (table) {
-                // Đảm bảo chỉ sử dụng hình ảnh của table hiện tại
-                var tableHinhAnh = table.idHinhAnh;
-
-                table.size.forEach(function (size) {
-                    var sizeForm = $scope.form[table.mau.idMauSac][size.idKichCo];
-                    if (sizeForm) {
-                        var SanPhamChiTiet = {
-                            ma: $scope.generateRandomString(8),
+            table.size.forEach(function (size) {
+                var sizeForm = $scope.form[table.mau.idMauSac] && $scope.form[table.mau.idMauSac][size.idKichCo];
+                if (sizeForm) {
+                    var promise = $http.get("/admin/san-pham/chi-tiet/check-existence/" + idSanPham, {
+                        params: {
                             idMauSac: table.mau.idMauSac,
-                            idKichCo: size.idKichCo,
-                            idSanPham: idSanPham,
-                            soLuong: sizeForm.soLuong,
-                            giaNhap: sizeForm.giaNhap,
-                            giaBan: sizeForm.giaBan,
-                            idHinhAnh: tableHinhAnh // Sử dụng idHinhAnh từ table hiện tại
-                        };
-                        SanPhamChiTietList.push(SanPhamChiTiet);
-                    }
+                            idKichCo: size.idKichCo
+                        }
+                    }).then(function (response) {
+                        console.log("check spct:", response.data)
+                        if (response.data) {
+                            // Kiểm tra nếu sizeForm tồn tại trước khi thay đổi thuộc tính
+                            if (!sizeForm.errorMessages) {
+                                sizeForm.errorMessages = {};
+                            }
+                            sizeForm.errorMessages.exists = "Sản phẩm chi tiết đã tồn tại!";
+                            hasError = true;
+                        }
+                    }).catch(function (err) {
+                        console.error("Lỗi khi kiểm tra sự tồn tại của sản phẩm chi tiết:", err);
+                    });
+                    checkExistPromises.push(promise);
+                }
+            });
+        });
+
+        // Nếu có lỗi tồn tại, không tiếp tục
+        if (hasError) return;
+
+        // Chờ kiểm tra sự tồn tại hoàn tất
+        Promise.all(checkExistPromises).then(function () {
+            if (hasError) return; // Nếu có lỗi tồn tại, không tiếp tục
+
+            // Tiếp tục thực hiện các bước tạo sản phẩm chi tiết
+            var SanPhamChiTietList = [];
+            var promises = [];
+            $scope.tables.forEach(function (table) {
+                var HinhAnh = {ten: table.img ? table.img.imageSrc : null};
+                var promise = $scope.getHinhAnh(HinhAnh).then(function (hinhAnh) {
+                    table.idHinhAnh = hinhAnh && hinhAnh.idHinhAnh ? hinhAnh.idHinhAnh : null;
+                }).catch(function (err) {
+                    console.error("Lỗi khi xử lý ảnh:", err);
+                    table.idHinhAnh = null;
                 });
+                promises.push(promise);
             });
 
-            if (SanPhamChiTietList.length > 0) {
-                $http.post("/admin/san-pham/chi-tiet/add", SanPhamChiTietList).then(function (r) {
-                    alert("Thêm sản phẩm chi tiết thành công!");
-                }).catch(function (err) {
-                    console.error("Thêm sản phẩm không thành công", err);
+            Promise.all(promises).then(function () {
+                $scope.tables.forEach(function (table) {
+                    var tableHinhAnh = table.idHinhAnh;
+
+                    table.size.forEach(function (size) {
+                        var sizeForm = $scope.form[table.mau.idMauSac] && $scope.form[table.mau.idMauSac][size.idKichCo];
+                        if (sizeForm) {
+                            var SanPhamChiTiet = {
+                                ma: $scope.generateRandomString(8),
+                                idMauSac: table.mau.idMauSac,
+                                idKichCo: size.idKichCo,
+                                idSanPham: idSanPham,
+                                soLuong: sizeForm.soLuong,
+                                giaNhap: sizeForm.giaNhap,
+                                giaBan: sizeForm.giaBan,
+                                idHinhAnh: tableHinhAnh
+                            };
+                            SanPhamChiTietList.push(SanPhamChiTiet);
+                        }
+                    });
                 });
-            } else {
-                console.error("Không có sản phẩm chi tiết hợp lệ để thêm.");
-            }
+
+                if (SanPhamChiTietList.length > 0) {
+                    $http.post("/admin/san-pham/chi-tiet/add", SanPhamChiTietList).then(function (r) {
+                        alert("Thêm sản phẩm chi tiết thành công!");
+                    }).catch(function (err) {
+                        console.error("Thêm sản phẩm không thành công", err);
+                    });
+                } else {
+                    console.error("Không có sản phẩm chi tiết hợp lệ để thêm.");
+                }
+            }).catch(function (err) {
+                console.error("Lỗi khi xử lý các ảnh:", err);
+            });
         }).catch(function (err) {
-            console.error("Lỗi khi xử lý các ảnh:", err);
+            console.error("Lỗi khi kiểm tra sự tồn tại của sản phẩm chi tiết:", err);
         });
+    };
+
+
+    $scope.updateSize = function (table, size) {
+        // Logic cập nhật sản phẩm chi tiết, ví dụ:
+        var sizeForm = $scope.form[table.mau.idMauSac][size.idKichCo];
+        if (sizeForm) {
+            // Cập nhật dữ liệu cho sizeForm
+            // Ví dụ: gửi yêu cầu HTTP để cập nhật thông tin vào database
+            var updateCTSP = {
+                idSanPham: idSanPham,
+                idMauSac: table.mau.idMauSac,
+                idKichCo: size.idKichCo,
+                soLuong: sizeForm.soLuong,
+                giaNhap: sizeForm.giaNhap,
+                giaBan: sizeForm.giaBan
+            }
+            console.log("updateCTSP",updateCTSP);
+            $http.post("/admin/san-pham/chi-tiet/update-by-size/" + idSanPham, updateCTSP).then(function (response) {
+                
+                // Xóa dòng tương ứng trong bảng
+                var index = table.size.indexOf(size);
+                if (index > -1) {
+                    table.size.splice(index, 1); // Xóa phần tử tại vị trí index
+                }
+
+                // Có thể xóa lỗi hoặc cập nhật lại các thông tin cần thiết
+                delete sizeForm.errorMessages.exists;
+            }).catch(function (err) {
+                // Xử lý khi có lỗi
+                console.error("Lỗi khi cập nhật sản phẩm chi tiết:", err);
+            });
+        }
     };
 
 

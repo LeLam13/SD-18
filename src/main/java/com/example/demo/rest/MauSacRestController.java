@@ -50,6 +50,12 @@ public class MauSacRestController {
         return ResponseEntity.ok(ms);
     }
 
+    @GetMapping("/admin/mau-sac/get-all-by-chi-tiet/{idSanPham}")
+    public ResponseEntity<?> getAllbyCT(@PathVariable("idSanPham") Integer idSanPham) {
+        List<MauSac> ms = mauSacService.getAllbyCT(idSanPham);
+        return ResponseEntity.ok(ms);
+    }
+
 
     @GetMapping("/mau-sac/get-all")
     public ResponseEntity<?> getAll3() {
