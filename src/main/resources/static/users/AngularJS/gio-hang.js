@@ -543,7 +543,8 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
         console.log("check user view gio hang: not null",$scope.username);
         //hiển thị thông tin khách hàng khi đăng nhập
         $('#hoVaTen').val(response.data.hoTen);
-        $('#email').val(response.data.email);
+        //$('#email').val(response.data.email);
+        $('#email').val(response.data.taikhoan.email);
         $('#soDienThoai').val(response.data.soDienThoai);
 
         //lấy giỏ hàng chi tiết
