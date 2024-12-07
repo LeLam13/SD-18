@@ -343,7 +343,7 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
                             if (!sizeForm.errorMessages) {
                                 sizeForm.errorMessages = {};
                             }
-                            sizeForm.errorMessages.exists = "Sản phẩm chi tiết đã tồn tại!";
+                            sizeForm.errorMessages.exists = "Đã tồn tại!";
                             hasError = true;
                         }
                     }).catch(function (err) {
