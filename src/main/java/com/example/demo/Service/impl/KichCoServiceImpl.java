@@ -8,6 +8,9 @@ import com.example.demo.repo.KichCoRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -47,6 +50,7 @@ public class KichCoServiceImpl implements KichCoService {
         kc.setTen(kichCoRequestDTO.getTen());
         kc.setCreateDate(date);
         kc.setTrangThai(true);
+        kc.setCreateBy(getCurrentUsername());
         return kichCoRepo.save(kc);
     }
 
@@ -55,6 +59,7 @@ public class KichCoServiceImpl implements KichCoService {
         KichCo kc = kichCoRepo.findByMa(kichCoRequestDTO.getMa());
         kc.setTen(kichCoRequestDTO.getTen());
         kc.setUpdateDate(date);
+        kc.setUpdateBy(getCurrentUsername());
         return kichCoRepo.save(kc);
     }
 
@@ -84,5 +89,23 @@ public class KichCoServiceImpl implements KichCoService {
     @Override
     public Page<KichCo> search(String query, Pageable pageable) {
         return kichCoRepo.searchIgnoreCaseAndDiacritics(query, pageable);
+    }
+
+    public String getCurrentUsername() {
+        String username = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetails) {
+                // Trường hợp principal là UserDetails
+                username = ((UserDetails) principal).getUsername();
+                System.out.println("Username (UserDetails): " + username);
+            } else {
+                // Trường hợp principal là chuỗi (vd: OAuth2)
+                username = principal.toString();
+                System.out.println("Username (String): " + username);
+            }
+        }
+        return username;
     }
 }
