@@ -86,7 +86,24 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval,$sce, $timeout)
         $('#modal-status').modal('show');
     }
 
+    $scope.statusOrder = [1, 7, 2, 3, 5];
+    $scope.currentStatus = 1;
+
     $scope.updateOrderStatus = function (idTrangThai){
+        const currentIndex = $scope.statusOrder.indexOf($scope.currentStatus);
+        const newIndex = $scope.statusOrder.indexOf(idTrangThai);
+        // Kiểm tra nếu trạng thái mới nằm trước trạng thái hiện tại
+        if (newIndex <= currentIndex) {
+            $scope.showNotification('Không thể quay lại trạng thái trước hoặc cập nhật trạng thái hiện tại!', 'error');
+            return;
+        }
+
+        // Nếu trạng thái hiện tại đã là 5, không cho phép cập nhật
+        if ($scope.currentStatus === 5) {
+            $scope.showNotification('Không thể cập nhật vì đơn hàng đã hoàn thành!', 'error');
+            return;
+        }
+
         var chichu = $('#ghi-chu').val();
         $scope.dataStatus ={
             idDonHang: $scope.idDonHang,
@@ -108,6 +125,7 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval,$sce, $timeout)
         }) .then(function(response) {
             console.log("status after update: ",response.data);
             //$scope.showStatusOrderAfterUpdate(response);
+            $scope.currentStatus = idTrangThai;
             $scope.getAllOrder();
             $scope.showNotification('Cập Nhật trạng Thái Thành công!','success');
             $('#modal-status').modal('hide');
@@ -165,6 +183,7 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval,$sce, $timeout)
                 .then(function(response) {
                     // Cập nhật idTrangThai từ phản hồi server
                     const newTrangThai = response.data.trangThai.idTrangThai;
+                    $scope.currentStatus = response.data.trangThai.idTrangThai ;
                     // console.log("newTrangThai",newTrangThai);
                     // console.log("newTrangThai",$scope.idTrangThai);
                     // Chỉ cập nhật giao diện nếu trạng thái thay đổi
