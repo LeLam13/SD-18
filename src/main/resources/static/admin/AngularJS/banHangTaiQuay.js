@@ -47,7 +47,7 @@ app.controller("banhang-ctrl", function ($scope, $http,$sce,$timeout) {
         idKhachHang: 1,
         idPhuongThucThanhToan: 1,
         idKhuyenMai: 1,
-        loaiDonHang: 1
+        loaiDonHang: 3
     };
 
     $scope.khachHangById={};

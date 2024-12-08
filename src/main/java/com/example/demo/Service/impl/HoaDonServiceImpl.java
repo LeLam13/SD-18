@@ -149,6 +149,9 @@ public class HoaDonServiceImpl implements HoaDonService {
         donHang.setDiaChiNhan(hoaDon.getDiaChiKhachNhan());
         donHang.setPhuongThucNhan(hoaDon.getPhuongThucNhan());
         donHang.setLoaiDonHang(hoaDon.getLoaiDonHang());
+        LocalDate localDate1 = LocalDate.now();
+        donHang.setUpdateDate(localDate1);
+        donHang.setUpdateBy(getNV.getHoTen());
         donHangRepo.save(donHang);
         //System.out.println("check đơn hàng update: "+donHang);
 
