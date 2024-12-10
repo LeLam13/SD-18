@@ -266,9 +266,9 @@ public class DonHangServiceImpl implements DonHangService {
 
         // số lượng cập nhật > sô lượng có
         SanPhamChiTiet oldSacPhamCT = sanPhamChiTietRepo.findById(donHangChiTietRequestDTO.getIdSanPhamChiTiet()).get();
-        if (oldSacPhamCT.getSoLuong() < donHangChiTietRequestDTO.getSoLuong()) {
-            throw new RuntimeException("Số lượng sản phẩm không đủ!");
-        }
+//        if (oldSacPhamCT.getSoLuong() < donHangChiTietRequestDTO.getSoLuong()) {
+//            throw new RuntimeException("Số lượng sản phẩm không đủ!");
+//        }
         // cập nhật số lượng của sản phẩm chi tiết
         oldSacPhamCT.setSoLuong(oldSacPhamCT.getSoLuong() + donHangChiTietRequestDTO.getSoLuong());
         sanPhamChiTietRepo.save(oldSacPhamCT);
