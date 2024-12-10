@@ -241,8 +241,8 @@
 
             .button-group {
                 display: flex;
-                gap: 8px;
-                margin-top: 16px;
+                gap: 6px;
+                margin-top: 18px;
             }
 
             .btn {
@@ -267,7 +267,7 @@
         <div class="page-content" ng-app="trahang-app" ng-controller="trahang-ctrl">
             <div class="container-fluid">
                 <div class="row show">
-                    <h2>Theo Dõi Đơn Hàng</h2>
+                    <h2>Bộ Lọc Tìm Kiếm</h2>
                     <div class="search-form">
                         <div class="form-group">
                             <label for="maHoaDon">Tìm kiếm:</label>
@@ -275,18 +275,34 @@
                                     type="text"
                                     id="maHoaDon"
                                     class="form-control"
+                                    ng-model="inputData"
+                                    ng-model-options="{ debounce: 500 }" ng-change="searchMa()"
                                     placeholder="Nhập mã hóa đơn"
                             />
                         </div>
 
                         <div class="form-group">
                             <label for="loaiDon">Loại đơn:</label>
-                            <select id="loaiDon" class="form-control">
+                            <select id="loaiDon" class="form-control" ng-change="searchLoaiDonHang()" ng-model="selectedLoaiDon">
                                 <option value="">-Loại đơn-</option>
+                                <option value="1">Đơn hàng tại quầy</option>
+                                <option value="2">Đơn hàng online</option>
+                                <option value="3">Đơn hàng chờ</option>
                                 <!-- Thêm các tùy chọn khác tại đây -->
                             </select>
                         </div>
 
+                        <div class="form-group">
+                            <label for="trangThai">Trạng thái:</label>
+                            <select id="trangThai" class="form-control">
+                                <option value="">-Loại đơn-</option>
+                                <option value="1">Đơn hàng tại quầy</option>
+                                <option value="2">Đơn hàng online</option>
+                                <option value="3">Đơn hàng chờ</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="search-form">
                         <div class="form-group">
                             <label for="ngayBatDau">Ngày bắt đầu:</label>
                             <input
@@ -304,9 +320,10 @@
                                     id="ngayKetThuc"
                                     class="form-control"
                                     placeholder="dd/mm/yyyy"
+                                    ng-model="ngayKetThuc"
+                                    ng-change="searchByDateRange()"
                             />
                         </div>
-
                         <div class="button-group">
                             <button class="btn btn-primary">Tìm kiếm</button>
                             <button class="btn btn-danger">Xóa</button>
@@ -356,10 +373,6 @@
                                             <i class="bi bi-pencil-square"></i>
                                         </button>
                                     </a>
-
-
-
-
                                 </td>
                             </tr>
                             </tbody>

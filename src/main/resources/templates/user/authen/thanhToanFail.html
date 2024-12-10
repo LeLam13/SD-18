@@ -12,13 +12,73 @@
 
 <!-- start body -->
 <div class="body py-5">
+    <style>
+        .order-fail {
+            background: #fff;
+            width: 400px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .order-fail .header .logo {
+            max-width: 100px;
+            margin-bottom: 20px;
+        }
+
+        .order-fail .content .order-value {
+            color: red;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .order-fail .fail-icon {
+            font-size: 48px;
+            color: red;
+            margin: 10px 0;
+        }
+
+        .order-fail h1 {
+            color: #333;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .order-fail .error-message {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        .order-fail .retry-btn {
+            background-color: #d9534f;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .order-fail .retry-btn:hover {
+            background-color: #c9302c;
+        }
+
+    </style>
     <div class="container">
-        <div class="w-50 m-auto">
-            <!-- Thêm lớp "my-4" để tạo ra khoảng cách trên và dưới tiêu đề trang -->
-            <h1 class="my-3 text-danger text-center">Thanh toán thất bại</h1>
-            <!-- Sử dụng lớp "alert" và "alert-danger" để tạo ra thông báo lỗi -->
-            <!-- Sử dụng lớp "table" và "table-bordered" để tạo ra bảng hiển thị thông tin chi tiết đơn hàng -->
-            <a href="/trang-chu" class="btn btn-primary">Về Trang Chủ</a>
+        <div class="order-fail">
+            <div class="header">
+                <img src="/images/vnpay-logo.png" alt="VN Pay" class="logo">
+            </div>
+            <div class="content">
+                <p class="order-value">Rất tiếc, giao dịch của bạn đã không thành công.</p>
+                <div class="fail-icon">✘</div>
+                <h1>Thanh toán thất bại!</h1>
+                <p class="error-message">Vui lòng kiểm tra lại thông tin thanh toán hoặc thử lại sau.</p>
+                <a href="/home" class="retry-btn">Quay lại trang chủ</a>
+            </div>
         </div>
     </div>
 </div>

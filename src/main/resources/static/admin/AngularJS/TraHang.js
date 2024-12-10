@@ -231,91 +231,6 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval,$sce, $timeout)
     $scope.hideStatusOrder = function (){
         $('#step-6').hide();
     }
-    //hiển thị trạng thái
-    $scope.showStatusOrder = function (response){
-        var itemOrderStatus = null
-        var index =0;
-        response.data.forEach((item, index) => {
-            //console.log(`Order ${index} Detail:`, item.donHang);
-            itemOrderStatus = item.donHang;
-            //console.log(`Order ${index+1} Detail:`, itemOrder);
-        });
-        $('#order-tracking').show();
-        if(itemOrderStatus.phuongThucNhan ===1 && itemOrderStatus.trangThai.idTrangThai ===5){
-            $('#step-1').hide();
-            $('#step-2').hide();
-            $('#step-3').hide();
-            $('#step-4').show();
-        }
-
-        if(itemOrderStatus.phuongThucNhan ===2 && itemOrderStatus.trangThai.idTrangThai ===2){
-            console.log("check log status")
-            $('#step-1').show();
-            $('#step-2').hide();
-            $('#step-3').hide();
-            $('#step-4').hide();
-        }
-        if(itemOrderStatus.phuongThucNhan ===2 && itemOrderStatus.trangThai.idTrangThai ===3){
-            console.log("check log status")
-            $('#step-1').show();
-            $('#step-2').show();
-            $('#step-3').hide();
-            $('#step-4').hide();
-        }
-        if(itemOrderStatus.phuongThucNhan ===2 && itemOrderStatus.trangThai.idTrangThai ===4){
-            console.log("check log status")
-            $('#step-1').show();
-            $('#step-2').show();
-            $('#step-3').show();
-            $('#step-4').hide();
-        }
-        if(itemOrderStatus.phuongThucNhan ===2 && itemOrderStatus.trangThai.idTrangThai ===5){
-            console.log("check log status")
-            $('#step-1').show();
-            $('#step-2').show();
-            $('#step-3').show();
-            $('#step-4').show();
-        }
-    }
-
-    $scope.showStatusOrderAfterUpdate = function (response){
-        var itemOrderStatus = response.data;
-        if(itemOrderStatus.phuongThucNhan ===1 && itemOrderStatus.trangThai.idTrangThai ===5){
-            $('#step-1').hide();
-            $('#step-2').hide();
-            $('#step-3').hide();
-            $('#step-4').show();
-        }
-
-        if(itemOrderStatus.phuongThucNhan ===2 && itemOrderStatus.trangThai.idTrangThai ===2){
-            console.log("check log status")
-            $('#step-1').show();
-            $('#step-2').hide();
-            $('#step-3').hide();
-            $('#step-4').hide();
-        }
-        if(itemOrderStatus.phuongThucNhan ===2 && itemOrderStatus.trangThai.idTrangThai ===3){
-            console.log("check log status")
-            $('#step-1').show();
-            $('#step-2').show();
-            $('#step-3').hide();
-            $('#step-4').hide();
-        }
-        if(itemOrderStatus.phuongThucNhan ===2 && itemOrderStatus.trangThai.idTrangThai ===4){
-            console.log("check log status")
-            $('#step-1').show();
-            $('#step-2').show();
-            $('#step-3').show();
-            $('#step-4').hide();
-        }
-        if(itemOrderStatus.phuongThucNhan ===2 && itemOrderStatus.trangThai.idTrangThai ===5){
-            console.log("check log status")
-            $('#step-1').show();
-            $('#step-2').show();
-            $('#step-3').show();
-            $('#step-4').show();
-        }
-    }
 
     //phân trang
     $scope.getPagedProducts = function () {
@@ -350,6 +265,123 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval,$sce, $timeout)
         return $scope.listDonHang.length > $scope.pageSize;
     };
 
+    //filter
+    var inputData = null;
+    $scope.searchMa = function (){
+        $scope.stopAutoCheck();
+        var maHD = $('#maHoaDon').val().trim();
+
+        $http({
+            method: 'GET',
+            url: '/don-hang/tim-kiem-ma-don-hang', // URL cơ bản
+            params: { maHD: maHD } // Truyền trực tiếp tham số
+        }).then(function (response) {
+            if(!response || !response.data || response.data.length === 0){
+                $scope.getAllOrder();
+            }else {
+                $scope.listDonHang = response.data;
+                console.log("get all order search: ",response.data);
+                $scope.totalPages = Math.ceil($scope.listDonHang.length / $scope.pageSize); // Tổng số trang
+            }
+        }).catch(function (error) {
+            console.error("Có lỗi khi lấy trạng thái", error);
+        })
+    }
+    $scope.selectedLoaiDon = null;
+    $scope.searchLoaiDonHang = function (){
+        $scope.stopAutoCheck();
+        var loaiDonHang = $scope.selectedLoaiDon; // Lấy giá trị từ ng-model
+        // if (!loaiDonHang) {
+        //     $scope.showNotification("Vui lòng chọn loại đơn", "error");
+        //     return;
+        // }
+        $http({
+            method: 'GET',
+            url: '/don-hang/tim-kiem-loai-don-hang', // URL cơ bản
+            params: { loaiDonHang: loaiDonHang } // Truyền trực tiếp tham số
+        }).then(function (response) {
+            if(response && response.data === null){
+                $scope.getAllOrder();
+            }else {
+                $scope.listDonHang = response.data;
+                console.log("get all order search: ",response.data);
+                $scope.totalPages = Math.ceil($scope.listDonHang.length / $scope.pageSize); // Tổng số trang
+            }
+        }).catch(function (error) {
+            console.error("Có lỗi khi lấy trạng thái", error);
+        })
+    }
+
+    $scope.ngayBatDau = null;
+    $scope.ngayKetThuc  =null;
+    flatpickr("#ngayBatDau", {
+        dateFormat: "d/m/Y",
+        // minDate: "today", // Chỉ cho phép chọn ngày từ hôm nay trở đi
+        // disableMobile: true, // Vô hiệu hóa datepicker trên thiết bị di động (nếu bạn muốn sử dụng giao diện riêng cho di động)
+    });
+    // Khởi tạo Flatpickr cho trường Ngày kết thúc
+    flatpickr("#ngayKetThuc", {
+        dateFormat: "d/m/Y",  // Định dạng ngày hiển thị
+    });
+    $scope.searchByDateRange = function () {
+        $scope.stopAutoCheck();
+        // Lấy giá trị từ các trường nhập liệu
+        const ngayBatDau = document.getElementById("ngayBatDau").value.trim();
+        const ngayKetThuc = document.getElementById("ngayKetThuc").value.trim();
+
+        // Biểu thức kiểm tra định dạng ngày dd/MM/yyyy
+        const dateRegex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[012])\/\d{4}$/;
+
+        // Kiểm tra định dạng ngày
+        if (ngayBatDau && !dateRegex.test(ngayBatDau)) {
+            $scope.showNotification("Ngày bắt đầu không đúng định dạng dd/MM/yyyy", "error");
+            return;
+        }
+        if (ngayKetThuc && !dateRegex.test(ngayKetThuc)) {
+            $scope.showNotification("Ngày kết thúc không đúng định dạng dd/MM/yyyy", "error");
+            return;
+        }
+
+        // Kiểm tra thứ tự ngày bắt đầu và ngày kết thúc
+        if (ngayBatDau && ngayKetThuc) {
+            const startDate = new Date(ngayBatDau.split("/").reverse().join("-"));
+            const endDate = new Date(ngayKetThuc.split("/").reverse().join("-"));
+            if (startDate > endDate) {
+                $scope.showNotification("Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc", "error");
+                return;
+            }
+        }
+
+        // Chuyển đổi ngày thành định dạng phù hợp với API
+        const params = {
+            ngayBatDau: ngayBatDau || null,
+            ngayKetThuc: ngayKetThuc || null,
+        };
+
+        // Gửi yêu cầu tìm kiếm
+        $http({
+            method: "GET",
+            url: "/don-hang/tim-kiem-theo-ngay",
+            params: params,
+        }).then(function (response) {
+            if (response.data && response.data.length > 0) {
+                $scope.listDonHang = response.data;
+                console.log("Kết quả tìm kiếm:", response.data);
+
+                // Tính tổng số trang dựa trên dữ liệu trả về
+                $scope.totalPages = Math.ceil($scope.listDonHang.length / $scope.pageSize);
+            } else {
+                $scope.showNotification("Không tìm thấy đơn hàng trong khoảng thời gian này", "info");
+                $scope.listDonHang = [];  // Nếu không có kết quả, đảm bảo mảng danh sách trống
+                $scope.totalPages = 0;  // Cập nhật lại số trang
+            }
+        }).catch(function (error) {
+            console.error("Lỗi trong quá trình tìm kiếm:", error);
+            $scope.showNotification("Có lỗi xảy ra trong quá trình tìm kiếm", "error");
+        });
+    };
+
+
     //load data
     $scope.hideStatusOrder();
     $scope.getAllOrder();
@@ -362,9 +394,15 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval,$sce, $timeout)
     // intervalPromiseDH = $interval(function() {
     //     $scope.getAllOrder();
     // }, 1500);
+    $scope.isAutoCheckRunning = false;
     $scope.startAutoCheckOrder = function() {
+        $scope.isAutoCheckRunning = true;
         // Hàm quản lý chu kỳ chạy và dừng
         function manageInterval() {
+            if (!$scope.isAutoCheckRunning) {
+                console.log("Tự động kiểm tra đã bị dừng.");
+                return;
+            }
             // Khởi động $interval nếu chưa có
             if (!intervalPromiseDH) {
                 intervalPromiseDH = $interval(function() {
@@ -381,9 +419,12 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval,$sce, $timeout)
                     intervalPromiseDH = null;
                     console.log("Tạm dừng tự động kiểm tra sau " + pauseTime + "ms.");
                 }
-
+                // Khởi động lại sau resumeTime nếu cần
+                if ($scope.isAutoCheckRunning) {
+                    controlTimeout = $timeout(manageInterval, resumeTime);
+                }
                 // Khởi động lại sau resumeTime
-                controlTimeout = $timeout(manageInterval, resumeTime); // Sử dụng thời gian khởi động lại được cấu hình
+                //controlTimeout = $timeout(manageInterval, resumeTime); // Sử dụng thời gian khởi động lại được cấu hình
             }, pauseTime); // Sử dụng thời gian tạm dừng được cấu hình
         }
 
@@ -392,6 +433,20 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval,$sce, $timeout)
     };
     $scope.startAutoCheckOrder();
 
+    $scope.stopAutoCheck = function (){
+        console.log("Hàm stopAutoCheck được gọi.");
+        $scope.isAutoCheckRunning = false;
+        if (intervalPromiseDH) {
+            $interval.cancel(intervalPromiseDH);
+            intervalPromiseDH = null;
+            console.log("Đã dừng $interval khi chuyển trang.");
+        }
+        if (controlTimeout) {
+            $timeout.cancel(controlTimeout);
+            controlTimeout = null;
+            console.log("Đã dừng $timeout khi chuyển trang.");
+        }
+    }
     // Hủy $interval và $timeout khi controller bị hủy
     $scope.$on('$destroy', function() {
         if (intervalPromiseDH) {

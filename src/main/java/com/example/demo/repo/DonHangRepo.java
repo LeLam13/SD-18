@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface DonHangRepo extends JpaRepository<DonHang, Integer> {
@@ -35,7 +36,16 @@ public interface DonHangRepo extends JpaRepository<DonHang, Integer> {
     @Query("SELECT d FROM DonHang d WHERE d.khachHang.idKhachHang = :idKhachHang ORDER BY d.idDonHang DESC")
     List<DonHang> findByKhachHangId(@Param("idKhachHang") Long idKhachHang);
 
-    @Query("SELECT dh FROM DonHang dh WHERE LOWER(dh.maDonHang) LIKE LOWER(CONCAT('%', :maDonHang, '%'))")
+    @Query("SELECT dh FROM DonHang dh WHERE LOWER(dh.maDonHang) LIKE LOWER(CONCAT('%', :maDonHang, '%')) ORDER BY dh.idDonHang DESC")
     List<DonHang> searchByMaDonHang(@Param("maDonHang") String maDonHang);
+
+    @Query(value = "SELECT * FROM don_hang dh WHERE dh.create_date BETWEEN :startDate AND :endDate ORDER BY dh.id_don_hang DESC", nativeQuery = true)
+    List<DonHang> findDonHangByDateRangeNative(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+
+    @Query(value = "SELECT * FROM don_hang dh WHERE dh.loai_don_hang = :loaiDonHang ORDER BY dh.id_don_hang DESC", nativeQuery = true)
+    List<DonHang> findDonHangByLoaiDonHangNative(@Param("loaiDonHang") Integer loaiDonHang);
+
+
+
 
 }
