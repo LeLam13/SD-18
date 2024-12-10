@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -24,7 +25,7 @@ public class ThanhToanVNPayController {
 //    HoaDon hoaDon;
 
     @GetMapping("/vnpay/response")
-    public String handleVNPayResponse(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public String handleVNPayResponse(HttpServletRequest request, Model model) throws IOException {
         // Lấy các tham số từ VNPay
         String vnp_ResponseCode = request.getParameter("vnp_ResponseCode");
         String amount = request.getParameter("vnp_Amount");
@@ -58,6 +59,9 @@ public class ThanhToanVNPayController {
             System.out.println("check tạo hoá đon = hoaDonOnlineRequestDTO: "+hoaDonOnlineRequestDTO);
             HoaDon hoaDon = donHangOnlineService.createInvoice(hoaDonOnlineRequestDTO,"ss");
             System.out.println("test get hoaDon: "+hoaDon);
+            model.addAttribute("amount", amountInVND);
+            model.addAttribute("orderId", hoaDon.getDonHang().getMaDonHang());
+            model.addAttribute("username", username);
             return "/user/authen/thanhToanSuccess";
         } else {
             // Thất bại, chuyển hướng đến trang faild

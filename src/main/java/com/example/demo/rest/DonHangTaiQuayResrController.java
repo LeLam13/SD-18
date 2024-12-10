@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -41,5 +43,30 @@ public class DonHangTaiQuayResrController {
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());  // Trả về lỗi với thông báo
         }
+    }
+    @GetMapping("/don-hang/tim-kiem-ma-don-hang")
+    public  ResponseEntity<?> searchMaDonHang(@RequestParam("maHD") String maHD){
+        List<DonHang> donHangList = donHangTaiQuayService.searchMaDonhang(maHD);
+        return ResponseEntity.ok(donHangList);
+    }
+    @GetMapping("/don-hang/tim-kiem-loai-don-hang")
+    public  ResponseEntity<?> searchLoaiDonHang(@RequestParam("loaiDonHang") Integer loaiDonHang){
+        List<DonHang> donHangList = donHangTaiQuayService.searchLoaiDonhang(loaiDonHang);
+        return ResponseEntity.ok(donHangList);
+    }
+
+    @GetMapping("/don-hang/tim-kiem-theo-ngay")
+    public  ResponseEntity<?> searchNgayTao(@RequestParam(required = false) String ngayBatDau,
+                                            @RequestParam(required = false) String ngayKetThuc){
+        // Định dạng ngày "dd/MM/yyyy" để chuyển đổi chuỗi từ request
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        // Chuyển đổi chuỗi thành LocalDate
+        LocalDate startDate = (ngayBatDau != null && !ngayBatDau.isEmpty())
+                ? LocalDate.parse(ngayBatDau, formatter) : null;
+        LocalDate endDate = (ngayKetThuc != null && !ngayKetThuc.isEmpty())
+                ? LocalDate.parse(ngayKetThuc, formatter) : null;
+
+       List<DonHang> donHangList = donHangTaiQuayService.searchNgayTao(startDate,endDate);
+        return ResponseEntity.ok(donHangList);
     }
 }
