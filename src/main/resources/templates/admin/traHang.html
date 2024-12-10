@@ -295,10 +295,10 @@
                         <div class="form-group">
                             <label for="trangThai">Trạng thái:</label>
                             <select id="trangThai" class="form-control">
-                                <option value="">-Loại đơn-</option>
-                                <option value="1">Đơn hàng tại quầy</option>
-                                <option value="2">Đơn hàng online</option>
-                                <option value="3">Đơn hàng chờ</option>
+                                <option value="">-Trạng thái-</option>
+                                <option ng-repeat="status in listStatus" value="{{status.idTrangThai}}">
+                                    {{status.tenTrangThai}}
+                                </option>
                             </select>
                         </div>
                     </div>

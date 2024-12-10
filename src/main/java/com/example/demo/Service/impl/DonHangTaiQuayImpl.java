@@ -77,4 +77,9 @@ public class DonHangTaiQuayImpl implements DonHangTaiQuayService {
     public List<DonHang> searchNgayTao(LocalDate startDate, LocalDate endDate) {
         return donHangRepo.findDonHangByDateRangeNative(startDate,endDate);
     }
+
+    @Override
+    public List<TrangThai> getAllStatus() {
+        return trangThaiRepo.findAll();
+    }
 }

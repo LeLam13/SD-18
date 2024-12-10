@@ -381,10 +381,22 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval,$sce, $timeout)
         });
     };
 
+    //lấy tất cả trạng thái
+    $scope.listStatus = [];
+    $scope.getAllStatus = function (){
+        $http.get("/don-hang/lay-trang-thai").then(function (response) {
+            $scope.listStatus = response.data;
+            console.log("check $scope.listStatus: ",$scope.listStatus);
+        }).catch(function (errors) {
+            console.error("Có lỗi xảy ra trong quá trình ",errors);
+            $scope.showNotification("Có lỗi xảy ra trong quá trình ", "error");
+        })
+    }
 
     //load data
     $scope.hideStatusOrder();
     $scope.getAllOrder();
+    $scope.getAllStatus();
 
     var intervalPromiseDH; // Biến quản lý $interval
     var controlTimeout;    // Biến quản lý $timeout

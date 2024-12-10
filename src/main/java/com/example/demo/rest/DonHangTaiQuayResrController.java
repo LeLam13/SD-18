@@ -4,6 +4,7 @@ import com.example.demo.Service.DonHangTaiQuayService;
 import com.example.demo.dto.request.DonHangTaiQuayStatusRequestDTO;
 import com.example.demo.entity.DonHang;
 import com.example.demo.entity.DonHangChiTiet;
+import com.example.demo.entity.TrangThai;
 import com.example.demo.entity.khachhang;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -68,5 +69,10 @@ public class DonHangTaiQuayResrController {
 
        List<DonHang> donHangList = donHangTaiQuayService.searchNgayTao(startDate,endDate);
         return ResponseEntity.ok(donHangList);
+    }
+    @GetMapping("/don-hang/lay-trang-thai")
+    public  ResponseEntity<?> getAllStatus(){
+        List<TrangThai> trangThaiList = donHangTaiQuayService.getAllStatus();
+        return ResponseEntity.ok(trangThaiList);
     }
 }
