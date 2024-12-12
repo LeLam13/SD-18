@@ -11,6 +11,10 @@ app.controller("donhanguser-ctrl", function ($scope, $http,$interval,$sce,$timeo
         icon: ''
     };
 
+    //phân trang
+    $scope.currentPage = 1; // Trang hiện tại
+    $scope.pageSize = 5;
+
     //function
 
     //lấy tất cả hoá đơn của username đăng nhập
@@ -18,8 +22,25 @@ app.controller("donhanguser-ctrl", function ($scope, $http,$interval,$sce,$timeo
         $http.get("/don-hang-cua-khach/lay-don-hang").then(function (response) {
             //console.log("check order username: ",response.data);
             $scope.listOrder = response.data;
-        }).catch(function (errors) {
-            console.error("có lỗi xảy ra: ",errors);
+            $scope.totalPages = Math.ceil($scope.listOrder.length / $scope.pageSize); // Tổng số trang
+        }).catch(function (error) {
+            console.error("có lỗi xảy ra: ",error);
+            if (error.status === -1 || error.status ===500) { // Lỗi kết nối server
+                console.log("Server không phản hồi. Dừng tự động kiểm tra danh sách đơn hàng.");
+                isAutoCheckStopped = true; // Đặt cờ để ngăn việc khởi động lại
+                if (intervalPromiseDH) {
+                    $interval.cancel(intervalPromiseDH);
+                    intervalPromiseDH = null;
+                }
+                if (controlTimeout) {
+                    $timeout.cancel(controlTimeout);
+                    controlTimeout = null;
+                }
+                if (intervalPromise) {
+                    $interval.cancel(intervalPromise);
+                    intervalPromise = null;
+                }
+            }
         })
     }
 
@@ -118,6 +139,8 @@ app.controller("donhanguser-ctrl", function ($scope, $http,$interval,$sce,$timeo
     }
     $scope.inputData = "";
     $scope.searchOrder = function (inputData){
+        isAutoCheckStopped = true;
+        $scope.stopAutoCheck();
         if (!inputData || inputData.trim() === "") {
             $scope.getOrderOfUser();
         } else {
@@ -125,6 +148,7 @@ app.controller("donhanguser-ctrl", function ($scope, $http,$interval,$sce,$timeo
                 params: { maDonHang: inputData }
             }).then(function (response) {
                 $scope.listOrder = response.data;
+                $scope.totalPages = Math.ceil($scope.listOrder.length / $scope.pageSize); // Tổng số trang
                 //console.log("Check PD search: ", response.data);
             }).catch(function (errors) {
                 console.error('Có lỗi xảy ra:', errors);
@@ -169,7 +193,11 @@ app.controller("donhanguser-ctrl", function ($scope, $http,$interval,$sce,$timeo
             $scope.showNotification('Huỷ Đơn Thành công!', 'success');
         }).catch(function (error) {
             console.error('Có lỗi xảy ra:', error);
-            $scope.showNotification('Huỷ Đơn Thất Bại!', 'error');
+            if (error.data && error.data.message) {
+                $scope.showNotification(error.data.message, 'error');
+            } else {
+                $scope.showNotification('Huỷ Đơn Thất Bại! Đã xảy ra lỗi không xác định.', 'error');
+            }
         });
 
     };
@@ -237,6 +265,10 @@ app.controller("donhanguser-ctrl", function ($scope, $http,$interval,$sce,$timeo
                 })
                 .catch(function(error) {
                     console.error("Có lỗi khi lấy trạng thái", error);
+                    if (error.status === -1) { // Lỗi kết nối server
+                        console.log("Server không phản hồi. Dừng tự động kiểm tra.");
+                        $scope.stopAutoCheck();
+                    }
                 });
         }
 
@@ -283,6 +315,41 @@ app.controller("donhanguser-ctrl", function ($scope, $http,$interval,$sce,$timeo
         }
         $('#step-6').hide();
     }
+    //phân trang
+    $scope.getPagedProducts = function () {
+        const start = ($scope.currentPage - 1) * $scope.pageSize;
+        const end = start + $scope.pageSize;
+        return $scope.listOrder.slice(start, end); // Lấy danh sách đơn hàng cho trang hiện tại
+    };
+
+    // Chuyển đến trang khác
+    $scope.setPage = function (page) {
+        if (page >= 1 && page <= $scope.totalPages) {
+            $scope.currentPage = page;
+        }
+    };
+
+    $scope.getPaginationRange = function () {
+        const rangeSize = 5; // Số lượng trang muốn hiển thị (mặc định là 5)
+        let start = Math.max($scope.currentPage - Math.floor(rangeSize / 2), 1);
+        const end = Math.min(start + rangeSize - 1, $scope.totalPages);
+
+        // Điều chỉnh lại nếu các trang bị vượt giới hạn
+        start = Math.max(Math.min(start, $scope.totalPages - rangeSize + 1), 1);
+
+        const pages = [];
+        for (let i = start; i <= end; i++) {
+            pages.push(i);
+        }
+        return pages;
+    };
+
+    $scope.isPaginationVisible = function () {
+        return $scope.listOrder.length > $scope.pageSize;
+    };
+
+
+
     //load data
     $scope.hideCancel();
     $scope.getOrderOfUser();
@@ -293,21 +360,29 @@ app.controller("donhanguser-ctrl", function ($scope, $http,$interval,$sce,$timeo
     var pauseTime = 3000;   // Thời gian tạm dừng $interval
     var resumeTime = 2000;  // Thời gian để khởi động lại
     // intervalPromiseDH = $interval(function() {
-    //     $scope.getAllOrder();
+    //     $scope.getOrderOfUser();
     // }, 1500);
+    let isAutoCheckStopped = false;
     $scope.startAutoCheckOrder = function() {
-        // Hàm quản lý chu kỳ chạy và dừng
+        if (isAutoCheckStopped) {
+            console.log("Tự động kiểm tra đã bị dừng, không khởi động lại.");
+            return;
+        }
+
         function manageInterval() {
-            // Khởi động $interval nếu chưa có
             if (!intervalPromiseDH) {
                 intervalPromiseDH = $interval(function() {
+                    if (isAutoCheckStopped) {
+                        $interval.cancel(intervalPromiseDH);
+                        intervalPromiseDH = null;
+                        return;
+                    }
                     $scope.getOrderOfUser();
                     console.log("Đang kiểm tra danh sách đơn hàng...");
-                }, intervalTime); // Sử dụng thời gian lặp lại được cấu hình
+                }, intervalTime);
                 console.log("Đã bắt đầu tự động kiểm tra danh sách đơn hàng.");
             }
 
-            // Tạm dừng sau pauseTime
             $timeout(function() {
                 if (intervalPromiseDH) {
                     $interval.cancel(intervalPromiseDH);
@@ -315,18 +390,27 @@ app.controller("donhanguser-ctrl", function ($scope, $http,$interval,$sce,$timeo
                     console.log("Tạm dừng tự động kiểm tra sau " + pauseTime + "ms.");
                 }
 
-                // Khởi động lại sau resumeTime
-                controlTimeout = $timeout(manageInterval, resumeTime); // Sử dụng thời gian khởi động lại được cấu hình
-            }, pauseTime); // Sử dụng thời gian tạm dừng được cấu hình
+                if (!isAutoCheckStopped) {
+                    controlTimeout = $timeout(manageInterval, resumeTime);
+                }
+            }, pauseTime);
         }
 
-        // Bắt đầu chu kỳ
         manageInterval();
     };
     $scope.startAutoCheckOrder();
     
     // Hủy $interval và $timeout khi controller bị hủy
+    // $scope.$on('$destroy', function() {
+    //     if (intervalPromise) {
+    //         $interval.cancel(intervalPromise);
+    //         intervalPromise = null; // Giải phóng interval
+    //         console.log("Đã dừng interval khi chuyển trang.");
+    //     }
+    // });
+
     $scope.$on('$destroy', function() {
+        isAutoCheckStopped = true;
         if (intervalPromiseDH) {
             $interval.cancel(intervalPromiseDH);
             intervalPromiseDH = null;
@@ -337,5 +421,10 @@ app.controller("donhanguser-ctrl", function ($scope, $http,$interval,$sce,$timeo
             controlTimeout = null;
             console.log("Đã dừng $timeout khi chuyển trang.");
         }
+            if (intervalPromise) {
+                $interval.cancel(intervalPromise);
+                intervalPromise = null; // Giải phóng interval
+                console.log("Đã dừng interval khi chuyển trang.");
+            }
     });
 });

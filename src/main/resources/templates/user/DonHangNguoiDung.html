@@ -283,13 +283,18 @@
                             <div class="col-6">
                                 <h3>Danh Sách Đơn Hàng</h3>
                             </div>
-                            <div class="col-6">
+                            <div class="col-3" style="font-size: 14px">
                                 <div class="mb-3">
-                                    <input type="text" id="search-order"
+                                    <input style="font-size: 14px" type="text" id="search-order"
                                            ng-model="inputData"
                                            ng-model-options="{ debounce: 500 }"
                                            ng-change="searchOrder(inputData)"
                                            class="form-control" placeholder="Tìm kiếm theo mã đơn hàng">
+                                </div>
+                            </div>
+                            <div class="col-3" style="font-size: 14px">
+                                <div class="mb-3">
+                                    helllo
                                 </div>
                             </div>
                         </div>
@@ -305,8 +310,8 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr ng-repeat="orderItem in listOrder">
-                                <th scope="row">{{$index +1}}</th>
+                            <tr ng-repeat="orderItem in getPagedProducts()">
+                                <td>{{ ($index + 1) + (currentPage - 1) * pageSize }}</td>
                                 <td>{{orderItem.maDonHang}}</td>
                                 <td>{{orderItem.khachHang.hoTen}}</td>
                                 <td>{{orderItem.createDate}}</td>
@@ -320,6 +325,55 @@
 
                             </tbody>
                         </table>
+                        <div class="row" style="font-size: 14px">
+                            <nav aria-label="Page navigation example" ng-if="isPaginationVisible()">
+                                <ul class="pagination">
+                                    <!-- Nút Trang đầu -->
+                                    <li class="page-item" ng-class="{disabled: currentPage === 1}">
+                                        <a class="page-link" href="#" ng-click="setPage(1)" aria-label="First">
+                                            <span aria-hidden="true" style="font-size: 14px">« Đầu</span>
+                                        </a>
+                                    </li>
+
+                                    <!-- Nút Previous -->
+                                    <li class="page-item" ng-class="{disabled: currentPage === 1}">
+                                        <a class="page-link" href="#" ng-click="setPage(currentPage - 1)" aria-label="Previous">
+                                            <span aria-hidden="true" style="font-size: 14px">&laquo;</span>
+                                        </a>
+                                    </li>
+
+                                    <!-- Dấu "..." trước -->
+                                    <li class="page-item" ng-if="getPaginationRange()[0] > 1">
+                                        <span class="page-link" style="font-size: 14px">...</span>
+                                    </li>
+
+                                    <!-- Hiển thị các trang -->
+                                    <li class="page-item" ng-repeat="page in getPaginationRange()"
+                                        ng-class="{active: currentPage === page}">
+                                        <a class="page-link" href="#" ng-click="setPage(page)" style="font-size: 14px">{{ page }}</a>
+                                    </li>
+
+                                    <!-- Dấu "..." sau -->
+                                    <li class="page-item" ng-if="getPaginationRange()[getPaginationRange().length - 1] < totalPages">
+                                        <span class="page-link" style="font-size: 14px">...</span>
+                                    </li>
+
+                                    <!-- Nút Next -->
+                                    <li class="page-item" ng-class="{disabled: currentPage === totalPages}">
+                                        <a class="page-link" href="#" ng-click="setPage(currentPage + 1)" aria-label="Next">
+                                            <span aria-hidden="true" style="font-size: 14px">&raquo;</span>
+                                        </a>
+                                    </li>
+
+                                    <!-- Nút Trang cuối -->
+                                    <li class="page-item" ng-class="{disabled: currentPage === totalPages}">
+                                        <a class="page-link" href="#" ng-click="setPage(totalPages)" aria-label="Last">
+                                            <span aria-hidden="true" style="font-size: 14px">Cuối »</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
                     </div>
                 </div>
 <!--                thông tin đơn hàng-->
@@ -439,7 +493,11 @@
                                 <thead>
                                 <tr>
                                     <th scope="col">STT</th>
-                                    <th scope="col">Tên Sản phẩm</th>
+                                    <th scope="col">Tên sản phẩm</th>
+                                    <th scope="col">Màu sắc</th>
+                                    <th scope="col">Kích cỡ</th>
+                                    <th scope="col">Thương Hiệu</th>
+                                    <th scope="col">Chất liệu</th>
                                     <th scope="col" >Số lượng</th>
                                     <th scope="col">Đơn Giá</th>
                                     <th scope="col">Tổng</th>
@@ -449,15 +507,17 @@
                                     <tr ng-repeat="orderDetails in listOrderDetail">
                                         <th scope="row">{{$index+1}}</th>
                                         <td>{{orderDetails.sanPhamChiTiet.idSanPham.ten}}</td>
+                                        <td>{{orderDetails.sanPhamChiTiet.idMauSac.ten}}</td>
+                                        <td>{{orderDetails.sanPhamChiTiet.idKichCo.ten}}</td>
+                                        <td>{{orderDetails.sanPhamChiTiet.idSanPham.idThuongHieu.ten}}</td>
+                                        <td>{{orderDetails.sanPhamChiTiet.idSanPham.idChatLieu.ten}}</td>
                                         <td>
-                                            <div class="quantity-input">
-                                                <button  class="btn btn-outline-secondary bi bi-dash-circle" ></button>
-                                                <input  ng-model="orderDetails.soLuong"  type="text" class="form-control"  min="1">
-                                                <!--                                        <div ng-show="orderProduct.invalidQuantity" class="error-message" style="color: red;">-->
-                                                <!--                                            Số lượng nhập vượt quá số lượng có sẵn!-->
-                                                <!--                                        </div>-->
-                                                <button class="btn btn-outline-secondary bi bi-plus-circle" ></button>
-                                            </div>
+                                            {{orderDetails.soLuong}}
+<!--                                            <div class="quantity-input">-->
+<!--                                                <button  class="btn btn-outline-secondary bi bi-dash-circle" ></button>-->
+<!--                                                <input  ng-model="orderDetails.soLuong"  type="text" class="form-control"  min="1">-->
+<!--                                                <button class="btn btn-outline-secondary bi bi-plus-circle" ></button>-->
+<!--                                            </div>-->
                                         </td>
                                         <td>{{orderDetails.donGia}}</td>
                                         <td>{{orderDetails.donGia * orderDetails.soLuong}}</td>
@@ -494,7 +554,7 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button ng-click="cancelOrderStatus()" type="button" class="btn btn-primary">Cập Nhật</button>
+                                <button ng-click="cancelOrderStatus()" type="button" class="btn btn-primary">Huỷ đơn</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                             </div>
                         </div>
@@ -506,7 +566,7 @@
                     <div class="modal-dialog" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title">Xác nhận</h5>
+                                <h5 class="modal-title">Xác nhận huỷ đơn</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
@@ -515,8 +575,8 @@
                                 <p>Bạn có chắc chắn muốn huỷ đơn hàng này không?</p>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary col-2" data-dismiss="modal">Hủy</button>
-                                <button type="button" class="btn btn-danger col-2" ng-click="showModalCancel()">Xóa</button>
+                                <button type="button" class="btn btn-secondary col-2" data-dismiss="modal">Đóng</button>
+                                <button type="button" class="btn btn-danger col-2" ng-click="showModalCancel()">Huỷ đơn</button>
                             </div>
                         </div>
                     </div>

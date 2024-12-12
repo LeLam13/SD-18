@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -283,7 +284,8 @@ public class DonHangServiceImpl implements DonHangService {
 
     @Override
     public List<KhuyenMai> getAllKhuyenMai() {
-        List<KhuyenMai> khuyenMai = khuyenMaiRepo.findAll();
+        Date currentDate = new Date();
+        List<KhuyenMai> khuyenMai = khuyenMaiRepo.findValidPromotions(currentDate);
         return khuyenMai;
     }
 

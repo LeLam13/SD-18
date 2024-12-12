@@ -173,7 +173,10 @@ public class HoaDonServiceImpl implements HoaDonService {
         newHoaDon.setGhiChu(hoaDon.getGhiChu());
         newHoaDon.setTrangThaiThanhToan(true);
         newHoaDon.setPhuongThucNhan(hoaDon.getPhuongThucNhan());
-
+        newHoaDon.setTenKhachNhan(donHang.getTenKhachNhan());
+        newHoaDon.setEmailKhachNhan(donHang.getEmailKhachNhan());
+        newHoaDon.setSoDienThoaiKhachNhan(donHang.getSoDienThoaiKhachNhan());
+        newHoaDon.setDiaChiNhan(donHang.getDiaChiNhan());
         //System.out.println("check ;log hoá đơn: "+newHoaDon);
         hoaDonRepo.save(newHoaDon);
 
@@ -248,6 +251,8 @@ public class HoaDonServiceImpl implements HoaDonService {
             float towColumwidth[] = {towcol150 ,towcol};
             float columnWidths[] = {threecol*3}; // Define table column widths
             float threeColumnWidth[] ={threecol,threecol,threecol};
+            // Định nghĩa lại chiều rộng của 5 cột
+            float[] fiveColumnWidth = {threecol, threecol, threecol, threecol, threecol}; // Cân đối các cột
 
 //            String fontPath = "C:\\Windows\\Fonts\\times.ttf";
 //            PdfFont pdfFont = PdfFontFactory.createFont(fontPath, PdfEncodings.IDENTITY_H, true);
@@ -300,6 +305,12 @@ public class HoaDonServiceImpl implements HoaDonService {
             }else {
                 textEmail = new Text("").setFont(pdfFont);
             }
+            Text diaChiNhan;
+            if(getHoaDon.getDiaChiNhan() == null){
+                diaChiNhan = new Text(getHoaDon.getKhachHang().getDiaChi()).setFont(pdfFont);
+            }else {
+                diaChiNhan = new Text(getHoaDon.getDiaChiNhan()).setFont(pdfFont);
+            }
 
             LocalDate createDate = getHoaDon.getCreateDate();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -331,7 +342,7 @@ public class HoaDonServiceImpl implements HoaDonService {
             Table twoColTable3 = new Table(towColumwidth);
             twoColTable3.addCell(getCell10fleft(text3,true));
             twoColTable3.addCell(getCell10fleft(text4,true));
-            twoColTable3.addCell(getCell10fleft("",false));
+            twoColTable3.addCell(getCell10fleft(diaChiNhan,false));
             twoColTable3.addCell(getCell10fleft(textNgayTao,false));
             twoColTable3.addCell(getCell10fleft(text5,true));
             twoColTable3.addCell(getCell10fleft(text6,true));
@@ -350,45 +361,68 @@ public class HoaDonServiceImpl implements HoaDonService {
             Paragraph productPara = new Paragraph(textProduct);
             document.add(productPara);
 
-            Table threeColTable1 = new Table(threeColumnWidth);
+            //Table threeColTable1 = new Table(threeColumnWidth);
+            Table threeColTable1 = new Table(fiveColumnWidth);
             threeColTable1.setBackgroundColor(Color.BLACK,0.7f);
 
             threeColTable1.addCell(new Cell().add("Tên Sản Phẩm").setBold().setFont(pdfFont).setFontColor(Color.WHITE).setBorder(Border.NO_BORDER));
+            threeColTable1.addCell(new Cell().add("Màu Sắc").setBold().setFont(pdfFont).setFontColor(Color.WHITE).setTextAlignment(TextAlignment.CENTER));
+            threeColTable1.addCell(new Cell().add("Kích Thước").setBold().setFont(pdfFont).setFontColor(Color.WHITE).setTextAlignment(TextAlignment.CENTER));
             threeColTable1.addCell(new Cell().add("Số Lượng").setBold().setFont(pdfFont).setFontColor(Color.WHITE).setTextAlignment(TextAlignment.CENTER));
             threeColTable1.addCell(new Cell().add("Đơn Giá").setBold().setFont(pdfFont).setFontColor(Color.WHITE).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
             document.add(threeColTable1);
 
             List<HoaDonChiTiet> listSanPham = hoaDonChiTietRepo.findByHoaDonId(getHoaDon.getIdHoaDon());
-            Table threeColTable2 = new Table(threeColumnWidth);
+            //Table threeColTable2 = new Table(threeColumnWidth);
+            Table threeColTable2 = new Table(fiveColumnWidth);
             float totalSum =0;
             for(HoaDonChiTiet spct:listSanPham){
                 float total = spct.getDonGia()* spct.getSoLuong();
                 totalSum +=total;
                 threeColTable2.addCell(new Cell().add(spct.getSanPhamChiTiet().getIdSanPham().getTen()).setFont(pdfFont).setBorder(Border.NO_BORDER).setMarginLeft(10f));
+                threeColTable2.addCell(new Cell().add(spct.getSanPhamChiTiet().getIdMauSac().getTen()).setFont(pdfFont).setTextAlignment(TextAlignment.CENTER).setBorder(Border.NO_BORDER));
+                threeColTable2.addCell(new Cell().add(spct.getSanPhamChiTiet().getIdKichCo().getTen()).setFont(pdfFont).setTextAlignment(TextAlignment.CENTER).setBorder(Border.NO_BORDER));
                 threeColTable2.addCell(new Cell().add(String.valueOf(spct.getSoLuong())).setFont(pdfFont).setTextAlignment(TextAlignment.CENTER).setBorder(Border.NO_BORDER));
                 threeColTable2.addCell(new Cell().add(String.valueOf(spct.getDonGia())).setFont(pdfFont).setTextAlignment(TextAlignment.RIGHT).setBorder(Border.NO_BORDER).setMarginRight(15f));
             }
             document.add(threeColTable2.setMarginBottom(20f));
+
             float oneCol[] ={threecol+125f,threecol*2};
             Table threeColTable4 = new Table(oneCol);
             threeColTable4.addCell(new Cell().add("").setBorder(Border.NO_BORDER));
             threeColTable4.addCell(new Cell().add(tableDivider).setBorder(Border.NO_BORDER));
             document.add(threeColTable4);
 
-            Text tong = new Text("Tổng Hoá Đơn").setFont(pdfFont);
+            Text tong = new Text("Tổng").setFont(pdfFont);
             Paragraph paragraphTong = new Paragraph().add(tong);
+            Text tongHoaDon = new Text("Tổng hoá đơn").setFont(pdfFont);
+            Paragraph paragraphTongHoaDon = new Paragraph().add(tongHoaDon);
             Table threeColTable3 = new Table(threeColumnWidth);
 
             threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(10f));
+            threeColTable3.addCell(new Cell().add(paragraphTong).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
+            threeColTable3.addCell(new Cell().add(String.valueOf(totalSum)).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
+            //phí ship
             if(getHoaDon.getPhiVanChuyen() >0){
+                threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(10f));
                 threeColTable3.addCell(new Cell().add("Phí Ship").setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
                 threeColTable3.addCell(new Cell().add(String.valueOf(getHoaDon.getPhiVanChuyen())).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
+                //tong + phi van chuyen
+                threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(15f));
+                threeColTable3.addCell(new Cell().add(paragraphTongHoaDon).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
+                threeColTable3.addCell(new Cell().add(String.valueOf(totalSum + getHoaDon.getPhiVanChuyen())).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
             }
+//            else {
+//                threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(10f));
+//                threeColTable3.addCell(new Cell().add(paragraphTong).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
+//                threeColTable3.addCell(new Cell().add(String.valueOf(totalSum)).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
+//            }
+//            threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(10f));
+//            threeColTable3.addCell(new Cell().add(paragraphTong).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
+//            threeColTable3.addCell(new Cell().add(String.valueOf(totalSum)).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
 
-            threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(15f));
-            threeColTable3.addCell(new Cell().add(paragraphTong).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
 
-            threeColTable3.addCell(new Cell().add(String.valueOf(totalSum)).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
+            //threeColTable3.addCell(new Cell().add(String.valueOf(totalSum)).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
             document.add(threeColTable3);
             document.add(tableDivider);
             document.add(new Paragraph("\n"));
