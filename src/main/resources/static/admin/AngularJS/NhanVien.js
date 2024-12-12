@@ -92,14 +92,35 @@ app.controller("nhan-vien-ctrl", function ($scope, $http) {
     };
 
     $scope.update = function (idNhanVien) {
+        // Reset các thông báo lỗi cũ
+        document.getElementById("eHoTen").innerText = "";
+        document.getElementById("eSoDienThoai").innerText = "";
+        document.getElementById("eEmail").innerText = "";
+        document.getElementById("eSoCanCuocCongDan").innerText = "";
+
+        // Kiểm tra các trường hợp lỗi
         if ($scope.hoTen == undefined || $scope.hoTen.length == 0) {
-            document.getElementById("eHoTen").innerText = "Vui lòng nhập họ tên!!!";
+            document.getElementById("eHoTen").innerText = "Vui lòng nhập họ tên!";
             return;
         }
-        if ($scope.hoTen.length > 100) {
-            document.getElementById("eHoTen").innerText = "Họ tên tối đa 100 ký tự!!!";
+        if ($scope.soDienThoai == undefined || $scope.soDienThoai.length == 0) {
+            document.getElementById("eSoDienThoai").innerText = "Vui lòng nhập số điện thoại!";
             return;
         }
+        if (!/^0\d{9}$/.test($scope.soDienThoai)) {
+            document.getElementById("eSoDienThoai").innerText = "Số điện thoại phải bắt đầu bằng 0 và có đúng 10 chữ số!";
+            return;
+        }
+        if ($scope.email == undefined || $scope.email.length == 0) {
+            document.getElementById("eEmail").innerText = "Vui lòng nhập email!";
+            return;
+        }
+        if ($scope.soCanCuocCongDan == undefined || $scope.soCanCuocCongDan.length != 13) {
+            document.getElementById("eSoCanCuocCongDan").innerText = "Số căn cước công dân phải có 13 số!";
+            return;
+        }
+
+        // Tạo object gửi yêu cầu
         var url = "/admin/nhan-vien/update" + "/" + idNhanVien;
         var updateNhanVien = {
             idNhanVien: idNhanVien,
@@ -109,16 +130,23 @@ app.controller("nhan-vien-ctrl", function ($scope, $http) {
             soCanCuocCongDan: $scope.soCanCuocCongDan,
             diaChi: $scope.diaChi,
             gioiTinh: $scope.gioiTinh,
-            email: $scope.email,  // Thêm trường email
+            email: $scope.email,
         };
 
+        // Gửi yêu cầu POST
         $http.post(url, updateNhanVien).then(function (response) {
-            alertify.success("Cập nhật nhân viên thành công")
-            $scope.findAll(); // Tải lại trang để xem các thay đổi
+            alertify.success("Cập nhật nhân viên thành công");
+            $scope.findAll(); // Tải lại danh sách nhân viên sau khi cập nhật
         }).catch(function (error) {
-            console.log("Cập nhật không thành công:", error);
+            // Hiển thị thông báo lỗi nếu có từ backend
+            if (error.data.message) {
+                alertify.error(error.data.message);  // Hiển thị lỗi từ server (ví dụ: email đã tồn tại)
+            } else {
+                alertify.error("Cập nhật không thành công.");
+            }
         });
     };
+
 
     // Hàm xóa mềm nhân viên
     $scope.softDelete = function (idNhanVien) {

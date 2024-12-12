@@ -148,6 +148,46 @@ public class NhanVienController {
 
     @PostMapping("/addEmployee")
     public String addEmployee(NhanVienRequetsDTO dto, RedirectAttributes redirectAttributes) {
+        if (dto.getUsername() == null || dto.getUsername().trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Tên đăng nhập không được để trống.");
+            redirectAttributes.addFlashAttribute("dto", dto);
+            return "redirect:/admin/nhan-vien";
+        }
+        if (dto.getEmail() == null || dto.getEmail().trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Email không được để trống.");
+            redirectAttributes.addFlashAttribute("dto", dto);
+            return "redirect:/admin/nhan-vien";
+        }
+        if (dto.getSoDienThoai() == null || dto.getSoDienThoai().trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Số điện thoại không được để trống.");
+            redirectAttributes.addFlashAttribute("dto", dto);
+            return "redirect:/admin/nhan-vien";
+        }
+        if (dto.getHoTen() == null || dto.getHoTen().trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Họ tên không được để trống.");
+            redirectAttributes.addFlashAttribute("dto", dto);
+            return "redirect:/admin/nhan-vien";
+        }
+        if (dto.getNgaySinh() == null) {
+            redirectAttributes.addFlashAttribute("error", "Ngày sinh không được để trống.");
+            redirectAttributes.addFlashAttribute("dto", dto);
+            return "redirect:/admin/nhan-vien";
+        }
+        if (dto.getSoCanCuocCongDan() == null || dto.getSoCanCuocCongDan().trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Căn cước công dân không được để trống.");
+            redirectAttributes.addFlashAttribute("dto", dto);
+            return "redirect:/admin/nhan-vien";
+        }
+        if (dto.getDiaChi() == null || dto.getDiaChi().trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("error", "Địa chỉ không được để trống.");
+            redirectAttributes.addFlashAttribute("dto", dto);
+            return "redirect:/admin/nhan-vien";
+        }
+        if (dto.getVaiTro() == null) {
+            redirectAttributes.addFlashAttribute("error", "Vai trò không được để trống.");
+            redirectAttributes.addFlashAttribute("dto", dto);
+            return "redirect:/admin/nhan-vien";
+        }
         // Kiểm tra username
         if (taikhoanRepo.existsByUsername(dto.getUsername())) {
             redirectAttributes.addFlashAttribute("error", "Tên đăng nhập đã tồn tại");

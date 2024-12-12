@@ -48,6 +48,12 @@ public class DotGiamGiaController {
             dotGiamGia.setGiamGia(giamGiaPercent); // Giảm giá theo phần trăm
             dotGiamGia.setLoaiGiamGia(0); // 0 cho giảm giá theo %
         } else {
+            // Kiểm tra xem giá trị giảm giá theo tiền có hợp lệ không
+            if (giamGiaAmount == null || giamGiaAmount < 1000 ) {
+                model.addAttribute("error", "Giảm giá theo tiền phải lớn hơn 1000 ");
+                return listDotGiamGia(model); // Trả về trang danh sách nếu không hợp lệ
+            }
+
             dotGiamGia.setGiamGia(giamGiaAmount); // Giảm giá theo tiền
             dotGiamGia.setLoaiGiamGia(1); // 1 cho giảm giá theo tiền
         }

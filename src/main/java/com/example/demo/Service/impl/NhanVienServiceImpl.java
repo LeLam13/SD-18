@@ -9,8 +9,10 @@ import com.example.demo.repo.NhanVienRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -32,6 +34,7 @@ public class NhanVienServiceImpl implements NhanVienService {
 
     @Override
     public nhanvien updateNhanVien(NhanVienRequetsDTO nhanVienRequestDTO) {
+        // Lấy nhân viên hiện tại từ cơ sở dữ liệu
         Optional<nhanvien> optionalNhanVien = nhanVienRepository.findById(nhanVienRequestDTO.getIdNhanVien());
         if (!optionalNhanVien.isPresent()) {
             throw new RuntimeException("Nhân viên không tồn tại!");
@@ -39,7 +42,34 @@ public class NhanVienServiceImpl implements NhanVienService {
 
         nhanvien nhanVien = optionalNhanVien.get();
 
-        // Cập nhật thông tin trong bảng Nhân viên
+        // Kiểm tra nếu email thay đổi thì kiểm tra tính duy nhất
+        String emailMoi = nhanVienRequestDTO.getEmail();
+        String emailCu = nhanVien.getTaikhoan() != null ? nhanVien.getTaikhoan().getEmail() : "";
+
+        // Chỉ kiểm tra email nếu email thay đổi và không phải là email của chính nhân viên đang cập nhật
+        if (!emailMoi.equals(emailCu) && checkEmailExists(emailMoi)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email đã tồn tại trong hệ thống.");
+        }
+
+        // Validate số điện thoại
+        String soDienThoai = nhanVienRequestDTO.getSoDienThoai();
+        if (soDienThoai == null || soDienThoai.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Số điện thoại không được để trống.");
+        }
+        if (!soDienThoai.matches("^0\\d{9}$")) {  // Kiểm tra số điện thoại bắt đầu bằng 0 và có 10 chữ số
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Số điện thoại phải bắt đầu bằng 0 và có đúng 10 chữ số.");
+        }
+
+        // Validate số căn cước công dân
+        String soCanCuocCongDan = nhanVienRequestDTO.getSoCanCuocCongDan();
+        if (soCanCuocCongDan == null || soCanCuocCongDan.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Số căn cước công dân không được để trống.");
+        }
+        if (!soCanCuocCongDan.matches("^[0-9]{13}$")) {  // Kiểm tra số căn cước công dân có 13 chữ số
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Số căn cước công dân phải có 13 số.");
+        }
+
+        // Cập nhật thông tin nhân viên
         nhanVien.setHoTen(nhanVienRequestDTO.getHoTen());
         nhanVien.setSoDienThoai(nhanVienRequestDTO.getSoDienThoai());
         nhanVien.setNgaySinh(nhanVienRequestDTO.getNgaySinh());
@@ -58,6 +88,13 @@ public class NhanVienServiceImpl implements NhanVienService {
         // Lưu thông tin cập nhật
         return nhanVienRepository.save(nhanVien);
     }
+
+    public boolean checkEmailExists(String email) {
+        // Kiểm tra email đã tồn tại trong hệ thống hay chưa
+        taikhoan taiKhoan = taikhoanRepo.findByEmail(email);
+        return taiKhoan != null;
+    }
+
 
 
 
