@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,7 +56,11 @@ public class DonHangServiceImpl implements DonHangService {
             TrangThai trangThai = trangThaiRepo.findById(donHangDTO.getIdTrangThai()).get();
             newDonHang.setTrangThai(trangThai);
             newDonHang.setLoaiDonHang(donHangDTO.getLoaiDonHang());
+            newDonHang.setCreateBy(getNV.getHoTen());
+            LocalDate localDate = LocalDate.now();
+            newDonHang.setCreateDate(localDate);
         }
+
         return donHangRepo.save(newDonHang);
     }
 
@@ -261,9 +266,9 @@ public class DonHangServiceImpl implements DonHangService {
 
         // số lượng cập nhật > sô lượng có
         SanPhamChiTiet oldSacPhamCT = sanPhamChiTietRepo.findById(donHangChiTietRequestDTO.getIdSanPhamChiTiet()).get();
-        if (oldSacPhamCT.getSoLuong() < donHangChiTietRequestDTO.getSoLuong()) {
-            throw new RuntimeException("Số lượng sản phẩm không đủ!");
-        }
+//        if (oldSacPhamCT.getSoLuong() < donHangChiTietRequestDTO.getSoLuong()) {
+//            throw new RuntimeException("Số lượng sản phẩm không đủ!");
+//        }
         // cập nhật số lượng của sản phẩm chi tiết
         oldSacPhamCT.setSoLuong(oldSacPhamCT.getSoLuong() + donHangChiTietRequestDTO.getSoLuong());
         sanPhamChiTietRepo.save(oldSacPhamCT);

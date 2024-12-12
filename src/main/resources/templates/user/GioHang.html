@@ -166,7 +166,7 @@
                                         <button ng-click="soLuongPlus(orderProduct)" class="btn btn-outline-secondary bi bi-plus-circle" ></button>
                                     </div>
                                     <div ng-show="orderProduct.invalidQuantity" class="error-message" style="color: red;">
-                                        Số lượng nhập vượt quá số lượng có sẵn!
+                                        {{ orderProduct.errorMessage }}
                                     </div>
                                 </td>
                                 <td>{{orderProduct.giaBan}}</td>

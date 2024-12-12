@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -60,5 +61,20 @@ public class DonHangTaiQuayImpl implements DonHangTaiQuayService {
         oldOrder.setTrangThai(status);
         donHangRepo.save(oldOrder);
         return oldOrder;
+    }
+
+    @Override
+    public List<DonHang> searchMaDonhang(String maHD) {
+        return donHangRepo.searchByMaDonHang(maHD);
+    }
+
+    @Override
+    public List<DonHang> searchLoaiDonhang(Integer loaiDonHang) {
+        return donHangRepo.findDonHangByLoaiDonHangNative(loaiDonHang);
+    }
+
+    @Override
+    public List<DonHang> searchNgayTao(LocalDate startDate, LocalDate endDate) {
+        return donHangRepo.findDonHangByDateRangeNative(startDate,endDate);
     }
 }
