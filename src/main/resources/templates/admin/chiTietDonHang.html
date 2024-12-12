@@ -273,8 +273,8 @@
                         </div>
                     </div>
                     <div class="buttons">
-                        <button class="button cancel" ng-click="cancelOrderStatus()" id="btn-huy">Hủy đơn hàng</button>
-                        <button ng-click="" class="btn btn-info">In Hoá Đơn</button>
+                        <button class="button cancel" ng-click="showModalConfirm()" id="btn-huy">Hủy đơn hàng</button>
+                        <button ng-click="" class="btn btn-info" id="btn-in-hoa-don">In Hoá Đơn</button>
                     </div>
                 </div>
 
@@ -462,19 +462,10 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Lý Do Huỷ Đơn</h1>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            <div class="row">
-                                <div class="mb-3">
-                                    <label class="form-label">Trạng Thái</label>
-                                    <select class="form-select" aria-label="Default select example" readonly="">
-                                        <option selected>Xác Nhận Thay Đổi</option>
-                                    </select>
-                                </div>
-
-                            </div>
                             <div class="row">
                                 <div class="mb-3">
                                     <label for="ghi-chu" class="form-label">Ghi Chú</label>
@@ -483,12 +474,33 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button ng-click="updateOrderStatus()" type="button" class="btn btn-primary">Cập Nhật</button>
+                            <button ng-click="cancelOrderStatus()" type="button" class="btn btn-primary">Huỷ đơn</button>
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                         </div>
                     </div>
                 </div>
             </div>
+
+            <!-- Modal -->
+            <div id="confirmModal" class="modal fade" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmModalLabel">Xác nhận huỷ đơn</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>Bạn có chắc chắn muốn huỷ đơn hàng này không?</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary col-2" data-bs-dismiss="modal">Đóng</button>
+                            <button type="button" class="btn btn-danger col-2" ng-click="showModalCancel()">Huỷ đơn</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
 
         </div>
 

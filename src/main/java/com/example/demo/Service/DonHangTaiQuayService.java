@@ -22,4 +22,6 @@ public interface DonHangTaiQuayService {
     List<DonHang> searchNgayTao(LocalDate startDate, LocalDate endDate);
 
     List<TrangThai> getAllStatus();
+
+    DonHang cancelOrderStatus(DonHangTaiQuayStatusRequestDTO donHangStatus,String username);
 }
