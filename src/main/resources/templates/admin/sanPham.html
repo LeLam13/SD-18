@@ -57,7 +57,14 @@
                                         Thêm Sản Phẩm
                                     </button>
                                 </div>
-
+                                <div class="col-6 nav justify-content-end">
+                                    <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                            data-bs-target="#filterModal">
+                                        <i data-feather="filter"></i>
+                                        <span class="badge bg-primary ms-1 ml-2"
+                                              style="font-size: 11px; font-weight: bold;" id="lengthFilter"></span>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div class="card-body" style="min-height: 450px">
@@ -185,7 +192,7 @@
                                     <!-- Nút Trang trước -->
                                     <li class="page-item" ng-class="{ 'disabled': page === 0 }">
                                         <a class="page-link" href="" ng-click="previousPage()"><small>&#8592; Trang
-                                            trước></small></a>
+                                            trước</small></a>
                                     </li>
 
                                     <!-- Hiển thị thông tin trang -->
@@ -227,16 +234,16 @@
                                     <!-- Modal body -->
                                     <div class="modal-body">
                                         <div class="row g-3">
-<!--                                            <div class="col-md-6">-->
-<!--                                                <img ng-src="/assets/img/{{sp.idHinhAnh.ten ? sp.idHinhAnh.ten : 'default.png'}}"-->
-<!--                                                     alt="Ảnh sản phẩm"-->
-<!--                                                     class="img-thumbnail"-->
-<!--                                                     style="width: 240px; height: 240px; object-fit: cover; cursor: pointer;"-->
-<!--                                                     ng-click="triggerFileInput(sp.idSanPham)"/>-->
+                                            <!--                                            <div class="col-md-6">-->
+                                            <!--                                                <img ng-src="/assets/img/{{sp.idHinhAnh.ten ? sp.idHinhAnh.ten : 'default.png'}}"-->
+                                            <!--                                                     alt="Ảnh sản phẩm"-->
+                                            <!--                                                     class="img-thumbnail"-->
+                                            <!--                                                     style="width: 240px; height: 240px; object-fit: cover; cursor: pointer;"-->
+                                            <!--                                                     ng-click="triggerFileInput(sp.idSanPham)"/>-->
 
-<!--                                                <input type="file" id="formFile-{{sp.idSanPham}}" class="d-none"-->
-<!--                                                       onchange="angular.element(this).scope().onFileSelected1(event)">-->
-<!--                                            </div>-->
+                                            <!--                                                <input type="file" id="formFile-{{sp.idSanPham}}" class="d-none"-->
+                                            <!--                                                       onchange="angular.element(this).scope().onFileSelected1(event)">-->
+                                            <!--                                            </div>-->
                                             <div class="col-md-6">
 
                                             </div>
@@ -268,7 +275,7 @@
                                                         <!-- Dropdown luôn hiển thị -->
                                                         <select class="form-control"
                                                                 ng-model="sp.idXuatXu"
-                                                                ng-options="xuatXu as xuatXu.ten for xuatXu in xuatXu track by xuatXu.idXuatXu">
+                                                                ng-options="xuatXu as xuatXu.ten for xuatXu in xuatXuCr track by xuatXu.idXuatXu">
                                                             <option value="" disabled selected>Chọn xuất xứ</option>
                                                         </select>
                                                     </div>
@@ -279,7 +286,7 @@
                                                         <!-- Dropdown nếu chưa chọn giá trị -->
                                                         <select class="form-control"
                                                                 ng-model="sp.idChatLieu"
-                                                                ng-options="chatLieu as chatLieu.ten for chatLieu in chatLieu track by chatLieu.idChatLieu">
+                                                                ng-options="chatLieu as chatLieu.ten for chatLieu in chatLieuCr track by chatLieu.idChatLieu">
                                                             <option value="" disabled selected>Chọn chất liệu</option>
                                                         </select>
                                                     </div>
@@ -294,7 +301,7 @@
                                                         <!-- Dropdown nếu chưa chọn giá trị -->
                                                         <select class="form-control"
                                                                 ng-model="sp.idThuongHieu"
-                                                                ng-options="thuongHieu as thuongHieu.ten for thuongHieu in thuongHieu track by thuongHieu.idThuongHieu">
+                                                                ng-options="thuongHieu as thuongHieu.ten for thuongHieu in thuongHieuCr track by thuongHieu.idThuongHieu">
                                                             <option value="" disabled selected>Chọn thương hiệu</option>
                                                         </select>
                                                     </div>
@@ -305,7 +312,7 @@
                                                         <!-- Dropdown nếu chưa chọn giá trị -->
                                                         <select class="form-control"
                                                                 ng-model="sp.idKieuDang"
-                                                                ng-options="kieuDang as kieuDang.ten for kieuDang in kieuDang track by kieuDang.idKieuDang">
+                                                                ng-options="kieuDang as kieuDang.ten for kieuDang in kieuDangCr track by kieuDang.idKieuDang">
                                                             <option value="" disabled selected>Chọn kiểu dáng</option>
                                                         </select>
                                                     </div>
@@ -355,20 +362,20 @@
                                     <!-- Modal body -->
                                     <div class="modal-body">
                                         <div class="row g-3">
-<!--                                            <div class="col-md-6">-->
-<!--                                                &lt;!&ndash; Ảnh hiển thị &ndash;&gt;-->
-<!--                                                <img ng-src="/assets/img/{{selectedImage ? selectedImage : 'default.png'}}"-->
-<!--                                                     alt="Ảnh sản phẩm"-->
-<!--                                                     class="img-thumbnail"-->
-<!--                                                     style="width: 240px; height: 240px; object-fit: cover; cursor: pointer;"-->
-<!--                                                     ng-click="triggerFileInputCr()"/>-->
+                                            <!--                                            <div class="col-md-6">-->
+                                            <!--                                                &lt;!&ndash; Ảnh hiển thị &ndash;&gt;-->
+                                            <!--                                                <img ng-src="/assets/img/{{selectedImage ? selectedImage : 'default.png'}}"-->
+                                            <!--                                                     alt="Ảnh sản phẩm"-->
+                                            <!--                                                     class="img-thumbnail"-->
+                                            <!--                                                     style="width: 240px; height: 240px; object-fit: cover; cursor: pointer;"-->
+                                            <!--                                                     ng-click="triggerFileInputCr()"/>-->
 
-<!--                                                &lt;!&ndash; Input file để chọn ảnh &ndash;&gt;-->
-<!--                                                <input type="file"-->
-<!--                                                       id="fileInput"-->
-<!--                                                       class="d-none"-->
-<!--                                                       onchange="angular.element(this).scope().onFileSelectedCr(event)"/>-->
-<!--                                            </div>-->
+                                            <!--                                                &lt;!&ndash; Input file để chọn ảnh &ndash;&gt;-->
+                                            <!--                                                <input type="file"-->
+                                            <!--                                                       id="fileInput"-->
+                                            <!--                                                       class="d-none"-->
+                                            <!--                                                       onchange="angular.element(this).scope().onFileSelectedCr(event)"/>-->
+                                            <!--                                            </div>-->
                                             <div class="col-md-6">
 
                                             </div>
@@ -396,7 +403,7 @@
                                                                 class="form-control"
                                                                 ng-model="selectedXuatXu" ng-change="onXuatXuChange()">
                                                             <option value="" disabled selected>Chọn xuất xứ</option>
-                                                            <option ng-repeat="x in xuatXu" ng-value="x.idXuatXu">
+                                                            <option ng-repeat="x in xuatXuCr" ng-value="x.idXuatXu">
                                                                 {{x.ten}}
                                                             </option>
                                                         </select>
@@ -412,7 +419,7 @@
                                                                 class="form-control"
                                                                 ng-model="selectedChatLieu">
                                                             <option value="" disabled selected>Chọn chất liệu</option>
-                                                            <option ng-repeat="c in chatLieu" ng-value="c.idChatLieu">
+                                                            <option ng-repeat="c in chatLieuCr" ng-value="c.idChatLieu">
                                                                 {{c.ten}}
                                                             </option>
                                                         </select>
@@ -430,7 +437,7 @@
                                                                 class="form-control"
                                                                 ng-model="selectedThuongHieu">
                                                             <option value="" disabled selected>Chọn thương hiệu</option>
-                                                            <option ng-repeat="t in thuongHieu"
+                                                            <option ng-repeat="t in thuongHieuCr"
                                                                     ng-value="t.idThuongHieu">
                                                                 {{t.ten}}
                                                             </option>
@@ -445,7 +452,7 @@
                                                                 class="form-control"
                                                                 ng-model="selectedKieuDang">
                                                             <option value="" disabled selected>Chọn kiểu dáng</option>
-                                                            <option ng-repeat="k in kieuDang" ng-value="k.idKieuDang">
+                                                            <option ng-repeat="k in kieuDangCr" ng-value="k.idKieuDang">
                                                                 {{k.ten}}
                                                             </option>
                                                         </select>
@@ -479,6 +486,82 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel"
+                         aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="filterModalLabel">Lọc sản phẩm</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                            aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <div class="mb-3">
+                                                <label>Tên hoặc mã</label>
+                                                <input type="text" ng-model="filterData.ten" class="form-control"/>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label>Xuất xứ</label>
+                                                <select class="form-control" ng-model="filterData.idXuatXu">
+                                                    <option value="" selected>Tất cả</option>
+                                                    <option ng-repeat="x in xuatXu" value="{{x.idXuatXu}}">{{x.ten}}
+                                                    </option>
+                                                </select>
+
+
+                                            </div>
+                                            <div class="mb-3">
+                                                <label>Chất liệu</label>
+                                                <select class="form-control" ng-model="filterData.idChatLieu">
+                                                    <option value="" selected>Tất cả</option>
+                                                    <option ng-repeat="c in chatLieu" value="{{c.idChatLieu}}">
+                                                        {{c.ten}}
+                                                    </option>
+                                                </select>
+
+
+                                            </div>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <div class="mb-3">
+                                                <label>Thương Hiệu</label>
+                                                <select class="form-control" ng-model="filterData.idThuongHieu">
+                                                    <option value="" selected>Tất cả</option>
+                                                    <option ng-repeat="t in thuongHieu" value="{{t.idThuongHieu}}">
+                                                        {{t.ten}}
+                                                    </option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label>Kiểu dáng</label>
+                                                <select class="form-control" ng-model="filterData.idKieuDang">
+                                                    <option value="" selected>Tất cả</option>
+                                                    <option ng-repeat="k in kieuDang" value="{{k.idKieuDang}}">
+                                                        {{k.ten}}
+                                                    </option>
+                                                </select>
+
+
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button class="btn btn-danger" type="button" data-bs-dismiss="modal"
+                                            ng-click="clearFilter()">Bỏ lọc
+                                    </button>
+                                    <button class="btn btn-primary" type="button" data-bs-dismiss="modal"
+                                            ng-click="filter(filterData)">Lọc
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <!-- end col -->
             </div>

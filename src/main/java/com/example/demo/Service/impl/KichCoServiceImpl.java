@@ -4,6 +4,7 @@ import com.example.demo.Service.KichCoService;
 import com.example.demo.dto.request.KichCoRequestDTO;
 import com.example.demo.entity.KichCo;
 import com.example.demo.entity.MauSac;
+import com.example.demo.entity.XuatXu;
 import com.example.demo.repo.KichCoRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,11 @@ public class KichCoServiceImpl implements KichCoService {
     @Override
     public List<KichCo> getAll() {
         return kichCoRepo.findAll();
+    }
+
+    @Override
+    public List<KichCo> getAllByTT() {
+        return kichCoRepo.getAllByTT();
     }
 
     @Override

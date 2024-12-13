@@ -7,15 +7,15 @@
     <style>
         /* CSS cho nút Làm Mới với màu xám */
         .btn-refresh {
-            background-color: #6c757d;  /* Màu nền xám */
-            border-color: #6c757d;      /* Màu viền xám */
-            color: white;               /* Màu chữ trắng */
+            background-color: #6c757d; /* Màu nền xám */
+            border-color: #6c757d; /* Màu viền xám */
+            color: white; /* Màu chữ trắng */
         }
 
         .btn-refresh:hover {
-            background-color: #5a6368;  /* Màu nền khi hover (màu xám đậm hơn) */
-            border-color: #4e555b;      /* Màu viền khi hover */
-            color: white;               /* Chữ trắng khi hover */
+            background-color: #5a6368; /* Màu nền khi hover (màu xám đậm hơn) */
+            border-color: #4e555b; /* Màu viền khi hover */
+            color: white; /* Chữ trắng khi hover */
         }
 
 
@@ -55,6 +55,11 @@
                         <div class="card">
                             <div class="card-header">
                                 <div class="row">
+                                    <div class="col-6">
+                                        <div class="btn" ng-click="viewChiTiet()">
+                                            Quay lại
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="card-body">
@@ -69,7 +74,7 @@
                                         <th>Số Lượng</th>
                                         <th>Giá Nhập</th>
                                         <th>Ngày Tạo</th>
-<!--                                        <th>Thao Tác</th>-->
+                                        <!--                                        <th>Thao Tác</th>-->
                                     </tr>
                                     </thead>
 
@@ -89,12 +94,12 @@
                                         <td>{{kc.soLuong}}</td>
                                         <td>{{kc.giaNhap}}</td>
                                         <td>{{kc.createDate | date:'yyyy-MM-dd'}}</td>
-<!--                                        <td>-->
-<!--                                            <a href="" class="edit" data-bs-toggle="modal" data-bs-target="#view"-->
-<!--                                               ng-click="getKichCo(kc.ma)">-->
-<!--                                                <i style='font-size:24px' class='fas'>&#xf06e;</i>-->
-<!--                                            </a>-->
-<!--                                        </td>-->
+                                        <!--                                        <td>-->
+                                        <!--                                            <a href="" class="edit" data-bs-toggle="modal" data-bs-target="#view"-->
+                                        <!--                                               ng-click="getKichCo(kc.ma)">-->
+                                        <!--                                                <i style='font-size:24px' class='fas'>&#xf06e;</i>-->
+                                        <!--                                            </a>-->
+                                        <!--                                        </td>-->
                                     </tr>
                                     </tbody>
                                 </table>
@@ -104,27 +109,32 @@
                                     <ul class="pagination pagination-sm-125">
                                         <!-- Nút Trang đầu -->
                                         <li class="page-item" ng-class="{ 'disabled': page === 0 }">
-                                            <a class="page-link" href="" ng-click="goToFirstPage()"><small>&#8676; Trang đầu</small></a>
+                                            <a class="page-link" href="" ng-click="goToFirstPage()"><small>&#8676; Trang
+                                                đầu</small></a>
                                         </li>
 
                                         <!-- Nút Trang trước -->
                                         <li class="page-item" ng-class="{ 'disabled': page === 0 }">
-                                            <a class="page-link" href="" ng-click="previousPage()"><small>&#8592; Trang trước></small></a>
+                                            <a class="page-link" href="" ng-click="previousPage()"><small>&#8592; Trang
+                                                trước></small></a>
                                         </li>
 
                                         <!-- Hiển thị thông tin trang -->
                                         <li class="page-item disabled">
-                                            <span class="page-link"><small>Trang {{ page + 1 }} / {{ totalPages }}</small></span>
+                                            <span class="page-link"><small>Trang {{ page + 1 }} / {{ totalPages
+                                                }}</small></span>
                                         </li>
 
                                         <!-- Nút Trang sau -->
                                         <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 }">
-                                            <a class="page-link" href="" ng-click="nextPage()"><small>Trang sau &#8594;</small></a>
+                                            <a class="page-link" href="" ng-click="nextPage()"><small>Trang sau
+                                                &#8594;</small></a>
                                         </li>
 
                                         <!-- Nút Trang cuối -->
                                         <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 }">
-                                            <a class="page-link" href="" ng-click="goToLastPage()"><small>Trang cuối &#8677;</small></a>
+                                            <a class="page-link" href="" ng-click="goToLastPage()"><small>Trang cuối
+                                                &#8677;</small></a>
                                         </li>
                                     </ul>
                                 </nav>

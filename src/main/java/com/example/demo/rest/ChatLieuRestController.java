@@ -42,6 +42,12 @@ public class ChatLieuRestController {
         return ResponseEntity.ok(cl);
     }
 
+    @GetMapping("/admin/chat-lieu/get-all/trang-thai")
+    public ResponseEntity<?> getAllByTT() {
+        List<ChatLieu> ms = chatLieuService.getAllByTT();
+        return ResponseEntity.ok(ms);
+    }
+
     @GetMapping("/chat-lieu/get-all")
     public ResponseEntity<?> getAll2() {
         List<ChatLieu> cl = chatLieuService.getAll();

@@ -39,6 +39,12 @@ public class KieuDangRestController {
         return ResponseEntity.ok(kd);
     }
 
+    @GetMapping("/admin/kieu-dang/get-all/trang-thai")
+    public ResponseEntity<?> getAllByTT() {
+        List<KieuDang> ms = kieuDangService.getAllByTT();
+        return ResponseEntity.ok(ms);
+    }
+
     @GetMapping("/admin/kieu-dang/find-all")
     public ResponseEntity<?> findAll(@RequestParam(defaultValue = "0") int page,
                                      @RequestParam(defaultValue = "5") int size) {

@@ -5,6 +5,7 @@ import com.example.demo.entity.SanPham;
 import com.example.demo.entity.SanPhamChiTiet;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -102,6 +103,6 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Integer> {
     Page<SanPham> findByTrangThaiWithChiTiet(Pageable pageable);
 
 
-
+    Page<SanPham> findAll(Specification<SanPham> speci, Pageable pageable);
 }
 

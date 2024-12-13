@@ -32,6 +32,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 
@@ -143,7 +146,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
             HinhAnh hinhAnh = hinhAnhRepo.findByIdHinhAnh(dto.getIdHinhAnh());
             chiTiet.setIdHinhAnh(hinhAnh);
-
+            chiTiet.setUpdateBy(getCurrentUsername());
             sanPhamChiTietList.add(chiTiet);
         }
 
@@ -171,7 +174,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
         HinhAnh hinhAnh = hinhAnhRepo.findByIdHinhAnh(sanPhamChiTietRequestDTO.getIdHinhAnh());
         ms.setIdHinhAnh(hinhAnh);
-
+        ms.setUpdateBy(getCurrentUsername());
         ms.setUpdateDate(date);
         return sanPhamChiTietRepo.save(ms);
     }
@@ -204,6 +207,13 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 //                        criteriaBuilder.in(root.get("idSanPham")).value(sanPhamList));
 //        }
 
+        // Tìm kiếm theo mã hoặc tên sản phẩm
+        if (filterRequest.getTen() != null && !filterRequest.getTen().isEmpty()) {
+            String tenKhongDau = removeAccents(filterRequest.getTen());
+            spec = spec.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.like(criteriaBuilder.lower(root.get("ma")), "%" + tenKhongDau.toLowerCase() + "%"));
+        }
+
         if (filterRequest.getIdSanPham() != null) {
             SanPham sanPham = sanPhamRepo.findByIdSanPham(filterRequest.getIdSanPham());
             spec = spec.and((root, query, criteriaBuilder) ->
@@ -218,31 +228,15 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
             spec = spec.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.lessThanOrEqualTo(root.get("giaBan"), filterRequest.getGiaMax()));
         }
-        if (filterRequest.getIdXuatXu() != null) {
-            XuatXu xuatXu = xuatXuRepo.findByIdXuatXu(filterRequest.getIdXuatXu());
-            spec = spec.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("idXuatXu"), xuatXu));
-        }
+//        if (filterRequest.getIdXuatXu() != null) {
+//            XuatXu xuatXu = xuatXuRepo.findByIdXuatXu(filterRequest.getIdXuatXu());
+//            spec = spec.and((root, query, criteriaBuilder) ->
+//                    criteriaBuilder.equal(root.get("idXuatXu"), xuatXu));
+//        }
         if (filterRequest.getIdMauSac() != null) {
             MauSac mauSac = mauSacRepo.findByIdMauSac(filterRequest.getIdMauSac());
             spec = spec.and((root, query, criteriaBuilder) ->
                     criteriaBuilder.equal(root.get("idMauSac"), mauSac));
-        }
-        if (filterRequest.getIdThuongHieu() != null) {
-            ThuongHieu thuongHieu = thuongHieuRepo.findByIdThuongHieu(filterRequest.getIdThuongHieu());
-
-            spec = spec.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("idThuongHieu"), thuongHieu));
-        }
-        if (filterRequest.getIdKieuDang() != null) {
-            KieuDang kieuDang = kieuDangRepo.findByIdKieuDang(filterRequest.getIdKieuDang());
-            spec = spec.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("idKieuDang"), kieuDang));
-        }
-        if (filterRequest.getIdChatLieu() != null) {
-            ChatLieu chatLieu = chatLieuRepo.findByIdChatLieu(filterRequest.getIdChatLieu());
-            spec = spec.and((root, query, criteriaBuilder) ->
-                    criteriaBuilder.equal(root.get("idChatLieu"), chatLieu));
         }
         if (filterRequest.getIdKichCo() != null) {
             KichCo kichCo = kichCoRepo.findByIdKichCo(filterRequest.getIdKichCo());
@@ -288,7 +282,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
         sanPhamChiTiet.setGiaNhap(sanPhamChiTietRequestDTO.getGiaNhap());
         sanPhamChiTiet.setSoLuong(soLuongMoi + soLuongCu);
-
+        sanPhamChiTiet.setUpdateBy(getCurrentUsername());
         sanPhamChiTiet.setUpdateDate(date);
         return sanPhamChiTietRepo.save(sanPhamChiTiet);
     }
@@ -308,7 +302,25 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         Integer soLuongCu = productDetails.getSoLuong();
         Integer soLuongMoi = sanPhamChiTietRequestDTO.getSoLuong();
         productDetails.setSoLuong(soLuongMoi + soLuongCu);
-
+        productDetails.setUpdateBy(getCurrentUsername());
         return sanPhamChiTietRepo.save(productDetails);
+    }
+
+    public String getCurrentUsername() {
+        String username = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetails) {
+                // Trường hợp principal là UserDetails
+                username = ((UserDetails) principal).getUsername();
+                System.out.println("Username (UserDetails): " + username);
+            } else {
+                // Trường hợp principal là chuỗi (vd: OAuth2)
+                username = principal.toString();
+                System.out.println("Username (String): " + username);
+            }
+        }
+        return username;
     }
 }

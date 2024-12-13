@@ -81,7 +81,7 @@
                                                        ng-change="autoSelectColor()">
                                                 <select class="form-control" ng-model="selectedMauSac" multiple
                                                         ng-change="selectColor()">
-                                                    <option ng-repeat="mau in mauSac | filter:colorFilterFunction"
+                                                    <option ng-repeat="mau in mauSacCr | filter:colorFilterFunction"
                                                             ng-value="mau">
                                                         {{ mau.ten
                                                         }}
@@ -98,7 +98,7 @@
                                                        ng-change="autoSelectSize()">
                                                 <select class="form-control" ng-model="selectedKichCo" multiple
                                                         ng-change="selectSize()">
-                                                    <option ng-repeat="size in kichCo | filter:sizeFilterFunction"
+                                                    <option ng-repeat="size in kichCoCr | filter:sizeFilterFunction"
                                                             ng-value="size">
                                                         {{ size.ten
                                                         }}
@@ -224,7 +224,11 @@
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-danger" ng-click="create()">Thêm</button>
+            <div class="row justify-content-center">
+                <div class="col-auto">
+                    <button type="button" class="btn btn-danger" ng-click="create()">Thêm</button>
+                </div>
+            </div>
 
         </div>
     </div>

@@ -1,5 +1,6 @@
 package com.example.demo.Service;
 
+import com.example.demo.dto.request.FilterRequestDTO;
 import com.example.demo.dto.request.SanPhamRequestDTO;
 import com.example.demo.dto.request.SanPhamWithImageDto;
 import com.example.demo.entity.SanPham;
@@ -33,4 +34,8 @@ public interface SanPhamService {
     Page<SanPham> findAllWithStatistics(Pageable pageable); // Tìm tất cả sản phẩm kèm số lượng tồn và đã bán
 
     Page<SanPham> findAllSanPham(Pageable pageable);
+
+    public Page<SanPham> filterProducts(FilterRequestDTO filterRequest, Pageable pageable);
+
+    public Page<SanPham> filterProductsView(FilterRequestDTO filterRequest, Pageable pageable);
 }

@@ -228,6 +228,10 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
         window.location.href = '/admin/lich-su-nhap-hang/view/' + idSanPham;
     };
 
+    $scope.back = function () {
+        window.location.href = '/admin/san-pham';
+    };
+
     // Hàm lọc sản phẩm
     $scope.filter = function (filterData) {
         // Loại bỏ các thuộc tính không hợp lệ (rỗng/null)
@@ -400,6 +404,35 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
 
     $scope.getThuocTinhCT();
 
+
+    $scope.getThuocTinhByTrangThai = function () {
+        $http.get("/admin/mau-sac/get-all/trang-thai").then(r => {
+            $scope.mauSacCr = r.data;
+        }).catch(e => console.log(e))
+
+        $http.get("/admin/chat-lieu/get-all/trang-thai").then(r => {
+            $scope.chatLieuCr = r.data;
+        }).catch(e => console.log(e))
+
+        $http.get("/admin/thuong-hieu/get-all/trang-thai").then(r => {
+            $scope.thuongHieuCr = r.data;
+        }).catch(e => console.log(e))
+
+        $http.get("/admin/xuat-xu/get-all/trang-thai").then(r => {
+            $scope.xuatXuCr = r.data;
+        }).catch(e => console.log(e))
+
+        $http.get("/admin/kieu-dang/get-all/trang-thai").then(r => {
+            $scope.kieuDangCr = r.data;
+        }).catch(e => console.log(e))
+
+        $http.get("/admin/size/get-all/trang-thai").then(r => {
+            $scope.kichCoCr = r.data;
+        }).catch(e => console.log(e))
+    }
+
+    $scope.getThuocTinhByTrangThai();
+
     $scope.updateKichCo = function () {
         if (!$scope.idMauSacNhap) {
             // Nếu không chọn màu sắc, hiển thị tất cả kích cỡ
@@ -505,6 +538,9 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
             return false; // Nếu có lỗi xảy ra trong khi kiểm tra
         });
     };
+
+
+
 //     const pathName = window.location.pathname.split('/');
 //     const idSP = pathName[pathName.length - 1]
 //

@@ -4,6 +4,7 @@ import com.example.demo.Service.KieuDangService;
 import com.example.demo.dto.request.KieuDangRequestDTO;
 import com.example.demo.entity.KieuDang;
 import com.example.demo.entity.MauSac;
+import com.example.demo.entity.XuatXu;
 import com.example.demo.repo.KieuDangRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,11 @@ public class KieuDangServiceImpl implements KieuDangService {
     @Override
     public List<KieuDang> getAll() {
         return kieuDangRepo.findAll();
+    }
+
+    @Override
+    public List<KieuDang> getAllByTT() {
+        return kieuDangRepo.getAllByTT();
     }
 
     @Override

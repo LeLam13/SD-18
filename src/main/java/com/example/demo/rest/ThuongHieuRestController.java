@@ -33,6 +33,12 @@ public class ThuongHieuRestController {
         return ResponseEntity.ok(th);
     }
 
+    @GetMapping("/admin/thuong-hieu/get-all/trang-thai")
+    public ResponseEntity<?> getAllByTT() {
+        List<ThuongHieu> ms = thuongHieuService.getAllByTT();
+        return ResponseEntity.ok(ms);
+    }
+
     @GetMapping("/thuong-hieu/get-all")
     public ResponseEntity<?> getAll2(){
         List<ThuongHieu> th=thuongHieuService.getAll();

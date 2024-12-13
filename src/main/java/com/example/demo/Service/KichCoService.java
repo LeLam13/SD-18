@@ -3,6 +3,7 @@ package com.example.demo.Service;
 import com.example.demo.dto.request.KichCoRequestDTO;
 import com.example.demo.dto.request.MauSacRequestDTO;
 import com.example.demo.entity.KichCo;
+import com.example.demo.entity.KieuDang;
 import com.example.demo.entity.MauSac;
 import com.example.demo.entity.XuatXu;
 import org.springframework.data.domain.Page;
@@ -33,5 +34,7 @@ public interface KichCoService {
     public List<KichCo> getAllbyCT(Integer idSanPham);
 
     public List<KichCo> getAllbyMS(Integer idSanPham, Integer idMauSac);
+
+    public List<KichCo> getAllByTT();
 
 }

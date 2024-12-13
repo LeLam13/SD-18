@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface KieuDangRepo extends JpaRepository<KieuDang,Integer> {
     KieuDang findByMa(String ma);
@@ -20,4 +22,7 @@ public interface KieuDangRepo extends JpaRepository<KieuDang,Integer> {
             "LOWER(REPLACE(m.ten, 'đ', 'd')) LIKE LOWER(REPLACE(CONCAT('%', :query, '%'), 'đ', 'd'))")
     Page<KieuDang> searchIgnoreCaseAndDiacritics(@Param("query") String query, Pageable pageable);
 
+
+    @Query("SELECT ms FROM KieuDang ms where ms.trangThai = true")
+    List<KieuDang> getAllByTT();
 }

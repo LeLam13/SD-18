@@ -6,9 +6,9 @@
         layout:decorate="~{/user/trangChu}"
 >
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title>Thông Tin Khách Hàng</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
             rel="stylesheet"
@@ -57,7 +57,7 @@
 
         /* Trạng thái chọn */
         .custom-button.selected {
-            border: 2px solid black; /* Viền đậm khi được chọn */
+            border: 3px solid black; /* Viền đậm khi được chọn */
         }
 
         /* Hiệu ứng hover */
@@ -90,6 +90,10 @@
             font-weight: bold; /* Đảm bảo chữ đậm */
         }
 
+        .large-td {
+            font-size: 16px; /* Tăng kích thước font */
+            padding: 15px; /* Tăng khoảng cách trong ô */
+        }
 
     </style>
     <style>
@@ -100,7 +104,7 @@
     </style>
     <!-- Product Detail -->
     <section class="sec-product-detail bg0 p-t-65 ">
-        <div class="container"  ng-controller="ctsp-ctrl">
+        <div class="container" ng-controller="ctsp-ctrl">
             <!-- Chỉ hiển thị một sản phẩm duy nhất theo màu sắc và kích cỡ đã chọn -->
             <div class="row" ng-if="filteredItems.length > 0">
                 <div class="col-md-6 col-lg-7 p-b-30">
@@ -121,8 +125,8 @@
                     </div>
                 </div>
 
-                <div class="col-md-6 col-lg-5 box-border" >
-                    <div class="p-r-50 p-t-5 p-lr-0-lg">
+                <div class="col-md-6 col-lg-5 box-border">
+                    <div style="padding: 10px">
                         <div class="d-flex align-content-center">
                             <h4 class="mtext-105 cl2 js-name-detail p-b-14 me-2">
                                 {{filteredItems[0].idSanPham.ten}}
@@ -135,7 +139,7 @@
                                 <div class="col-12">
                                     <div class="price-container">
 
-                                        <h5 class="text-danger" ng-if="price">Giá: {{price}}</h5>
+                                        <h5 class="text-danger" ng-if="price">Giá: {{price | number}}</h5>
                                         <h5 class="text-danger" ng-if="!price">Liên hệ để biết giá</h5>
                                     </div>
                                 </div>
@@ -145,8 +149,8 @@
                         <!-- Hiển thị số lượng -->
                         <div class="row">
                             <div class="col-6 m-t-10">
-                                <p ng-if="soLuong > 0">Hàng trong kho: {{soLuong}}</p>
-                                <p ng-if="soLuong <= 0" class="text-danger">Hết hàng</p>
+                                <p ng-if="soLuong > 0" style="font-size: 16px">Số lượng: {{soLuong}}</p>
+                                <p ng-if="soLuong <= 0" style="font-size: 16px" class="text-danger">Hết hàng</p>
                             </div>
                         </div>
 
@@ -180,18 +184,19 @@
 
 
                         <!-- Thêm vào giỏ hàng -->
-                        <div class="p-t-3 mt-3">
+                        <div class="p-t-3 mt-5 d-flex justify-content-center align-items-center">
                             <div class="row p-b-10">
                                 <div class="size-600 flex-w flex-m respon6-next">
                                     <div class="col-5">
                                         <button ng-click="addProductIntocart(idSanPhamChiTiet1)"
-                                                class="flex-c-m stext-80 cl0 size-101 bg1 bor1 hov-btn1 p-lr-15 trans-04 mb-2">
+                                                class="btn btn-primary">
                                             Thêm vào giỏ hàng
                                         </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -217,26 +222,27 @@
                                         <tbody>
                                         <tr>
                                             <th scope="row" style="width: 400px;">Thương hiệu</th>
-                                            <td>{{filteredItems[0].idSanPham.idThuongHieu.ten}}</td>
+                                            <td class="large-td">{{filteredItems[0].idSanPham.idThuongHieu.ten}}</td>
                                         </tr>
                                         <tr>
                                             <th scope="row">Xuất xứ</th>
-                                            <td>{{filteredItems[0].idSanPham.idXuatXu.ten}}</td>
+                                            <td class="large-td">{{filteredItems[0].idSanPham.idXuatXu.ten}}</td>
                                         </tr>
                                         <tr>
                                             <th scope="row">Chất liệu</th>
-                                            <td>{{filteredItems[0].idSanPham.idChatLieu.ten}}</td>
+                                            <td class="large-td">{{filteredItems[0].idSanPham.idChatLieu.ten}}</td>
                                         </tr>
-                                        <tr >
+                                        <tr>
                                             <th scope="row">Kiểu dáng</th>
-                                            <td>{{filteredItems[0].idSanPham.idKieuDang.ten}}</td>
+                                            <td class="large-td">{{filteredItems[0].idSanPham.idKieuDang.ten}}</td>
                                         </tr>
                                         <tr>
                                             <th scope="row">Mô tả</th>
-                                            <td>{{filteredItems[0].idSanPham.moTa}}</td>
+                                            <td class="large-td">{{filteredItems[0].idSanPham.moTa}}</td>
                                         </tr>
                                         </tbody>
                                     </table>
+
                                 </div>
                             </div>
 

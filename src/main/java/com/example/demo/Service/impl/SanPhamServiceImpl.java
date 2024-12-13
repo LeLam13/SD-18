@@ -1,11 +1,14 @@
 package com.example.demo.Service.impl;
 
 import com.example.demo.Service.SanPhamService;
+import com.example.demo.dto.request.FilterRequestDTO;
 import com.example.demo.dto.request.SanPhamRequestDTO;
 import com.example.demo.dto.request.SanPhamWithImageDto;
 import com.example.demo.entity.ChatLieu;
 import com.example.demo.entity.HinhAnh;
+import com.example.demo.entity.KichCo;
 import com.example.demo.entity.KieuDang;
+import com.example.demo.entity.MauSac;
 import com.example.demo.entity.SanPham;
 import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.entity.ThuongHieu;
@@ -13,17 +16,25 @@ import com.example.demo.entity.XuatXu;
 import com.example.demo.repo.ChatLieuRepo;
 import com.example.demo.repo.HinhAnhRepo;
 import com.example.demo.repo.KieuDangRepo;
+import com.example.demo.repo.MauSacRepo;
 import com.example.demo.repo.SanPhamChiTietRepo;
 import com.example.demo.repo.SanPhamRepo;
 import com.example.demo.repo.ThuongHieuRepo;
 import com.example.demo.repo.XuatXuRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 public class SanPhamServiceImpl implements SanPhamService {
@@ -32,6 +43,9 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     @Autowired
     private SanPhamChiTietRepo sanPhamChiTietRepo;
+
+    @Autowired
+    private MauSacRepo mauSacRepo;
 
     @Autowired
     private ChatLieuRepo chatLieuRepo;
@@ -113,6 +127,7 @@ public class SanPhamServiceImpl implements SanPhamService {
 
             // Gán hình ảnh nếu tồn tại
             sanPham.setHinhAnh(cheapestDetail != null ? cheapestDetail.getIdHinhAnh().getTen() : null);
+
         });
 
 
@@ -142,6 +157,7 @@ public class SanPhamServiceImpl implements SanPhamService {
 
         sp.setMoTa(sanPhamRequestDTO.getMoTa());
         sp.setCreateDate(date);
+        sp.setCreateBy(getCurrentUsername());
         sp.setTrangThai(true);
         return sanPhamRepo.save(sp);
     }
@@ -167,12 +183,13 @@ public class SanPhamServiceImpl implements SanPhamService {
 //        ms.setIdHinhAnh(hinhAnh);
 
         ms.setMoTa(sanPhamRequestDTO.getMoTa());
+        ms.setUpdateBy(getCurrentUsername());
         ms.setUpdateDate(date);
         return sanPhamRepo.save(ms);
     }
 
     @Override
-    public SanPham updateSanPhamTheoID(Integer idSanPham,SanPhamRequestDTO sanPhamRequestDTO) {
+    public SanPham updateSanPhamTheoID(Integer idSanPham, SanPhamRequestDTO sanPhamRequestDTO) {
         SanPham ms = sanPhamRepo.findByIdSanPham(idSanPham);
 
         ChatLieu chatLieu = chatLieuRepo.findByIdChatLieu(sanPhamRequestDTO.getIdChatLieu());
@@ -190,7 +207,7 @@ public class SanPhamServiceImpl implements SanPhamService {
 //        HinhAnh hinhAnh = hinhAnhRepo.findByIdHinhAnh(sanPhamRequestDTO.getIdHinhAnh());
 //        ms.setIdHinhAnh(hinhAnh);
 
-
+        ms.setUpdateBy(getCurrentUsername());
         ms.setUpdateDate(date);
         return sanPhamRepo.save(ms);
     }
@@ -216,4 +233,207 @@ public class SanPhamServiceImpl implements SanPhamService {
         return sanPhamRepo.save(ms);
     }
 
+    @Override
+    public Page<SanPham> filterProducts(FilterRequestDTO filterRequest, Pageable pageable) {
+        Specification<SanPham> speci = Specification.where(null);
+
+        // Tìm kiếm theo mã hoặc tên sản phẩm
+        if (filterRequest.getTen() != null && !filterRequest.getTen().isEmpty()) {
+            String tenKhongDau = removeAccents(filterRequest.getTen());
+            speci = speci.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.or(
+                            criteriaBuilder.like(criteriaBuilder.lower(root.get("ten")), "%" + tenKhongDau.toLowerCase() + "%"),
+                            criteriaBuilder.like(criteriaBuilder.lower(root.get("ma")), "%" + tenKhongDau.toLowerCase() + "%")
+                    ));
+        }
+
+        if (filterRequest.getIdXuatXu() != null) {
+            XuatXu xuatXu = xuatXuRepo.findByIdXuatXu(filterRequest.getIdXuatXu());
+            speci = speci.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("idXuatXu"), xuatXu));
+        }
+
+        if (filterRequest.getIdThuongHieu() != null) {
+            ThuongHieu thuongHieu = thuongHieuRepo.findByIdThuongHieu(filterRequest.getIdThuongHieu());
+            speci = speci.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("idThuongHieu"), thuongHieu));
+        }
+
+        if (filterRequest.getIdKieuDang() != null) {
+            KieuDang kieuDang = kieuDangRepo.findByIdKieuDang(filterRequest.getIdKieuDang());
+            speci = speci.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("idKieuDang"), kieuDang));
+        }
+
+        if (filterRequest.getIdChatLieu() != null) {
+            ChatLieu chatLieu = chatLieuRepo.findByIdChatLieu(filterRequest.getIdChatLieu());
+            speci = speci.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("idChatLieu"), chatLieu));
+        }
+
+        // Lấy sản phẩm từ database
+        Page<SanPham> result = sanPhamRepo.findAll(speci, pageable);
+
+        // Xử lý bổ sung thông tin sản phẩm
+        List<SanPham> processedProducts = result.getContent().stream().map(sanPham -> {
+            // Lấy dữ liệu chi tiết đã bán từ truy vấn
+            List<Object[]> detailedSoldData = sanPhamChiTietRepo.getDetailedTotalSoldByProduct(sanPham.getIdSanPham());
+
+            // Tổng số lượng đã bán bằng cách gộp từ các chi tiết
+            Integer totalSold = detailedSoldData.stream()
+                    .filter(row -> row[1] != null)
+                    .mapToInt(row -> ((Number) row[1]).intValue())
+                    .sum();
+
+            // Lấy số lượng tồn kho
+            Integer totalInventory = sanPhamChiTietRepo.getTotalInventoryByProduct(sanPham.getIdSanPham());
+
+            // Gán giá trị bổ sung vào sản phẩm
+            sanPham.setTotalSold(totalSold != null ? totalSold : 0); // Tránh NullPointerException
+            sanPham.setTotalInventory(totalInventory != null ? totalInventory : 0); // Tránh NullPointerException
+
+            // Lấy giá bán nhỏ nhất và hình ảnh từ chi tiết sản phẩm
+            List<SanPhamChiTiet> chiTietList = sanPhamChiTietRepo.findCheapestProductDetail(sanPham.getIdSanPham());
+            SanPhamChiTiet cheapestDetail = chiTietList.stream()
+                    .filter(chiTiet -> chiTiet.getIdHinhAnh() != null)
+                    .findFirst()
+                    .orElse(null);
+
+            sanPham.setMinGiaBan(cheapestDetail != null ? cheapestDetail.getGiaBan() : null);
+            sanPham.setHinhAnh(cheapestDetail != null ? cheapestDetail.getIdHinhAnh().getTen() : null);
+
+            return sanPham;
+        }).collect(Collectors.toList());
+
+        // Lọc sản phẩm theo GiaMin và GiaMax
+        List<SanPham> filteredProducts = processedProducts.stream()
+                .filter(sanPham -> filterRequest.getGiaMin() == null ||
+                        (sanPham.getMinGiaBan() != null && sanPham.getMinGiaBan() >= filterRequest.getGiaMin()))
+                .filter(sanPham -> filterRequest.getGiaMax() == null ||
+                        (sanPham.getMinGiaBan() != null && sanPham.getMinGiaBan() <= filterRequest.getGiaMax()))
+                .collect(Collectors.toList());
+
+        // Chuyển danh sách đã lọc thành Page
+        return new PageImpl<>(filteredProducts, pageable, filteredProducts.size());
+    }
+
+
+    @Override
+    public Page<SanPham> filterProductsView(FilterRequestDTO filterRequest, Pageable pageable) {
+        Specification<SanPham> speci = Specification.where(null);
+
+        // Tìm kiếm theo mã hoặc tên sản phẩm
+        if (filterRequest.getTen() != null && !filterRequest.getTen().isEmpty()) {
+            String tenKhongDau = removeAccents(filterRequest.getTen());
+            speci = speci.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.or(
+                            criteriaBuilder.like(criteriaBuilder.lower(root.get("ten")), "%" + tenKhongDau.toLowerCase() + "%"),
+                            criteriaBuilder.like(criteriaBuilder.lower(root.get("ma")), "%" + tenKhongDau.toLowerCase() + "%")
+                    ));
+        }
+
+        if (filterRequest.getIdXuatXu() != null) {
+            XuatXu xuatXu = xuatXuRepo.findByIdXuatXu(filterRequest.getIdXuatXu());
+            speci = speci.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("idXuatXu"), xuatXu));
+        }
+
+        if (filterRequest.getIdThuongHieu() != null) {
+            ThuongHieu thuongHieu = thuongHieuRepo.findByIdThuongHieu(filterRequest.getIdThuongHieu());
+            speci = speci.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("idThuongHieu"), thuongHieu));
+        }
+
+        if (filterRequest.getIdKieuDang() != null) {
+            KieuDang kieuDang = kieuDangRepo.findByIdKieuDang(filterRequest.getIdKieuDang());
+            speci = speci.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("idKieuDang"), kieuDang));
+        }
+
+        if (filterRequest.getIdChatLieu() != null) {
+            ChatLieu chatLieu = chatLieuRepo.findByIdChatLieu(filterRequest.getIdChatLieu());
+            speci = speci.and((root, query, criteriaBuilder) ->
+                    criteriaBuilder.equal(root.get("idChatLieu"), chatLieu));
+        }
+        Page<SanPham> result = sanPhamRepo.findAll(speci, pageable);
+
+// Lọc danh sách sản phẩm để loại bỏ các sản phẩm không có chi tiết
+        List<SanPham> filteredSanPhams = result.getContent().stream()
+                .filter(sanPham -> !sanPhamChiTietRepo.findByIdSanPham(sanPham.getIdSanPham()).isEmpty()) // Chỉ giữ sản phẩm có chi tiết
+                .collect(Collectors.toList());
+
+// Áp dụng các phép tính bổ sung chỉ cho các sản phẩm còn lại
+        filteredSanPhams.forEach(sanPham -> {
+            // Lấy dữ liệu chi tiết đã bán từ truy vấn
+            List<Object[]> detailedSoldData = sanPhamChiTietRepo.getDetailedTotalSoldByProduct(sanPham.getIdSanPham());
+
+            // Tổng số lượng đã bán bằng cách gộp từ các chi tiết
+            Integer totalSold = 0;
+            for (Object[] row : detailedSoldData) {
+                if (row[1] != null) {
+                    totalSold += ((Number) row[1]).intValue();
+                }
+            }
+
+            // Lấy số lượng tồn kho
+            Integer totalInventory = sanPhamChiTietRepo.getTotalInventoryByProduct(sanPham.getIdSanPham());
+
+            // Gán giá trị bổ sung vào sản phẩm
+            sanPham.setTotalSold(totalSold != null ? totalSold : 0); // Tránh NullPointerException
+            sanPham.setTotalInventory(totalInventory != null ? totalInventory : 0); // Tránh NullPointerException
+
+            List<SanPhamChiTiet> chiTietList = sanPhamChiTietRepo.findCheapestProductDetail(sanPham.getIdSanPham());
+
+            // Lọc danh sách để chỉ giữ các mục có idHinhAnh không null
+            SanPhamChiTiet cheapestDetail = chiTietList.stream()
+                    .filter(chiTiet -> chiTiet.getIdHinhAnh() != null)
+                    .findFirst() // Lấy mục đầu tiên sau khi lọc
+                    .orElse(null);
+
+            // Gán giá nhỏ nhất
+            sanPham.setMinGiaBan(cheapestDetail != null ? cheapestDetail.getGiaBan() : null);
+
+            // Gán hình ảnh nếu tồn tại
+            sanPham.setHinhAnh(cheapestDetail != null ? cheapestDetail.getIdHinhAnh().getTen() : null);
+        });
+
+// Nếu không còn sản phẩm nào sau khi lọc, trả về danh sách trống
+        if (filteredSanPhams.isEmpty()) {
+            return Page.empty();
+        }
+
+// Trả về kết quả đã được lọc và ánh xạ lại vào Page
+        return new PageImpl<>(filteredSanPhams, pageable, filteredSanPhams.size());
+
+    }
+
+    public static String removeAccents(String str) {
+        if (str == null) return null;
+        return str.replaceAll("[áàảãạăắằẳẵặâấầẩẫậ]", "a")
+                .replaceAll("[éèẻẽẹêếềểễệ]", "e")
+                .replaceAll("[íìỉĩị]", "i")
+                .replaceAll("[óòỏõọôốồổỗộơớờởỡợ]", "o")
+                .replaceAll("[úùủũụưứừửữự]", "u")
+                .replaceAll("[ýỳỷỹỵ]", "y")
+                .replaceAll("[đ]", "d")
+                .replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");
+    }
+
+    public String getCurrentUsername() {
+        String username = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetails) {
+                // Trường hợp principal là UserDetails
+                username = ((UserDetails) principal).getUsername();
+                System.out.println("Username (UserDetails): " + username);
+            } else {
+                // Trường hợp principal là chuỗi (vd: OAuth2)
+                username = principal.toString();
+                System.out.println("Username (String): " + username);
+            }
+        }
+        return username;
+    }
 }

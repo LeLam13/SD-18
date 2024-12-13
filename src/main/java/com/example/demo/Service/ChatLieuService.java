@@ -3,6 +3,7 @@ package com.example.demo.Service;
 import com.example.demo.dto.request.ChatLieuRequestDTO;
 import com.example.demo.dto.request.MauSacRequestDTO;
 import com.example.demo.entity.ChatLieu;
+import com.example.demo.entity.KieuDang;
 import com.example.demo.entity.MauSac;
 import com.example.demo.entity.XuatXu;
 import org.springframework.data.domain.Page;
@@ -15,6 +16,8 @@ import java.util.List;
 public interface ChatLieuService {
 
     public List<ChatLieu> getAll();
+
+    public List<ChatLieu> getAllByTT();
 
     public Page<ChatLieu> findAll(Pageable pageable);
 

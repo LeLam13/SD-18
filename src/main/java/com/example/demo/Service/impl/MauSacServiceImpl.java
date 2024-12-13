@@ -3,6 +3,7 @@ package com.example.demo.Service.impl;
 import com.example.demo.Service.MauSacService;
 import com.example.demo.dto.request.MauSacRequestDTO;
 import com.example.demo.entity.MauSac;
+import com.example.demo.entity.XuatXu;
 import com.example.demo.repo.MauSacRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -26,6 +27,11 @@ public class MauSacServiceImpl implements MauSacService {
     @Override
     public List<MauSac> getAll() {
         return mauSacRepo.findAll();
+    }
+
+    @Override
+    public List<MauSac> getAllByTT() {
+        return mauSacRepo.getAllByTT();
     }
 
     @Override
