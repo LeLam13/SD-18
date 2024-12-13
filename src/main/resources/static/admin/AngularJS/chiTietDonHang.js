@@ -77,7 +77,7 @@ app.controller("chiTiet-ctrl",function ($scope,$location, $http,$interval,$sce, 
         }
 
         // Nếu trạng thái hiện tại đã là 5, không cho phép cập nhật
-        if ($scope.currentStatus === 5) {
+        if ($scope.currentStatus === 5 || $scope.currentStatus === 6) {
             $scope.showNotification('Không thể cập nhật vì đơn hàng đã hoàn thành!', 'error');
             return;
         }
@@ -113,6 +113,60 @@ app.controller("chiTiet-ctrl",function ($scope,$location, $http,$interval,$sce, 
         });
     }
 
+    $scope.cancelOrderStatus = function (){
+        var ghichu = $('#ghi-chu').val();
+        $scope.calcel ={
+            idDonHang: id,
+            idTrangThai: 6,
+            ghiChu: ghichu
+        }
+        if(ghichu === null || ghichu ===""){
+            $scope.showNotification("Chưa điền lý do huỷ đơn!",'error')
+        }
+        var calcelData = angular.copy($scope.calcel);
+        console.log("calcelData: ",calcelData);
+        $http.put('/don-hang-tai-quay/huy-don-hang', calcelData, {
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(function (response) {
+            console.log("check order after cancel: ", response.data);
+            //$scope.getOrderOfUser();
+            $scope.currentStatus = 6;
+            $('#modal-status').modal('hide');
+            $('#btn-huy').hide();
+            $scope.showNotification('Huỷ Đơn Thành công!', 'success');
+        }).catch(function (error) {
+            console.error('Có lỗi xảy ra:', error);
+            if (error.data && error.data.message) {
+                $scope.showNotification(error.data.message, 'error');
+            } else {
+                $scope.showNotification('Huỷ Đơn Thất Bại! Đã xảy ra lỗi không xác định.', 'error');
+            }
+        });
+
+    };
+
+    $scope.showCancelOrder = function() {
+        $(".step").removeClass("active");
+        $("#step-6").show();
+        $("#step-1").addClass("active");
+        $("#step-6").addClass("active");
+    };
+
+    $scope.showModalCancel = function (){
+        $('#confirmModal').modal('hide');
+        $('#modal-status').modal('show');
+    }
+
+    $scope.showModalConfirm = function (){
+        // if(idDonHangShow === null){
+        //     $scope.showNotification('Chưa chọn đơn hàng!','error');
+        // }else {
+        //     $('#confirmModal').modal('show');
+        // }
+        $('#confirmModal').modal('show');
+    }
     $scope.showNotification = function(message, type) {
         $scope.notification.message = message;
         $scope.notification.type = type;
@@ -136,7 +190,21 @@ app.controller("chiTiet-ctrl",function ($scope,$location, $http,$interval,$sce, 
 
     //ẩn trạng thái
     $scope.hideStatusOrder = function (){
+        if(idDonHangShow !==1){
+            $('#btn-huy').hide();
+        }else {
+            $('#btn-huy').show();
+        }
         $('#step-6').hide();
+    }
+
+    $scope.hideStatusOrder = function (){
+        if(idDonHangShow === 7){
+            $('#btn-in-hoa-don').show();
+        }else {
+            $('#btn-in-hoa-don').hide();
+        }
+
     }
 
     //load dữ liệu mặc định
@@ -195,11 +263,20 @@ app.controller("chiTiet-ctrl",function ($scope,$location, $http,$interval,$sce, 
                             $scope.showActive(5);
                             $scope.stopAutoCheck();  // Dừng interval
                         }
+                        if(newTrangThai === 6){
+                            console.log("Trạng thái đạt 6, dừng tự động!");
+                            $scope.showCancelOrder();
+                            $scope.stopAutoCheck(); // Dừng interval
+                        }
                         $('#trang-thai').text(response.data.trangThai.tenTrangThai);
                     }
                 })
                 .catch(function(error) {
                     console.error("Có lỗi khi lấy trạng thái", error);
+                    if (error.status === -1 || error.status === 500) { // Lỗi kết nối server
+                        console.log("Server không phản hồi. Dừng tự động kiểm tra.");
+                        $scope.stopAutoCheck();
+                    }
                 });
         }
     }
@@ -212,4 +289,13 @@ app.controller("chiTiet-ctrl",function ($scope,$location, $http,$interval,$sce, 
     };
 
     $scope.startAutoCheck();
+
+    $scope.$on('$destroy', function() {
+        $scope.stopAutoCheck();
+        if (intervalPromise) {
+            $interval.cancel(intervalPromise);
+            intervalPromise = null;
+            console.log("Đã dừng tự động kiểm tra trạng thái.");
+        }
+    });
 });

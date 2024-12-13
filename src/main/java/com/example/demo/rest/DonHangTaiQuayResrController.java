@@ -4,9 +4,13 @@ import com.example.demo.Service.DonHangTaiQuayService;
 import com.example.demo.dto.request.DonHangTaiQuayStatusRequestDTO;
 import com.example.demo.entity.DonHang;
 import com.example.demo.entity.DonHangChiTiet;
+import com.example.demo.entity.TrangThai;
 import com.example.demo.entity.khachhang;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -44,6 +48,29 @@ public class DonHangTaiQuayResrController {
             return ResponseEntity.badRequest().body(e.getMessage());  // Trả về lỗi với thông báo
         }
     }
+    @PutMapping("/don-hang-tai-quay/huy-don-hang")
+    public ResponseEntity<?> cancelStatusOrder(@RequestBody DonHangTaiQuayStatusRequestDTO donHangStatus){
+        try {
+            String username =null;
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.isAuthenticated()) {
+                Object principal = authentication.getPrincipal();
+                if (principal instanceof UserDetails) {
+                    //return ((UserDetails) principal).getUsername();
+                    System.out.println("test get user1: "+((UserDetails) principal).getUsername());
+                    username = ((UserDetails) principal).getUsername();
+                } else {
+                    System.out.println("test get user2: "+principal.toString());
+                    //return principal.toString();
+                }
+            }
+            System.out.println("check status order: "+ donHangStatus);
+            DonHang donHangTaiQuay = donHangTaiQuayService.cancelOrderStatus(donHangStatus,username);
+            return ResponseEntity.ok(donHangTaiQuay);
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());  // Trả về lỗi với thông báo
+        }
+    }
     @GetMapping("/don-hang/tim-kiem-ma-don-hang")
     public  ResponseEntity<?> searchMaDonHang(@RequestParam("maHD") String maHD){
         List<DonHang> donHangList = donHangTaiQuayService.searchMaDonhang(maHD);
@@ -68,5 +95,10 @@ public class DonHangTaiQuayResrController {
 
        List<DonHang> donHangList = donHangTaiQuayService.searchNgayTao(startDate,endDate);
         return ResponseEntity.ok(donHangList);
+    }
+    @GetMapping("/don-hang/lay-trang-thai")
+    public  ResponseEntity<?> getAllStatus(){
+        List<TrangThai> trangThaiList = donHangTaiQuayService.getAllStatus();
+        return ResponseEntity.ok(trangThaiList);
     }
 }

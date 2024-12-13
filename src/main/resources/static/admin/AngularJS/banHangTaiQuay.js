@@ -298,7 +298,9 @@ app.controller("banhang-ctrl", function ($scope, $http,$sce,$timeout) {
         var selectedWardName = selectedWard ? selectedWard.WardName : '';
 
         var diaChiKhachNhan =$('#soNha').val()+ "-" + selectedWardName+ "-" + selectedDistrictName  + "-" + selectedProvinceName ;
-
+        if(selectedProvinceName ==='' && selectedDistrictName==='' && selectedWardName===''){
+            diaChiKhachNhan = null;
+        }
 
         console.log("check id khach hàng1: ",$scope.khachHangById);
         var trangThai = 5;
@@ -763,6 +765,12 @@ app.controller("banhang-ctrl", function ($scope, $http,$sce,$timeout) {
     $scope.getKhuyenmaiById = function (id){
         $http.get("/don-hang/khuyen-mai/"+id).then(function (response) {
             console.log('khuyen mai by id:', response.data);
+            var discourate =  response.data.soTienToiThieu;
+            let getDiscourate = parseFloat(discourate);
+            if($scope.getSum() < getDiscourate){
+                $scope.showErrrorsMes("Giá Tiền Không Phù Hợp Với Mức Áp Dụng!");
+                return;
+            }
             $scope.khuyenMaiById = response.data;
             $('#ma-khuyen-mai').val(response.data.maKhuyenMai);
             if(response.data.mucGiamGia < 100){
@@ -771,12 +779,11 @@ app.controller("banhang-ctrl", function ($scope, $http,$sce,$timeout) {
                 $('#muc-giam-gia').val(response.data.mucGiamGia);
             }
 
-            // $('#show-modal-khach').modal('hide');
+            $('#show-modal-khuyen-mai').modal('hide');
         }).catch(function (errors) {
             console.error('Có lỗi xảy ra:', errors);
         })
     }
-
 
     //in hoá đơn
     $scope.printer = function (){

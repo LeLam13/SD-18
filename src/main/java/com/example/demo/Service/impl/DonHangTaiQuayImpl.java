@@ -2,19 +2,15 @@ package com.example.demo.Service.impl;
 
 import com.example.demo.Service.DonHangTaiQuayService;
 import com.example.demo.dto.request.DonHangTaiQuayStatusRequestDTO;
-import com.example.demo.entity.DonHang;
-import com.example.demo.entity.DonHangChiTiet;
-import com.example.demo.entity.TrangThai;
-import com.example.demo.repo.DonHangChiTietRepo;
-import com.example.demo.repo.DonHangRepo;
-import com.example.demo.repo.SanPhamChiTietRepo;
-import com.example.demo.repo.TrangThaiRepo;
+import com.example.demo.entity.*;
+import com.example.demo.repo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DonHangTaiQuayImpl implements DonHangTaiQuayService {
@@ -26,6 +22,12 @@ public class DonHangTaiQuayImpl implements DonHangTaiQuayService {
     SanPhamChiTietRepo sanPhamChiTietRepo;
     @Autowired
     TrangThaiRepo trangThaiRepo;
+    @Autowired
+    taikhoanRepo taikhoanRepo;
+    @Autowired
+    NhanVienRepo nhanVienRepo;
+    @Autowired
+    KhuyenMaiRepo khuyenMaiRepo;
 
     @Override
     public List<DonHang> getAllOrder() {
@@ -76,5 +78,53 @@ public class DonHangTaiQuayImpl implements DonHangTaiQuayService {
     @Override
     public List<DonHang> searchNgayTao(LocalDate startDate, LocalDate endDate) {
         return donHangRepo.findDonHangByDateRangeNative(startDate,endDate);
+    }
+
+    @Override
+    public List<TrangThai> getAllStatus() {
+        return trangThaiRepo.findAll();
+    }
+
+    @Override
+    public DonHang cancelOrderStatus(DonHangTaiQuayStatusRequestDTO donHangStatus,String username) {
+        DonHang donHang = donHangRepo.findById(donHangStatus.getIdDonHang()).get();
+        System.out.println("donHang: "+donHang);
+
+        taikhoan oldTaiKoan = taikhoanRepo.findByUsername(username);
+        if(oldTaiKoan!= null){
+            System.out.println("check TK: "+oldTaiKoan.toString());
+//            System.out.println("check TK: "+oldTaiKoan.getNhanVien().getIdNhanVien());
+            nhanvien getNV = nhanVienRepo.findById(oldTaiKoan.getNhanVien().getIdNhanVien()).get();
+            if(getNV != null){
+                donHang.setNhanVien(getNV);
+                donHang.setUpdateBy(getNV.getHoTen());
+            }
+        }
+
+        if(donHang == null){
+            throw new RuntimeException("Không tìm thấy đơn hàng!");
+        }
+        if(donHang.getKhuyenMai() != null){
+            KhuyenMai khuyenMai = null;
+            Optional<KhuyenMai> optionalKhuyenMai = khuyenMaiRepo.findById(donHang.getKhuyenMai().getIdKhuyenMai());
+
+            if (optionalKhuyenMai.isPresent()) {
+                khuyenMai = optionalKhuyenMai.get();
+                System.out.println("check khuyenmaix: " + khuyenMai);
+
+                // Tăng số lượng khuyến mãi và lưu lại
+                khuyenMai.setSoLuong(khuyenMai.getSoLuong() + 1);
+                khuyenMaiRepo.save(khuyenMai);
+            }
+        }
+
+        TrangThai trangThai = trangThaiRepo.findById(6).orElse(null);
+        donHang.setTrangThai(trangThai);
+        LocalDate localDate = LocalDate.now();
+        donHang.setUpdateDate(localDate);
+
+        donHang.setGhiChu(donHangStatus.getGhiChu());
+        donHangRepo.save(donHang);
+        return donHang;
     }
 }

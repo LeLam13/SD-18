@@ -23,6 +23,8 @@ public class DonHangCuaKhacServiceImpl implements DonHangCuaKhachService {
     khachhangRePo khachhangRePo;
     @Autowired
     TrangThaiRepo trangThaiRepo;
+    @Autowired
+    KhuyenMaiRepo khuyenMaiRepo;
 
     @Override
     public List<DonHang> getAllOrderUsername(String username) {
@@ -67,6 +69,14 @@ public class DonHangCuaKhacServiceImpl implements DonHangCuaKhachService {
         if(donHang == null){
             throw new RuntimeException("Không tìm thấy đơn hàng!");
         }
+        KhuyenMai khuyenMai = khuyenMaiRepo.findById(donHang.getKhuyenMai().getIdKhuyenMai()).get();
+        if(khuyenMai != null){
+            khuyenMai.setSoLuong(khuyenMai.getSoLuong()+1);
+            khuyenMaiRepo.save(khuyenMai);
+        }
+//        else {
+//            throw new RuntimeException("Không tìm thấy khuyến mãi!");
+//        }
         TrangThai trangThai = trangThaiRepo.findById(6).orElse(null);
         donHang.setTrangThai(trangThai);
         LocalDate localDate = LocalDate.now();
