@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface ThuongHieuRepo extends JpaRepository<ThuongHieu,Integer> {
     ThuongHieu findByMa(String ma);
@@ -19,4 +21,7 @@ public interface ThuongHieuRepo extends JpaRepository<ThuongHieu,Integer> {
             "LOWER(REPLACE(m.ma, 'đ', 'd')) LIKE LOWER(REPLACE(CONCAT('%', :query, '%'), 'đ', 'd')) OR " +
             "LOWER(REPLACE(m.ten, 'đ', 'd')) LIKE LOWER(REPLACE(CONCAT('%', :query, '%'), 'đ', 'd'))")
     Page<ThuongHieu> searchIgnoreCaseAndDiacritics(@Param("query") String query, Pageable pageable);
+
+    @Query("SELECT ms FROM ThuongHieu ms where ms.trangThai = true")
+    List<ThuongHieu> getAllByTT();
 }

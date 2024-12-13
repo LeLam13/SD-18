@@ -15,6 +15,8 @@ import java.util.List;
 public interface KieuDangService {
    public List<KieuDang> getAll();
 
+   public List<KieuDang> getAllByTT();
+
    public Page<KieuDang> findAll(Pageable pageable);
 
    public KieuDang createKieuDang(KieuDangRequestDTO kieuDangRequestDTO);

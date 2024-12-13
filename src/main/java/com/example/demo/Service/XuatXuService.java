@@ -2,6 +2,7 @@ package com.example.demo.Service;
 
 import com.example.demo.dto.request.MauSacRequestDTO;
 import com.example.demo.dto.request.XuatXuRequestDTO;
+import com.example.demo.entity.KieuDang;
 import com.example.demo.entity.MauSac;
 import com.example.demo.entity.XuatXu;
 import org.springframework.data.domain.Page;
@@ -14,6 +15,8 @@ import java.util.List;
 public interface XuatXuService {
 
     public List<XuatXu> getAll();
+
+    public List<XuatXu> getAllByTT();
 
     public Page<XuatXu> findAll(Pageable pageable);
 

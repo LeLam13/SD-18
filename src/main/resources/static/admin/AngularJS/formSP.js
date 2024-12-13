@@ -237,6 +237,33 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
         }
     };
 
+    $scope.getThuocTinhByTrangThai = function () {
+        $http.get("/admin/mau-sac/get-all/trang-thai").then(r => {
+            $scope.mauSacCr = r.data;
+        }).catch(e => console.log(e))
+
+        $http.get("/admin/chat-lieu/get-all/trang-thai").then(r => {
+            $scope.chatLieuCr = r.data;
+        }).catch(e => console.log(e))
+
+        $http.get("/admin/thuong-hieu/get-all/trang-thai").then(r => {
+            $scope.thuongHieuCr = r.data;
+        }).catch(e => console.log(e))
+
+        $http.get("/admin/xuat-xu/get-all/trang-thai").then(r => {
+            $scope.xuatXuCr = r.data;
+        }).catch(e => console.log(e))
+
+        $http.get("/admin/kieu-dang/get-all/trang-thai").then(r => {
+            $scope.kieuDangCr = r.data;
+        }).catch(e => console.log(e))
+
+        $http.get("/admin/size/get-all/trang-thai").then(r => {
+            $scope.kichCoCr = r.data;
+        }).catch(e => console.log(e))
+    }
+
+    $scope.getThuocTinhByTrangThai();
 
     $scope.getHinhAnh = function (HinhAnh) {
         // Nếu HinhAnh là null hoặc không có tên, không thực hiện gì

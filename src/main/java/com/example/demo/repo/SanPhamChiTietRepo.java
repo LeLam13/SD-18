@@ -149,18 +149,19 @@ public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Intege
     );
 
     @Query("""
-    SELECT sp
-    FROM SanPhamChiTiet sp
-    WHERE sp.idSanPham.idSanPham = :idSanPham
-      AND sp.idMauSac.idMauSac = :idMauSac
-      AND sp.idKichCo.idKichCo = :idKichCo
-""")
+                SELECT sp
+                FROM SanPhamChiTiet sp
+                WHERE sp.idSanPham.idSanPham = :idSanPham
+                  AND sp.idMauSac.idMauSac = :idMauSac
+                  AND sp.idKichCo.idKichCo = :idKichCo
+            """)
     List<SanPhamChiTiet> findCheckEx(
             @Param("idSanPham") Integer idSanPham,
             @Param("idMauSac") Integer idMauSac,
             @Param("idKichCo") Integer idKichCo
     );
 
-
+    @Query("select spct from SanPhamChiTiet  spct where spct.idSanPham.idSanPham =: idSanPham")
+    List<SanPhamChiTiet> findByIdSanPham(@Param("idSanPham") Integer idSanPham);
 }
 

@@ -18,6 +18,9 @@ import com.example.demo.repo.SanPhamRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -62,6 +65,7 @@ public class LichSuNhapHangServiceImpl implements LichSuNhapHangService {
         SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepo.findCheapestProduct(idSanPham, idMauSac, idKichCo);
         ms.setIdSanPhamChiTiet(sanPhamChiTiet);
 
+        ms.setCreateBy(getCurrentUsername());
         ms.setCreateDate(date);
         return lichSuNhapHangRepo.save(ms);
     }
@@ -69,6 +73,24 @@ public class LichSuNhapHangServiceImpl implements LichSuNhapHangService {
     @Override
     public Page<LichSuNhapHang> findAll(Integer idSanPham, Pageable pageable) {
         return lichSuNhapHangRepo.findByIdSanPham(idSanPham, pageable);
+    }
+
+    public String getCurrentUsername() {
+        String username = null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+            if (principal instanceof UserDetails) {
+                // Trường hợp principal là UserDetails
+                username = ((UserDetails) principal).getUsername();
+                System.out.println("Username (UserDetails): " + username);
+            } else {
+                // Trường hợp principal là chuỗi (vd: OAuth2)
+                username = principal.toString();
+                System.out.println("Username (String): " + username);
+            }
+        }
+        return username;
     }
 
 }

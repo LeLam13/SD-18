@@ -21,7 +21,7 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
   $scope.cart = [];
 
   $scope.page = 0;  // Trang hiện tại
-  $scope.size = 12; // Số lượng bản ghi trên mỗi trang
+  $scope.size = 8; // Số lượng bản ghi trên mỗi trang
   $scope.totalPages = 0; // Tổng số trang
   $scope.pageInput = 1; // Giá trị nhập từ ô input
   $scope.filterData = {};
@@ -72,7 +72,7 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
     console.log("Dữ liệu lọc: ", filterData);
 
     // Gửi yêu cầu lọc đến server với phân trang
-    $http.post(`/san-pham/chi-tiet/filter?page=${$scope.page}&size=${$scope.size}`, filterData).then(function (response) {
+    $http.post(`/san-pham/filter?page=${$scope.page}&size=${$scope.size}`, filterData).then(function (response) {
       $scope.listProducts = response.data.content; // Gán danh sách sản phẩm sau khi lọc
       $scope.totalPages = response.data.totalPages; // Tổng số trang
       $scope.pageNumber = 0; // Reset lại trang hiện tại sau khi lọc

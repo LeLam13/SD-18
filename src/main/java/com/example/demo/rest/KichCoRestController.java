@@ -36,6 +36,12 @@ public class KichCoRestController {
         return ResponseEntity.ok(kc); // Trả về trang hiện tại cùng dữ liệu
     }
 
+    @GetMapping("/admin/size/get-all/trang-thai")
+    public ResponseEntity<?> getAllByTT() {
+        List<KichCo> ms = kichCoService.getAllByTT();
+        return ResponseEntity.ok(ms);
+    }
+
     @GetMapping("/admin/size/get-all")
     public ResponseEntity<?> getAll() {
         List<KichCo> kc = kichCoService.getAll();

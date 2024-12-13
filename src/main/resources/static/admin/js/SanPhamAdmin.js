@@ -260,7 +260,33 @@ app.controller('ctrl', function ($scope, $http) {
 
     $scope.getPropertiesInFilter();
 
+    $scope.getThuocTinhByTrangThai = function () {
+        $http.get("/admin/mau-sac/get-all/trang-thai").then(r => {
+            $scope.mauSacCr = r.data;
+        }).catch(e => console.log(e))
 
+        $http.get("/admin/chat-lieu/get-all/trang-thai").then(r => {
+            $scope.chatLieuCr = r.data;
+        }).catch(e => console.log(e))
+
+        $http.get("/admin/thuong-hieu/get-all/trang-thai").then(r => {
+            $scope.thuongHieuCr = r.data;
+        }).catch(e => console.log(e))
+
+        $http.get("/admin/xuat-xu/get-all/trang-thai").then(r => {
+            $scope.xuatXuCr = r.data;
+        }).catch(e => console.log(e))
+
+        $http.get("/admin/kieu-dang/get-all/trang-thai").then(r => {
+            $scope.kieuDangCr = r.data;
+        }).catch(e => console.log(e))
+
+        $http.get("/admin/size/get-all/trang-thai").then(r => {
+            $scope.kichCoCr = r.data;
+        }).catch(e => console.log(e))
+    }
+
+    $scope.getThuocTinhByTrangThai();
 
     $scope.getHinhAnh = function (HinhAnh) {
         console.log("getHinhAnh gọi với:", HinhAnh);
@@ -398,6 +424,43 @@ app.controller('ctrl', function ($scope, $http) {
         });
     };
 
+    // Hàm lọc sản phẩm
+    $scope.filter = function (filterData) {
+        // Loại bỏ các thuộc tính không hợp lệ (rỗng/null)
+        for (const [key, value] of Object.entries(filterData)) {
+            if (!value || value.length === 0) {
+                delete filterData[key];
+            }
+        }
+
+        // Gửi yêu cầu lọc đến server với phân trang
+        $http.post(`/admin/san-pham/filter?page=${$scope.page}&size=${$scope.size}`, filterData).then(function (response) {
+            $scope.items = response.data.content; // Gán danh sách sản phẩm sau khi lọc
+            $scope.totalPages = response.data.totalPages; // Tổng số trang
+            $scope.pageNumber = 0; // Reset lại trang hiện tại sau khi lọc
+            console.log("Dữ liệu lọc: ", $scope.items);
+
+            // Hiển thị số bộ lọc đang được áp dụng
+            if (Object.keys(filterData).length > 0) {
+                document.getElementById('lengthFilter').innerText = Object.keys(filterData).length;
+            } else {
+                document.getElementById('lengthFilter').innerText = "";
+            }
+
+        }).catch(function (error) {
+            console.error("Lỗi khi lọc sản phẩm:", error);
+            alertify.error("Không thể lọc sản phẩm!");
+        });
+    };
+
+
+    // Hàm xóa bộ lọc
+    $scope.clearFilter = function () {
+        $scope.filterData = {}; // Reset dữ liệu lọc
+        document.getElementById('lengthFilter').innerText = "";
+        // $scope.filter($scope.filterData); // Gọi lại hàm lọc để làm mới danh sách
+        $scope.findAll();
+    };
 
     // $scope.filter = function (filterData) {
     //     for (const [key, value] of Object.entries(filterData)) {

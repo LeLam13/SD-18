@@ -36,6 +36,12 @@ public class XuatXuRestController {
         return ResponseEntity.ok(xx); // Trả về trang hiện tại cùng dữ liệu
     }
 
+    @GetMapping("/admin/xuat-xu/get-all/trang-thai")
+    public ResponseEntity<?> getAllByTT() {
+        List<XuatXu> ms = xuatXuService.getAllByTT();
+        return ResponseEntity.ok(ms);
+    }
+
     @GetMapping("/admin/xuat-xu/get-all")
     public ResponseEntity<?> getAll() {
         List<XuatXu> xx = xuatXuService.getAll();

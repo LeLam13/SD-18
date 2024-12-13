@@ -363,11 +363,11 @@
                 <div class="filter-area-wrapper">
                     <div class="row">
                         <div class="col-sm-6">
-                            <div class="mb-3">
-                                <label>Tên Sản Phẩm</label>
-                                <input type="text" ng-model="filterData.ten"
-                                       class="form-control"/>
-                            </div>
+<!--                            <div class="mb-3">-->
+<!--                                <label>Tên Sản Phẩm</label>-->
+<!--                                <input type="text" ng-model="filterData.ten"-->
+<!--                                       class="form-control"/>-->
+<!--                            </div>-->
                             <div class="mb-3">
                                 <label>Giá min</label>
                                 <input type="text" ng-model="filterData.giaMin"
@@ -389,15 +389,15 @@
                             </div>
                         </div>
                         <div class="col-sm-6">
-                            <div class="mb-3">
-                                <label>Màu sắc</label>
-                                <select class="form-control" ng-model="filterData.idMauSac">
-                                    <option value="" selected>Tất cả</option>
-                                    <option ng-repeat="m in mauSac" value="{{m.idMauSac}}">
-                                        {{m.ten}}
-                                    </option>
-                                </select>
-                            </div>
+<!--                            <div class="mb-3">-->
+<!--                                <label>Màu sắc</label>-->
+<!--                                <select class="form-control" ng-model="filterData.idMauSac">-->
+<!--                                    <option value="" selected>Tất cả</option>-->
+<!--                                    <option ng-repeat="m in mauSac" value="{{m.idMauSac}}">-->
+<!--                                        {{m.ten}}-->
+<!--                                    </option>-->
+<!--                                </select>-->
+<!--                            </div>-->
                             <div class="mb-3">
                                 <label>Thương Hiệu</label>
                                 <select class="form-control"
@@ -460,12 +460,12 @@
 
                         <!-- Tên sản phẩm -->
                         <div class="product-body" style="margin-top: 16px;">
-                            <h5 class="product-title" style="margin-bottom: 8px; font-size: 1rem; font-weight: 500;">
+                            <h5 class="product-title" style="margin-bottom: 8px; font-size: 20px; font-weight: 500;">
                                 <a>{{products.ten}}</a>
                             </h5>
 
-                            <h4 class="product-title" style="margin-bottom: 8px; font-size: 1rem; font-weight: 500;">
-                                <a style="color: red">Giá Bán: {{products.minGiaBan}}</a>
+                            <h4 class="product-title" style="margin-bottom: 8px; font-size: 16px; font-weight: 500;">
+                                <a style="color: red">Giá Bán: {{products.minGiaBan | number}}</a>
                             </h4>
 
                             <!-- Mã màu và tên màu nằm cạnh nhau -->

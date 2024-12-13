@@ -1,6 +1,7 @@
 package com.example.demo.rest;
 
 import com.example.demo.Service.SanPhamService;
+import com.example.demo.dto.request.FilterRequestDTO;
 import com.example.demo.dto.request.MauSacRequestDTO;
 import com.example.demo.dto.request.SanPhamRequestDTO;
 import com.example.demo.dto.request.SanPhamWithImageDto;
@@ -146,4 +147,21 @@ public class SanPhamRestController {
         return ResponseEntity.ok(Collections.singletonMap("exists", exists));
     }
 
+    @PostMapping("/admin/san-pham/filter")
+    public ResponseEntity<?> filterProducts(@RequestBody FilterRequestDTO filterData,
+                                            @RequestParam(defaultValue = "0") int page,
+                                            @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size,Sort.by("idSanPham").descending());
+        Page<SanPham> filteredProducts = sanPhamService.filterProducts(filterData,pageable);
+        return ResponseEntity.ok(filteredProducts);
+    }
+
+    @PostMapping("/san-pham/filter")
+    public ResponseEntity<?> filterProductsView(@RequestBody FilterRequestDTO filterData,
+                                            @RequestParam(defaultValue = "0") int page,
+                                            @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size,Sort.by("idSanPham").descending());
+        Page<SanPham> filteredProducts = sanPhamService.filterProducts(filterData,pageable);
+        return ResponseEntity.ok(filteredProducts);
+    }
 }
