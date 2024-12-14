@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en" xmlns:th="http:/www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="~{/admin/index}">
+      layout:decorate="~{/admin/index}" xmlns:sec="http://www.w3.org/1999/xhtml">
 
 <head>
 
@@ -51,12 +51,12 @@
                                             Thêm Mới
                                         </button>
 
-                                        <button type="button" class="btn btn-primary" ng-click="navigateToHistory()">
+                                        <button type="button" class="btn btn-primary" ng-click="navigateToHistory()" sec:authorize="hasRole('ROLE_ADMIN')">
                                             Nhập Hàng
                                         </button>
 
                                         <button type="button" class="btn btn-primary"
-                                                ng-click="navigateToViewHistory()">
+                                                ng-click="navigateToViewHistory()" sec:authorize="hasRole('ROLE_ADMIN')">
                                             Lịch Sử Nhập
                                         </button>
 
@@ -125,7 +125,7 @@
                                                 <i style='font-size:24px' class='fas'>&#xf06e;</i>
                                             </a>
                                             <a href="" class="edit" data-bs-toggle="modal" data-bs-target="#update"
-                                               ng-click="getSanPhamChiTiet(m.ma)">
+                                               ng-click="getSanPhamChiTiet(m.ma)" sec:authorize="hasRole('ROLE_ADMIN')">
                                                 <i class="material-icons" title="Edit">&#xE254;</i>
                                             </a>
                                             <a href="" class="edit" ng-click="updateTT(m.idSanPhamChiTiet)">
