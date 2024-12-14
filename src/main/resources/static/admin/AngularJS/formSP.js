@@ -321,32 +321,59 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
             table.size.forEach(function (size) {
                 var sizeForm = $scope.form[table.mau.idMauSac] && $scope.form[table.mau.idMauSac][size.idKichCo];
                 if (sizeForm) {
+
+                    sizeForm.errorMessages = sizeForm.errorMessages || {};
+
                     // Kiểm tra lỗi cho từng input
                     if (sizeForm.soLuong <= 0 || sizeForm.soLuong == null) {
                         sizeForm.errorMessages.soLuong = sizeForm.soLuong == null
                             ? "Số lượng không được để trống"
                             : "Số lượng phải lớn hơn 0";
                         hasError = true;
+                    } else {
+                        delete sizeForm.errorMessages.soLuong;  // Xóa lỗi khi giá trị hợp lệ
                     }
+
                     if (sizeForm.giaNhap <= 0 || sizeForm.giaNhap == null) {
                         sizeForm.errorMessages.giaNhap = sizeForm.giaNhap == null
                             ? "Giá nhập không được để trống"
                             : "Giá nhập phải lớn hơn 0";
                         hasError = true;
+                    } else {
+                        delete sizeForm.errorMessages.giaNhap;  // Xóa lỗi khi giá trị hợp lệ
                     }
+
                     if (sizeForm.giaBan <= 0 || sizeForm.giaBan == null) {
                         sizeForm.errorMessages.giaBan = sizeForm.giaBan == null
                             ? "Giá bán không được để trống"
                             : "Giá bán phải lớn hơn 0";
                         hasError = true;
+                    } else {
+                        delete sizeForm.errorMessages.giaBan;  // Xóa lỗi khi giá trị hợp lệ
                     }
+
                     if (sizeForm.giaNhap >= sizeForm.giaBan) {
                         sizeForm.errorMessages.giaNhap = "Giá nhập phải nhỏ hơn giá bán";
                         sizeForm.errorMessages.giaBan = "Giá bán phải lớn hơn giá nhập";
                         hasError = true;
+                    } else {
+                        delete sizeForm.errorMessages.giaNhap;  // Xóa lỗi khi giá trị hợp lệ
+                        delete sizeForm.errorMessages.giaBan;  // Xóa lỗi khi giá trị hợp lệ
                     }
                 }
             });
+        });
+
+        // Kiểm tra ảnh đã được chọn chưa
+        $scope.tables.forEach(function (table) {
+            if (!table.img || !table.img.imageSrc) {
+                // Nếu không có ảnh, thêm lỗi
+                table.errorMessages = table.errorMessages || {};
+                table.errorMessages.img = "Ảnh không được để trống!";
+                hasError = true;
+            } else {
+                delete table.errorMessages.img;  // Xóa lỗi khi ảnh đã được chọn
+            }
         });
 
         // Nếu có lỗi, không tiếp tục xử lý
@@ -442,12 +469,59 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
     };
 
 
+
+
+
     $scope.updateSize = function (table, size) {
-        // Logic cập nhật sản phẩm chi tiết, ví dụ:
         var sizeForm = $scope.form[table.mau.idMauSac][size.idKichCo];
+        var hasError = false;
+
         if (sizeForm) {
-            // Cập nhật dữ liệu cho sizeForm
-            // Ví dụ: gửi yêu cầu HTTP để cập nhật thông tin vào database
+            sizeForm.errorMessages = sizeForm.errorMessages || {};
+
+            // Kiểm tra lỗi cho các input (số lượng, giá nhập, giá bán)
+            if (sizeForm.soLuong <= 0 || sizeForm.soLuong == null) {
+                sizeForm.errorMessages.soLuong = sizeForm.soLuong == null
+                    ? "Số lượng không được để trống"
+                    : "Số lượng phải lớn hơn 0";
+                hasError = true;
+            } else {
+                delete sizeForm.errorMessages.soLuong;  // Xóa lỗi khi giá trị hợp lệ
+            }
+
+            if (sizeForm.giaNhap <= 0 || sizeForm.giaNhap == null) {
+                sizeForm.errorMessages.giaNhap = sizeForm.giaNhap == null
+                    ? "Giá nhập không được để trống"
+                    : "Giá nhập phải lớn hơn 0";
+                hasError = true;
+            } else {
+                delete sizeForm.errorMessages.giaNhap;  // Xóa lỗi khi giá trị hợp lệ
+            }
+
+            if (sizeForm.giaBan <= 0 || sizeForm.giaBan == null) {
+                sizeForm.errorMessages.giaBan = sizeForm.giaBan == null
+                    ? "Giá bán không được để trống"
+                    : "Giá bán phải lớn hơn 0";
+                hasError = true;
+            } else {
+                delete sizeForm.errorMessages.giaBan;  // Xóa lỗi khi giá trị hợp lệ
+            }
+
+            if (sizeForm.giaNhap >= sizeForm.giaBan) {
+                sizeForm.errorMessages.giaNhap = "Giá nhập phải nhỏ hơn giá bán";
+                sizeForm.errorMessages.giaBan = "Giá bán phải lớn hơn giá nhập";
+                hasError = true;
+            } else {
+                delete sizeForm.errorMessages.giaNhap;  // Xóa lỗi khi giá trị hợp lệ
+                delete sizeForm.errorMessages.giaBan;  // Xóa lỗi khi giá trị hợp lệ
+            }
+
+            // Nếu có lỗi, không tiếp tục xử lý
+            if (hasError) {
+                return;
+            }
+
+            // Logic cập nhật sản phẩm chi tiết
             var updateCTSP = {
                 idSanPham: idSanPham,
                 idMauSac: table.mau.idMauSac,
@@ -455,17 +529,17 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
                 soLuong: sizeForm.soLuong,
                 giaNhap: sizeForm.giaNhap,
                 giaBan: sizeForm.giaBan
-            }
-            console.log("updateCTSP",updateCTSP);
+            };
+            console.log("updateCTSP", updateCTSP);
+
             $http.post("/admin/san-pham/chi-tiet/update-by-size/" + idSanPham, updateCTSP).then(function (response) {
-                
                 // Xóa dòng tương ứng trong bảng
                 var index = table.size.indexOf(size);
                 if (index > -1) {
                     table.size.splice(index, 1); // Xóa phần tử tại vị trí index
                 }
 
-                // Có thể xóa lỗi hoặc cập nhật lại các thông tin cần thiết
+                // Xóa lỗi hoặc cập nhật lại các thông tin cần thiết
                 delete sizeForm.errorMessages.exists;
             }).catch(function (err) {
                 // Xử lý khi có lỗi
@@ -473,6 +547,7 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
             });
         }
     };
+
 
 
 // Hàm chọn tất cả checkbox con khi chọn checkbox chính
@@ -489,30 +564,52 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
         });
     };
 
+
+    $scope.onValueChanged = function (field, value, table, size) {
+        const colorId = table.mau.idMauSac;
+        const sizeForm = $scope.form[colorId][size.idKichCo];
+
+        // Kiểm tra ô này đã được chọn hay chưa
+        if (sizeForm && sizeForm.selected === true) {
+            // Nếu được chọn, gọi updateAllSelectedValues
+            $scope.updateAllSelectedValues(field, value, table);
+        }
+    };
+
+
 // Hàm cập nhật giá trị cho tất cả các hàng được chọn khi nhập vào một trường bất kỳ
     $scope.updateAllSelectedValues = function (field, value, table) {
         const colorId = table.mau.idMauSac;
 
+        // Chỉ đồng bộ khi giá trị được thay đổi ở ô đã chọn (selected = true)
         table.size.forEach(function (size) {
             const sizeForm = $scope.form[colorId][size.idKichCo];
 
-            // Chỉ cập nhật các hàng được chọn
-            if (sizeForm && sizeForm.selected) {
+            // Kiểm tra nếu ô này đã được chọn (selected = true)
+            if (sizeForm && sizeForm.selected === true) {
+                // Chỉ đồng bộ giá trị cho ô đã được chọn
                 sizeForm[field] = value;
             }
         });
     };
+
+
+
+
+
 
 // Hàm để đồng bộ khi thay đổi giá trị ở checkbox con
     $scope.syncSelectedValues = function (table, size) {
         const colorId = table.mau.idMauSac;
         const sizeForm = $scope.form[colorId][size.idKichCo];
 
-        // Nếu tất cả checkbox con đều được chọn, đánh dấu checkbox chính
-        $scope.form[colorId].allSelected = table.size.every(size =>
-            $scope.form[colorId][size.idKichCo] && $scope.form[colorId][size.idKichCo].selected
-        );
+        // Cập nhật checkbox chính chỉ khi tất cả các ô con đều được chọn
+        $scope.form[colorId].allSelected = table.size.every(function (size) {
+            const currentSizeForm = $scope.form[colorId][size.idKichCo];
+            return currentSizeForm && currentSizeForm.selected;
+        });
     };
+
 
 
 // Hàm toggle cho màu sắc

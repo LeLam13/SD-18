@@ -153,7 +153,8 @@
                                     <td>
                                         <input ng-model="form[table.mau.idMauSac][size.idKichCo].soLuong"
                                                type="number"
-                                               ng-change="updateAllSelectedValues('soLuong', form[table.mau.idMauSac][size.idKichCo].soLuong, table)">
+                                               value="0" ng-init="form[table.mau.idMauSac][size.idKichCo].soLuong = 0"
+                                               ng-change="onValueChanged('soLuong', form[table.mau.idMauSac][size.idKichCo].soLuong, table, size)">
                                         <!-- Hiển thị lỗi số lượng -->
                                         <div ng-show="form[table.mau.idMauSac][size.idKichCo].errorMessages.soLuong"
                                              class="text-danger">
@@ -163,7 +164,8 @@
                                     <td>
                                         <input ng-model="form[table.mau.idMauSac][size.idKichCo].giaNhap"
                                                type="number"
-                                               ng-change="updateAllSelectedValues('giaNhap', form[table.mau.idMauSac][size.idKichCo].giaNhap, table)">
+                                               value="0" ng-init="form[table.mau.idMauSac][size.idKichCo].giaNhap = 0"
+                                               ng-change="onValueChanged('giaNhap', form[table.mau.idMauSac][size.idKichCo].giaNhap, table, size)">
                                         <!-- Hiển thị lỗi giá nhập -->
                                         <div ng-show="form[table.mau.idMauSac][size.idKichCo].errorMessages.giaNhap"
                                              class="text-danger">
@@ -173,7 +175,8 @@
                                     <td>
                                         <input ng-model="form[table.mau.idMauSac][size.idKichCo].giaBan"
                                                type="number"
-                                               ng-change="updateAllSelectedValues('giaBan', form[table.mau.idMauSac][size.idKichCo].giaBan, table)">
+                                               value="0" ng-init="form[table.mau.idMauSac][size.idKichCo].giaBan = 0"
+                                               ng-change="onValueChanged('giaBan', form[table.mau.idMauSac][size.idKichCo].giaBan, table, size)">
                                         <!-- Hiển thị lỗi giá bán -->
                                         <div ng-show="form[table.mau.idMauSac][size.idKichCo].errorMessages.giaBan"
                                              class="text-danger">
@@ -214,6 +217,9 @@
                                        data-table="{{table}}"
                                        onchange="angular.element(this).scope().onFileSelected1(event)">
                                 <span>{{ nameFile }}</span>
+                                <div ng-show="table.errorMessages && table.errorMessages.img" class="text-danger">
+                                    {{ table.errorMessages.img }}
+                                </div>
                                 <img ng-if="table.img.imageSrc"
                                      ng-src="/assets/img/{{table.img.imageSrc}}"
                                      alt="Ảnh xem trước"
