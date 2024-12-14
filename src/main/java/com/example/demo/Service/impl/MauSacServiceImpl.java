@@ -26,6 +26,11 @@ public class MauSacServiceImpl implements MauSacService {
     }
 
     @Override
+    public List<MauSac> getAllbyCT(Integer idSanPham) {
+        return mauSacRepo.getAllByCT(idSanPham);
+    }
+
+    @Override
     public Page<MauSac> findAll(Pageable pageable) {
         return mauSacRepo.findAll(pageable);
     }

@@ -17,11 +17,7 @@
         ></h2>
 
         <!-- Hiển thị lỗi nếu có -->
-        <div
-          class="alert alert-danger"
-          th:if="${error != null}"
-          th:text="${error}"
-        ></div>
+        <div class="alert alert-danger" th:if="${error != null}" th:text="${error}"></div>
 
         <form th:action="@{/admin/khuyen-mai/save}" method="post">
           <input
@@ -58,7 +54,9 @@
 
           <!-- Mức Giảm -->
           <div class="mb-3">
-            <label for="mucGiamGia" class="form-label">Mức Giảm (%) hoặc VND</label>
+            <label for="mucGiamGia" class="form-label"
+              >Mức Giảm (%) hoặc VND</label
+            >
             <input
               type="number"
               class="form-control"
@@ -86,7 +84,9 @@
 
           <!-- Thời Gian Bắt Đầu -->
           <div class="mb-3">
-            <label for="thoiGianBatDau" class="form-label">Thời Gian Bắt Đầu</label>
+            <label for="thoiGianBatDau" class="form-label"
+              >Thời Gian Bắt Đầu</label
+            >
             <input
               type="text"
               class="form-control"
@@ -100,7 +100,9 @@
 
           <!-- Thời Gian Kết Thúc -->
           <div class="mb-3">
-            <label for="thoiGianKetThuc" class="form-label">Thời Gian Kết Thúc</label>
+            <label for="thoiGianKetThuc" class="form-label"
+              >Thời Gian Kết Thúc</label
+            >
             <input
               type="text"
               class="form-control"
@@ -114,7 +116,9 @@
 
           <!-- Điều Kiện Áp Dụng -->
           <div class="mb-3">
-            <label for="soTienToiThieu" class="form-label">Điều Kiện Áp Dụng (Số Tiền Tối Thiểu)</label>
+            <label for="soTienToiThieu" class="form-label"
+              >Điều Kiện Áp Dụng (Số Tiền Tối Thiểu)</label
+            >
             <input
               type="number"
               class="form-control"
@@ -163,5 +167,34 @@
         </form>
       </div>
     </div>
+    <script>
+      function validateForm() {
+        const mucGiamGia = document.getElementById("mucGiamGia").value;
+        const soLuong = document.getElementById("soLuong").value;
+        const thoiGianBatDau = new Date(
+          document.getElementById("thoiGianBatDau").value
+        );
+        const thoiGianKetThuc = new Date(
+          document.getElementById("thoiGianKetThuc").value
+        );
+
+        if (mucGiamGia <= 0) {
+          alert("Mức giảm giá phải lớn hơn 0.");
+          return false;
+        }
+
+        if (soLuong <= 0) {
+          alert("Số lượng phải lớn hơn 0.");
+          return false;
+        }
+
+        if (thoiGianBatDau >= thoiGianKetThuc) {
+          alert("Thời gian bắt đầu phải nhỏ hơn thời gian kết thúc.");
+          return false;
+        }
+
+        return true;
+      }
+    </script>
   </body>
 </html>

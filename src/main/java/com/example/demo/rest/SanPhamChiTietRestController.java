@@ -70,6 +70,14 @@ public class SanPhamChiTietRestController {
         return ResponseEntity.ok(ms);
     }
 
+    @GetMapping("/admin/san-pham/chi-tiet/check-existence/{idSanPham}")
+    public ResponseEntity<?> getCheckEx(@PathVariable Integer idSanPham,
+                                        @RequestParam("idMauSac") Integer idMauSac,
+                                        @RequestParam("idKichCo") Integer idKichCo) {
+        SanPhamChiTiet ms = sanPhamChiTietService.checkEx(idSanPham,idMauSac,idKichCo);
+        return ResponseEntity.ok(ms);
+    }
+
     @GetMapping("/san-pham/chi-tiet/get-all-by/{idSanPham}")
     public ResponseEntity<?> getAllByIdSanPham(@PathVariable Integer idSanPham) {
         List<SanPhamChiTiet> ms = sanPhamChiTietService.getAllByIdSanPham(idSanPham);
@@ -99,8 +107,14 @@ public class SanPhamChiTietRestController {
     }
 
     @PostMapping("/admin/san-pham/chi-tiet/update/{ma}")
-    public ResponseEntity<?> updateMauSac(@RequestBody SanPhamChiTietRequestDTO sanPhamChiTietRequestDTO) {
+    public ResponseEntity<?> updateSPCT(@RequestBody SanPhamChiTietRequestDTO sanPhamChiTietRequestDTO) {
         sanPhamChiTietService.updateSanPhamChiTiet(sanPhamChiTietRequestDTO);
+        return ResponseEntity.ok(sanPhamChiTietRequestDTO);
+    }
+
+    @PostMapping("/admin/san-pham/chi-tiet/update-by-size/{idSanPham}")
+    public ResponseEntity<?> updateBySize(@RequestBody SanPhamChiTietRequestDTO sanPhamChiTietRequestDTO) {
+        sanPhamChiTietService.updateBySize(sanPhamChiTietRequestDTO);
         return ResponseEntity.ok(sanPhamChiTietRequestDTO);
     }
 

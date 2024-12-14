@@ -9,6 +9,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface KichCoRepo extends JpaRepository<KichCo,Integer> {
     KichCo findByMa(String ma);
@@ -19,4 +21,17 @@ public interface KichCoRepo extends JpaRepository<KichCo,Integer> {
             "LOWER(REPLACE(m.ma, 'đ', 'd')) LIKE LOWER(REPLACE(CONCAT('%', :query, '%'), 'đ', 'd')) OR " +
             "LOWER(REPLACE(m.ten, 'đ', 'd')) LIKE LOWER(REPLACE(CONCAT('%', :query, '%'), 'đ', 'd'))")
     Page<KichCo> searchIgnoreCaseAndDiacritics(@Param("query") String query, Pageable pageable);
+
+    @Query("SELECT DISTINCT ms FROM KichCo ms " +
+            "JOIN SanPhamChiTiet spct ON ms.idKichCo = spct.idKichCo.idKichCo " +
+            "WHERE spct.idSanPham.idSanPham = :idSanPham")
+    List<KichCo> getAllByCT(@Param("idSanPham") Integer idSanPham);
+
+    @Query("SELECT DISTINCT kc FROM KichCo kc " +
+            "JOIN SanPhamChiTiet spct ON kc.idKichCo = spct.idKichCo.idKichCo " +
+            "WHERE spct.idSanPham.idSanPham = :idSanPham " +
+            "AND spct.idMauSac.idMauSac = :idMauSac")
+    List<KichCo> getAllByCTAndMauSac(@Param("idSanPham") Integer idSanPham, @Param("idMauSac") Integer idMauSac);
+
+
 }

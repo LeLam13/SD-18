@@ -48,6 +48,19 @@ public class KichCoRestController {
         return ResponseEntity.ok(kc);
     }
 
+    @GetMapping("/admin/size/get-all-by-chi-tiet/{idSanPham}")
+    public ResponseEntity<?> getAllbyCT(@PathVariable("idSanPham") Integer idSanPham) {
+        List<KichCo> ms = kichCoService.getAllbyCT(idSanPham);
+        return ResponseEntity.ok(ms);
+    }
+
+    @GetMapping("/admin/size/get-all-by-mau-sac/{idSanPham}")
+    public ResponseEntity<?> getAllbyMS(@PathVariable("idSanPham") Integer idSanPham,
+                                        @RequestParam("idMauSac") Integer idMauSac) {
+        List<KichCo> ms = kichCoService.getAllbyMS(idSanPham, idMauSac);
+        return ResponseEntity.ok(ms);
+    }
+
     @PostMapping("/admin/size/add")
     public ResponseEntity<?> createKichCo(@RequestBody KichCoRequestDTO kichCoRequestDTO) {
         kichCoService.createKichCo(kichCoRequestDTO);

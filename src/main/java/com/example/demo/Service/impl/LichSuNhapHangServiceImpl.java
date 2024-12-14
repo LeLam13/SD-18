@@ -59,7 +59,7 @@ public class LichSuNhapHangServiceImpl implements LichSuNhapHangService {
         KichCo kichCo = kichCoRepo.findByIdKichCo(lichSuNhapHangRequestDTO.getIdKichCoNhap());
         Integer idKichCo = kichCo.getIdKichCo();
 
-        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepo.findCheapestProductDetail(idSanPham, idMauSac, idKichCo);
+        SanPhamChiTiet sanPhamChiTiet = sanPhamChiTietRepo.findCheapestProduct(idSanPham, idMauSac, idKichCo);
         ms.setIdSanPhamChiTiet(sanPhamChiTiet);
 
         ms.setCreateDate(date);

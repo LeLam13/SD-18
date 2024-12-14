@@ -1,477 +1,440 @@
 <!DOCTYPE html>
 <html
-        lang="en"
-        xmlns:th="http://www.thymeleaf.org"
-        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-        layout:decorate="~{/admin/index}"
-        ng-app="khachhangApp"
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{/admin/index}"
+  ng-app="khachhangApp"
 >
-<head>
-  <style>
-    .textDetail {
-      font-weight: bold;
-      font-size: 15px;
-      font-style: italic;
-    }
+  <head>
+    <style>
+      .textDetail {
+        font-weight: bold;
+        font-size: 15px;
+        font-style: italic;
+      }
 
-    .er {
-      color: red;
-      font-size: 13px;
-    }
+      .er {
+        color: red;
+        font-size: 13px;
+      }
 
-    .icon-btn {
-      cursor: pointer;
-    }
+      .icon-btn {
+        cursor: pointer;
+      }
 
-    .modal-dialog {
-      max-width: 80%;
-    }
+      .modal-dialog {
+        max-width: 80%;
+      }
 
-    .pagination-btn {
-      margin: 0 5px;
-    }
-  </style>
-</head>
-<body data-topbar="dark">
-<div
-        class="main-content"
-        layout:fragment="content"
-        ng-controller="KhachHangController"
->
-  <div class="page-content">
-    <div class="container-fluid">
-      <div class="row align-items-center">
-        <div class="col-md-6">
-          <h2>Thông Tin Khách Hàng</h2>
-        </div>
-        <div class="col-md-6 d-flex justify-content-end">
-          <input
-                  class="form-control me-2"
-                  ng-model="searchQuery"
-                  placeholder="Nhập mã, tên hoặc sđt"
-          />
-          <button class="btn btn-secondary" ng-click="searchKhachHang()">
-            <i class="fas fa-search"></i> Tìm Kiếm
-          </button>
-          <button class="btn btn-secondary ms-2" ng-click="showAddForm()">
-            <i class="bx bx-plus me-1"></i> Thêm Mới
-          </button>
-        </div>
-      </div>
+      .pagination-btn {
+        margin: 0 5px;
+      }
+    </style>
+  </head>
+  <body data-topbar="dark">
+    <div
+      class="main-content"
+      layout:fragment="content"
+      ng-controller="KhachHangController"
+    >
+      <div class="page-content">
+        <div class="container-fluid">
+          <div class="row align-items-center">
+            <div class="col-md-6">
+              <h2>Thông Tin Khách Hàng</h2>
+            </div>
+            <div class="col-md-6 d-flex justify-content-end">
+              <input
+                class="form-control me-2"
+                ng-model="searchQuery"
+                placeholder="Nhập mã, tên hoặc sđt"
+              />
+              <button class="btn btn-secondary" ng-click="searchKhachHang()">
+                <i class="fas fa-search"></i> Tìm Kiếm
+              </button>
+              <button class="btn btn-secondary ms-2" ng-click="showAddForm()">
+                <i class="bx bx-plus me-1"></i> Thêm Mới
+              </button>
+            </div>
+          </div>
 
-      <table class="table table-striped mt-3">
-        <thead>
-        <tr>
-          <th>ID</th>
-          <th>Mã Khách Hàng</th>
-          <th>Họ Tên</th>
-          <th>Ngày Sinh</th>
-          <th>Số Điện Thoại</th>
-          <th>Email</th>
-          <th>Giới Tính</th>
-          <th>Địa Chỉ</th>
-          <th>Tên Tài Khoản</th>
-          <th>Hành Động</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr ng-repeat="khach in khachhangList | filter:searchQuery">
-          <td>{{ khach.id_khach_hang }}</td>
-          <td>{{ khach.ma_khach_hang }}</td>
-          <td>{{ khach.ho_ten }}</td>
-          <td>{{ khach.ngay_sinh | date: 'yyyy-MM-dd' }}</td>
-          <td>{{ khach.so_dien_thoai }}</td>
-          <td>{{ khach.email }}</td>
-          <td>{{ khach.gioi_tinh ? 'Nam' : 'Nữ' }}</td>
-          <td>{{ khach.dia_chi }}</td>
-          <td>{{ khach.username_tai_khoan }}</td>
-          <td>
-            <button
+          <table class="table table-striped mt-3">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Mã Khách Hàng</th>
+                <th>Họ Tên</th>
+                <th>Ngày Sinh</th>
+                <th>Số Điện Thoại</th>
+                <th>Email</th>
+                <th>Giới Tính</th>
+                <th>Địa Chỉ</th>
+                <th>Tên Tài Khoản</th>
+                <th>Hành Động</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="khach in khachhangList | filter:searchQuery">
+                <td>{{ khach.id_khach_hang }}</td>
+                <td>{{ khach.ma_khach_hang }}</td>
+                <td>{{ khach.ho_ten }}</td>
+                <td>{{ khach.ngay_sinh | date: 'yyyy-MM-dd' }}</td>
+                <td>{{ khach.so_dien_thoai }}</td>
+                <td>{{ khach.email }}</td>
+                <td>{{ khach.gioi_tinh ? 'Nam' : 'Nữ' }}</td>
+                <td>{{ khach.dia_chi }}</td>
+                <td>{{ khach.username_tai_khoan }}</td>
+                <td>
+                  <button
                     type="button"
                     class="btn btn-info"
                     ng-click="viewDetails(khach)"
-            >
-              <i class="fas fa-eye"></i>
-            </button>
-            <button
+                  >
+                    <i class="fas fa-eye"></i>
+                  </button>
+                  <button
                     type="button"
                     class="btn btn-danger"
                     ng-click="editCustomer(khach)"
-            >
-              <i class="fas fa-edit"></i>
-            </button>
-            <button
+                  >
+                    <i class="fas fa-edit"></i>
+                  </button>
+                  <button
                     class="btn btn-primary"
                     ng-click="viewPurchaseHistory(khach.id_khach_hang)"
-            >
-              Lịch sử
-            </button>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+                  >
+                    Lịch sử
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
 
-      <div class="d-flex justify-content-center mt-3">
-        <button
-                class="btn btn-primary pagination-btn"
-                ng-click="previousPage()"
-                ng-disabled="currentPage === 1"
-        >
-          Trang trước
-        </button>
-        <span>Trang {{ currentPage }} / {{ totalPages }}</span>
-        <button
-                class="btn btn-primary pagination-btn"
-                ng-click="nextPage()"
-                ng-disabled="currentPage === totalPages"
-        >
-          Trang kế tiếp
-        </button>
-      </div>
-    </div>
-
-    <!-- Add Modal -->
-    <div
-            class="modal fade"
-            id="viewAdd"
-            tabindex="-1"
-            role="dialog"
-            aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5>Thêm Khách Hàng Mới</h5>
-            <button class="btn-close" ng-click="closeAddForm()"></button>
-          </div>
-          <div class="modal-body">
-            <form name="addForm" novalidate>
-              <div class="mb-3">
-                <label>Mã Khách Hàng</label>
-                <input
-                        type="text"
-                        class="form-control"
-                        ng-model="newKhachHang.ma_khach_hang"
-                        required
-                        minlength="3"
-                        maxlength="10"
-                />
-                <span
-                        class="text-danger"
-                        ng-show="addForm.maKhachHang.$touched && addForm.maKhachHang.$error.required"
-                >
-                      Mã khách hàng là bắt buộc.
-                    </span>
-                <span
-                        class="text-danger"
-                        ng-show="addForm.maKhachHang.$error.minlength"
-                >
-                      Mã khách hàng phải có ít nhất 3 ký tự.
-                    </span>
-                <span
-                        class="text-danger"
-                        ng-show="addForm.maKhachHang.$error.maxlength"
-                >
-                      Mã khách hàng không được vượt quá 10 ký tự.
-                    </span>
-              </div>
-              <div class="mb-3">
-                <label>Họ Tên</label>
-                <input
-                        type="text"
-                        class="form-control"
-                        ng-model="newKhachHang.ho_ten"
-                        required
-                />
-                <span
-                        class="text-danger"
-                        ng-show="addForm.hoTen.$touched && addForm.hoTen.$error.required"
-                >
-                      Họ tên là bắt buộc.
-                    </span>
-              </div>
-              <div class="mb-3">
-                <label>Ngày Sinh</label>
-                <input
-                        type="date"
-                        class="form-control"
-                        ng-model="newKhachHang.ngay_sinh"
-                        required
-                />
-                <span
-                        class="text-danger"
-                        ng-show="addForm.ngaySinh.$touched && addForm.ngaySinh.$error.required"
-                >
-                      Ngày sinh là bắt buộc.
-                    </span>
-              </div>
-              <div class="mb-3">
-                <label>Số Điện Thoại</label>
-                <input
-                        type="text"
-                        class="form-control"
-                        ng-model="newKhachHang.so_dien_thoai"
-                        required
-                        ng-pattern="/^(\+84|0)\d{9,10}$/"
-                />
-                <span
-                        class="text-danger"
-                        ng-show="addForm.soDienThoai.$touched && addForm.soDienThoai.$error.required"
-                >
-                      Số điện thoại là bắt buộc.
-                    </span>
-                <span
-                        class="text-danger"
-                        ng-show="addForm.soDienThoai.$error.pattern"
-                >
-                      Số điện thoại không đúng định dạng (VD: +84123456789 hoặc
-                      0123456789).
-                    </span>
-              </div>
-              <div class="mb-3">
-                <label>Email</label>
-                <input
-                        type="email"
-                        class="form-control"
-                        ng-model="newKhachHang.email"
-                        required
-                />
-                <span
-                        class="text-danger"
-                        ng-show="addForm.email.$touched && addForm.email.$error.required"
-                >
-                      Email là bắt buộc.
-                    </span>
-                <span
-                        class="text-danger"
-                        ng-show="addForm.email.$error.email"
-                >
-                      Email không hợp lệ.
-                    </span>
-              </div>
-              <div class="mb-3">
-                <label>Giới Tính</label>
-                <select
-                        class="form-control"
-                        ng-model="newKhachHang.gioi_tinh"
-                        required
-                >
-                  <option value="">Chọn Giới Tính</option>
-                  <option value="true">Nam</option>
-                  <option value="false">Nữ</option>
-                </select>
-                <span
-                        class="text-danger"
-                        ng-show="addForm.gioiTinh.$touched && addForm.gioiTinh.$error.required"
-                >
-                      Vui lòng chọn giới tính.
-                    </span>
-              </div>
-              <div class="mb-3">
-                <label>Địa Chỉ</label>
-                <input
-                        type="text"
-                        class="form-control"
-                        ng-model="newKhachHang.dia_chi"
-                        required
-                />
-                <span
-                        class="text-danger"
-                        ng-show="addForm.diaChi.$touched && addForm.diaChi.$error.required"
-                >
-                      Địa chỉ là bắt buộc.
-                    </span>
-              </div>
-              <div class="mb-3">
-                <label>Tên Tài Khoản</label>
-                <input
-                        type="text"
-                        class="form-control"
-                        ng-model="newKhachHang.username_tai_khoan"
-                        required
-                />
-                <span
-                        class="text-danger"
-                        ng-show="addForm.username.$touched && addForm.username.$error.required"
-                >
-                      Tên tài khoản là bắt buộc.
-                    </span>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" ng-click="closeAddForm()">
-              Đóng
-            </button>
+          <div class="d-flex justify-content-center mt-3">
             <button
-                    class="btn btn-primary"
-                    ng-click="addKhachHang()"
-                    ng-disabled="addForm.$invalid"
+              class="btn btn-primary pagination-btn"
+              ng-click="previousPage()"
+              ng-disabled="currentPage === 1"
             >
-              Thêm Khách Hàng
+              Trang trước
+            </button>
+            <span>Trang {{ currentPage }} / {{ totalPages }}</span>
+            <button
+              class="btn btn-primary pagination-btn"
+              ng-click="nextPage()"
+              ng-disabled="currentPage === totalPages"
+            >
+              Trang kế tiếp
             </button>
           </div>
         </div>
-      </div>
-    </div>
 
-    <!-- View Modal -->
-    <div
-            class="modal fade"
-            id="viewDetails"
-            tabindex="-1"
-            role="dialog"
-            aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5>Chi Tiết Khách Hàng</h5>
-            <button
-                    class="btn-close"
-                    ng-click="closeViewDetails()"
-            ></button>
-          </div>
-          <div class="modal-body">
-            <p>
-              <strong>ID:</strong> {{ selectedKhachHang.id_khach_hang }}
-            </p>
-            <p>
-              <strong>Mã Khách Hàng:</strong>
-              {{ selectedKhachHang.ma_khach_hang }}
-            </p>
-            <p><strong>Họ Tên:</strong> {{ selectedKhachHang.ho_ten }}</p>
-            <p>
-              <strong>Ngày Sinh:</strong>
-              {{ selectedKhachHang.ngay_sinh }}
-            </p>
-            <p>
-              <strong>Số Điện Thoại:</strong>
-              {{ selectedKhachHang.so_dien_thoai }}
-            </p>
-            <p>
-              <strong>Email:</strong>
-              {{ selectedKhachHang.email }}
-            </p>
-            <p>
-              <strong>Giới Tính:</strong>
-              {{ selectedKhachHang.gioi_tinh ? 'Nam' : 'Nữ' }}
-            </p>
-            <p><strong>Địa Chỉ:</strong> {{ selectedKhachHang.dia_chi }}</p>
-            <p>
-              <strong>Tên Tài Khoản:</strong>
-              {{ selectedKhachHang.username_tai_khoan }}
-            </p>
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" ng-click="closeViewDetails()">
-              Đóng
-            </button>
+        <!-- Add Modal -->
+        <div
+          class="modal fade"
+          id="viewAdd"
+          tabindex="-1"
+          role="dialog"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5>Thêm Khách Hàng Mới</h5>
+                <button class="btn-close" ng-click="closeAddForm()"></button>
+              </div>
+              <div class="modal-body">
+                <form name="addForm" novalidate>
+                  <div class="mb-3">
+                    <label>Mã Khách Hàng</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      ng-model="newKhachHang.ma_khach_hang"
+                      required
+                      minlength="3"
+                      maxlength="10"
+                    />
+                    <span
+                      class="text-danger"
+                      ng-if="errors.ma_khach_hang"
+                      ng-bind="errors.ma_khach_hang"
+                    ></span>
+                  </div>
+                  <div class="mb-3">
+                    <label>Họ Tên</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      ng-model="newKhachHang.ho_ten"
+                      required
+                    />
+                    <span
+                      class="text-danger"
+                      ng-if="errors.ho_ten"
+                      ng-bind="errors.ho_ten"
+                    ></span>
+                  </div>
+                  <div class="mb-3">
+                    <label>Ngày Sinh</label>
+                    <input
+                      type="date"
+                      class="form-control"
+                      ng-model="newKhachHang.ngay_sinh"
+                      required
+                    />
+                    <span
+                      class="text-danger"
+                      ng-if="errors.ngay_sinh"
+                      ng-bind="errors.ngay_sinh"
+                    ></span>
+                  </div>
+                  <div class="mb-3">
+                    <label>Số Điện Thoại</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      ng-model="newKhachHang.so_dien_thoai"
+                      required
+                      ng-pattern="/^(\+84|0)\d{9,10}$/"
+                    />
+                    <span
+                      class="text-danger"
+                      ng-if="errors.so_dien_thoai"
+                      ng-bind="errors.so_dien_thoai"
+                    ></span>
+                  </div>
+                  <div class="mb-3">
+                    <label>Email</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      ng-model="newKhachHang.email"
+                      required
+                    />
+                    <span
+                      class="text-danger"
+                      ng-if="errors.email"
+                      ng-bind="errors.email"
+                    ></span>
+                  </div>
+                  <div class="mb-3">
+                    <label>Giới Tính</label>
+                    <select
+                      class="form-control"
+                      ng-model="newKhachHang.gioi_tinh"
+                      required
+                    >
+                      <option value="">Chọn Giới Tính</option>
+                      <option value="true">Nam</option>
+                      <option value="false">Nữ</option>
+                    </select>
+                    <span
+                      class="text-danger"
+                      ng-if="errors.gioi_tinh"
+                      ng-bind="errors.gioi_tinh"
+                    ></span>
+                  </div>
+                  <div class="mb-3">
+                    <label>Địa Chỉ</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      ng-model="newKhachHang.dia_chi"
+                      required
+                    />
+                    <span
+                      class="text-danger"
+                      ng-if="errors.dia_chi"
+                      ng-bind="errors.dia_chi"
+                    ></span>
+                  </div>
+                  <div class="mb-3">
+                    <label>Tên Tài Khoản</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      ng-model="newKhachHang.username_tai_khoan"
+                      required
+                    />
+                    <span
+                      class="text-danger"
+                      ng-if="errors.username_tai_khoan"
+                      ng-bind="errors.username_tai_khoan"
+                    ></span>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" ng-click="closeAddForm()">
+                  Đóng
+                </button>
+                <button class="btn btn-primary" ng-click="addKhachHang()">
+                  Thêm Khách Hàng
+                </button>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-    <div
-            class="modal fade"
-            id="viewPurchaseHistory"
-            tabindex="-1"
-            role="dialog"
-            aria-hidden="true"
-    >
-      <div
-              class="modal-dialog modal-lg"
-              style="
+
+        <!-- View Modal -->
+        <div
+          class="modal fade"
+          id="viewDetails"
+          tabindex="-1"
+          role="dialog"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5>Chi Tiết Khách Hàng</h5>
+                <button
+                  class="btn-close"
+                  ng-click="closeViewDetails()"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <p>
+                  <strong>ID:</strong> {{ selectedKhachHang.id_khach_hang }}
+                </p>
+                <p>
+                  <strong>Mã Khách Hàng:</strong>
+                  {{ selectedKhachHang.ma_khach_hang }}
+                </p>
+                <p><strong>Họ Tên:</strong> {{ selectedKhachHang.ho_ten }}</p>
+                <p>
+                  <strong>Ngày Sinh:</strong>
+                  {{ selectedKhachHang.ngay_sinh }}
+                </p>
+                <p>
+                  <strong>Số Điện Thoại:</strong>
+                  {{ selectedKhachHang.so_dien_thoai }}
+                </p>
+                <p>
+                  <strong>Email:</strong>
+                  {{ selectedKhachHang.email }}
+                </p>
+                <p>
+                  <strong>Giới Tính:</strong>
+                  {{ selectedKhachHang.gioi_tinh ? 'Nam' : 'Nữ' }}
+                </p>
+                <p><strong>Địa Chỉ:</strong> {{ selectedKhachHang.dia_chi }}</p>
+                <p>
+                  <strong>Tên Tài Khoản:</strong>
+                  {{ selectedKhachHang.username_tai_khoan }}
+                </p>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" ng-click="closeViewDetails()">
+                  Đóng
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="modal fade"
+          id="viewPurchaseHistory"
+          tabindex="-1"
+          role="dialog"
+          aria-hidden="true"
+        >
+          <div
+            class="modal-dialog modal-lg"
+            style="
               max-width: 80%;
               margin: auto;
               font-family: Arial, sans-serif;
               margin-top: 40px;
             "
-      >
-        <div
-                class="modal-content"
-                style="
+          >
+            <div
+              class="modal-content"
+              style="
                 border-radius: 8px;
                 overflow: hidden;
                 box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
               "
-        >
-          <!-- Modal Header -->
-          <div
-                  class="modal-header"
-                  style="
+            >
+              <!-- Modal Header -->
+              <div
+                class="modal-header"
+                style="
                   background-color: #007bff;
                   color: #fff;
                   padding: 15px;
                   border-bottom: 3px solid #0056b3;
                 "
-          >
-            <h5
-                    class="modal-title"
-                    style="margin: 0; font-size: 18px; color: #fff"
-            >
-              Lịch Sử Mua Hàng
-            </h5>
-            <button
-                    type="button"
-                    class="btn-close"
-                    style="background: transparent; border: none; color: #fff"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                    ng-click="closePurchaseHistory()"
-            ></button>
-          </div>
+              >
+                <h5
+                  class="modal-title"
+                  style="margin: 0; font-size: 18px; color: #fff"
+                >
+                  Lịch Sử Mua Hàng
+                </h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  style="background: transparent; border: none; color: #fff"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                  ng-click="closePurchaseHistory()"
+                ></button>
+              </div>
 
-          <!-- Modal Body -->
-          <div class="modal-body" style="padding: 20px">
-            <!-- Nếu có lịch sử -->
-            <div ng-if="purchaseHistory.length > 0">
-              <table
-                      class="table"
-                      style="
+              <!-- Modal Body -->
+              <div class="modal-body" style="padding: 20px">
+                <!-- Nếu có lịch sử -->
+                <div ng-if="purchaseHistory.length > 0">
+                  <table
+                    class="table"
+                    style="
                       width: 100%;
                       border-collapse: collapse;
                       text-align: left;
                       margin-bottom: 20px;
                     "
-              >
-                <thead>
-                <tr
+                  >
+                    <thead>
+                      <tr
                         style="
                           background-color: #f8f9fa;
                           border-bottom: 2px solid #dee2e6;
                         "
-                >
-                  <th style="padding: 10px; border: 1px solid #dee2e6">
-                    Mã Hóa Đơn
-                  </th>
-                  <th style="padding: 10px; border: 1px solid #dee2e6">
-                    Ngày Mua
-                  </th>
-                  <th style="padding: 10px; border: 1px solid #dee2e6">
-                    Tổng Tiền
-                  </th>
-                  <th style="padding: 10px; border: 1px solid #dee2e6">
-                    Chi Tiết Sản Phẩm
-                  </th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr
+                      >
+                        <th style="padding: 10px; border: 1px solid #dee2e6">
+                          Mã Hóa Đơn
+                        </th>
+                        <th style="padding: 10px; border: 1px solid #dee2e6">
+                          Ngày Mua
+                        </th>
+                        <th style="padding: 10px; border: 1px solid #dee2e6">
+                          Tổng Tiền
+                        </th>
+                        <th style="padding: 10px; border: 1px solid #dee2e6">
+                          Chi Tiết Sản Phẩm
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr
                         ng-repeat="hoaDon in purchaseHistory"
                         style="border-bottom: 1px solid #dee2e6"
-                >
-                  <td style="padding: 10px; border: 1px solid #dee2e6">
-                    {{ hoaDon.maHoaDon }}
-                  </td>
-                  <td style="padding: 10px; border: 1px solid #dee2e6">
-                    {{ hoaDon.ngayMua | date: 'dd/MM/yyyy' }}
-                  </td>
-                  <td style="padding: 10px; border: 1px solid #dee2e6">
-                    {{ hoaDon.tongTien | currency:'₫':0 }}
-                  </td>
-                  <td style="padding: 10px; border: 1px solid #dee2e6">
-                    <!-- Chi Tiết Sản Phẩm -->
-                    <div
+                      >
+                        <td style="padding: 10px; border: 1px solid #dee2e6">
+                          {{ hoaDon.maHoaDon }}
+                        </td>
+                        <td style="padding: 10px; border: 1px solid #dee2e6">
+                          {{ hoaDon.ngayMua | date: 'dd/MM/yyyy' }}
+                        </td>
+                        <td style="padding: 10px; border: 1px solid #dee2e6">
+                          {{ hoaDon.tongTien | currency:'₫':0 }}
+                        </td>
+                        <td style="padding: 10px; border: 1px solid #dee2e6">
+                          <!-- Chi Tiết Sản Phẩm -->
+                          <div
                             style="
                               display: grid;
                               grid-template-columns: repeat(
@@ -480,8 +443,8 @@
                               );
                               gap: 10px;
                             "
-                    >
-                      <div
+                          >
+                            <div
                               ng-repeat="chiTiet in hoaDon.chiTietSanPham"
                               style="
                                 background: #f8f9fa;
@@ -489,346 +452,344 @@
                                 border-radius: 5px;
                                 border: 1px solid #dee2e6;
                               "
-                      >
-                        <p style="margin: 0; font-weight: bold">
-                          {{ chiTiet.tenSanPham }}
-                        </p>
-                        <p style="margin: 5px 0 0; font-size: 14px">
-                          Số lượng: {{ chiTiet.soLuong }}
-                        </p>
-                        <p
+                            >
+                              <p style="margin: 0; font-weight: bold">
+                                {{ chiTiet.tenSanPham }}
+                              </p>
+                              <p style="margin: 5px 0 0; font-size: 14px">
+                                Số lượng: {{ chiTiet.soLuong }}
+                              </p>
+                              <p
                                 style="
                                   margin: 0;
                                   font-size: 14px;
                                   color: #007bff;
                                 "
-                        >
-                          Giá bán: {{ chiTiet.giaBan | currency:'₫':0 }}
-                        </p>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
+                              >
+                                Giá bán: {{ chiTiet.giaBan | currency:'₫':0 }}
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
 
-            <!-- Nếu không có lịch sử -->
-            <div
-                    ng-if="purchaseHistory.length === 0"
-                    style="
+                <!-- Nếu không có lịch sử -->
+                <div
+                  ng-if="purchaseHistory.length === 0"
+                  style="
                     text-align: center;
                     color: #6c757d;
                     padding: 20px;
                     font-size: 16px;
                   "
-            >
-              <p>Không có lịch sử mua hàng.</p>
-            </div>
-          </div>
+                >
+                  <p>Không có lịch sử mua hàng.</p>
+                </div>
+              </div>
 
-          <!-- Modal Footer -->
-          <div
-                  class="modal-footer"
-                  style="
+              <!-- Modal Footer -->
+              <div
+                class="modal-footer"
+                style="
                   padding: 15px;
                   border-top: 1px solid #dee2e6;
                   background-color: #f8f9fa;
                 "
-          >
-            <button
-                    type="button"
-                    class="btn btn-secondary"
-                    style="
+              >
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  style="
                     background-color: #6c757d;
                     color: #fff;
                     padding: 8px 16px;
                     border: none;
                     border-radius: 4px;
                   "
-                    data-bs-dismiss="modal"
-                    ng-click="closePurchaseHistory()"
-            >
-              Đóng
-            </button>
+                  data-bs-dismiss="modal"
+                  ng-click="closePurchaseHistory()"
+                >
+                  Đóng
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Edit Modal -->
+        <div
+          class="modal fade"
+          id="viewEdit"
+          tabindex="-1"
+          role="dialog"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5>Sửa Khách Hàng</h5>
+                <button class="btn-close" ng-click="closeEditForm()"></button>
+              </div>
+              <div class="modal-body">
+                <form name="editForm" novalidate>
+                  <div class="mb-3">
+                    <label>Họ Tên</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      ng-model="selectedKhachHang.ho_ten"
+                      required
+                    />
+                    <span
+                      class="text-danger"
+                      ng-if="errors.ho_ten"
+                      ng-bind="errors.ho_ten"
+                    ></span>
+                  </div>
+                  <div class="mb-3">
+                    <label>Số Điện Thoại</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      ng-model="selectedKhachHang.so_dien_thoai"
+                      required
+                      ng-pattern="/^(\+84|0)\d{9,10}$/"
+                    />
+                    <span
+                      class="text-danger"
+                      ng-if="errors.so_dien_thoai"
+                      ng-bind="errors.so_dien_thoai"
+                    ></span>
+                  </div>
+                  <div class="mb-3">
+                    <label>Email</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      ng-model="selectedKhachHang.email"
+                      required
+                    />
+                    <span
+                      class="text-danger"
+                      ng-if="errors.email"
+                      ng-bind="errors.email"
+                    ></span>
+                  </div>
+                  <div class="mb-3">
+                    <label>Địa Chỉ</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      ng-model="selectedKhachHang.dia_chi"
+                      required
+                    />
+                    <span
+                      class="text-danger"
+                      ng-if="errors.dia_chi"
+                      ng-bind="errors.dia_chi"
+                    ></span>
+                  </div>
+                  <div class="mb-3">
+                    <label>Giới Tính</label>
+                    <select
+                      class="form-control"
+                      ng-model="selectedKhachHang.gioi_tinh"
+                    >
+                      <option value="">Chọn Giới Tính</option>
+                      <option value="true">Nam</option>
+                      <option value="false">Nữ</option>
+                    </select>
+                    <span
+                      class="text-danger"
+                      ng-if="errors.gioi_tinh"
+                      ng-bind="errors.gioi_tinh"
+                    ></span>
+                  </div>
+                  <div class="mb-3">
+                    <label>Ngày Sinh</label>
+                    <input
+                      type="date"
+                      class="form-control"
+                      ng-model="selectedKhachHang.ngay_sinh"
+                    />
+                    <span
+                      class="text-danger"
+                      ng-if="errors.ngay_sinh"
+                      ng-bind="errors.ngay_sinh"
+                    ></span>
+                  </div>
+                  <div class="mb-3">
+                    <label>Tên Tài Khoản</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      ng-model="selectedKhachHang.username_tai_khoan"
+                      disabled
+                    />
+                    <span
+                      class="text-danger"
+                      ng-if="errors.username_tai_khoan"
+                      ng-bind="errors.username_tai_khoan"
+                    ></span>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button class="btn btn-secondary" ng-click="closeEditForm()">
+                  Đóng
+                </button>
+                <button
+                  class="btn btn-primary"
+                  ng-click="updateKhachHang()"
+                  ng-disabled="editForm.$invalid"
+                >
+                  Lưu
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Edit Modal -->
-    <div
-            class="modal fade"
-            id="viewEdit"
-            tabindex="-1"
-            role="dialog"
-            aria-hidden="true"
-    >
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5>Sửa Khách Hàng</h5>
-            <button class="btn-close" ng-click="closeEditForm()"></button>
-          </div>
-          <div class="modal-body">
-            <form name="editForm" novalidate>
-              <div class="mb-3">
-                <label>Họ Tên</label>
-                <input
-                        type="text"
-                        class="form-control"
-                        ng-model="selectedKhachHang.ho_ten"
-                        required
-                />
-                <span
-                        class="text-danger"
-                        ng-show="editForm.hoTen.$touched && editForm.hoTen.$error.required"
-                >
-                      Họ tên là bắt buộc.
-                    </span>
-              </div>
-              <div class="mb-3">
-                <label>Số Điện Thoại</label>
-                <input
-                        type="text"
-                        class="form-control"
-                        ng-model="selectedKhachHang.so_dien_thoai"
-                        required
-                        ng-pattern="/^(\+84|0)\d{9,10}$/"
-                />
-                <span
-                        class="text-danger"
-                        ng-show="editForm.soDienThoai.$touched && editForm.soDienThoai.$error.required"
-                >
-                      Số điện thoại là bắt buộc.
-                    </span>
-                <span
-                        class="text-danger"
-                        ng-show="editForm.soDienThoai.$error.pattern"
-                >
-                      Số điện thoại không đúng định dạng (VD: +84123456789 hoặc
-                      0123456789).
-                    </span>
-              </div>
-              <div class="mb-3">
-                <label>Email</label>
-                <input
-                        type="email"
-                        class="form-control"
-                        ng-model="selectedKhachHang.email"
-                        required
-                />
-                <span
-                        class="text-danger"
-                        ng-show="editForm.email.$touched && editForm.email.$error.required"
-                >
-                      Email là bắt buộc.
-                    </span>
-                <span
-                        class="text-danger"
-                        ng-show="editForm.email.$error.email"
-                >
-                      Email không hợp lệ.
-                    </span>
-              </div>
-              <div class="mb-3">
-                <label>Địa Chỉ</label>
-                <input
-                        type="text"
-                        class="form-control"
-                        ng-model="selectedKhachHang.dia_chi"
-                        required
-                />
-                <span
-                        class="text-danger"
-                        ng-show="editForm.diaChi.$touched && editForm.diaChi.$error.required"
-                >
-                      Địa chỉ là bắt buộc.
-                    </span>
-              </div>
-              <div class="mb-3">
-                <label>Giới Tính</label>
-                <select
-                        class="form-control"
-                        ng-model="selectedKhachHang.gioi_tinh"
-                >
-                  <option value="">Chọn Giới Tính</option>
-                  <option value="true">Nam</option>
-                  <option value="false">Nữ</option>
-                </select>
-              </div>
-              <div class="mb-3">
-                <label>Ngày Sinh</label>
-                <input
-                        type="date"
-                        class="form-control"
-                        ng-model="selectedKhachHang.ngay_sinh"
-                />
-              </div>
-              <div class="mb-3">
-                <label>Tên Tài Khoản</label>
-                <input
-                        type="text"
-                        class="form-control"
-                        ng-model="selectedKhachHang.username_tai_khoan"
-                        disabled
-                />
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" ng-click="closeEditForm()">
-              Đóng
-            </button>
-            <button
-                    class="btn btn-primary"
-                    ng-click="updateKhachHang()"
-                    ng-disabled="editForm.$invalid"
-            >
-              Lưu
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+    <script src="https://code.angularjs.org/1.8.2/angular.min.js"></script>
+    <script>
+      var app = angular.module("khachhangApp", []);
+      app.controller("KhachHangController", function ($scope, $http, $filter) {
+        $scope.khachhangList = [];
+        $scope.newKhachHang = {};
+        $scope.selectedKhachHang = {};
+        $scope.currentPage = 1;
+        $scope.pageSize = 5;
+        $scope.totalPages = 0;
 
-<script src="https://code.angularjs.org/1.8.2/angular.min.js"></script>
-<script>
-  var app = angular.module("khachhangApp", []);
-  app.controller("KhachHangController", function ($scope, $http, $filter) {
-    $scope.khachhangList = [];
-    $scope.newKhachHang = {};
-    $scope.selectedKhachHang = {};
-    $scope.currentPage = 1;
-    $scope.pageSize = 5;
-    $scope.totalPages = 0;
+        $scope.fetchKhachHang = function () {
+          $http.get("/admin/khach-hang/api").then(
+            function (response) {
+              $scope.khachhangList = response.data;
+              $scope.totalPages = Math.ceil(
+                $scope.khachhangList.length / $scope.pageSize
+              );
+              $scope.paginatedKhachHangList = $scope.khachhangList.slice(
+                0,
+                $scope.pageSize
+              );
+            },
+            function (error) {
+              console.error("Error fetching data:", error);
+            }
+          );
+        };
 
-    $scope.fetchKhachHang = function () {
-      $http.get("/admin/khach-hang/api").then(
+        $scope.paginate = function () {
+          const start = ($scope.currentPage - 1) * $scope.pageSize;
+          const end = start + $scope.pageSize;
+          $scope.paginatedKhachHangList = $scope.khachhangList.slice(
+            start,
+            end
+          );
+        };
+
+        $scope.previousPage = function () {
+          if ($scope.currentPage > 1) {
+            $scope.currentPage--;
+            $scope.paginate();
+          }
+        };
+
+        $scope.nextPage = function () {
+          if ($scope.currentPage < $scope.totalPages) {
+            $scope.currentPage++;
+            $scope.paginate();
+          }
+        };
+
+        $scope.showAddForm = function () {
+          $scope.newKhachHang = {};
+          $("#viewAdd").modal("show");
+        };
+
+        $scope.closeAddForm = function () {
+          $("#viewAdd").modal("hide");
+        };
+
+        $scope.addKhachHang = function () {
+          // Format ngay_sinh to yyyy-MM-dd
+          if ($scope.newKhachHang.ngay_sinh) {
+            $scope.newKhachHang.ngay_sinh = $filter("date")(
+              $scope.newKhachHang.ngay_sinh,
+              "yyyy-MM-dd"
+            );
+          }
+
+          $http.post("/admin/khach-hang/api/add", $scope.newKhachHang).then(
+            function (response) {
+              console.log("Customer added successfully:", response.data);
+              $scope.khachhangList.push(response.data);
+              $scope.paginate(); // Refresh pagination if applicable
+              $scope.closeAddForm(); // Close the modal form
+              $scope.fetchKhachHang();
+            },
+            function (error) {
+              console.error("Error adding customer:", error);
+            }
+          );
+        };
+
+        $scope.viewDetails = function (khach) {
+          $scope.selectedKhachHang = khach;
+          $("#viewDetails").modal("show");
+        };
+
+        $scope.closeViewDetails = function () {
+          $("#viewDetails").modal("hide");
+        };
+
+        $scope.editCustomer = function (khach) {
+          $scope.selectedKhachHang = angular.copy(khach);
+          $("#viewEdit").modal("show");
+        };
+
+        $scope.closeEditForm = function () {
+          $("#viewEdit").modal("hide");
+        };
+
+        $scope.updateKhachHang = function () {
+          if ($scope.selectedKhachHang.ngay_sinh) {
+            $scope.selectedKhachHang.ngay_sinh = $filter("date")(
+              $scope.selectedKhachHang.ngay_sinh,
+              "yyyy-MM-dd"
+            );
+          }
+          $http
+            .put(
+              "/admin/khach-hang/api/update/" +
+                $scope.selectedKhachHang.id_khach_hang,
+              $scope.selectedKhachHang
+            )
+            .then(
               function (response) {
-                $scope.khachhangList = response.data;
-                $scope.totalPages = Math.ceil(
-                        $scope.khachhangList.length / $scope.pageSize
+                const index = $scope.khachhangList.findIndex(
+                  (kh) => kh.id_khach_hang === response.data.id_khach_hang
                 );
-                $scope.paginatedKhachHangList = $scope.khachhangList.slice(
-                        0,
-                        $scope.pageSize
-                );
-              },
-              function (error) {
-                console.error("Error fetching data:", error);
-              }
-      );
-    };
-
-    $scope.paginate = function () {
-      const start = ($scope.currentPage - 1) * $scope.pageSize;
-      const end = start + $scope.pageSize;
-      $scope.paginatedKhachHangList = $scope.khachhangList.slice(
-              start,
-              end
-      );
-    };
-
-    $scope.previousPage = function () {
-      if ($scope.currentPage > 1) {
-        $scope.currentPage--;
-        $scope.paginate();
-      }
-    };
-
-    $scope.nextPage = function () {
-      if ($scope.currentPage < $scope.totalPages) {
-        $scope.currentPage++;
-        $scope.paginate();
-      }
-    };
-
-    $scope.showAddForm = function () {
-      $scope.newKhachHang = {};
-      $("#viewAdd").modal("show");
-    };
-
-    $scope.closeAddForm = function () {
-      $("#viewAdd").modal("hide");
-    };
-
-    $scope.addKhachHang = function () {
-      // Format ngay_sinh to yyyy-MM-dd
-      if ($scope.newKhachHang.ngay_sinh) {
-        $scope.newKhachHang.ngay_sinh = $filter("date")(
-                $scope.newKhachHang.ngay_sinh,
-                "yyyy-MM-dd"
-        );
-      }
-
-      $http.post("/admin/khach-hang/api/add", $scope.newKhachHang).then(
-              function (response) {
-                console.log("Customer added successfully:", response.data);
-                $scope.khachhangList.push(response.data);
-                $scope.paginate(); // Refresh pagination if applicable
-                $scope.closeAddForm(); // Close the modal form
+                if (index !== -1) {
+                  $scope.khachhangList[index] = response.data;
+                  $scope.paginate();
+                }
+                $scope.closeEditForm();
                 $scope.fetchKhachHang();
               },
               function (error) {
-                console.error("Error adding customer:", error);
+                console.error("Error updating customer:", error);
               }
-      );
-    };
+            );
+        };
 
-    $scope.viewDetails = function (khach) {
-      $scope.selectedKhachHang = khach;
-      $("#viewDetails").modal("show");
-    };
-
-    $scope.closeViewDetails = function () {
-      $("#viewDetails").modal("hide");
-    };
-
-    $scope.editCustomer = function (khach) {
-      $scope.selectedKhachHang = angular.copy(khach);
-      $("#viewEdit").modal("show");
-    };
-
-    $scope.closeEditForm = function () {
-      $("#viewEdit").modal("hide");
-    };
-
-    $scope.updateKhachHang = function () {
-      if ($scope.selectedKhachHang.ngay_sinh) {
-        $scope.selectedKhachHang.ngay_sinh = $filter("date")(
-                $scope.selectedKhachHang.ngay_sinh,
-                "yyyy-MM-dd"
-        );
-      }
-      $http
-              .put(
-                      "/admin/khach-hang/api/update/" +
-                      $scope.selectedKhachHang.id_khach_hang,
-                      $scope.selectedKhachHang
-              )
-              .then(
-                      function (response) {
-                        const index = $scope.khachhangList.findIndex(
-                                (kh) => kh.id_khach_hang === response.data.id_khach_hang
-                        );
-                        if (index !== -1) {
-                          $scope.khachhangList[index] = response.data;
-                          $scope.paginate();
-                        }
-                        $scope.closeEditForm();
-                        $scope.fetchKhachHang();
-                      },
-                      function (error) {
-                        console.error("Error updating customer:", error);
-                      }
-              );
-    };
-
-    $scope.fetchKhachHang();
-  });
-</script>
-</body>
+        $scope.fetchKhachHang();
+      });
+    </script>
+  </body>
 </html>

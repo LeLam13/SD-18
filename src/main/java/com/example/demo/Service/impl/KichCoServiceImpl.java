@@ -26,6 +26,16 @@ public class KichCoServiceImpl implements KichCoService {
     }
 
     @Override
+    public List<KichCo> getAllbyCT(Integer idSanPham) {
+        return kichCoRepo.getAllByCT(idSanPham);
+    }
+
+    @Override
+    public List<KichCo> getAllbyMS(Integer idSanPham, Integer idMauSac) {
+        return kichCoRepo.getAllByCTAndMauSac(idSanPham, idMauSac);
+    }
+
+    @Override
     public Page<KichCo> findAll(Pageable pageable) {
         return kichCoRepo.findAll(pageable);
     }
@@ -56,10 +66,9 @@ public class KichCoServiceImpl implements KichCoService {
     @Override
     public KichCo updateTrangThai(Integer idKichCo) {
         KichCo kc = kichCoRepo.findByIdKichCo(idKichCo);
-        if(kc.getTrangThai()==true){
+        if (kc.getTrangThai() == true) {
             kc.setTrangThai(false);
-        }
-        else{
+        } else {
             kc.setTrangThai(true);
         }
         return kichCoRepo.save(kc);
