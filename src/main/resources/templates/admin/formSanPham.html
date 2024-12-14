@@ -88,10 +88,7 @@
                                                 <select class="form-control" ng-model="selectedMauSac" multiple
                                                         ng-change="selectColor()">
 
-                                                    <option ng-repeat="mau in mauSacCr | filter:colorFilterFunction"></option>
-
-                                                    <option ng-repeat="mau in mauSac | filter:colorFilterFunction"
-
+                                                    <option ng-repeat="mau in mauSacCr | filter:colorFilterFunction"
                                                             ng-value="mau">
                                                         {{ mau.ten
                                                         }}
@@ -109,10 +106,7 @@
                                                 <select class="form-control" ng-model="selectedKichCo" multiple
                                                         ng-change="selectSize()">
 
-                                                    <option ng-repeat="size in kichCoCr | filter:sizeFilterFunction"></option>
-
-                                                    <option ng-repeat="size in kichCo | filter:sizeFilterFunction"
-
+                                                    <option ng-repeat="size in kichCoCr | filter:sizeFilterFunction"
                                                             ng-value="size">
                                                         {{ size.ten
                                                         }}
