@@ -35,9 +35,8 @@ public interface KichCoService {
 
     public List<KichCo> getAllbyMS(Integer idSanPham, Integer idMauSac);
 
-<<<<<<< HEAD
+
     public List<KichCo> getAllByTT();
 
-=======
->>>>>>> feature/khuyenmai
+
 }

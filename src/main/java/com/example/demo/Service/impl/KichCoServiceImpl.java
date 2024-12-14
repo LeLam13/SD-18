@@ -30,14 +30,12 @@ public class KichCoServiceImpl implements KichCoService {
     }
 
     @Override
-<<<<<<< HEAD
+
     public List<KichCo> getAllByTT() {
         return kichCoRepo.getAllByTT();
     }
 
     @Override
-=======
->>>>>>> feature/khuyenmai
     public List<KichCo> getAllbyCT(Integer idSanPham) {
         return kichCoRepo.getAllByCT(idSanPham);
     }

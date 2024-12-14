@@ -404,7 +404,7 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
 
     $scope.getThuocTinhCT();
 
-<<<<<<< HEAD
+
 
     $scope.getThuocTinhByTrangThai = function () {
         $http.get("/admin/mau-sac/get-all/trang-thai").then(r => {
@@ -434,8 +434,7 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
 
     $scope.getThuocTinhByTrangThai();
 
-=======
->>>>>>> feature/khuyenmai
+
     $scope.updateKichCo = function () {
         if (!$scope.idMauSacNhap) {
             // Nếu không chọn màu sắc, hiển thị tất cả kích cỡ

@@ -27,11 +27,10 @@ public interface MauSacRepo extends JpaRepository<MauSac, Integer> {
             "WHERE spct.idSanPham.idSanPham = :idSanPham")
     List<MauSac> getAllByCT(@Param("idSanPham") Integer idSanPham);
 
-<<<<<<< HEAD
+
     @Query("SELECT ms FROM MauSac ms where ms.trangThai = true")
     List<MauSac> getAllByTT();
 
-=======
->>>>>>> feature/khuyenmai
+
 
 }
