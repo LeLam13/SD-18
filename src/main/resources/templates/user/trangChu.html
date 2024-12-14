@@ -14,6 +14,9 @@
     <!-- Favicon -->
     <link href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    </head>
 
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/icons/favicon-32x32.png">
@@ -162,6 +165,136 @@
         font-size: 2.5rem;  /* Tăng kích thước chữ cho phụ đề */
         font-weight: bold;  /* Làm chữ đậm */
     }
+    /* Footer Styles */
+    .footer {
+        background-color: #000; /* Nền đen */
+        color: #fff; /* Chữ trắng */
+        padding: 40px 20px;
+        font-family: Arial, sans-serif;
+        font-size: 14px; /* Kích thước chữ đồng nhất */
+        width: 100%; /* Đảm bảo footer chiếm toàn bộ chiều rộng */
+        box-sizing: border-box; /* Bao gồm cả padding và border vào chiều rộng */
+        margin: 0; /* Loại bỏ margin mặc định */
+    }
+
+    .footer__content {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 20px;
+        max-width: 1200px; /* Điều chỉnh chiều rộng tối đa của nội dung footer */
+        margin: 0 auto; /* Căn giữa nội dung trong footer */
+        width: 100%; /* Đảm bảo content chiếm 100% chiều rộng */
+    }
+
+    .footer__logo h3 {
+        font-size: 18px;
+        color: #fff;
+        margin-bottom: 10px;
+    }
+
+    .footer__logo p {
+        font-size: 14px;
+        color: #ccc;
+    }
+
+    .footer__links h4,
+    .footer__contact h4,
+    .footer__social h4 {
+        font-size: 16px;
+        margin-bottom: 10px;
+        color: #fff;
+    }
+
+    .footer__links ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .footer__links ul li {
+        margin-bottom: 5px;
+    }
+
+    .footer__links ul li a {
+        color: #ccc;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    .footer__links ul li a:hover {
+        color: #fff;
+    }
+
+    .footer__contact p,
+    .footer__social a {
+        font-size: 14px;
+        color: #ccc;
+        margin-bottom: 5px;
+    }
+
+    .footer__social a {
+        margin-right: 10px;
+        font-size: 18px;
+        color: #ccc;
+    }
+
+    .footer__social a:hover {
+        color: #fff;
+    }
+
+    .footer__copyright {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 12px;
+        color: #ccc;
+    }
+    /* Phân trang gọn gàng và thanh thoát */
+    .pagination.custom-pagination {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 10px 20px;
+        border-radius: 25px;
+    }
+
+    /* Nút phân trang */
+    .pagination.custom-pagination .page-item .page-link {
+        font-size: 16px; /* Kích thước chữ vừa phải */
+        padding: 8px 15px;
+        margin: 0 5px;
+        border-radius: 25px;
+        color: #6c4f3d; /* Màu chữ nâu sáng */
+        background-color: transparent; /* Không có nền */
+        border: 2px solid #e1d7b1; /* Viền nhạt màu be */
+        transition: border-color 0.3s, transform 0.2s ease;
+    }
+
+    /* Nút phân trang hover */
+    .pagination.custom-pagination .page-item .page-link:hover {
+        border-color: #6c4f3d; /* Đổi màu viền khi hover */
+        color: #6c4f3d; /* Đổi màu chữ khi hover */
+        transform: scale(1.05);
+    }
+
+    /* Màu nền cho nút vô hiệu hóa */
+    .pagination.custom-pagination .page-item.disabled .page-link {
+        color: #ccc; /* Màu chữ cho nút vô hiệu hóa */
+        border-color: #ccc; /* Màu viền cho nút vô hiệu hóa */
+        cursor: not-allowed;
+    }
+
+    /* Icon điều hướng */
+    .pagination.custom-pagination .page-item .page-link i {
+        font-size: 18px; /* Kích thước icon */
+        color: #6c4f3d; /* Màu icon */
+    }
+
+    /* Thông tin trang */
+    .pagination.custom-pagination .page-item.disabled .page-link {
+        color: #6c4f3d;
+        font-weight: bold;
+    }
+
 
 </style>
 
@@ -212,7 +345,7 @@
                                 <a href="/don-hang-khach" class="sf-with-ul">Đơn Hàng</a>
                             </li>
                             <li>
-                                <a href="/don-hang-khach" class="sf-with-ul">Giới Thiệu</a>
+                                <a href="/lien-he" class="sf-with-ul">Liên Hệ</a>
                             </li>
                         </ul><!-- End .menu -->
                     </nav><!-- End .main-nav -->
@@ -502,40 +635,72 @@
 
             <!-- Điều hướng phân trang -->
             <nav aria-label="Page navigation" class="d-flex justify-content-center mt-3">
-                <ul class="pagination pagination-sm-125">
-                    <!-- Nút Trang đầu -->
-                    <li class="page-item" ng-class="{ 'disabled': page === 0 }">
-                        <a class="page-link" href="" ng-click="goToFirstPage()"><small>&#8676; Trang
-                            đầu</small></a>
-                    </li>
-
+                <ul class="pagination custom-pagination">
                     <!-- Nút Trang trước -->
                     <li class="page-item" ng-class="{ 'disabled': page === 0 }">
-                        <a class="page-link" href="" ng-click="previousPage()"><small>&#8592; Trang
-                            trước></small></a>
+                        <a class="page-link" href="" ng-click="previousPage()">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
                     </li>
 
                     <!-- Hiển thị thông tin trang -->
                     <li class="page-item disabled">
-                                            <span class="page-link"><small>Trang {{ page + 1 }} / {{ totalPages
-                                                }}</small></span>
+                        <span class="page-link"><small>Trang {{ page + 1 }} / {{ totalPages }}</small></span>
                     </li>
 
                     <!-- Nút Trang sau -->
                     <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 }">
-                        <a class="page-link" href="" ng-click="nextPage()"><small>Trang sau
-                            &#8594;</small></a>
-                    </li>
-
-                    <!-- Nút Trang cuối -->
-                    <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 }">
-                        <a class="page-link" href="" ng-click="goToLastPage()"><small>Trang cuối
-                            &#8677;</small></a>
+                        <a class="page-link" href="" ng-click="nextPage()">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
                     </li>
                 </ul>
             </nav>
 
+
+
         </div><!-- End .container -->
+        <footer class="footer">
+            <div class="container footer__content">
+                <!-- Logo -->
+                <div class="footer__logo">
+                    <h3>Eighteen Polo</h3>
+                    <p>Thời trang nam đẳng cấp - Chất lượng hàng đầu</p>
+                </div>
+
+                <!-- Navigation Links -->
+                <div class="footer__links">
+                    <h4>Liên kết</h4>
+                    <ul>
+                        <li><a href="/about">Về chúng tôi</a></li>
+                        <li><a href="/products">Sản phẩm</a></li>
+                        <li><a href="/contact">Liên hệ</a></li>
+                        <li><a href="/policy">Chính sách bảo mật</a></li>
+                    </ul>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="footer__contact">
+                    <h4>Liên hệ</h4>
+                    <p><i class="ri-map-pin-line"></i> Địa chỉ: Đường Trịnh Văn Bô,Q. Nam Từ Liêm TP. Hà Nội</p>
+                    <p><i class="ri-phone-line"></i> Số điện thoại: 0909 123 456</p>
+                    <p><i class="ri-mail-line"></i> Email: support@polostore.com</p>
+                </div>
+
+                <!-- Social Media -->
+                <div class="footer__social">
+                    <h4>Kết nối với chúng tôi</h4>
+                    <a href="https://www.facebook.com/profile.php?id=61569788512145" class="footer__social-link"><i class="ri-facebook-circle-line">Facebook</i></a>
+                    <a href="#" class="footer__social-link"><i class="ri-instagram-line"></i></a>
+                    <a href="#" class="footer__social-link"><i class="ri-twitter-line"></i></a>
+                </div>
+            </div>
+
+            <!-- Copyright -->
+            <div class="footer__copyright">
+                <p>&copy; 2024 Eighteen Polo.</p>
+            </div>
+        </footer>
     </main><!-- End .main -->
 
 </div><!-- End .page-wrapper -->
