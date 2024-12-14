@@ -370,7 +370,11 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
                             if (!sizeForm.errorMessages) {
                                 sizeForm.errorMessages = {};
                             }
+<<<<<<< HEAD
                             sizeForm.errorMessages.exists = "Đã tồn tại!";
+=======
+                            sizeForm.errorMessages.exists = "Sản phẩm chi tiết đã tồn tại!";
+>>>>>>> feature/khuyenmai
                             hasError = true;
                         }
                     }).catch(function (err) {

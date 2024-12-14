@@ -302,6 +302,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         Integer soLuongCu = productDetails.getSoLuong();
         Integer soLuongMoi = sanPhamChiTietRequestDTO.getSoLuong();
         productDetails.setSoLuong(soLuongMoi + soLuongCu);
+<<<<<<< HEAD
         productDetails.setUpdateBy(getCurrentUsername());
         return sanPhamChiTietRepo.save(productDetails);
     }
@@ -323,4 +324,9 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         }
         return username;
     }
+=======
+
+        return sanPhamChiTietRepo.save(productDetails);
+    }
+>>>>>>> feature/khuyenmai
 }

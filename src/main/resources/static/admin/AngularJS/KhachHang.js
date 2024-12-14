@@ -17,23 +17,23 @@ app.controller("KhachHangController", function ($scope, $http, $filter) {
   // Fetch all customers with pagination
   $scope.fetchKhachHang = function () {
     $http
-        .get("/admin/khach-hang/api/page", {
-          params: {
-            page: $scope.currentPage - 1,
-            size: $scope.pageSize,
-            searchQuery: $scope.searchQuery, // Gửi từ khóa tìm kiếm
-          },
-        })
-        .then(function (response) {
-          const data = response.data;
-          $scope.khachhangList = data.data;
-          $scope.totalItems = data.totalItems;
-          $scope.totalPages = data.totalPages;
-          $scope.currentPage = data.currentPage + 1;
-        })
-        .catch(function (error) {
-          console.error("Error fetching data:", error);
-        });
+      .get("/admin/khach-hang/api/page", {
+        params: {
+          page: $scope.currentPage - 1,
+          size: $scope.pageSize,
+          searchQuery: $scope.searchQuery, // Gửi từ khóa tìm kiếm
+        },
+      })
+      .then(function (response) {
+        const data = response.data;
+        $scope.khachhangList = data.data;
+        $scope.totalItems = data.totalItems;
+        $scope.totalPages = data.totalPages;
+        $scope.currentPage = data.currentPage + 1;
+      })
+      .catch(function (error) {
+        console.error("Error fetching data:", error);
+      });
   };
 
   // Kích hoạt tìm kiếm
@@ -81,39 +81,144 @@ app.controller("KhachHangController", function ($scope, $http, $filter) {
 
   // Add new customer
   $scope.addKhachHang = function () {
-    // Format ngay_sinh to yyyy-MM-dd
-    if ($scope.newKhachHang.ngay_sinh) {
-      $scope.newKhachHang.ngay_sinh = $filter("date")(
-          $scope.newKhachHang.ngay_sinh,
-          "yyyy-MM-dd"
-      );
+    // Biến lỗi
+    $scope.errors = {};
+
+    // 1. Xác thực dữ liệu trước khi gọi API
+    let isValid = true;
+
+    // Kiểm tra rỗng và độ dài của mã khách hàng
+    if (!$scope.newKhachHang.ma_khach_hang || $scope.newKhachHang.ma_khach_hang.trim() === '') {
+      $scope.errors.ma_khach_hang = "Mã khách hàng không được để trống.";
+      isValid = false;
+    } else if ($scope.newKhachHang.ma_khach_hang.length < 3 || $scope.newKhachHang.ma_khach_hang.length > 10) {
+      $scope.errors.ma_khach_hang = "Mã khách hàng phải từ 3 đến 10 ký tự.";
+      isValid = false;
     }
 
-    $http.post("/admin/khach-hang/api/add", $scope.newKhachHang).then(
-        function (response) {
-          console.log("Customer added successfully:", response.data);
-          $scope.khachhangList.push(response.data);
-          $scope.paginate(); // Refresh pagination if applicable
-          $scope.closeAddForm(); // Close the modal form
-        },
-        function (error) {
-          console.error("Error adding customer:", error);
+    // Kiểm tra rỗng và định dạng họ tên
+    if (!$scope.newKhachHang.ho_ten || $scope.newKhachHang.ho_ten.trim() === '') {
+      $scope.errors.ho_ten = "Họ tên không được để trống.";
+      isValid = false;
+    }
+
+    if (!$scope.newKhachHang.ngay_sinh) {
+      $scope.errors.ngay_sinh = "Ngày sinh không được để trống.";
+      isValid = false;
+    } else {
+      let birthDate;
+
+      if (typeof $scope.newKhachHang.ngay_sinh === 'string') {
+        // Nếu ngay_sinh là chuỗi định dạng MM/dd/yyyy
+        const parts = $scope.newKhachHang.ngay_sinh.split('/');
+        if (parts.length !== 3) {
+          $scope.errors.ngay_sinh = "Định dạng ngày sinh không hợp lệ (MM/dd/yyyy).";
+          isValid = false;
+        } else {
+          const month = parseInt(parts[0], 10) - 1; // Tháng trong JavaScript bắt đầu từ 0
+          const day = parseInt(parts[1], 10);
+          const year = parseInt(parts[2], 10);
+          birthDate = new Date(year, month, day);
         }
+      } else if ($scope.newKhachHang.ngay_sinh instanceof Date) {
+        // Nếu ngay_sinh là đối tượng Date
+        birthDate = $scope.newKhachHang.ngay_sinh;
+      } else {
+        $scope.errors.ngay_sinh = "Ngày sinh không hợp lệ.";
+        isValid = false;
+      }
+
+      if (birthDate) {
+        const currentDate = new Date();
+        if (isNaN(birthDate.getTime())) {
+          $scope.errors.ngay_sinh = "Ngày sinh không hợp lệ.";
+          isValid = false;
+        } else if (birthDate > currentDate) {
+          $scope.errors.ngay_sinh = "Ngày sinh không được lớn hơn ngày hiện tại.";
+          isValid = false;
+        } else {
+          // Chuyển ngày sinh về định dạng yyyy-MM-dd
+          const formattedDate = `${birthDate.getFullYear()}-${('0' + (birthDate.getMonth() + 1)).slice(-2)}-${('0' + birthDate.getDate()).slice(-2)}`;
+          $scope.newKhachHang.ngay_sinh = formattedDate;
+        }
+      }
+    }
+
+
+    // Kiểm tra định dạng số điện thoại
+    const phonePattern = /^(\+84|0)\d{9,10}$/;
+    if (!$scope.newKhachHang.so_dien_thoai || $scope.newKhachHang.so_dien_thoai.trim() === '') {
+      $scope.errors.so_dien_thoai = "Số điện thoại không được để trống.";
+      isValid = false;
+    }
+    if (!phonePattern.test($scope.newKhachHang.so_dien_thoai)) {
+      $scope.errors.so_dien_thoai = "Số điện thoại không đúng định dạng (VD: +84123456789 hoặc 0123456789).";
+      isValid = false;
+    }
+
+    // Kiểm tra định dạng email
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if (!$scope.newKhachHang.email || $scope.newKhachHang.email.trim() === '') {
+      $scope.errors.email = "Email không được để trống.";
+      isValid = false;
+    } else if (!emailPattern.test($scope.newKhachHang.email)) {
+      $scope.errors.email = "Email không đúng định dạng.";
+      isValid = false;
+    }
+
+    // Kiểm tra giới tính
+    if ($scope.newKhachHang.gioi_tinh === undefined || $scope.newKhachHang.gioi_tinh === '') {
+      $scope.errors.gioi_tinh = "Vui lòng chọn giới tính.";
+      isValid = false;
+    }
+
+    // Kiểm tra rỗng địa chỉ
+    if (!$scope.newKhachHang.dia_chi || $scope.newKhachHang.dia_chi.trim() === '') {
+      $scope.errors.dia_chi = "Địa chỉ không được để trống.";
+      isValid = false;
+    }
+
+    // Kiểm tra tên tài khoản
+    if (!$scope.newKhachHang.username_tai_khoan || $scope.newKhachHang.username_tai_khoan.trim() === '') {
+      $scope.errors.username_tai_khoan = "Tên tài khoản không được để trống.";
+      isValid = false;
+    }
+
+    // Nếu có lỗi, ngừng thực hiện API và hiển thị lỗi
+    if (!isValid) {
+      console.warn("Có lỗi xác thực, không gửi yêu cầu API:", $scope.errors);
+      return;
+    }
+
+    // 3. Gửi dữ liệu đến API
+    $http.post("/admin/khach-hang/api/add", $scope.newKhachHang).then(
+      function (response) {
+        console.log("Customer added successfully:", response.data);
+        $scope.khachhangList.push(response.data);
+        $scope.paginate(); // Làm mới phân trang nếu có
+        $scope.closeAddForm(); // Đóng biểu mẫu
+      },
+      function (error) {
+        console.error("Error adding customer:", error);
+        $scope.errors.api_error = "Có lỗi xảy ra trong quá trình thêm khách hàng.";
+      }
     );
   };
+
+
   // View purchase history of a customer
   $scope.viewPurchaseHistory = function (idKhachHang) {
     $http
-        .get("/admin/khach-hang/api/purchase-history/" + idKhachHang)
-        .then(function (response) {
-          $scope.purchaseHistory = response.data; // Gán dữ liệu trả về vào biến purchaseHistory
-          $("#viewPurchaseHistory").modal("show"); // Hiển thị modal lịch sử mua hàng
-        })
-        .catch(function (error) {
-          console.error("Error fetching purchase history:", error);
-          $scope.purchaseHistory = []; // Reset danh sách lịch sử mua hàng nếu có lỗi
-          alert("Không thể lấy lịch sử mua hàng của khách hàng.");
-        });
+      .get("/admin/khach-hang/api/purchase-history/" + idKhachHang)
+      .then(function (response) {
+        $scope.purchaseHistory = response.data; // Gán dữ liệu trả về vào biến purchaseHistory
+        $("#viewPurchaseHistory").modal("show"); // Hiển thị modal lịch sử mua hàng
+      })
+      .catch(function (error) {
+        console.error("Error fetching purchase history:", error);
+        $scope.purchaseHistory = []; // Reset danh sách lịch sử mua hàng nếu có lỗi
+        alert("Không thể lấy lịch sử mua hàng của khách hàng.");
+      });
   };
 
   // Close purchase history modal
@@ -151,54 +256,144 @@ app.controller("KhachHangController", function ($scope, $http, $filter) {
 
     // Tiến hành gọi API nếu có mã giảm giá
     $http
-        .get("/api/khuyen-mai/kiem-tra", {
-          params: { maKhuyenMai: $scope.discountCode },
-        })
-        .then(function (response) {
-          const discountRate = parseFloat(response.data); // Tỉ lệ giảm giá từ server (ví dụ: 10%)
-          $scope.tienGiam = $scope.getSum() * (discountRate / 100);
-          $scope.discountSuccess = "Áp dụng mã giảm giá thành công!";
-          $scope.discountError = null;
-          $scope.formatMoney(); // Cập nhật số tiền sau khi áp dụng mã giảm giá
-        })
-        .catch(function (error) {
-          $scope.discountError = error.data || "Mã giảm giá không hợp lệ!";
-          $scope.discountSuccess = null;
-          $scope.tienGiam = 0;
-          $scope.formatMoney(); // Cập nhật lại tiền khi không có mã giảm giá
-        });
+      .get("/api/khuyen-mai/kiem-tra", {
+        params: { maKhuyenMai: $scope.discountCode },
+      })
+      .then(function (response) {
+        const discountRate = parseFloat(response.data); // Tỉ lệ giảm giá từ server (ví dụ: 10%)
+        $scope.tienGiam = $scope.getSum() * (discountRate / 100);
+        $scope.discountSuccess = "Áp dụng mã giảm giá thành công!";
+        $scope.discountError = null;
+        $scope.formatMoney(); // Cập nhật số tiền sau khi áp dụng mã giảm giá
+      })
+      .catch(function (error) {
+        $scope.discountError = error.data || "Mã giảm giá không hợp lệ!";
+        $scope.discountSuccess = null;
+        $scope.tienGiam = 0;
+        $scope.formatMoney(); // Cập nhật lại tiền khi không có mã giảm giá
+      });
   };
   // Update customer data
   $scope.updateKhachHang = function () {
-    if ($scope.selectedKhachHang.ngay_sinh) {
-      $scope.selectedKhachHang.ngay_sinh = $filter("date")(
-          $scope.selectedKhachHang.ngay_sinh,
-          "yyyy-MM-dd"
-      );
+    // Biến lỗi
+    $scope.errors = {};
+
+    // 1. Xác thực dữ liệu trước khi gọi API
+    let isValid = true;
+
+    // Kiểm tra rỗng và độ dài của mã khách hàng
+    if (!$scope.selectedKhachHang.ma_khach_hang || $scope.selectedKhachHang.ma_khach_hang.trim() === '') {
+      $scope.errors.ma_khach_hang = "Mã khách hàng không được để trống.";
+      isValid = false;
+    } else if ($scope.selectedKhachHang.ma_khach_hang.length < 3 || $scope.selectedKhachHang.ma_khach_hang.length > 10) {
+      $scope.errors.ma_khach_hang = "Mã khách hàng phải từ 3 đến 10 ký tự.";
+      isValid = false;
     }
-    $http
-        .put(
-            "/admin/khach-hang/api/update/" +
-            $scope.selectedKhachHang.id_khach_hang,
-            $scope.selectedKhachHang
-        )
-        .then(
-            function (response) {
-              const index = $scope.khachhangList.findIndex(
-                  (kh) => kh.id_khach_hang === response.data.id_khach_hang
-              );
-              if (index !== -1) {
-                $scope.khachhangList[index] = response.data; // Cập nhật danh sách khách hàng
-                $scope.paginate(); // Cập nhật dữ liệu phân trang
-              }
-              $scope.closeEditForm(); // Đóng modal sửa
-              $scope.fetchKhachHang();
-            },
-            function (error) {
-              console.error("Error updating customer:", error);
-            }
-        );
+
+    // Kiểm tra rỗng và định dạng họ tên
+    if (!$scope.selectedKhachHang.ho_ten || $scope.selectedKhachHang.ho_ten.trim() === '') {
+      $scope.errors.ho_ten = "Họ tên không được để trống.";
+      isValid = false;
+    }
+
+    // Kiểm tra ngày sinh
+    if (!$scope.selectedKhachHang.ngay_sinh) {
+      $scope.errors.ngay_sinh = "Ngày sinh không được để trống.";
+      isValid = false;
+    } else {
+      let birthDate;
+      if (typeof $scope.selectedKhachHang.ngay_sinh === 'string') {
+        const parts = $scope.selectedKhachHang.ngay_sinh.split('/');
+        if (parts.length !== 3) {
+          $scope.errors.ngay_sinh = "Định dạng ngày sinh không hợp lệ (MM/dd/yyyy).";
+          isValid = false;
+        } else {
+          const month = parseInt(parts[0], 10) - 1;
+          const day = parseInt(parts[1], 10);
+          const year = parseInt(parts[2], 10);
+          birthDate = new Date(year, month, day);
+        }
+      } else if ($scope.selectedKhachHang.ngay_sinh instanceof Date) {
+        birthDate = $scope.selectedKhachHang.ngay_sinh;
+      } else {
+        $scope.errors.ngay_sinh = "Ngày sinh không hợp lệ.";
+        isValid = false;
+      }
+
+      if (birthDate) {
+        const currentDate = new Date();
+        if (isNaN(birthDate.getTime())) {
+          $scope.errors.ngay_sinh = "Ngày sinh không hợp lệ.";
+          isValid = false;
+        } else if (birthDate > currentDate) {
+          $scope.errors.ngay_sinh = "Ngày sinh không được lớn hơn ngày hiện tại.";
+          isValid = false;
+        } else {
+          const formattedDate = `${birthDate.getFullYear()}-${('0' + (birthDate.getMonth() + 1)).slice(-2)}-${('0' + birthDate.getDate()).slice(-2)}`;
+          $scope.selectedKhachHang.ngay_sinh = formattedDate;
+        }
+      }
+    }
+
+    // Kiểm tra định dạng số điện thoại
+    const phonePattern = /^(\+84|0)\d{9,10}$/;
+    if (!$scope.selectedKhachHang.so_dien_thoai || $scope.selectedKhachHang.so_dien_thoai.trim() === '') {
+      $scope.errors.so_dien_thoai = "Số điện thoại không được để trống.";
+      isValid = false;
+    } else if (!phonePattern.test($scope.selectedKhachHang.so_dien_thoai)) {
+      $scope.errors.so_dien_thoai = "Số điện thoại không đúng định dạng (VD: +84123456789 hoặc 0123456789).";
+      isValid = false;
+    }
+
+    // Kiểm tra định dạng email
+    const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+    if (!$scope.selectedKhachHang.email || $scope.selectedKhachHang.email.trim() === '') {
+      $scope.errors.email = "Email không được để trống.";
+      isValid = false;
+    } else if (!emailPattern.test($scope.selectedKhachHang.email)) {
+      $scope.errors.email = "Email không đúng định dạng.";
+      isValid = false;
+    }
+
+    // Kiểm tra rỗng địa chỉ
+    if (!$scope.selectedKhachHang.dia_chi || $scope.selectedKhachHang.dia_chi.trim() === '') {
+      $scope.errors.dia_chi = "Địa chỉ không được để trống.";
+      isValid = false;
+    }
+
+    // Kiểm tra tên tài khoản
+    if (!$scope.selectedKhachHang.username_tai_khoan || $scope.selectedKhachHang.username_tai_khoan.trim() === '') {
+      $scope.errors.username_tai_khoan = "Tên tài khoản không được để trống.";
+      isValid = false;
+    }
+
+    // Nếu có lỗi, ngừng thực hiện API và hiển thị lỗi
+    if (!isValid) {
+      console.warn("Có lỗi xác thực, không gửi yêu cầu API:", $scope.errors);
+      return;
+    }
+
+    // 3. Gửi dữ liệu đến API
+    $http.put(`/admin/khach-hang/api/update/${$scope.selectedKhachHang.id_khach_hang}`, $scope.selectedKhachHang)
+      .then(
+        function (response) {
+          const index = $scope.khachhangList.findIndex(
+            (kh) => kh.id_khach_hang === response.data.id_khach_hang
+          );
+          if (index !== -1) {
+            $scope.khachhangList[index] = response.data;
+            $scope.paginate();
+          }
+          $scope.closeEditForm();
+          $scope.fetchKhachHang();
+        },
+        function (error) {
+          console.error("Error updating customer:", error);
+          $scope.errors.api_error = "Có lỗi xảy ra trong quá trình cập nhật khách hàng.";
+        }
+      );
   };
+
 
   // Initialize data fetch
   $scope.fetchKhachHang();

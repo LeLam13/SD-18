@@ -30,11 +30,14 @@ public class MauSacServiceImpl implements MauSacService {
     }
 
     @Override
+<<<<<<< HEAD
     public List<MauSac> getAllByTT() {
         return mauSacRepo.getAllByTT();
     }
 
     @Override
+=======
+>>>>>>> feature/khuyenmai
     public List<MauSac> getAllbyCT(Integer idSanPham) {
         return mauSacRepo.getAllByCT(idSanPham);
     }

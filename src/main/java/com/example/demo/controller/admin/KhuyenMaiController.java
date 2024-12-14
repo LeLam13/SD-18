@@ -12,7 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -25,11 +27,11 @@ public class KhuyenMaiController {
     // Hiển thị danh sách khuyến mãi
     @GetMapping("")
     public String hienThiDanhSach(@RequestParam(defaultValue = "0") int page,
-                                  @RequestParam(defaultValue = "") String search,
-                                  @RequestParam(defaultValue = "all") String trangThai,
-                                  @RequestParam(value = "status", required = false) String status,
-                                  @RequestParam(value = "message", required = false) String message,
-                                  Model model) {
+            @RequestParam(defaultValue = "") String search,
+            @RequestParam(defaultValue = "all") String trangThai,
+            @RequestParam(value = "status", required = false) String status,
+            @RequestParam(value = "message", required = false) String message,
+            Model model) {
         Page<KhuyenMai> danhSach = khuyenMaiService.timKiemPhanTrang(page, search, trangThai);
         model.addAttribute("danhSach", danhSach.getContent());
         model.addAttribute("currentPage", page);
@@ -70,27 +72,80 @@ public class KhuyenMaiController {
     // Xử lý lưu khuyến mãi (thêm/sửa)
     @PostMapping("/save")
     public String saveKhuyenMai(@ModelAttribute("khuyenMai") KhuyenMai khuyenMai,
-                                @RequestParam("thoiGianBatDau") String thoiGianBatDau,
-                                @RequestParam("thoiGianKetThuc") String thoiGianKetThuc,
-                                Model model) {
-        try {
-            // Chuyển đổi String -> Date
-            SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy");
-            khuyenMai.setThoiGianBatDau(dateFormat.parse(thoiGianBatDau));
-            khuyenMai.setThoiGianKetThuc(dateFormat.parse(thoiGianKetThuc));
+            @RequestParam("thoiGianBatDau") String thoiGianBatDau,
+            @RequestParam("thoiGianKetThuc") String thoiGianKetThuc,
+            Model model) {
+        StringBuilder errorMessage = new StringBuilder();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy"); // Định dạng ngày khớp với input type="date"
 
-            // Lưu vào cơ sở dữ liệu
+        try {
+            // 1. Kiểm tra dữ liệu đầu vào (validate input)
+
+            // Kiểm tra rỗng
+            if (khuyenMai.getMaKhuyenMai() == null || khuyenMai.getMaKhuyenMai().trim().isEmpty()) {
+                errorMessage.append("Mã khuyến mãi không được để trống. ");
+            }
+
+            if (khuyenMai.getTenKhuyenMai() == null || khuyenMai.getTenKhuyenMai().trim().isEmpty()) {
+                errorMessage.append("Tên khuyến mãi không được để trống. ");
+            }
+
+            if (thoiGianBatDau == null || thoiGianBatDau.trim().isEmpty()) {
+                errorMessage.append("Thời gian bắt đầu không được để trống. ");
+            }
+
+            if (thoiGianKetThuc == null || thoiGianKetThuc.trim().isEmpty()) {
+                errorMessage.append("Thời gian kết thúc không được để trống. ");
+            }
+
+            // Kiểm tra giá trị số
+            if (khuyenMai.getMucGiamGia() == null || khuyenMai.getMucGiamGia() <= 0) {
+                errorMessage.append("Mức giảm giá phải lớn hơn 0. ");
+            }
+
+            if (khuyenMai.getSoLuong() == null || khuyenMai.getSoLuong() <= 0) {
+                errorMessage.append("Số lượng phải lớn hơn 0. ");
+            }
+
+            if (khuyenMai.getSoTienToiThieu() != null && khuyenMai.getSoTienToiThieu() < 0) {
+                errorMessage.append("Số tiền tối thiểu không được nhỏ hơn 0. ");
+            }
+
+            // Kiểm tra định dạng ngày
+            Date startDate = null;
+            Date endDate = null;
+            try {
+                startDate = dateFormat.parse(thoiGianBatDau);
+                endDate = dateFormat.parse(thoiGianKetThuc);
+                khuyenMai.setThoiGianBatDau(startDate);
+                khuyenMai.setThoiGianKetThuc(endDate);
+            } catch (ParseException e) {
+                errorMessage.append("Định dạng ngày không hợp lệ. Vui lòng nhập ngày theo định dạng MM/dd/yyyy. ");
+            }
+
+            // Kiểm tra logic thời gian
+            if (startDate != null && endDate != null && !startDate.before(endDate)) {
+                errorMessage.append("Thời gian bắt đầu phải nhỏ hơn thời gian kết thúc. ");
+            }
+
+            // Nếu có lỗi, hiển thị lại trang form và trả về thông báo lỗi
+            if (errorMessage.length() > 0) {
+                model.addAttribute("error", errorMessage.toString().trim());
+                model.addAttribute("khuyenMai", khuyenMai);
+                return "/admin/formKhuyenMai"; // Quay lại form nếu lỗi
+            }
+
+            // 2. Lưu vào cơ sở dữ liệu
             khuyenMaiService.save(khuyenMai);
 
-            // Mã hóa thông báo thành công
+            // 3. Mã hóa thông báo thành công
             String message = java.net.URLEncoder.encode("Lưu khuyến mãi thành công!", "UTF-8");
             return "redirect:/admin/khuyen-mai?status=success&message=" + message;
+
         } catch (Exception e) {
-            // Xử lý lỗi nếu xảy ra
             e.printStackTrace();
-            model.addAttribute("status", "error");
-            model.addAttribute("message", "Đã xảy ra lỗi khi lưu khuyến mãi.");
-            return "/admin/formKhuyenMai"; // Quay lại form nếu lỗi
+            model.addAttribute("error", "Đã xảy ra lỗi khi lưu khuyến mãi.");
+            return "/admin/formKhuyenMai";
         }
     }
 

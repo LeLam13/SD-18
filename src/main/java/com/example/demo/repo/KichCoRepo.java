@@ -33,6 +33,10 @@ public interface KichCoRepo extends JpaRepository<KichCo,Integer> {
             "AND spct.idMauSac.idMauSac = :idMauSac")
     List<KichCo> getAllByCTAndMauSac(@Param("idSanPham") Integer idSanPham, @Param("idMauSac") Integer idMauSac);
 
+<<<<<<< HEAD
     @Query("SELECT ms FROM KichCo ms where ms.trangThai = true")
     List<KichCo> getAllByTT();
+=======
+
+>>>>>>> feature/khuyenmai
 }

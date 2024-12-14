@@ -3,6 +3,12 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{/admin/index}">
 <head>
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    <title>Form sản phẩm</title>
+=======
+>>>>>>> feature/khuyenmai
     <title>Eighteen Polo | Form sản phẩm</title>
     <style>
         .button-container {
@@ -10,8 +16,13 @@
             align-items: flex-start; /* Căn chỉnh phần tử lên trên cùng */
             gap: 10px; /* Khoảng cách giữa button và thông báo lỗi */
         }
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 96e7de6 (fix)
+
+>>>>>>> feature/khuyenmai
         .text-danger {
             display: flex;
             align-items: flex-start; /* Căn chỉnh văn bản lỗi lên trên cùng */
@@ -81,7 +92,11 @@
                                                        ng-change="autoSelectColor()">
                                                 <select class="form-control" ng-model="selectedMauSac" multiple
                                                         ng-change="selectColor()">
+<<<<<<< HEAD
                                                     <option ng-repeat="mau in mauSacCr | filter:colorFilterFunction"
+=======
+                                                    <option ng-repeat="mau in mauSac | filter:colorFilterFunction"
+>>>>>>> feature/khuyenmai
                                                             ng-value="mau">
                                                         {{ mau.ten
                                                         }}
@@ -98,7 +113,11 @@
                                                        ng-change="autoSelectSize()">
                                                 <select class="form-control" ng-model="selectedKichCo" multiple
                                                         ng-change="selectSize()">
+<<<<<<< HEAD
                                                     <option ng-repeat="size in kichCoCr | filter:sizeFilterFunction"
+=======
+                                                    <option ng-repeat="size in kichCo | filter:sizeFilterFunction"
+>>>>>>> feature/khuyenmai
                                                             ng-value="size">
                                                         {{ size.ten
                                                         }}
