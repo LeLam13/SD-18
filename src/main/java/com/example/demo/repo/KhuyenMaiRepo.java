@@ -23,6 +23,7 @@ public interface KhuyenMaiRepo extends JpaRepository<KhuyenMai, Integer> {
 
         List<KhuyenMai> findByTrangThaiTrue();
 
-        @Query("SELECT km FROM KhuyenMai km WHERE km.thoiGianBatDau <= :currentDate AND km.thoiGianKetThuc >= :currentDate AND km.trangThai = true")
+        @Query("SELECT km FROM KhuyenMai km WHERE km.thoiGianBatDau <= :currentDate AND km.thoiGianKetThuc >= :currentDate AND km.trangThai = true AND km.soLuong > 0")
         List<KhuyenMai> findValidPromotions(@Param("currentDate") Date currentDate);
+
 }
