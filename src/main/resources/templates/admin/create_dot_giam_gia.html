@@ -138,25 +138,43 @@
                 <td th:text="${dotGiamGia.thoiGianBatDau}"></td>
                 <td th:text="${dotGiamGia.thoiGianKetThuc}"></td>
                 <td>
-    <span th:class="${dotGiamGia.trangThai == 0 ? 'text-warning' : (dotGiamGia.trangThai == 1 ? 'text-success' : 'text-danger')}">
-        <span th:text="${dotGiamGia.trangThai == 0 ? 'Sắp diễn ra' : (dotGiamGia.trangThai == 1 ? 'Đang diễn ra' : 'Đã kết thúc')}"></span>
-    </span>
+                    <span th:class="${dotGiamGia.trangThai == 0 ? 'text-warning' : (dotGiamGia.trangThai == 1 ? 'text-success' : 'text-danger')}">
+                        <span th:text="${dotGiamGia.trangThai == 0 ? 'Sắp diễn ra' : (dotGiamGia.trangThai == 1 ? 'Đang diễn ra' : 'Đã kết thúc')}"></span>
+                    </span>
                 </td>
                 <td th:text="${dotGiamGia.loaiGiamGia == 0 ? 'Giảm theo phần trăm' : 'Giảm theo tiền'}"></td>
                 <td>
-                    <a th:href="@{/admin/dot-giam-gia/detail/{id}(id=${dotGiamGia.idGiamGia})}"
-                       class="btn btn-info"
-                      >Detail</a>
+                    <a th:href="@{/admin/dot-giam-gia/detail/{id}(id=${dotGiamGia.idGiamGia})}" class="btn btn-info">Detail</a>
                     <a th:href="@{/admin/dot-giam-gia/update/{id}(id=${dotGiamGia.idGiamGia})}"
                        th:classappend="${dotGiamGia.trangThai == 2} ? 'disabled' : ''"
                        th:attr="disabled=${dotGiamGia.trangThai == 2}"
                        class="btn btn-warning">Cập Nhật</a>
                 </td>
-
             </tr>
             </tbody>
         </table>
+
+        <!-- Phân trang -->
+        <div>
+            <ul class="pagination">
+                <!-- Trang trước -->
+                <li th:class="${currentPage == 0} ? 'disabled' : ''">
+                    <a th:href="@{/admin/dot-giam-gia(page=${currentPage - 1}, size=${size})}" class="page-link">Previous</a>
+                </li>
+
+                <!-- Các trang -->
+                <li th:each="i : ${#numbers.sequence(0, totalPages - 1)}" th:class="${i == currentPage} ? 'active' : ''">
+                    <a th:href="@{/admin/dot-giam-gia(page=${i}, size=${size})}" class="page-link" th:text="${i + 1}"></a>
+                </li>
+
+                <!-- Trang sau -->
+                <li th:class="${currentPage == totalPages - 1} ? 'disabled' : ''">
+                    <a th:href="@{/admin/dot-giam-gia(page=${currentPage + 1}, size=${size})}" class="page-link">Next</a>
+                </li>
+            </ul>
+        </div>
     </div>
+
 
     <style>
         .text-warning {
@@ -172,17 +190,6 @@
         }
     </style>
     <!-- container-fluid -->
-    <footer class="footer">
-        <div class="container-fluid">
-            <div class="row">
-                <footer>
-                    <div class="footer__copyright">
-                        <p>&copy; 2024 Eighteen Polo.</p>
-                    </div>
-                </footer>
-            </div>
-        </div>
-    </footer>
 </div>
 <!-- End Page-content -->
 </div>

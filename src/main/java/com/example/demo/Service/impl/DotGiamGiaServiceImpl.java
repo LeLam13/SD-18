@@ -6,6 +6,8 @@ import com.example.demo.entity.SanPhamChiTiet;
 import com.example.demo.repo.DotGiamGiaRepository;
 import com.example.demo.repo.SanPhamChiTietRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +53,9 @@ public class DotGiamGiaServiceImpl {
 
     public List<DotGiamGia> getAllDotGiamGia() {
         return dotGiamGiaRepository.findAll();
+    }
+    public Page<DotGiamGia> getAllDotGiamGia1(Pageable pageable) {
+        return dotGiamGiaRepository.findAll(pageable);  // Sử dụng findAll của JpaRepository để phân trang
     }
 
     public void updateStatus(DotGiamGia dotGiamGia) {

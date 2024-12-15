@@ -2,6 +2,8 @@ package com.example.demo.repo;
 
 import com.example.demo.entity.DotGiamGia;
 import com.example.demo.entity.MauSac;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,6 +15,7 @@ import java.util.Optional;
 
 @Repository
 public interface DotGiamGiaRepository extends JpaRepository<DotGiamGia, Integer> {
+    Page<DotGiamGia> findAll(Pageable pageable);
     Optional<DotGiamGia> findFirstByTrangThaiInOrderByThoiGianKetThucDesc(List<Integer> trangThaiList);
 
     List<DotGiamGia> findByThoiGianBatDauBeforeAndThoiGianKetThucAfter(LocalDateTime startTime, LocalDateTime endTime);

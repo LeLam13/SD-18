@@ -5,6 +5,10 @@ import com.example.demo.Service.impl.DotGiamGiaServiceImpl;
 import com.example.demo.dto.request.DotGiamGiaDTO;
 import com.example.demo.entity.DotGiamGia;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -32,14 +36,14 @@ public class DotGiamGiaController {
         // Kiểm tra ngày bắt đầu không được lớn hơn ngày kết thúc
         if (thoiGianBatDau.isAfter(thoiGianKetThuc)) {
             model.addAttribute("error", "Ngày bắt đầu không được lớn hơn ngày kết thúc.");
-            return listDotGiamGia(model);
+            return listDotGiamGia(0, 5, model);
         }
 
         // Lấy đợt giảm giá gần nhất có trạng thái "sắp diễn ra" hoặc "đang diễn ra"
         DotGiamGia lastActiveDotGiamGia = dotGiamGiaService.getLastActiveDotGiamGia();
         if (lastActiveDotGiamGia != null && thoiGianBatDau.isBefore(lastActiveDotGiamGia.getThoiGianKetThuc())) {
             model.addAttribute("error", "Ngày bắt đầu của đợt giảm giá mới phải lớn hơn ngày kết thúc của đợt giảm giá hiện tại.");
-            return listDotGiamGia(model);
+            return listDotGiamGia(0, 5, model);
         }
 
         DotGiamGia dotGiamGia = new DotGiamGia();
@@ -47,16 +51,23 @@ public class DotGiamGiaController {
         if ("percent".equals(discountType)) {
             dotGiamGia.setGiamGia(giamGiaPercent); // Giảm giá theo phần trăm
             dotGiamGia.setLoaiGiamGia(0); // 0 cho giảm giá theo %
-        } else {
+        }else {
             // Kiểm tra xem giá trị giảm giá theo tiền có hợp lệ không
-            if (giamGiaAmount == null || giamGiaAmount < 1000 ) {
-                model.addAttribute("error", "Giảm giá theo tiền phải lớn hơn 1000 ");
-                return listDotGiamGia(model); // Trả về trang danh sách nếu không hợp lệ
+            if (giamGiaAmount == null || giamGiaAmount < 1000) {
+                model.addAttribute("error", "Giảm giá theo tiền phải lớn hơn 1000.");
+                return listDotGiamGia(0, 5, model); // Trả về trang danh sách nếu không hợp lệ
+            }
+
+            // Kiểm tra giảm giá tối đa là 20 triệu
+            if (giamGiaAmount > 20000000) {
+                model.addAttribute("error", "Giảm giá theo tiền không được vượt quá 20 triệu.");
+                return listDotGiamGia(0, 5, model); // Trả về trang danh sách nếu không hợp lệ
             }
 
             dotGiamGia.setGiamGia(giamGiaAmount); // Giảm giá theo tiền
             dotGiamGia.setLoaiGiamGia(1); // 1 cho giảm giá theo tiền
         }
+
 
         dotGiamGia.setThoiGianBatDau(thoiGianBatDau);
         dotGiamGia.setThoiGianKetThuc(thoiGianKetThuc);
@@ -72,10 +83,17 @@ public class DotGiamGiaController {
 
 
     @GetMapping("")
-    public String listDotGiamGia(Model model) {
-        List<DotGiamGia> dotGiamGias = dotGiamGiaService.getAllDotGiamGia();
+    public String listDotGiamGia(@RequestParam(value = "page", defaultValue = "0") int page,
+                                 @RequestParam(value = "size", defaultValue = "5") int size,
+                                 Model model) {
+        // Tạo Pageable từ các tham số page và size, sắp xếp theo thời gian bắt đầu giảm giá
+        Pageable pageable = PageRequest.of(page, size, Sort.by("thoiGianBatDau").descending());
 
-        List<DotGiamGiaDTO> dotGiamGiaDTOs = dotGiamGias.stream()
+        // Gọi service để lấy dữ liệu phân trang
+        Page<DotGiamGia> dotGiamGiasPage = dotGiamGiaService.getAllDotGiamGia1(pageable);
+
+        // Chuyển dữ liệu từ Page<DotGiamGia> thành List<DotGiamGiaDTO> (nếu cần)
+        List<DotGiamGiaDTO> dotGiamGiaDTOs = dotGiamGiasPage.getContent().stream()
                 .map(dotGiamGia -> {
                     DotGiamGiaDTO dto = new DotGiamGiaDTO();
                     dto.setIdGiamGia(dotGiamGia.getIdGiamGia());
@@ -88,8 +106,14 @@ public class DotGiamGiaController {
                 })
                 .collect(Collectors.toList());
 
+        // Truyền dữ liệu vào model
         model.addAttribute("dotGiamGias", dotGiamGiaDTOs);
-        return "admin/create_dot_giam_gia";
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", dotGiamGiasPage.getTotalPages());
+        model.addAttribute("totalItems", dotGiamGiasPage.getTotalElements());
+        model.addAttribute("size", size);
+
+        return "admin/create_dot_giam_gia";  // Trả về view Thymeleaf
     }
 
     @GetMapping("/detail/{id}")
@@ -172,11 +196,20 @@ public class DotGiamGiaController {
         } else { // Giảm giá theo tiền
             try {
                 Double giamGiaAmount = Double.parseDouble(giamGiaAmountStr); // Chuyển đổi từ String sang Double
-                if (giamGiaAmount < 0) {
+                if (giamGiaAmount == null || giamGiaAmount < 1000) {
+                    model.addAttribute("error2", "Giảm giá theo tiền phải lớn hơn hoặc bằng 1000.");
+                    model.addAttribute("dotGiamGia", dotGiamGia);
+                    return "admin/updatedgg"; // Trả về trang cập nhật nếu không hợp lệ
+                } else if (giamGiaAmount > 20000000) {
+                    model.addAttribute("error2", "Giảm giá theo tiền không được vượt quá 20 triệu.");
+                    model.addAttribute("dotGiamGia", dotGiamGia);
+                    return "admin/updatedgg"; // Trả về trang cập nhật nếu vượt quá giới hạn
+                } else if (giamGiaAmount < 0) {
                     model.addAttribute("error2", "Giảm giá theo tiền không được là số âm.");
                     model.addAttribute("dotGiamGia", dotGiamGia);
-                    return "admin/updatedgg";
+                    return "admin/updatedgg"; // Trả về trang cập nhật nếu là số âm
                 }
+
                 dotGiamGia.setGiamGia(giamGiaAmount);
                 dotGiamGia.setLoaiGiamGia(1); // Giảm giá theo tiền
             } catch (NumberFormatException e) {
