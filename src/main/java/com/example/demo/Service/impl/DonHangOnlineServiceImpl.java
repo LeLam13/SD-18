@@ -374,13 +374,14 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
         //ghi chu
         hoaDon.setGhiChu(donHang.getGhiChu());
         //trang thai thanh toan
-        if(donHang.getPhuongThucThanhToan().getIdPhuongThucThanhToan() ==2){
-            hoaDon.setTrangThaiThanhToan(true);
-            donHang.setTrangThaiThanhToan(true);
-            donHangRepo.save(donHang);
-        }else {
-            hoaDon.setTrangThaiThanhToan(donHang.getTrangThaiThanhToan());
-        }
+        hoaDon.setTrangThaiThanhToan(donHang.getTrangThaiThanhToan());
+//        if(donHang.getPhuongThucThanhToan().getIdPhuongThucThanhToan() ==2){
+//            hoaDon.setTrangThaiThanhToan(true);
+//            donHang.setTrangThaiThanhToan(true);
+//            donHangRepo.save(donHang);
+//        }else {
+//            hoaDon.setTrangThaiThanhToan(donHang.getTrangThaiThanhToan());
+//        }
         //phuong thuc nhan
         hoaDon.setPhuongThucNhan(donHang.getPhuongThucNhan());
 
@@ -423,6 +424,17 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
     @Override
     public DonHang findByMaDonHang(String txnRef) {
         return donHangRepo.findByMaDonHang(txnRef);
+    }
+
+    @Override
+    public HoaDon updateInvoice(HoaDonOnlineRequestDTO hoaDonOnlineRequestDTO, String username) {
+        DonHang donHang = donHangRepo.findById(hoaDonOnlineRequestDTO.getIdDonHang()).get();
+        donHang.setTrangThaiThanhToan(true);
+        donHangRepo.save(donHang);
+        HoaDon hoaDon = hoaDonRepo.findByDonHangId(hoaDonOnlineRequestDTO.getIdDonHang());
+        hoaDon.setTrangThaiThanhToan(true);
+        hoaDonRepo.save(hoaDon);
+        return hoaDon;
     }
 
 }

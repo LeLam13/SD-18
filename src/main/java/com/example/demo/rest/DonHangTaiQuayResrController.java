@@ -2,10 +2,7 @@ package com.example.demo.rest;
 
 import com.example.demo.Service.DonHangTaiQuayService;
 import com.example.demo.dto.request.DonHangTaiQuayStatusRequestDTO;
-import com.example.demo.entity.DonHang;
-import com.example.demo.entity.DonHangChiTiet;
-import com.example.demo.entity.TrangThai;
-import com.example.demo.entity.khachhang;
+import com.example.demo.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -41,8 +38,21 @@ public class DonHangTaiQuayResrController {
     @PutMapping("/don-hang-tai-quay/cap-nhat-trang-thai")
     public ResponseEntity<?> updateStatusOrder(@RequestBody DonHangTaiQuayStatusRequestDTO donHangStatus){
         try {
+            String username =null;
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.isAuthenticated()) {
+                Object principal = authentication.getPrincipal();
+                if (principal instanceof UserDetails) {
+                    //return ((UserDetails) principal).getUsername();
+                    System.out.println("test get user1: "+((UserDetails) principal).getUsername());
+                    username = ((UserDetails) principal).getUsername();
+                } else {
+                    System.out.println("test get user2: "+principal.toString());
+                    //return principal.toString();
+                }
+            }
             System.out.println("check status order: "+ donHangStatus);
-            DonHang donHangTaiQuay = donHangTaiQuayService.updateOrderStatus(donHangStatus);
+            DonHang donHangTaiQuay = donHangTaiQuayService.updateOrderStatus(donHangStatus,username);
             return ResponseEntity.ok(donHangTaiQuay);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());  // Trả về lỗi với thông báo
@@ -82,6 +92,12 @@ public class DonHangTaiQuayResrController {
         return ResponseEntity.ok(donHangList);
     }
 
+    @GetMapping("/don-hang/tim-kiem-trang-thai-don-hang")
+    public  ResponseEntity<?> searchTrangThaiDonHang(@RequestParam("idTrangThai") Integer idTrangThai){
+        List<DonHang> donHangList = donHangTaiQuayService.searchTrangThaiDonhang(idTrangThai);
+        return ResponseEntity.ok(donHangList);
+    }
+
     @GetMapping("/don-hang/tim-kiem-theo-ngay")
     public  ResponseEntity<?> searchNgayTao(@RequestParam(required = false) String ngayBatDau,
                                             @RequestParam(required = false) String ngayKetThuc){
@@ -100,5 +116,33 @@ public class DonHangTaiQuayResrController {
     public  ResponseEntity<?> getAllStatus(){
         List<TrangThai> trangThaiList = donHangTaiQuayService.getAllStatus();
         return ResponseEntity.ok(trangThaiList);
+    }
+
+    @GetMapping("/don-hang/get-invoice/{id}")
+    public ResponseEntity<?> getInvoice(@PathVariable("id") Integer id) {
+        System.out.println("checkID: " + id);
+        try {
+            HoaDon hoaDon = donHangTaiQuayService.getInvoice(id);
+            System.out.println("hoaDon: " + hoaDon);
+            return ResponseEntity.ok(hoaDon);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.noContent().build();
+        }
+        // return ResponseEntity.ok("");
+    }
+
+    @GetMapping("/don-hang/invoice/{id}")
+    public ResponseEntity<?> printerInvoice(@PathVariable("id") Integer id) {
+        System.out.println("checkID: " + id);
+        try {
+            String path = donHangTaiQuayService.printerInvoice(id);
+            System.out.println("path" + path);
+            return ResponseEntity.ok("");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.noContent().build();
+        }
+        // return ResponseEntity.ok("");
     }
 }

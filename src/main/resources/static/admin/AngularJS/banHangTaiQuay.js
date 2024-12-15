@@ -64,7 +64,7 @@ app.controller("banhang-ctrl", function ($scope, $http,$sce,$timeout) {
     $scope.selectedId = null;
     $scope.khachThanhToan = 0;
     //hiển thị vận chuyển
-    $scope.shippingMethod = '1';
+    $scope.shippingMethod = "1";
     //phân trang
     $scope.currentPage = 1; // Trang hiện tại
     $scope.pageSize = 5;
@@ -304,9 +304,10 @@ app.controller("banhang-ctrl", function ($scope, $http,$sce,$timeout) {
 
         console.log("check id khach hàng1: ",$scope.khachHangById);
         var trangThai = 5;
-        if($scope.shippingMethod===2){
-            trangThai=1;
+        if (parseInt($scope.shippingMethod) === 2) {
+            trangThai = 1;
         }
+        console.log("check trangThai: ",trangThai);
         $scope.hoaDonData ={
             maHoaDon: $scope.generateRandomString(8),
             idKhuyenMai: phieuGiamGia,

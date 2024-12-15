@@ -45,4 +45,6 @@ public interface DonHangOnlineService {
     DonHang findByID(Integer idDonHang);
 
     DonHang findByMaDonHang(String txnRef);
+
+    HoaDon updateInvoice(HoaDonOnlineRequestDTO hoaDonOnlineRequestDTO, String username);
 }

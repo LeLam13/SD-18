@@ -24,7 +24,7 @@ public class ThanhToanVNPayController {
 //    @Autowired
 //    HoaDon hoaDon;
 
-    @GetMapping("/vnpay/response")
+    @GetMapping("/response")
     public String handleVNPayResponse(HttpServletRequest request, Model model) throws IOException {
         // Lấy các tham số từ VNPay
         String vnp_ResponseCode = request.getParameter("vnp_ResponseCode");
@@ -57,13 +57,17 @@ public class ThanhToanVNPayController {
             hoaDonOnlineRequestDTO.setIdDonHang(donHang.getIdDonHang());
             hoaDonOnlineRequestDTO.setMaHoaDon(donHang.getMaDonHang());
             System.out.println("check tạo hoá đon = hoaDonOnlineRequestDTO: "+hoaDonOnlineRequestDTO);
-            HoaDon hoaDon = donHangOnlineService.createInvoice(hoaDonOnlineRequestDTO,"ss");
+            //HoaDon hoaDon = donHangOnlineService.createInvoice(hoaDonOnlineRequestDTO,"ss");
+            HoaDon hoaDon = donHangOnlineService.updateInvoice(hoaDonOnlineRequestDTO,username);
             System.out.println("test get hoaDon: "+hoaDon);
             model.addAttribute("amount", amountInVND);
             model.addAttribute("orderId", hoaDon.getDonHang().getMaDonHang());
             model.addAttribute("username", username);
             return "/user/authen/thanhToanSuccess";
         } else {
+            DonHang donHang = donHangOnlineService.findByMaDonHang(txnRef);
+            model.addAttribute("donHang", donHang); // Gửi thông tin đơn hàng về view
+
             // Thất bại, chuyển hướng đến trang faild
             return "/user/authen/thanhToanFail";
         }

@@ -390,10 +390,32 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
 
   }
 
+  //format VND
+  $scope.formatCurrency1 = function (amount, currencyCode = 'VND') {
+    return amount.toLocaleString('vi-VN', { style: 'currency', currency: currencyCode });
+  };
 
-  $scope.count = function (){
-    return $scope.items.map(item => item.soLuong).reduce((total, soLuong) => total + soLuong, 0);
+  $scope.count = function () {
+    return $scope.items.map(item => {
+      return (typeof item.soLuong === 'number' && !isNaN(item.soLuong)) ? item.soLuong : 0;
+    })
+        .reduce((total, soLuong) => total + soLuong, 0);
   }
+  $scope.getAmount = function () {
+    return $scope.items.map(item => {
+      // Kiểm tra nếu soLuong và donGia là số hợp lệ
+      if (typeof item.soLuong === 'number' && !isNaN(item.soLuong) &&
+          typeof item.giaBan === 'number' && !isNaN(item.giaBan)) {
+        return item.soLuong * item.giaBan;  // Tính tổng tiền cho phần tử
+      }
+      return 0;  // Trả về 0 nếu soLuong hoặc donGia không hợp lệ
+    })
+        .reduce((total, amount) => total + amount, 0); // Cộng dồn tất cả các giá trị
+  }
+
+  // get amount(){
+  //   return this.items.map(item=>item.qty*item.price).reduce((total,qty)=>total+=qty,0);
+  // }
 
   $scope.$on('cartUpdated', function() {
     console.log("cartUpdated");
@@ -401,7 +423,9 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
     if(!$scope.username){
       $scope.loadFromLocalStorage();
       $scope.count();
+
     }
+    $scope.getAmount();
     //$scope.count();
   });
 
@@ -463,7 +487,7 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
 
 //view giỏ hàng
 
-app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$rootScope) {
+app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$rootScope,$location) {
   $scope.generateRandomString = function(length) {
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let result = '';
@@ -887,7 +911,7 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
       tongTienThanhToan: $scope.sumAmount(),
       phiVanChuyen: $scope.getFeeShip(),
       ghiChu: $('#ghi-chu').val(),
-      trangThaiThanhToan: trangThaiThanhToan,
+      trangThaiThanhToan: false,
       idTrangThai: 1,
       idPhuongThucThanhToan: $scope.paymentMethod,
       idKhuyenMai: $scope.khuyenMaiById.idKhuyenMai != null ? $scope.khuyenMaiById.idKhuyenMai : null,
@@ -922,15 +946,18 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
         //$scope.getCart();
 
       }
-      if($scope.paymentMethod ===1){
-        $scope.createInvoince(response);
-      }
+      // if($scope.paymentMethod ===1){
+      //   $scope.createInvoince(response);
+      // }
+      $scope.createInvoince(response);
       // $scope.deleteCartDetail(response);
       // $scope.createInvoince(response);
       // $scope.getCartGH();
       $scope.showNotification('Đặt hàng Thành công!','success')
       if(response.data.phuongThucThanhToan.idPhuongThucThanhToan ===2){
         $scope.showVNPay(response);
+      }else {
+        window.location.href = '/don-hang-khach';
       }
 
     }).catch(function(error) {

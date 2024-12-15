@@ -253,7 +253,8 @@
 
                                         <span class="cart-product-info">
                                             <span class="cart-product-qty">{{item.soLuong}}</span>
-                                            <!--                                            x $84.00-->x {{item.giaBan}}
+                                            <!-- x $84.00-->x {{ formatCurrency1(item.giaBan) }}
+<!--                                            {{item.giaBan}}-->
                                         </span>
                                     </div><!-- End .product-cart-details -->
 
@@ -270,7 +271,7 @@
 
                             <div class="dropdown-cart-total">
                                 <span>Tổng tiền</span>
-                                <span class="cart-total-price">$160.00</span>
+                                <span class="cart-total-price">{{ formatCurrency1(getAmount()) }}</span>
                             </div><!-- End .dropdown-cart-total -->
 
                             <div class="dropdown-cart-action">

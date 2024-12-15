@@ -265,7 +265,7 @@ app.controller("donhanguser-ctrl", function ($scope, $http,$interval,$sce,$timeo
                 })
                 .catch(function(error) {
                     console.error("Có lỗi khi lấy trạng thái", error);
-                    if (error.status === -1) { // Lỗi kết nối server
+                    if (error.status === -1 || error.status === 500) { // Lỗi kết nối server
                         console.log("Server không phản hồi. Dừng tự động kiểm tra.");
                         $scope.stopAutoCheck();
                     }

@@ -294,7 +294,7 @@
 
                         <div class="form-group">
                             <label for="trangThai">Trạng thái:</label>
-                            <select id="trangThai" class="form-control">
+                            <select id="trangThai" class="form-control" ng-model="selectedTrangThai" ng-change="searchTrangThai()">
                                 <option value="">-Trạng thái-</option>
                                 <option ng-repeat="status in listStatus" value="{{status.idTrangThai}}">
                                     {{status.tenTrangThai}}
@@ -325,8 +325,8 @@
                             />
                         </div>
                         <div class="button-group">
-                            <button class="btn btn-primary">Tìm kiếm</button>
-                            <button class="btn btn-danger">Xóa</button>
+                            <button class="btn btn-primary">Làm mới</button>
+<!--                            <button class="btn btn-danger">Xóa</button>-->
                         </div>
                     </div>
 
@@ -365,7 +365,7 @@
                                 <td>{{ order.createBy}}</td>
                                 <td>
                                     <a
-                                            ng-href="{{order.loaiDonHang != 3 ? '/admin/tra-hang/' + order.idDonHang : '#'}}">
+                                            ng-href="{{order.loaiDonHang != 3 ? '/admin/don-hang/' + order.idDonHang : '#'}}">
                                         <button
                                                 type="button"
                                                 ng-disabled="order.loaiDonHang == 3"
