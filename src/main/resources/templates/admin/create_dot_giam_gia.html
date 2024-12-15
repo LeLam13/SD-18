@@ -4,6 +4,8 @@
       layout:decorate="~{/admin/index}">
 
 <head>
+    <!-- Thêm Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
 
     <meta charset="utf-8"/>
     <title>Đợt Giảm Giá</title>
@@ -38,7 +40,7 @@
                 </div> <!-- end col -->
             </div> <!-- end row -->
         </div>
-        <button type="button" class="btn btn-primary" style="margin-left: 100px; margin-bottom: 20px" data-toggle="modal" data-target="#createDiscountModal">
+        <button type="button" class="btn btn-primary" style="margin-left: 180px; margin-bottom: 20px" data-toggle="modal" data-target="#createDiscountModal">
             Tạo Đợt Giảm Giá
         </button>
 
@@ -159,7 +161,9 @@
             <ul class="pagination">
                 <!-- Trang trước -->
                 <li th:class="${currentPage == 0} ? 'disabled' : ''">
-                    <a th:href="@{/admin/dot-giam-gia(page=${currentPage - 1}, size=${size})}" class="page-link">Previous</a>
+                    <a th:href="@{/admin/dot-giam-gia(page=${currentPage - 1}, size=${size})}" class="page-link">
+                        <i class="fa fa-chevron-left"></i> <!-- Biểu tượng mũi tên trái -->
+                    </a>
                 </li>
 
                 <!-- Các trang -->
@@ -169,10 +173,13 @@
 
                 <!-- Trang sau -->
                 <li th:class="${currentPage == totalPages - 1} ? 'disabled' : ''">
-                    <a th:href="@{/admin/dot-giam-gia(page=${currentPage + 1}, size=${size})}" class="page-link">Next</a>
+                    <a th:href="@{/admin/dot-giam-gia(page=${currentPage + 1}, size=${size})}" class="page-link">
+                        <i class="fa fa-chevron-right"></i> <!-- Biểu tượng mũi tên phải -->
+                    </a>
                 </li>
             </ul>
         </div>
+
     </div>
 
 
