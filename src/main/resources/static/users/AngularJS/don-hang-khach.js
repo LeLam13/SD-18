@@ -212,6 +212,7 @@ app.controller("donhanguser-ctrl", function ($scope, $http,$interval,$sce,$timeo
         }
     };
     $scope.stopAutoCheck = function() {
+        isAutoCheckStopped = true;
         // Dừng interval khi trạng thái đạt 5
         if (intervalPromise) {
             $interval.cancel(intervalPromise);
@@ -348,11 +349,47 @@ app.controller("donhanguser-ctrl", function ($scope, $http,$interval,$sce,$timeo
         return $scope.listOrder.length > $scope.pageSize;
     };
 
+    //lấy tất cả trạng thái
+    $scope.listStatus = [];
+    $scope.getAllStatus = function (){
+        $http.get("/don-hang/lay-trang-thai").then(function (response) {
+            $scope.listStatus = response.data;
+            console.log("check $scope.listStatus: ",$scope.listStatus);
+        }).catch(function (errors) {
+            console.error("Có lỗi xảy ra trong quá trình ",errors);
+            $scope.showNotification("Có lỗi xảy ra trong quá trình ", "error");
+        })
+    }
+
+    $scope.selectedTrangThai = null;
+    $scope.searchTrangThai = function (){
+        $scope.stopAutoCheck();
+        var idTrangThai = $scope.selectedTrangThai; // Lấy giá trị từ ng-model
+        if (!idTrangThai || idTrangThai.length === 0) {
+            $scope.getOrderOfUser();
+        }
+        $http({
+            method: 'GET',
+            url: '/don-hang/tim-kiem-trang-thai-don-hang', // URL cơ bản
+            params: { idTrangThai: idTrangThai } // Truyền trực tiếp tham số
+        }).then(function (response) {
+            if(response && response.data === null){
+                $scope.getOrderOfUser();
+            }else {
+                $scope.listOrder = response.data;
+                console.log("get all order search: ",response.data);
+                $scope.totalPages = Math.ceil($scope.listOrder.length / $scope.pageSize); // Tổng số trang
+            }
+        }).catch(function (error) {
+            console.error("Có lỗi khi lấy trạng thái", error);
+        })
+    }
 
 
     //load data
     $scope.hideCancel();
     $scope.getOrderOfUser();
+    $scope.getAllStatus();
 
     var intervalPromiseDH; // Biến quản lý $interval
     var controlTimeout;    // Biến quản lý $timeout

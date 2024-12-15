@@ -190,15 +190,15 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
 
         gioHangchiTietRepo.save(gioHangChiTiet);
 
-        SanPhamChiTiet oldSanPhamCT = sanPhamChiTietRepo.findById(gioHAngChiTietRequestDTO.getIdSanPhamChiTiet())
-                .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm chi tiết!"));
-        //cập nhật lại số lượng sản phẩm
-        if (oldSanPhamCT.getSoLuong() < gioHAngChiTietRequestDTO.getSoLuong()) {
-            throw new RuntimeException("Số lượng sản phẩm không đủ!");
-        }
-        // Cập nhật lại số lượng tồn kho của sản phẩm
-        oldSanPhamCT.setSoLuong(oldSanPhamCT.getSoLuong() - gioHAngChiTietRequestDTO.getSoLuong());
-        sanPhamChiTietRepo.save(oldSanPhamCT);
+//        SanPhamChiTiet oldSanPhamCT = sanPhamChiTietRepo.findById(gioHAngChiTietRequestDTO.getIdSanPhamChiTiet())
+//                .orElseThrow(() -> new RuntimeException("Không tìm thấy sản phẩm chi tiết!"));
+//        //cập nhật lại số lượng sản phẩm
+//        if (oldSanPhamCT.getSoLuong() < gioHAngChiTietRequestDTO.getSoLuong()) {
+//            throw new RuntimeException("Số lượng sản phẩm không đủ!");
+//        }
+//        // Cập nhật lại số lượng tồn kho của sản phẩm
+//        oldSanPhamCT.setSoLuong(oldSanPhamCT.getSoLuong() - gioHAngChiTietRequestDTO.getSoLuong());
+//        sanPhamChiTietRepo.save(oldSanPhamCT);
         return gioHangChiTiet;
     }
 
@@ -237,8 +237,9 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
     }
 
     @Override
-    public GioHangChiTiet deleteAndReturnBySanPhamChiTietId(Integer idSanPhamChiTiet) {
-        GioHangChiTiet gioHangChiTiet = gioHangchiTietRepo.findBySanPhamChiTiet_IdSanPhamChiTiet(idSanPhamChiTiet);
+    public GioHangChiTiet deleteAndReturnBySanPhamChiTietId(Integer idSanPhamChiTiet,Integer idGioHangChiTiet) {
+        GioHangChiTiet gioHangChiTiet = gioHangchiTietRepo.findByGioHangChiTietIdAndSanPhamChiTietId(idGioHangChiTiet,idSanPhamChiTiet);
+
         if (gioHangChiTiet != null) {
             gioHangchiTietRepo.delete(gioHangChiTiet);
         }
@@ -429,9 +430,13 @@ public class DonHangOnlineServiceImpl implements DonHangOnlineService {
     @Override
     public HoaDon updateInvoice(HoaDonOnlineRequestDTO hoaDonOnlineRequestDTO, String username) {
         DonHang donHang = donHangRepo.findById(hoaDonOnlineRequestDTO.getIdDonHang()).get();
+        TrangThai trangThai = trangThaiRepo.findById(7).get();
+        donHang.setTrangThai(trangThai);
         donHang.setTrangThaiThanhToan(true);
         donHangRepo.save(donHang);
+
         HoaDon hoaDon = hoaDonRepo.findByDonHangId(hoaDonOnlineRequestDTO.getIdDonHang());
+        hoaDon.setTrangThai(trangThai);
         hoaDon.setTrangThaiThanhToan(true);
         hoaDonRepo.save(hoaDon);
         return hoaDon;

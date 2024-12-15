@@ -229,7 +229,7 @@
                                                 <button ng-click="soLuongPlus(details)" class="btn btn-outline-secondary bi bi-plus-circle"></button>
                                             </div>
                                             <div ng-show="details.invalidQuantity" class="error-message" style="color: red;">
-                                                Số lượng nhập không hợp lệ!
+                                                {{ details.errorMessage }}
                                             </div>
                                         </td>
                                         <td>{{ details.giaBan}}</td>
@@ -240,25 +240,25 @@
                                 </table>
                             </div>
 
-                            <div class="row">
-                                <nav aria-label="Page navigation example">
-                                    <ul class="pagination">
-                                        <li class="page-item">
-                                            <a class="page-link" href="#" aria-label="Previous">
-                                                <span aria-hidden="true">&laquo;</span>
-                                            </a>
-                                        </li>
-                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                        <li class="page-item">
-                                            <a class="page-link" href="#" aria-label="Next">
-                                                <span aria-hidden="true">&raquo;</span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
+<!--                            <div class="row">-->
+<!--                                <nav aria-label="Page navigation example">-->
+<!--                                    <ul class="pagination">-->
+<!--                                        <li class="page-item">-->
+<!--                                            <a class="page-link" href="#" aria-label="Previous">-->
+<!--                                                <span aria-hidden="true">&laquo;</span>-->
+<!--                                            </a>-->
+<!--                                        </li>-->
+<!--                                        <li class="page-item"><a class="page-link" href="#">1</a></li>-->
+<!--                                        <li class="page-item"><a class="page-link" href="#">2</a></li>-->
+<!--                                        <li class="page-item"><a class="page-link" href="#">3</a></li>-->
+<!--                                        <li class="page-item">-->
+<!--                                            <a class="page-link" href="#" aria-label="Next">-->
+<!--                                                <span aria-hidden="true">&raquo;</span>-->
+<!--                                            </a>-->
+<!--                                        </li>-->
+<!--                                    </ul>-->
+<!--                                </nav>-->
+<!--                            </div>-->
                         </div>
 
                         <div class="row">
@@ -376,14 +376,14 @@
                                 <div class="mb-2">
                                     <label class="form-label" >Phiếu giảm giá:</label>
                                     <div class="row">
-                                        <div class="col-5">
+                                        <div class="col-4">
                                             <input type="text" id="ma-khuyen-mai" class="form-control" readonly>
                                         </div>
                                         <div class="col-4">
                                             <input type="text" id="muc-giam-gia" class="form-control" readonly>
                                         </div>
-                                        <div class="col-3">
-                                            <button ng-click="openModalKhuyenMai()" type="button" class="btn btn-info">Info</button>
+                                        <div class="col-4">
+                                            <button ng-click="openModalKhuyenMai()" type="button" class="btn btn-info">Khuyến Mãi</button>
                                         </div>
                                     </div>
 <!--                                    <select class="form-select" id="discountSelect">-->
@@ -460,8 +460,8 @@
                                 <div class="customer-box" ng-show="shippingMethod == '2'">
                                     <div class="input-group">
                                         <span class="input-group-text">Khách Hàng Nhận:</span>
-                                        <input type="text" id="nameKHNhan" aria-label="First name" class="form-control">
-                                        <input type="text" id="sdtKHNhan" aria-label="Last name" class="form-control">
+                                        <input type="text" id="nameKHNhan" aria-label="First name" class="form-control" readonly>
+                                        <input type="text" id="sdtKHNhan" aria-label="Last name" class="form-control" readonly>
                                     </div>
                                     <div class="mb-2" id="address-selection">
                                         <label class="form-label">Địa Chỉ Giao Hàng:</label>
@@ -521,8 +521,10 @@
                                 </div>
                                 <div class="mb-2">
                                     <label class="form-label">Khách thanh toán:</label>
-                                    <input type="text" class="form-control" ng-model="khachThanhToan" id="id-khach-thanh-toan">
-
+                                    <input type="text" class="form-control" ng-model="khachThanhToan" id="id-khach-thanh-toan" ng-change="kiemTraTien(khachThanhToan)">
+<!--                                    <div class="text-danger" ng-if="loiTien">-->
+<!--                                        {{ loiTien }}-->
+<!--                                    </div>-->
                                 </div>
                                 <div class="mb-2">
                                     <label class="form-label">Số tiền thừa:</label>

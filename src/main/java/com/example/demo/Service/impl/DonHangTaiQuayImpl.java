@@ -98,6 +98,10 @@ public class DonHangTaiQuayImpl implements DonHangTaiQuayService {
 //        if(donHangStatus.getIdTrangThai() < 5){
 //            status = trangThaiRepo.findById(donHangStatus.getIdTrangThai()+1).get();
 //        }
+        if(status.getIdTrangThai() ==5){
+            hoaDon.setTrangThaiThanhToan(true);
+            oldOrder.setTrangThaiThanhToan(true);
+        }
         LocalDate localDate = LocalDate.now();
         hoaDon.setUpdateDate(localDate);
         hoaDon.setTrangThai(status);
@@ -162,6 +166,15 @@ public class DonHangTaiQuayImpl implements DonHangTaiQuayService {
                 khuyenMai.setSoLuong(khuyenMai.getSoLuong() + 1);
                 khuyenMaiRepo.save(khuyenMai);
             }
+        }
+
+        List<DonHangChiTiet> chiTietDonHangList = donHangChiTietRepo.findByDonHangId(donHang.getIdDonHang());
+
+        // Cập nhật lại số lượng sản phẩm
+        for (DonHangChiTiet chiTiet : chiTietDonHangList) {
+            SanPhamChiTiet sanPham = chiTiet.getSanPhamChiTiet();
+            sanPham.setSoLuong(sanPham.getSoLuong() + chiTiet.getSoLuong());
+            sanPhamChiTietRepo.save(sanPham);
         }
 
         TrangThai trangThai = trangThaiRepo.findById(6).orElse(null);

@@ -37,9 +37,13 @@ app.controller("chiTiet-ctrl",function ($scope,$location, $http,$interval,$sce, 
                 $('#ma-don-hang').text(itemOrder.maDonHang);
                 if (itemOrder.loaiDonHang === 2) {
                     $('#loai-don-hang').text("Đơn hàng online");
+                    $('#phuong-thuc-thanh-toan').text(
+                        itemOrder.phuongThucThanhToan.idPhuongThucThanhToan ===2 ? "Thanh Toán Online(ví VNPay)" : "Thanh Toán Sau Khi Nhận");
                 }
                 if(itemOrder.loaiDonHang === 1){
                     $('#loai-don-hang').text("Đơn hàng tại quầy");
+                    $('#phuong-thuc-thanh-toan').text(
+                        itemOrder.phuongThucThanhToan.idPhuongThucThanhToan ===2 ? "Thanh Toán Online" : "Tiền mặt");
                 }
                 // if (itemOrder.phuongThucNhan === 1) {
                 //     $('#loai-don-hang').text("Đơn hàng tại quầy");
@@ -48,7 +52,7 @@ app.controller("chiTiet-ctrl",function ($scope,$location, $http,$interval,$sce, 
                 $('#tong-tien').text(itemOrder.tongTien);
                 $('#tong-tien-thanh-toan').text(itemOrder.tongTienThanhToan);
                 $('#phi-van-chuyen').text(itemOrder.phiVanChuyen);
-
+                $('#trang-thai-thanh-toan').text(itemOrder.trangThaiThanhToan ? "Đã thanh toán" : "Chưa thanh toán");
                 //khach mua
                 $('#ten-khach-mua').val(itemOrder.khachHang.hoTen);
                 $('#sdt-khach-mua').val(itemOrder.khachHang.soDienThoai);
