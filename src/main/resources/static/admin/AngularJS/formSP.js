@@ -469,8 +469,14 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
     };
 
 
+    $scope.back = function () {
+        window.location.href = '/admin/san-pham';
+    };
 
-
+    $scope.viewChiTiet = function () {
+        // Chuyển hướng đến trang chi tiết sản phẩm
+        location.href = `/admin/san-pham/` + idSanPham;
+    };
 
     $scope.updateSize = function (table, size) {
         var sizeForm = $scope.form[table.mau.idMauSac][size.idKichCo];

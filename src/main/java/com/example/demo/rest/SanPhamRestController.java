@@ -161,7 +161,7 @@ public class SanPhamRestController {
                                             @RequestParam(defaultValue = "0") int page,
                                             @RequestParam(defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page, size,Sort.by("idSanPham").descending());
-        Page<SanPham> filteredProducts = sanPhamService.filterProducts(filterData,pageable);
+        Page<SanPham> filteredProducts = sanPhamService.filterProductsView(filterData,pageable);
         return ResponseEntity.ok(filteredProducts);
     }
 }

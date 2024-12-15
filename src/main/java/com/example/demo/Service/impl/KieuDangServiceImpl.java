@@ -74,6 +74,8 @@ public class KieuDangServiceImpl implements KieuDangService {
         else{
             kd.setTrangThai(true);
         }
+        kd.setUpdateBy(getCurrentUsername());
+        kd.setUpdateDate(date);
         return kieuDangRepo.save(kd);
     }
 

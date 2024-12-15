@@ -82,6 +82,8 @@ public class KichCoServiceImpl implements KichCoService {
         } else {
             kc.setTrangThai(true);
         }
+        kc.setUpdateBy(getCurrentUsername());
+        kc.setUpdateDate(date);
         return kichCoRepo.save(kc);
     }
 

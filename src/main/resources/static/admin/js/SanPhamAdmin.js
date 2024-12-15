@@ -83,50 +83,113 @@ app.controller('ctrl', function ($scope, $http) {
             idChatLieu: $scope.selectedChatLieu || null,
             idKieuDang: $scope.selectedKieuDang || null,
             idThuongHieu: $scope.selectedThuongHieu || null,
-            // idHinhAnh:$scope.idHinhAnhCr. idHinhAnh,
             moTa: $scope.moTa
+        };
 
-        }
+        // Biến flag để kiểm tra tính hợp lệ
+        var isValid = true;
 
         // Kiểm tra tính hợp lệ của tên
-        if ($scope.ten == undefined || $scope.ten.length == 0) {
+        if (!$scope.ten || $scope.ten.trim().length === 0) {
             document.getElementById("eTenMau").innerText = "Vui lòng nhập tên!!!";
-            return;
+            isValid = false;
+        } else if ($scope.ten.length > 30) {
+            document.getElementById("eTenMau").innerText = "Tên tối đa 30 ký tự!!!";
+            isValid = false;
+        } else {
+            document.getElementById("eTenMau").innerText = "";
         }
 
-        if ($scope.ten.length > 100) {
-            document.getElementById("eTenMau").innerText = "Tên tối đa 100 ký tự!!!";
-            return;
+        // Kiểm tra rỗng các trường select
+        if (!$scope.selectedXuatXu) {
+            document.getElementById("eXuatXu").innerText = "Vui lòng chọn xuất xứ!!!";
+            isValid = false;
+        } else {
+            document.getElementById("eXuatXu").innerText = "";
         }
+
+        if (!$scope.selectedChatLieu) {
+            document.getElementById("eChatLieu").innerText = "Vui lòng chọn chất liệu!!!";
+            isValid = false;
+        } else {
+            document.getElementById("eChatLieu").innerText = "";
+        }
+
+        if (!$scope.selectedThuongHieu) {
+            document.getElementById("eThuongHieu").innerText = "Vui lòng chọn thương hiệu!!!";
+            isValid = false;
+        } else {
+            document.getElementById("eThuongHieu").innerText = "";
+        }
+
+        if (!$scope.selectedKieuDang) {
+            document.getElementById("eKieuDang").innerText = "Vui lòng chọn kiểu dáng!!!";
+            isValid = false;
+        } else {
+            document.getElementById("eKieuDang").innerText = "";
+        }
+
+        // Kiểm tra tính hợp lệ của mô tả
+        if (!$scope.moTa || $scope.moTa.trim().length === 0) {
+            document.getElementById("eMoTa").innerText = "Vui lòng nhập mô tả!!!";
+            isValid = false;
+        } else if ($scope.moTa.length > 500) {
+            document.getElementById("eMoTa").innerText = "Mô tả tối đa 500 ký tự!!!";
+            isValid = false;
+        } else {
+            document.getElementById("eMoTa").innerText = "";
+        }
+
+        // Nếu có lỗi, dừng thực hiện
+        if (!isValid) return;
 
         // Gọi getAll để kiểm tra xem tên đã tồn tại chưa
         $http.get("/admin/san-pham/get-all").then(function (response) {
             var existingSanPham = response.data;
-            var tenTonTai = false;
-
-            // Kiểm tra xem tên có trùng với dữ liệu hiện có không
-            angular.forEach(existingSanPham, function (item) {
-                if (item.ten.toLowerCase() === $scope.ten.toLowerCase()) {
-                    tenTonTai = true;
-                }
+            var tenTonTai = existingSanPham.some(function (item) {
+                return item.ten.toLowerCase() === $scope.ten.toLowerCase();
             });
 
-            // Nếu tên đã tồn tại, hiển thị thông báo
             if (tenTonTai) {
                 document.getElementById("eTenMau").innerText = "Tên đã tồn tại";
             } else {
                 // Nếu không, gửi yêu cầu tạo mới
-                $http.post("/admin/san-pham/add", SanPham).then(function (r) {
-                    $scope.findAll();
-                    alert("Thêm thành công");
-                }).catch(function (err) {
-                    console.log("Thêm không thành công", err);
-                });
+                $http.post("/admin/san-pham/add", SanPham)
+                    .then(function (r) {
+                        $scope.findAll();
+                        alert("Thêm thành công");
+                    })
+                    .catch(function (err) {
+                        console.log("Thêm không thành công", err);
+                    });
             }
         }).catch(function (err) {
             console.log("Lỗi khi lấy dữ liệu", err);
         });
-    }
+    };
+
+
+    // Hàm reset form
+    $scope.resetForm = function () {
+        $scope.ten = '';
+        $scope.selectedXuatXu = null;
+        $scope.selectedChatLieu = null;
+        $scope.selectedKieuDang = null;
+        $scope.selectedThuongHieu = null;
+        $scope.moTa = '';
+        document.getElementById("eTenMau").innerText = "";
+        document.getElementById("eXuatXu").innerText = "";
+        document.getElementById("eChatLieu").innerText = "";
+        document.getElementById("eThuongHieu").innerText = "";
+        document.getElementById("eKieuDang").innerText = "";
+        document.getElementById("eMoTa").innerText = "";
+    };
+
+    $('#spModal').on('hide.bs.modal', function () {
+        angular.element(this).scope().resetForm(); // Reset dữ liệu trong AngularJS
+        angular.element(this).scope().$apply();
+    });
+
 
 
     $scope.getSanPham = function (ma) {
@@ -138,52 +201,85 @@ app.controller('ctrl', function ($scope, $http) {
         })
     }
 
+
+    $scope.resetErrors = function () {
+        // Xóa các thông báo lỗi
+        document.getElementById("eTenMauUd").innerText = "";
+        document.getElementById("eMoTaUd").innerText = "";
+
+    };
+
+
     $scope.update = function (ma) {
-        if ($scope.sp.ten == undefined || $scope.sp.ten.length == 0) {
-            document.getElementById("eTenMauUd").innerText = "Vui lòng nhập tên!!!";
-            return
-        }
-        if ($scope.sp.ten.length > 100) {
-            document.getElementById("eTenMauUd").innerText = "Tên tối đa 100 ký tự!!!";
-            return
+        // Tạo đối tượng sản phẩm để cập nhật
+        var updateSanPham = {
+            ma: ma,
+            ten: $scope.sp.ten,
+            idXuatXu: $scope.sp.idXuatXu.idXuatXu,
+            idChatLieu: $scope.sp.idChatLieu.idChatLieu,
+            idKieuDang: $scope.sp.idKieuDang.idKieuDang,
+            idThuongHieu: $scope.sp.idThuongHieu.idThuongHieu,
+            moTa: $scope.sp.moTa
         }
 
+        var isValid = true;
+
+        // Kiểm tra tính hợp lệ của tên sản phẩm
+        if (!$scope.sp.ten || $scope.sp.ten.trim().length === 0) {
+            document.getElementById("eTenMauUd").innerText = "Vui lòng nhập tên!!!";
+            isValid = false;
+        } else if ($scope.sp.ten.length > 30) {
+            document.getElementById("eTenMauUd").innerText = "Tên tối đa 30 ký tự!!!";
+            isValid = false;
+        } else {
+            document.getElementById("eTenMauUd").innerText = "";
+        }
+
+        // Kiểm tra tính hợp lệ của mô tả
+        if (!$scope.sp.moTa || $scope.sp.moTa.trim().length === 0) {
+            document.getElementById("eMoTaUd").innerText = "Vui lòng nhập mô tả!!!";
+            isValid = false;
+        } else if ($scope.sp.moTa.length > 500) {
+            document.getElementById("eMoTaUd").innerText = "Mô tả tối đa 500 ký tự!!!";
+            isValid = false;
+        } else {
+            document.getElementById("eMoTaUd").innerText = "";
+        }
+
+        // Nếu có lỗi, dừng thực hiện
+        if (!isValid) return;
+
+        // Kiểm tra tên sản phẩm có trùng không
         $http.get("/admin/san-pham/get-all").then(function (response) {
             var existingSanPham = response.data;
             var tenTonTai = false;
+
             angular.forEach(existingSanPham, function (item) {
-                if (item.ten.toLowerCase() === $scope.sp.ten.toLowerCase() && item.ma !== ma) {
+                // Kiểm tra xem tên sản phẩm đã tồn tại trong danh sách và không phải sản phẩm hiện tại
+                if (item.ten && item.ten.toLowerCase() === $scope.sp.ten.toLowerCase() && item.ma !== ma) {
                     tenTonTai = true;
                 }
             });
 
+            // Nếu tên sản phẩm đã tồn tại, hiển thị thông báo lỗi
             if (tenTonTai) {
                 document.getElementById("eTenMauUd").innerText = "Tên đã tồn tại";
                 return;
             } else {
+                // Nếu không có lỗi, gửi yêu cầu cập nhật sản phẩm
                 var url = "/admin/san-pham/update" + "/" + ma;
-                var updateSanPham = {
-                    ma: ma,
-                    ten: $scope.sp.ten,
-                    idXuatXu: $scope.sp.idXuatXu.idXuatXu,
-                    idChatLieu: $scope.sp.idChatLieu.idChatLieu,
-                    idKieuDang: $scope.sp.idKieuDang.idKieuDang,
-                    idThuongHieu: $scope.sp.idThuongHieu.idThuongHieu,
-                    // idHinhAnh: $scope.sp.idHinhAnh.idHinhAnh,
-                    moTa: $scope.sp.moTa
-                }
-
                 $http.post(url, updateSanPham).then(function (r) {
-                    $scope.findAll();
-                    alert("Update thành công")
+                    $scope.findAll(); // Cập nhật lại danh sách sản phẩm
+                    alert("Update thành công");
                 }).catch(function (err) {
-                    console.log("Update khong thanh cong", err);
-                })
+                    console.log("Update không thành công", err);
+                });
             }
         }).catch(function (err) {
             console.log("Lỗi khi lấy dữ liệu", err);
         });
     }
+
 
     $scope.updateTT = function (idSanPham) {
         if (confirm("Xác nhận đổi?")) {

@@ -179,29 +179,58 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
         });
     };
 
+    $scope.resetErrors = function () {
+        // Xóa các thông báo lỗi
+        document.getElementById("eSoLuong").innerText = "";
+        document.getElementById("eGiaBan").innerText = "";
+    };
 
     $scope.update = function (ma) {
+        // Kiểm tra tính hợp lệ
+        var isValid = true;
+
+        // Kiểm tra rỗng và giá trị > 0 cho số lượng
+        if (!$scope.spct.soLuong || $scope.spct.soLuong <= 0) {
+            document.getElementById("eSoLuong").innerText = "Vui lòng nhập số lượng lớn hơn 0!";
+            isValid = false;
+        } else {
+            document.getElementById("eSoLuong").innerText = "";
+        }
+
+        // Kiểm tra rỗng và giá trị > 0 cho giá bán
+        if (!$scope.spct.giaBan || $scope.spct.giaBan <= 0) {
+            document.getElementById("eGiaBan").innerText = "Vui lòng nhập giá bán lớn hơn 0!";
+            isValid = false;
+        } else {
+            document.getElementById("eGiaBan").innerText = "";
+        }
+
+        // Dừng thực hiện nếu không hợp lệ
+        if (!isValid) return;
+
+        // Tạo object update
         var url = "/admin/san-pham/chi-tiet/update" + "/" + ma;
         var updateSPCT = {
             ma: ma,
             soLuong: $scope.spct.soLuong,
             giaBan: $scope.spct.giaBan,
             idMauSac: $scope.spct.idMauSac.idMauSac,
-            // idThuongHieu: $scope.spct.idThuongHieu.idThuongHieu,
-            // idKieuDang: $scope.spct.idKieuDang.idKieuDang,
-            // idChatLieu: $scope.spct.idChatLieu.idChatLieu,
-            // idXuatXu: $scope.spct.idXuatXu.idXuatXu,
             idKichCo: $scope.spct.idKichCo.idKichCo,
             idHinhAnh: $scope.spct.idHinhAnh.idHinhAnh
-        }
-        $http.post(url, updateSPCT).then(function (r) {
-            alert("Update thành công");
-            console.log($scope.spct)
-            $scope.findAll();
-        }).catch(function (err) {
-            console.log("Update khong thanh cong", err);
-        })
-    }
+        };
+
+        // Gửi yêu cầu cập nhật
+        $http.post(url, updateSPCT)
+            .then(function (r) {
+                alert("Update thành công");
+                console.log($scope.spct);
+                $scope.findAll();
+            })
+            .catch(function (err) {
+                console.log("Update không thành công", err);
+            });
+    };
+
 
     $scope.updateTT = function (idSanPhamChiTiet) {
         if (confirm("Xác nhận đổi?")) {
@@ -451,6 +480,45 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
     };
 
     $scope.updateByNhap = function () {
+        // Biến cờ kiểm tra tính hợp lệ
+        var isValid = true;
+
+        // Kiểm tra số lượng nhập
+        if (!$scope.soLuongNhap || $scope.soLuongNhap <= 0) {
+            document.getElementById("eSoLuongNhap").innerText = "Số lượng phải lớn hơn 0!";
+            isValid = false;
+        } else {
+            document.getElementById("eSoLuongNhap").innerText = "";
+        }
+
+        // Kiểm tra giá nhập
+        if (!$scope.giaNhapNhap || $scope.giaNhapNhap <= 0) {
+            document.getElementById("eGiaNhapNhap").innerText = "Giá nhập phải lớn hơn 0!";
+            isValid = false;
+        } else {
+            document.getElementById("eGiaNhapNhap").innerText = "";
+        }
+
+        // Kiểm tra màu sắc
+        if (!$scope.idMauSacNhap || !$scope.idMauSacNhap.idMauSac) {
+            document.getElementById("eMauSacNhap").innerText = "Vui lòng chọn màu sắc!";
+            isValid = false;
+        } else {
+            document.getElementById("eMauSacNhap").innerText = "";
+        }
+
+        // Kiểm tra kích cỡ
+        if (!$scope.idKichCoNhap || !$scope.idKichCoNhap.idKichCo) {
+            document.getElementById("eKichCoNhap").innerText = "Vui lòng chọn kích cỡ!";
+            isValid = false;
+        } else {
+            document.getElementById("eKichCoNhap").innerText = "";
+        }
+
+        // Nếu có lỗi, dừng thực hiện
+        if (!isValid) return;
+
+        // Tạo đối tượng Nhập Hàng
         var NhapHang = {
             idSanPham: idSanPham,
             ma: $scope.generateRandomString(8),
@@ -458,23 +526,27 @@ app.controller('chiTietSP-ctrl', function ($scope, $http) {
             giaNhapNhap: $scope.giaNhapNhap,
             idMauSacNhap: $scope.idMauSacNhap.idMauSac,
             idKichCoNhap: $scope.idKichCoNhap.idKichCo
-        }
+        };
+
         $http.post("/admin/lich-su-nhap-hang/add", NhapHang).then(r => {
+            // Tạo đối tượng Cập Nhật Chi Tiết
             var upDateCT = {
                 idSanPham: idSanPham,
                 soLuong: $scope.soLuongNhap,
                 giaNhap: $scope.giaNhapNhap,
                 idMauSac: $scope.idMauSacNhap.idMauSac,
                 idKichCo: $scope.idKichCoNhap.idKichCo
-            }
+            };
+
             $http.post("/admin/san-pham/chi-tiet/updateNhap", upDateCT).then(r => {
-                alert("Them thanh cong");
+                alert("Thêm thành công");
                 $scope.viewChiTiet();
-            })
+            });
         }).catch(function (err) {
             console.error("Lỗi khi gọi :", err);
         });
-    }
+    };
+
 
     $scope.viewChiTiet = function () {
         // Chuyển hướng đến trang chi tiết sản phẩm

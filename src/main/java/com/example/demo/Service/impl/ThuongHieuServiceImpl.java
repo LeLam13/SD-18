@@ -74,6 +74,8 @@ public class ThuongHieuServiceImpl implements ThuongHieuService {
         else{
             th.setTrangThai(true);
         }
+        th.setUpdateBy(getCurrentUsername());
+        th.setUpdateDate(date);
         return thuongHieuRepo.save(th);
     }
 
