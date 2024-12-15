@@ -201,6 +201,25 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
     })
   }
 
+  $scope.searchQuery="";
+
+  $scope.handleKeyPress = function (event) {
+    if (event.key === "Enter") {
+      $scope.page = 0; // Reset về trang đầu tiên khi tìm kiếm
+      $scope.search();
+    }
+  };
+
+  $scope.search = function () {
+    const url = `/san-pham/search?page=${$scope.page}&size=${$scope.size}&query=${encodeURIComponent($scope.searchQuery)}`;
+    $http.get(url).then(resp => {
+      $scope.listProducts = resp.data.content;
+      $scope.totalPages = resp.data.totalPages;
+    }).catch(error => {
+      console.error("Lỗi khi tìm kiếm:", error);
+    });
+  };
+
   $scope.getAllProduct = function () {
     $http.get(`/san-pham/find-all-san-pham?page=${$scope.page}&size=${$scope.size}`).then(function (response) {
       $scope.listProducts = response.data.content;
@@ -513,6 +532,7 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
   $scope.username = null;
   $scope.cart = [];
   var idGioHang = null;
+
 
 
 

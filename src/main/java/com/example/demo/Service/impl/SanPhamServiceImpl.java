@@ -402,9 +402,43 @@ public class SanPhamServiceImpl implements SanPhamService {
     }
 
 
+    @Override
+    public Page<SanPham> search(String query, Pageable pageable) {
 
+        Page<SanPham> result = sanPhamRepo.searchIgnoreCaseAndDiacritics(query, pageable);
+        // Xử lý bổ sung thông tin sản phẩm
+        List<SanPham> processedProducts = result.getContent().stream().map(sanPham -> {
+            // Lấy dữ liệu chi tiết đã bán từ truy vấn
+            List<Object[]> detailedSoldData = sanPhamChiTietRepo.getDetailedTotalSoldByProduct(sanPham.getIdSanPham());
 
+            // Tổng số lượng đã bán bằng cách gộp từ các chi tiết
+            Integer totalSold = detailedSoldData.stream()
+                    .filter(row -> row[1] != null)
+                    .mapToInt(row -> ((Number) row[1]).intValue())
+                    .sum();
 
+            // Lấy số lượng tồn kho
+            Integer totalInventory = sanPhamChiTietRepo.getTotalInventoryByProduct(sanPham.getIdSanPham());
+
+            // Gán giá trị bổ sung vào sản phẩm
+            sanPham.setTotalSold(totalSold != null ? totalSold : 0); // Tránh NullPointerException
+            sanPham.setTotalInventory(totalInventory != null ? totalInventory : 0); // Tránh NullPointerException
+
+            // Lấy giá bán nhỏ nhất và hình ảnh từ chi tiết sản phẩm
+            List<SanPhamChiTiet> chiTietList = sanPhamChiTietRepo.findCheapestProductDetail(sanPham.getIdSanPham());
+            SanPhamChiTiet cheapestDetail = chiTietList.stream()
+                    .filter(chiTiet -> chiTiet.getIdHinhAnh() != null)
+                    .findFirst()
+                    .orElse(null);
+
+            sanPham.setMinGiaBan(cheapestDetail != null ? cheapestDetail.getGiaBan() : null);
+            sanPham.setHinhAnh(cheapestDetail != null ? cheapestDetail.getIdHinhAnh().getTen() : null);
+            return sanPham;
+        }).collect(Collectors.toList());
+
+        // Trả về Page đã xử lý
+        return new PageImpl<>(processedProducts, pageable, result.getTotalElements());
+    }
 
 
     public static String removeAccents(String str) {
