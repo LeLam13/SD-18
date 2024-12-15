@@ -131,25 +131,23 @@ app.controller("xuat-xu-ctrl",function ($scope,$http){
         console.log(url)
         $http.get(url).then(function (r) {
             console.log(r.data)
-            let xuatXu = r.data;
-            $scope.idXuatXu=xuatXu.idXuatXu;
-            $scope.ma = xuatXu.ma;
-            $scope.ten = xuatXu.ten;
-            $scope.createBy = xuatXu.createBy;
-            $scope.createDate = xuatXu.createDate;
-            $scope.updateDate = xuatXu.updateDate;
-            $scope.updateBy = xuatXu.updateBy;
-            $scope.trangThai = xuatXu.trangThai;
+            $scope.xx = r.data;
         })
     }
 
+    $scope.resetErrors = function () {
+        // Xóa các thông báo lỗi
+        document.getElementById("eTenMauUd").innerText = "";
+        document.getElementById("eTenMau").innerText = "";
+        $scope.ten="";
+    };
 
     $scope.update = function (ma) {
-        if ($scope.ten == undefined || $scope.ten.length == 0) {
+        if ($scope.xx.ten == undefined || $scope.xx.ten.length == 0) {
             document.getElementById("eTenMauUd").innerText = "Vui lòng nhập tên!!!";
             return
         }
-        if ($scope.ten.length > 100) {
+        if ($scope.xx.ten.length > 100) {
             document.getElementById("eTenMauUd").innerText = "Tên tối đa 100 ký tự!!!";
             return
         }
@@ -158,7 +156,7 @@ app.controller("xuat-xu-ctrl",function ($scope,$http){
             var existingXuatXu = response.data;
             var tenTonTai = false;
             angular.forEach(existingXuatXu, function (item) {
-                if (item.ten.toLowerCase() === $scope.ten.toLowerCase() && item.ma !== ma) {
+                if (item.ten.toLowerCase() === $scope.xx.ten.toLowerCase() && item.ma !== ma) {
                     tenTonTai = true;
                 }
             });
@@ -170,7 +168,7 @@ app.controller("xuat-xu-ctrl",function ($scope,$http){
                 var url = "/admin/xuat-xu/update" + "/" + ma;
                 var updateMau = {
                     ma: ma,
-                    ten: $scope.ten
+                    ten: $scope.xx.ten
                 }
 
                 $http.post(url, updateMau).then(function (r) {

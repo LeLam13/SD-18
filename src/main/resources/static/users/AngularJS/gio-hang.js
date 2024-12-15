@@ -60,6 +60,8 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
 
   $scope.getThuocTinh();
 
+
+
   // Hàm lọc sản phẩm
   $scope.filter = function (filterData) {
     // Loại bỏ các thuộc tính không hợp lệ (rỗng/null)

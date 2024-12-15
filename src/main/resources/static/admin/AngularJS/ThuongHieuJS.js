@@ -121,27 +121,25 @@ app.controller("thuonghieu-ctrl", function ($scope, $http) {
         console.log(url)
         $http.get(url).then(function (r) {
             console.log(r.data)
-            let ThuongHieu = r.data;
-            $scope.idThuongHieu = ThuongHieu.idThuongHieu;
-            $scope.ma = ThuongHieu.ma;
-            $scope.ten = ThuongHieu.ten;
-            $scope.createBy = ThuongHieu.createBy;
-            $scope.createDate = ThuongHieu.createDate;
-            $scope.updateDate = ThuongHieu.updateDate;
-            $scope.updateBy = ThuongHieu.updateBy;
-            $scope.trangThai = ThuongHieu.trangThai;
+            $scope.th = r.data;
         })
     }
 
 
-    //update
+    $scope.resetErrors = function () {
+        // Xóa các thông báo lỗi
+        document.getElementById("erTenUd").innerText = "";
+        document.getElementById("erTen").innerText = "";
+        $scope.ten="";
+    };
 
+    //update
     $scope.update = function (ma) {
-        if ($scope.ten == undefined || $scope.ten.length == 0) {
+        if ($scope.th.ten == undefined || $scope.th.ten.length == 0) {
             document.getElementById('erTenUd').innerText = "Vui lòng nhập tên thương hiệu"
             return;
         }
-        if ($scope.ten.length > 100) {
+        if ($scope.th.ten.length > 100) {
             document.getElementById('erTenUd').innerText = "Tên thương hiệu tối đa 100 ký tự"
             return;
         }
@@ -149,7 +147,7 @@ app.controller("thuonghieu-ctrl", function ($scope, $http) {
             var existingThuongHieu = response.data;
             var tenTonTai = false;
             angular.forEach(existingThuongHieu, function (item) {
-                if (item.ten.toLowerCase() === $scope.ten.toLowerCase() && item.ma !== ma) {
+                if (item.ten.toLowerCase() === $scope.th.ten.toLowerCase() && item.ma !== ma) {
                     tenTonTai = true;
                 }
             });
@@ -161,7 +159,7 @@ app.controller("thuonghieu-ctrl", function ($scope, $http) {
                 var url = "/admin/thuong-hieu/update" + "/" + ma;
                 var thuonghieu = {
                     ma: ma,
-                    ten: $scope.ten
+                    ten: $scope.th.ten
                 }
                 $http.post(url, thuonghieu).then(function (resp) {
                     $scope.findAll();

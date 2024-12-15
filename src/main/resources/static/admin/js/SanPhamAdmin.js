@@ -281,6 +281,10 @@ app.controller('ctrl', function ($scope, $http) {
     }
 
 
+    function removeVietnameseTones(str) {
+        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').replace(/Đ/g, 'D');
+    }
+
     $scope.updateTT = function (idSanPham) {
         if (confirm("Xác nhận đổi?")) {
             var url = "/admin/san-pham/updateTT" + "/" + idSanPham;

@@ -104,5 +104,7 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Integer> {
 
 
     Page<SanPham> findAll(Specification<SanPham> speci, Pageable pageable);
+
+    List<SanPham> findAll(Specification<SanPham> spec);
 }
 
