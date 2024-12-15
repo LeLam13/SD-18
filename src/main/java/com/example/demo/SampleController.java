@@ -50,7 +50,11 @@ public class SampleController {
         if (dto.getUsername() == null || dto.getUsername().isEmpty()) {
             model.addAttribute("errorMessage", "Username không được để trống.");
             return "signup";
+        } else if (dto.getUsername().length() < 5 || dto.getUsername().length() > 12) {
+            model.addAttribute("errorMessage", "Username phải có từ 5 đến 12 ký tự.");
+            return "signup";
         }
+
         if (dto.getPassword() == null || dto.getPassword().isEmpty()) {
             model.addAttribute("errorMessage", "Password không được để trống.");
             return "signup";
