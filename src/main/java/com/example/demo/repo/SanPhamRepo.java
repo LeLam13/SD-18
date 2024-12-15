@@ -112,5 +112,11 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Integer> {
             "LOWER(REPLACE(m.ten, 'đ', 'd')) LIKE LOWER(REPLACE(CONCAT('%', :query, '%'), 'đ', 'd'))")
     Page<SanPham> searchIgnoreCaseAndDiacritics(@Param("query") String query, Pageable pageable);
 
+    @Query("SELECT s FROM SanPham s WHERE " +
+            "LOWER(REPLACE(s.ten, 'đ', 'd')) LIKE LOWER(REPLACE(CONCAT('%', :query, '%'), 'đ', 'd')) " +
+            "AND EXISTS (SELECT 1 FROM SanPhamChiTiet spct WHERE spct.idSanPham.idSanPham = s.idSanPham)")
+    Page<SanPham> searchIgnoreCaseAndDiacriticsWithDetails(@Param("query") String query, Pageable pageable);
+
+
 }
 

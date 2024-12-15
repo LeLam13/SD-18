@@ -400,13 +400,22 @@
                             <!--                            </div>-->
                             <div class="mb-3">
                                 <label>Giá min</label>
-                                <input type="text" ng-model="filterData.giaMin"
-                                       class="form-control"/>
+                                <input type="text" ng-model="filterData.giaMin" class="form-control"
+                                       ng-blur="checkGiaMin()" />
+                                <!-- Thông báo lỗi cho Giá min -->
+                                <div ng-if="isInvalidGiaMin" class="alert alert-danger">
+                                    Vui lòng nhập giá trị hợp lệ cho Giá Min (số dương).
+                                </div>
                             </div>
+
                             <div class="mb-3">
                                 <label>Giá Max</label>
-                                <input type="text" ng-model="filterData.giaMax"
-                                       class="form-control"/>
+                                <input type="text" ng-model="filterData.giaMax" class="form-control"
+                                       ng-blur="checkGiaMax()" />
+                                <!-- Thông báo lỗi cho Giá Max -->
+                                <div ng-if="isInvalidGiaMax" class="alert alert-danger">
+                                    Vui lòng nhập giá trị hợp lệ cho Giá Max (số dương).
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label>Xuất xứ</label>

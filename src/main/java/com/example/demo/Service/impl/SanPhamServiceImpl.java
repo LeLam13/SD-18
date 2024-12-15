@@ -404,9 +404,10 @@ public class SanPhamServiceImpl implements SanPhamService {
 
     @Override
     public Page<SanPham> search(String query, Pageable pageable) {
+        // Sử dụng truy vấn kết hợp tìm kiếm và kiểm tra chi tiết
+        Page<SanPham> result = sanPhamRepo.searchIgnoreCaseAndDiacriticsWithDetails(query, pageable);
 
-        Page<SanPham> result = sanPhamRepo.searchIgnoreCaseAndDiacritics(query, pageable);
-        // Xử lý bổ sung thông tin sản phẩm
+        // Xử lý bổ sung thông tin sản phẩm (giữ nguyên phần này)
         List<SanPham> processedProducts = result.getContent().stream().map(sanPham -> {
             // Lấy dữ liệu chi tiết đã bán từ truy vấn
             List<Object[]> detailedSoldData = sanPhamChiTietRepo.getDetailedTotalSoldByProduct(sanPham.getIdSanPham());
@@ -439,6 +440,8 @@ public class SanPhamServiceImpl implements SanPhamService {
         // Trả về Page đã xử lý
         return new PageImpl<>(processedProducts, pageable, result.getTotalElements());
     }
+
+
 
 
     public static String removeAccents(String str) {
