@@ -10,7 +10,7 @@ app.controller("KhachHangController", function ($scope, $http, $filter) {
 
   // Pagination variables
   $scope.currentPage = 1; // Trang hiện tại
-  $scope.pageSize = 5; // Số khách hàng mỗi trang
+  $scope.pageSize = 3; // Số khách hàng mỗi trang
   $scope.totalPages = 0; // Tổng số trang
 
   // Fetch all customers
@@ -102,6 +102,7 @@ app.controller("KhachHangController", function ($scope, $http, $filter) {
       isValid = false;
     }
 
+    // Kiểm tra ngày sinh
     if (!$scope.newKhachHang.ngay_sinh) {
       $scope.errors.ngay_sinh = "Ngày sinh không được để trống.";
       isValid = false;
@@ -109,16 +110,16 @@ app.controller("KhachHangController", function ($scope, $http, $filter) {
       let birthDate;
 
       if (typeof $scope.newKhachHang.ngay_sinh === 'string') {
-        // Nếu ngay_sinh là chuỗi định dạng MM/dd/yyyy
+        // Tách chuỗi ngày sinh theo định dạng MM/dd/yyyy
         const parts = $scope.newKhachHang.ngay_sinh.split('/');
-        if (parts.length !== 3) {
-          $scope.errors.ngay_sinh = "Định dạng ngày sinh không hợp lệ (MM/dd/yyyy).";
-          isValid = false;
-        } else {
+        if (parts.length === 3) {
           const month = parseInt(parts[0], 10) - 1; // Tháng trong JavaScript bắt đầu từ 0
           const day = parseInt(parts[1], 10);
           const year = parseInt(parts[2], 10);
           birthDate = new Date(year, month, day);
+        } else {
+          $scope.errors.ngay_sinh = "Ngày sinh không hợp lệ.";
+          isValid = false;
         }
       } else if ($scope.newKhachHang.ngay_sinh instanceof Date) {
         // Nếu ngay_sinh là đối tượng Date
@@ -143,7 +144,6 @@ app.controller("KhachHangController", function ($scope, $http, $filter) {
         }
       }
     }
-
 
     // Kiểm tra định dạng số điện thoại
     const phonePattern = /^(\+84|0)\d{9,10}$/;
@@ -200,10 +200,34 @@ app.controller("KhachHangController", function ($scope, $http, $filter) {
       },
       function (error) {
         console.error("Error adding customer:", error);
-        $scope.errors.api_error = "Có lỗi xảy ra trong quá trình thêm khách hàng.";
+
+        // Xử lý lỗi từ backend
+        if (error.data && error.data.errorCode) {
+          switch (error.data.errorCode) {
+            case 'ma_khach_hang_exists':
+              alert('Mã khách hàng đã tồn tại');
+              break;
+            case 'so_dien_thoai_exists':
+              alert('Số điện thoại đã tồn tại');
+              break;
+            case 'username_exists':
+              alert('Tên đăng nhập đã tồn tại');
+              break;
+            case 'email_exists':
+              alert('Email đã tồn tại');
+              break;
+            default:
+              alert('Có lỗi xảy ra. Vui lòng thử lại.');
+          }
+          $scope.newKhachHang.ngay_sinh = '';
+        } else {
+          $scope.errors.api_error = "Có lỗi xảy ra trong quá trình thêm khách hàng.";
+          alert($scope.errors.api_error);
+        }
       }
     );
   };
+
 
 
   // View purchase history of a customer
@@ -389,10 +413,16 @@ app.controller("KhachHangController", function ($scope, $http, $filter) {
         },
         function (error) {
           console.error("Error updating customer:", error);
-          $scope.errors.api_error = "Có lỗi xảy ra trong quá trình cập nhật khách hàng.";
+          // Xử lý lỗi trả về từ API
+          if (error.data && error.data.api_error) {
+            $scope.errors.api_error = error.data.api_error;
+          } else {
+            $scope.errors.api_error = "Có lỗi xảy ra trong quá trình cập nhật khách hàng.";
+          }
         }
       );
   };
+
 
 
   // Initialize data fetch

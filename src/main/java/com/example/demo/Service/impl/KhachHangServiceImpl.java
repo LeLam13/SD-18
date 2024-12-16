@@ -1,6 +1,7 @@
 package com.example.demo.Service.impl;
 
 import com.example.demo.Service.KhachHangService;
+import com.example.demo.dto.reponse.CustomException;
 import com.example.demo.dto.reponse.DonHangChiTietResponseDTO;
 import com.example.demo.dto.reponse.KhachHangResponseDTO;
 import com.example.demo.dto.reponse.LichSuMuaHangResponseDTO;
@@ -115,7 +116,6 @@ public class KhachHangServiceImpl implements KhachHangService {
         }
     }
 
-    // Helper method to convert KhachHangRequestDTO to khachhang entity
     private khachhang convertToEntity(KhachHangRequestDTO dto) {
         khachhang entity = new khachhang();
         entity.setMaKhachHang(dto.getMaKhachHang());
@@ -126,13 +126,23 @@ public class KhachHangServiceImpl implements KhachHangService {
         entity.setDiaChi(dto.getDiaChi());
         entity.setEmail(dto.getEmail()); // Set email
 
+        // Kiểm tra tính duy nhất của mã khách hàng
+        if (khachHangRepo.existsByMaKhachHang(dto.getMaKhachHang())) {
+            throw new CustomException("Mã khách hàng đã tồn tại", "ma_khach_hang_exists");
+        }
+
+        // Kiểm tra tính duy nhất của số điện thoại
+        if (khachHangRepo.existsBySoDienThoai(dto.getSoDienThoai())) {
+            throw new CustomException("Số điện thoại đã tồn tại", "so_dien_thoai_exists");
+        }
+
         // Kiểm tra và tạo tài khoản liên kết
         if (dto.getUsernameTaiKhoan() != null && !dto.getUsernameTaiKhoan().isEmpty()) {
             if (taikhoanRepo.existsByUsername(dto.getUsernameTaiKhoan())) {
-                throw new IllegalArgumentException("Tên đăng nhập đã tồn tại");
+                throw new CustomException("Tên đăng nhập đã tồn tại", "username_exists");
             }
             if (taikhoanRepo.existsByEmail(dto.getEmail())) {
-                throw new IllegalArgumentException("Email đã tồn tại");
+                throw new CustomException("Email đã tồn tại", "email_exists");
             }
 
             // Tạo tài khoản mới
