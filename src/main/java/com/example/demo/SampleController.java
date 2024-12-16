@@ -75,6 +75,14 @@ public class SampleController {
             model.addAttribute("errorMessage", "Họ tên không được để trống.");
             return "signup";
         }
+
+// Kiểm tra họ tên không chứa ký tự đặc biệt
+        String regex = "^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỂễếỄỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪửữựỲỴÝỶỸỳỵỷỹ\\s]+$";
+        if (!dto.getHoTen().matches(regex)) {
+            model.addAttribute("errorMessage", "Họ tên chỉ được chứa chữ cái và khoảng trắng.");
+            return "signup";
+        }
+
         if (dto.getSoDienThoai() == null || dto.getSoDienThoai().isEmpty()) {
             model.addAttribute("errorMessage", "Số điện thoại không được để trống.");
             return "signup";
