@@ -172,13 +172,43 @@ app.controller("chiTiet-ctrl",function ($scope,$location, $http,$interval,$sce, 
     //in hoá đơn
     $scope.printerInvoice = function (idHoaDon){
         console.log('check in hoá đơn:');
-        $http.get("/don-hang/invoice/"+idHoaDon).then(function (response) {
-            console.log('thanh cong:', response);
-            $scope.showNotification("In hoá đơn thành công!","success");
+        $http({
+            method: 'GET',
+            url: "/don-hang/invoice/" + idHoaDon,
+            headers: {
+                'Accept': 'text/plain' // Đảm bảo server trả về plain text (URL của file PDF)
+            },
+            responseType: 'text' // Đảm bảo AngularJS xử lý đúng dữ liệu (URL file PDF)
+        }).then(function (response) {
+            console.log('Phản hồi thành công:', response.data);
+
+            // Nếu có URL file PDF
+            if (response.data) {
+                console.log('URL file PDF:', response.data);
+
+                // Kiểm tra xem URL có hợp lệ không trước khi mở
+                if (response.data.startsWith('/assets/pdf/')) {
+                    // Mở file PDF trong tab mới
+                    window.open(response.data, '_blank');
+                } else {
+                    console.warn('URL không hợp lệ:', response.data);
+                    $scope.showNotification("Không tìm thấy file PDF!", "error");
+                }
+            } else {
+                console.warn('Phản hồi không chứa URL file PDF.');
+                $scope.showNotification("Không tìm thấy file PDF!", "error");
+            }
         }).catch(function (errors) {
             console.error('Có lỗi xảy ra:', errors);
-            $scope.showNotification("In hoá đơn thất bại!","error");
-        })
+            $scope.showNotification("Có lỗi xảy ra khi tạo file PDF.", "error");
+        });
+        // $http.get("/don-hang/invoice/"+idHoaDon).then(function (response) {
+        //     console.log('thanh cong:', response);
+        //     $scope.showNotification("In hoá đơn thành công!","success");
+        // }).catch(function (errors) {
+        //     console.error('Có lỗi xảy ra:', errors);
+        //     $scope.showNotification("In hoá đơn thất bại!","error");
+        // })
     }
 
     $scope.showCancelOrder = function() {

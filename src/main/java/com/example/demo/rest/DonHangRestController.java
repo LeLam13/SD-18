@@ -10,13 +10,19 @@ import com.example.demo.dto.reponse.KhachHangResponseDTO;
 import com.example.demo.dto.request.*;
 import com.example.demo.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -428,18 +434,70 @@ public class DonHangRestController {
         // return ResponseEntity.ok("");
     }
 
+//    @GetMapping("/hoa-don/invoice/{id}")
+//    public ResponseEntity<?> printerInvoice(@PathVariable("id") Integer id) {
+//        System.out.println("checkID: " + id);
+//        try {
+//            String path = hoaDonService.printerInvoice(id);
+//            String fileUrl = "http://localhost:8080/assets/pdf/" + path;
+//            System.out.println("checkPath:" + fileUrl);
+//            return ResponseEntity.ok()
+//                    .contentType(MediaType.TEXT_PLAIN)
+//                    .body(fileUrl);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseEntity.noContent().build();
+//        }
+//        // return ResponseEntity.ok("");
+//    }
+
     @GetMapping("/hoa-don/invoice/{id}")
     public ResponseEntity<?> printerInvoice(@PathVariable("id") Integer id) {
         System.out.println("checkID: " + id);
         try {
-            String path = hoaDonService.printerInvoice(id);
-            System.out.println("path" + path);
-            return ResponseEntity.ok("");
+            // Lưu file PDF vào thư mục static/assets/pdf
+            String fileName = hoaDonService.printerInvoice(id);
+
+            // Đường dẫn truy cập file PDF
+            String fileUrl = "/assets/pdf/" + fileName;  // Đảm bảo đường dẫn bắt đầu từ /assets/pdf/
+
+            System.out.println("checkPath: " + fileUrl);
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.TEXT_PLAIN)
+                    .body(fileUrl);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.noContent().build();
         }
-        // return ResponseEntity.ok("");
     }
+
+
+    // Phục vụ file PDF từ thư mục static
+    @GetMapping("/assets/pdf/{fileName:.+}")
+    public ResponseEntity<?> servePdfFile(@PathVariable String fileName) {
+        System.out.println("check pdf.....");
+        try {
+            // Đường dẫn đầy đủ tới file PDF trong thư mục static/assets/pdf
+            Path file = Paths.get("src/main/resources/static/assets/pdf/").resolve(fileName).normalize();
+
+            // Kiểm tra file có tồn tại hay không
+            if (!Files.exists(file)) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // Tạo đối tượng Resource từ file
+            Resource resource = new UrlResource(file.toUri());
+
+            // Trả về file với MediaType là PDF
+            return ResponseEntity.ok()
+                    .contentType(MediaType.APPLICATION_PDF)
+                    .body(resource);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 
 }

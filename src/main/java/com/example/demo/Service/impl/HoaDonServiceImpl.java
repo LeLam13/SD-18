@@ -197,6 +197,10 @@ public class HoaDonServiceImpl implements HoaDonService {
         newHoaDon.setTrangThaiThanhToan(true);
         newHoaDon.setPhuongThucNhan(hoaDon.getPhuongThucNhan());
 
+        newHoaDon.setTenKhachNhan(hoaDon.getTenKhachNhan());
+        newHoaDon.setSoDienThoaiKhachNhan(hoaDon.getSoDienThoaiKhachNhan());
+        newHoaDon.setDiaChiNhan(hoaDon.getDiaChiKhachNhan());
+
         // System.out.println("check ;log hoá đơn: "+newHoaDon);
         hoaDonRepo.save(newHoaDon);
 
@@ -236,8 +240,11 @@ public class HoaDonServiceImpl implements HoaDonService {
                 throw new RuntimeException("không tìm thấy hoá đơn");
             }
             // String pdfFilePath = "C:\\Users\\Admin\\Desktop\\TTS-XUONG\\invoice.pdf";
-            String folderPath = Paths.get("src", "main", "resources", "images").toAbsolutePath().toString();
-            String pdfFilePath = folderPath + File.separator + getHoaDon.getMaHoaDon() + ".pdf";
+            //String folderPath = Paths.get("src", "main", "resources", "images").toAbsolutePath().toString();
+            String folderPath = Paths.get("src", "main", "resources", "static", "assets", "pdf").toAbsolutePath().toString();
+            String fileName = getHoaDon.getMaHoaDon() + ".pdf";
+            String pdfFilePath = folderPath + File.separator + fileName;
+            //String pdfFilePath = folderPath + File.separator + getHoaDon.getMaHoaDon() + ".pdf";
 
             // Tạo thư mục nếu chưa tồn tại
             File folder = new File(folderPath);
@@ -409,35 +416,45 @@ public class HoaDonServiceImpl implements HoaDonService {
             Paragraph paragraphTong = new Paragraph().add(tong);
             Table threeColTable3 = new Table(threeColumnWidth);
 
-            threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(10f));
+            //threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(10f));
             if (getHoaDon.getPhiVanChuyen() > 0) {
+                threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(10f));
                 threeColTable3.addCell(
                         new Cell().add("Phí Ship").setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
                 threeColTable3.addCell(new Cell().add(String.valueOf(getHoaDon.getPhiVanChuyen()))
                         .setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
+
+                threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(10f));
+                threeColTable3.addCell(
+                        new Cell().add(paragraphTong).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
+
+                threeColTable3.addCell(new Cell().add(String.valueOf(getHoaDon.getTongTienThanhToan())).setBorder(Border.NO_BORDER)
+                        .setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
+            }else {
+                threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(10f));
+                threeColTable3.addCell(
+                        new Cell().add(paragraphTong).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
+
+                threeColTable3.addCell(new Cell().add(String.valueOf(getHoaDon.getTongTienThanhToan())).setBorder(Border.NO_BORDER)
+                        .setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
             }
 
-            threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(15f));
-            threeColTable3.addCell(
-                    new Cell().add(paragraphTong).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
-
-            threeColTable3.addCell(new Cell().add(String.valueOf(totalSum)).setBorder(Border.NO_BORDER)
-                    .setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
             document.add(threeColTable3);
             document.add(tableDivider);
-            document.add(new Paragraph("\n"));
-            document.add(divider.setBorder(new SolidBorder(Color.GRAY, 1)).setMarginBottom(15f));
-
-            Table tb = new Table(columnWidths);
-            tb.addCell(new Cell().add("Tems and conditition")).setBold().setBorder(Border.NO_BORDER);
-            tb.addCell(new Cell().add("1.Tems")).setBorder(Border.NO_BORDER);
-            tb.addCell(new Cell().add("2.Tems")).setBorder(Border.NO_BORDER);
-            document.add(tb);
+//            document.add(new Paragraph("\n"));
+//            document.add(divider.setBorder(new SolidBorder(Color.GRAY, 1)).setMarginBottom(15f));
+//
+//            Table tb = new Table(columnWidths);
+//            tb.addCell(new Cell().add("Tems and conditition")).setBold().setBorder(Border.NO_BORDER);
+//            tb.addCell(new Cell().add("1.Tems")).setBorder(Border.NO_BORDER);
+//            tb.addCell(new Cell().add("2.Tems")).setBorder(Border.NO_BORDER);
+//            document.add(tb);
 
             document.close();
             pdfDocument.close();
             pdfWriter.close();
-            return pdfFilePath;
+            //return pdfFilePath;
+            return fileName;
 
         } catch (Exception e) {
             e.printStackTrace();

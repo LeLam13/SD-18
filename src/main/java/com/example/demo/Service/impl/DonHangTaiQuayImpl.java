@@ -212,8 +212,9 @@ public class DonHangTaiQuayImpl implements DonHangTaiQuayService {
                 throw  new RuntimeException("không tìm thấy hoá đơn");
             }
 //            String pdfFilePath  = "C:\\Users\\Admin\\Desktop\\TTS-XUONG\\invoice.pdf";
-            String folderPath = Paths.get("src", "main", "resources", "images").toAbsolutePath().toString();
-            String pdfFilePath = folderPath + File.separator + getHoaDon.getMaHoaDon() + ".pdf";
+            String folderPath = Paths.get("src", "main", "resources", "static", "assets", "pdf").toAbsolutePath().toString();
+            String fileName = getHoaDon.getMaHoaDon() + ".pdf";
+            String pdfFilePath = folderPath + File.separator + fileName;
 
             // Tạo thư mục nếu chưa tồn tại
             File folder = new File(folderPath);
@@ -287,27 +288,27 @@ public class DonHangTaiQuayImpl implements DonHangTaiQuayService {
             Text text2 = new Text("Mã Hoá Đơn:").setFont(pdfFont);
             Text text1 = new Text("Hoá Đơn Bán Hàng").setFont(pdfFont);
             //thông tin
-            Text textSDT = new Text(getHoaDon.getSoDienThoaiKhachNhan()).setFont(pdfFont);
-            Text textEmail = new Text(getHoaDon.getEmailKhachNhan()).setFont(pdfFont);;
+            Text textSDT ;
+            Text textEmail ;
             Text textHoTen = new Text(getHoaDon.getTenKhachNhan()).setFont(pdfFont);
             Text textMaHD = new Text(getHoaDon.getMaHoaDon()).setFont(pdfFont);
 
-//            if(getHoaDon.getKhachHang().getSoDienThoai() != null){
-//                textSDT = new Text(getHoaDon.getKhachHang().getSoDienThoai()).setFont(pdfFont);
-//            }else {
-//                textSDT = new Text("").setFont(pdfFont);
-//            }
-//            if(getHoaDon.getKhachHang().getEmail() != null){
-//                textEmail = new Text(getHoaDon.getKhachHang().getEmail()).setFont(pdfFont);
-//            }else {
-//                textEmail = new Text("").setFont(pdfFont);
-//            }
-            Text diaChiNhan = new Text(getHoaDon.getDiaChiNhan()).setFont(pdfFont);
-//            if(getHoaDon.getDiaChiNhan() == null){
-//                diaChiNhan = new Text(getHoaDon.getKhachHang().getDiaChi()).setFont(pdfFont);
-//            }else {
-//                diaChiNhan = new Text(getHoaDon.getDiaChiNhan()).setFont(pdfFont);
-//            }
+            if(getHoaDon.getSoDienThoaiKhachNhan() != null){
+                textSDT = new Text(getHoaDon.getSoDienThoaiKhachNhan()).setFont(pdfFont);
+            }else {
+                textSDT = new Text("").setFont(pdfFont);
+            }
+            if(getHoaDon.getEmailKhachNhan() != null){
+                textEmail = new Text(getHoaDon.getKhachHang().getEmail()).setFont(pdfFont);
+            }else {
+                textEmail = new Text("").setFont(pdfFont);
+            }
+            Text diaChiNhan ;
+            if(getHoaDon.getDiaChiNhan() == null){
+                diaChiNhan = new Text(getHoaDon.getKhachHang().getDiaChi()).setFont(pdfFont);
+            }else {
+                diaChiNhan = new Text(getHoaDon.getDiaChiNhan()).setFont(pdfFont);
+            }
 
             LocalDate createDate = getHoaDon.getCreateDate();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
@@ -390,15 +391,15 @@ public class DonHangTaiQuayImpl implements DonHangTaiQuayService {
             threeColTable4.addCell(new Cell().add(tableDivider).setBorder(Border.NO_BORDER));
             document.add(threeColTable4);
 
-            Text tong = new Text("Tổng").setFont(pdfFont);
+            Text tong = new Text("Tổng Sản Phẩm").setFont(pdfFont);
             Paragraph paragraphTong = new Paragraph().add(tong);
             Text tongHoaDon = new Text("Tổng hoá đơn").setFont(pdfFont);
             Paragraph paragraphTongHoaDon = new Paragraph().add(tongHoaDon);
             Table threeColTable3 = new Table(threeColumnWidth);
 
-            threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(10f));
-            threeColTable3.addCell(new Cell().add(paragraphTong).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
-            threeColTable3.addCell(new Cell().add(String.valueOf(totalSum)).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
+//            threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(10f));
+//            threeColTable3.addCell(new Cell().add(paragraphTong).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
+//            threeColTable3.addCell(new Cell().add(String.valueOf(totalSum)).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
             //phí ship
             if(getHoaDon.getPhiVanChuyen() >0){
                 threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(10f));
@@ -407,13 +408,17 @@ public class DonHangTaiQuayImpl implements DonHangTaiQuayService {
                 //tong + phi van chuyen
                 threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(15f));
                 threeColTable3.addCell(new Cell().add(paragraphTongHoaDon).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
-                threeColTable3.addCell(new Cell().add(String.valueOf(totalSum + getHoaDon.getPhiVanChuyen())).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
+                threeColTable3.addCell(new Cell().add(String.valueOf(getHoaDon.getTongTienThanhToan())).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
             }
-//            else {
-//                threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(10f));
-//                threeColTable3.addCell(new Cell().add(paragraphTong).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
-//                threeColTable3.addCell(new Cell().add(String.valueOf(totalSum)).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
-//            }
+            else {
+                threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(10f));
+                threeColTable3.addCell(new Cell().add(paragraphTong).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
+                threeColTable3.addCell(new Cell().add(String.valueOf(totalSum)).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
+
+                threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(10f));
+                threeColTable3.addCell(new Cell().add(paragraphTongHoaDon).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
+                threeColTable3.addCell(new Cell().add(String.valueOf(getHoaDon.getTongTienThanhToan())).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
+            }
 //            threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(10f));
 //            threeColTable3.addCell(new Cell().add(paragraphTong).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
 //            threeColTable3.addCell(new Cell().add(String.valueOf(totalSum)).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
@@ -422,21 +427,21 @@ public class DonHangTaiQuayImpl implements DonHangTaiQuayService {
             //threeColTable3.addCell(new Cell().add(String.valueOf(totalSum)).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
             document.add(threeColTable3);
             document.add(tableDivider);
-            document.add(new Paragraph("\n"));
-            document.add(divider.setBorder(new SolidBorder(Color.GRAY,1)).setMarginBottom(15f));
-
-            Table tb = new Table(columnWidths);
-            tb.addCell(new Cell().add("Tems and conditition")).setBold().setBorder(Border.NO_BORDER);
-            tb.addCell(new Cell().add("1.Tems")).setBorder(Border.NO_BORDER);
-            tb.addCell(new Cell().add("2.Tems")).setBorder(Border.NO_BORDER);
-            document.add(tb);
+//            document.add(new Paragraph("\n"));
+//            document.add(divider.setBorder(new SolidBorder(Color.GRAY,1)).setMarginBottom(15f));
+//
+//            Table tb = new Table(columnWidths);
+//            tb.addCell(new Cell().add("Tems and conditition")).setBold().setBorder(Border.NO_BORDER);
+//            tb.addCell(new Cell().add("1.Tems")).setBorder(Border.NO_BORDER);
+//            tb.addCell(new Cell().add("2.Tems")).setBorder(Border.NO_BORDER);
+//            document.add(tb);
 
 
 
             document.close();
             pdfDocument.close();
             pdfWriter.close();
-            return pdfFilePath;
+            return fileName;
 
         }catch (Exception e){
             e.printStackTrace();

@@ -456,6 +456,16 @@ app.controller("banhang-ctrl", function ($scope, $http,$sce,$timeout) {
             idHoaDoncheck = response.data.idHoaDon;
             $scope.getKhachHang();
             // alert("Lưu Hoá Đơn Thành Công!");
+            $scope.getDonHang();
+            $('#nameKHNhan').val("");
+            $('#sdtKHNhan').val("");
+            $('#nameKH').val("");
+            $('#sdtKH').val("");
+            $('#ma-khuyen-mai').val("");
+            $('#muc-giam-gia').val("");
+            $('#id-khach-thanh-toan').val(0);
+            $scope.productDetails =[];
+
             $('#printer').show();
             $scope.showNotification('Lưu Hoá Đơn Thành Công!','success');
         }).catch(function(error) {
@@ -817,15 +827,43 @@ app.controller("banhang-ctrl", function ($scope, $http,$sce,$timeout) {
         })
 
     }
-    $scope.printerInvoice = function (idHoaDon){
+    $scope.printerInvoice = function (idHoaDon) {
         console.log('check in hoá đơn:');
-        $http.get("/hoa-don/invoice/"+idHoaDon).then(function (response) {
-            console.log('thanh cong:', response);
+
+        // Gửi yêu cầu đến API để tạo file PDF
+        $http({
+            method: 'GET',
+            url: "/hoa-don/invoice/" + idHoaDon,
+            headers: {
+                'Accept': 'text/plain' // Đảm bảo server trả về plain text (URL của file PDF)
+            },
+            responseType: 'text' // Đảm bảo AngularJS xử lý đúng dữ liệu (URL file PDF)
+        }).then(function (response) {
+            console.log('Phản hồi thành công:', response.data);
+
+            // Nếu có URL file PDF
+            if (response.data) {
+                console.log('URL file PDF:', response.data);
+
+                // Kiểm tra xem URL có hợp lệ không trước khi mở
+                if (response.data.startsWith('/assets/pdf/')) {
+                    // Mở file PDF trong tab mới
+                    window.open(response.data, '_blank');
+                } else {
+                    console.warn('URL không hợp lệ:', response.data);
+                    $scope.showNotification("Không tìm thấy file PDF!", "error");
+                }
+            } else {
+                console.warn('Phản hồi không chứa URL file PDF.');
+                $scope.showNotification("Không tìm thấy file PDF!", "error");
+            }
         }).catch(function (errors) {
             console.error('Có lỗi xảy ra:', errors);
+            $scope.showNotification("Có lỗi xảy ra khi tạo file PDF.", "error");
+        });
+    };
 
-        })
-    }
+
 
     //ẩn thông báo
     $scope.hideErrrorsMes = function (){

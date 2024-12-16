@@ -4,15 +4,24 @@ import com.example.demo.Service.DonHangTaiQuayService;
 import com.example.demo.dto.request.DonHangTaiQuayStatusRequestDTO;
 import com.example.demo.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 public class DonHangTaiQuayResrController {
@@ -134,15 +143,24 @@ public class DonHangTaiQuayResrController {
 
     @GetMapping("/don-hang/invoice/{id}")
     public ResponseEntity<?> printerInvoice(@PathVariable("id") Integer id) {
-        System.out.println("checkID: " + id);
+        System.out.println("checkID qly: " + id);
         try {
-            String path = donHangTaiQuayService.printerInvoice(id);
-            System.out.println("path" + path);
-            return ResponseEntity.ok("");
+            // Lưu file PDF vào thư mục static/assets/pdf
+            String fileName = donHangTaiQuayService.printerInvoice(id);
+
+            // Đường dẫn truy cập file PDF
+            String fileUrl = "/assets/pdf/" + fileName;  // Đảm bảo đường dẫn bắt đầu từ /assets/pdf/
+
+            System.out.println("checkPath: " + fileUrl);
+
+            return ResponseEntity.ok()
+                    .contentType(MediaType.TEXT_PLAIN)
+                    .body(fileUrl);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.noContent().build();
         }
         // return ResponseEntity.ok("");
     }
+
 }
