@@ -281,7 +281,8 @@
                                     <th scope="col"></th>
                                     <th scope="col">Tên Sản phẩm</th>
                                     <th scope="col" class="text-center">Số lượng</th>
-                                    <th scope="col">Đơn Giá</th>
+                                    <th scope="col">Màu sắc</th>
+                                    <th scope="col">Kích cỡ</th>
                                     <th scope="col">Giá bán</th>
                                     <th scope="col"></th>
                                 </tr>
@@ -296,7 +297,8 @@
                                     <td class="text-center">
                                         {{itemProducts.soLuong}}
                                     </td>
-                                    <td>{{itemProducts.giaBan}}</td>
+                                    <td>{{itemProducts.idMauSac.ten}}</td>
+                                    <td>{{itemProducts.idKichCo.ten}}</td>
                                     <td>{{itemProducts.giaBan}}</td>
                                     <td class="text-center">
                                         <button ng-click="addProductsDetail(itemProducts.idSanPhamChiTiet)" class="btn btn-outline-secondary">

@@ -190,6 +190,7 @@ app.controller("donhanguser-ctrl", function ($scope, $http,$interval,$sce,$timeo
             console.log("check order after cancel: ", response.data);
             $scope.getOrderOfUser();
             $('#modal-status').modal('hide');
+            $('#cancel-order').hide();
             $scope.showNotification('Huỷ Đơn Thành công!', 'success');
         }).catch(function (error) {
             console.error('Có lỗi xảy ra:', error);
@@ -258,6 +259,7 @@ app.controller("donhanguser-ctrl", function ($scope, $http,$interval,$sce,$timeo
                         if(newTrangThai === 6){
                             console.log("Trạng thái đạt 6, dừng tự động!");
                             $scope.showCancelOrder();
+                            $('#cancel-order').hide();
                             $scope.stopAutoCheck(); // Dừng interval
                         }
 

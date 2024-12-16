@@ -391,8 +391,11 @@
                                     </div><!-- End .product-cart-details -->
 
                                     <figure class="product-image-container">
-                                        <a href="product.html" class="product-image">
-                                            <img src="/assets/images/products/cart/product-1.jpg" alt="product">
+                                        <a href="product.html" class="product-image" ng-if="username.length !== 0">
+                                            <img ng-src="/assets/img/{{item.sanPhamChiTiet.idHinhAnh.ten}}" alt="">
+                                        </a>
+                                        <a href="product.html" class="product-image" ng-if="username.length === 0">
+                                            <img ng-src="/assets/img/{{item.idHinhAnh.ten}}" alt="">
                                         </a>
                                     </figure>
                                     <a href="#" ng-click="removeLocalStorage(item)"

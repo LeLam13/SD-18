@@ -1073,7 +1073,7 @@ app.controller("banhang-ctrl", function ($scope, $http,$sce,$timeout) {
         // Sử dụng $timeout để tự động ẩn sau 5 giây
         $timeout(function() {
             $scope.notification.show = false;
-        }, 3000);
+        }, 1000);
     };
 
 
