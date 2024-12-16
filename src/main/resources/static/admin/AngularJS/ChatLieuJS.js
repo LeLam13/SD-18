@@ -90,8 +90,8 @@ app.controller("chat-lieu-ctrl", function ($scope, $http) {
             return;
         }
 
-        if ($scope.ten.length > 100) {
-            document.getElementById("eTenMau").innerText = "Tên tối đa 100 ký tự!!!";
+        if ($scope.ten.length > 30) {
+            document.getElementById("eTenMau").innerText = "Tên tối đa 30 ký tự!!!";
             return;
         }
 
@@ -147,8 +147,8 @@ app.controller("chat-lieu-ctrl", function ($scope, $http) {
             document.getElementById("eTenMauUd").innerText = "Vui lòng nhập tên!!!";
             return
         }
-        if ($scope.cl.ten.length > 100) {
-            document.getElementById("eTenMauUd").innerText = "Tên tối đa 100 ký tự!!!";
+        if ($scope.cl.ten.length > 30) {
+            document.getElementById("eTenMauUd").innerText = "Tên tối đa 30 ký tự!!!";
             return
         }
 

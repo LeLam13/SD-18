@@ -84,8 +84,8 @@ app.controller("kieudang-ctrl", function ($scope, $http) {
             document.getElementById('erTen').innerText = "Vui lòng nhập tên kiểu dáng"
             return;
         }
-        if ($scope.ten.length > 100) {
-            document.getElementById('erTen').innerText = "Tên kiểu dáng tối đa 100 ký tự"
+        if ($scope.ten.length > 30) {
+            document.getElementById('erTen').innerText = "Tên kiểu dáng tối đa 30 ký tự"
             return;
         }
         $http.get("/admin/kieu-dang/get-all").then(function (response) {
@@ -140,8 +140,8 @@ app.controller("kieudang-ctrl", function ($scope, $http) {
             document.getElementById('erTenUd').innerText = "Vui lòng nhập tên kiểu dáng"
             return;
         }
-        if ($scope.kd.ten.length > 100) {
-            document.getElementById('erTenUd').innerText = "Tên kiểu dáng tối đa 100 ký tự"
+        if ($scope.kd.ten.length > 30) {
+            document.getElementById('erTenUd').innerText = "Tên kiểu dáng tối đa 30 ký tự"
             return;
         }
         $http.get("/admin/kieu-dang/get-all").then(function (response) {

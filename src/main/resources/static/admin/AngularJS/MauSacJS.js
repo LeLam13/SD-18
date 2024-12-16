@@ -133,8 +133,8 @@ app.controller("mau-sac-ctrl", function ($scope, $http,$sce,$timeout) {
         if (!mauSac.ten) {
             showError("eTenMau", "Vui lòng nhập tên!!!");
             check = false;
-        } else if (mauSac.ten.length > 100) {
-            showError("eTenMau", "Tên tối đa 100 ký tự!!!");
+        } else if (mauSac.ten.length > 30) {
+            showError("eTenMau", "Tên tối đa 30 ký tự!!!");
             check = false;
         }
 
@@ -207,8 +207,8 @@ app.controller("mau-sac-ctrl", function ($scope, $http,$sce,$timeout) {
         if ($scope.ms.ten == undefined || $scope.ms.ten.length == 0) {
             showError("eTenMauUd", "Vui lòng nhập tên!!!");
             check = false;
-        } else if ($scope.ms.ten.length > 100) {
-            showError("eTenMauUd", "Tên tối đa 100 ký tự!!!");
+        } else if ($scope.ms.ten.length > 30) {
+            showError("eTenMauUd", "Tên tối đa 30 ký tự!!!");
             check = false;
         }
 

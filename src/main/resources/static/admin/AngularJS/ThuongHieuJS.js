@@ -82,8 +82,8 @@ app.controller("thuonghieu-ctrl", function ($scope, $http) {
             document.getElementById('erTen').innerText = "Vui lòng nhập tên thương hiệu"
             return;
         }
-        if ($scope.ten.length > 100) {
-            document.getElementById('erTen').innerText = "Tên thương hiệu tối đa 100 ký tự"
+        if ($scope.ten.length > 30) {
+            document.getElementById('erTen').innerText = "Tên thương hiệu tối đa 30 ký tự"
             return;
         }
 
@@ -139,8 +139,8 @@ app.controller("thuonghieu-ctrl", function ($scope, $http) {
             document.getElementById('erTenUd').innerText = "Vui lòng nhập tên thương hiệu"
             return;
         }
-        if ($scope.th.ten.length > 100) {
-            document.getElementById('erTenUd').innerText = "Tên thương hiệu tối đa 100 ký tự"
+        if ($scope.th.ten.length > 30) {
+            document.getElementById('erTenUd').innerText = "Tên thương hiệu tối đa 30 ký tự"
             return;
         }
         $http.get("/admin/thuong-hieu/get-all").then(function (response) {
