@@ -1,6 +1,7 @@
 package com.example.demo.repo;
 
 import com.example.demo.dto.request.SanPhamWithImageDto;
+import com.example.demo.entity.MauSac;
 import com.example.demo.entity.SanPham;
 import com.example.demo.entity.SanPhamChiTiet;
 import org.springframework.data.domain.Page;
@@ -104,5 +105,18 @@ public interface SanPhamRepo extends JpaRepository<SanPham, Integer> {
 
 
     Page<SanPham> findAll(Specification<SanPham> speci, Pageable pageable);
+
+    List<SanPham> findAll(Specification<SanPham> spec);
+
+    @Query("SELECT m FROM SanPham m WHERE " +
+            "LOWER(REPLACE(m.ten, 'đ', 'd')) LIKE LOWER(REPLACE(CONCAT('%', :query, '%'), 'đ', 'd'))")
+    Page<SanPham> searchIgnoreCaseAndDiacritics(@Param("query") String query, Pageable pageable);
+
+    @Query("SELECT s FROM SanPham s WHERE " +
+            "LOWER(REPLACE(s.ten, 'đ', 'd')) LIKE LOWER(REPLACE(CONCAT('%', :query, '%'), 'đ', 'd')) " +
+            "AND EXISTS (SELECT 1 FROM SanPhamChiTiet spct WHERE spct.idSanPham.idSanPham = s.idSanPham)")
+    Page<SanPham> searchIgnoreCaseAndDiacriticsWithDetails(@Param("query") String query, Pageable pageable);
+
+
 }
 

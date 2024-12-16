@@ -80,6 +80,8 @@ public class MauSacServiceImpl implements MauSacService {
         else{
             ms.setTrangThai(true);
         }
+        ms.setUpdateBy(getCurrentUsername());
+        ms.setUpdateDate(date);
         return mauSacRepo.save(ms);
     }
 

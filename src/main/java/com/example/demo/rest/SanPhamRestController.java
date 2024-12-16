@@ -161,7 +161,17 @@ public class SanPhamRestController {
                                             @RequestParam(defaultValue = "0") int page,
                                             @RequestParam(defaultValue = "5") int size) {
         Pageable pageable = PageRequest.of(page, size,Sort.by("idSanPham").descending());
-        Page<SanPham> filteredProducts = sanPhamService.filterProducts(filterData,pageable);
+        Page<SanPham> filteredProducts = sanPhamService.filterProductsView(filterData,pageable);
         return ResponseEntity.ok(filteredProducts);
     }
+
+    @GetMapping("/san-pham/search")
+    public ResponseEntity<?> search(@RequestParam String query,
+                                    @RequestParam(defaultValue = "0") int page,
+                                    @RequestParam(defaultValue = "5") int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("idSanPham").descending());
+        Page<SanPham> ms = sanPhamService.search(query,pageable); // Phân trang
+        return ResponseEntity.ok(ms); // Trả về trang hiện tại cùng dữ liệu
+    }
+
 }

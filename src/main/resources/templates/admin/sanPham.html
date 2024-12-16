@@ -228,6 +228,8 @@
                                             type="button"
                                             class="btn-close"
                                             data-bs-dismiss="modal"
+                                            aria-label="Close"
+                                            ng-click="resetErrors()"
                                     ></button>
                                 </div>
                                 <form>
@@ -327,6 +329,7 @@
                                                         class="form-control"
                                                         rows="3"
                                                 ></textarea>
+                                                <i id="eMoTaUd" style="color: red" class="er"></i>
                                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                                             </div>
                                         </div>
@@ -352,11 +355,7 @@
                                 <!-- Modal Header -->
                                 <div class="modal-header">
                                     <h4 class="modal-title">Thêm Sản Phẩm</h4>
-                                    <button
-                                            type="button"
-                                            class="btn-close"
-                                            data-bs-dismiss="modal"
-                                    ></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <form>
                                     <!-- Modal body -->
@@ -397,32 +396,34 @@
 
                                                     <div class="mb-3 m-4">
                                                         <label for="xuatXu">Xuất xứ</label>
-
-                                                        <!-- Dropdown luôn hiển thị -->
-                                                        <select id="xuatXu"
+                                                        <select
+                                                                id="xuatXu"
                                                                 class="form-control"
-                                                                ng-model="selectedXuatXu" ng-change="onXuatXuChange()">
-                                                            <option value="" disabled selected>Chọn xuất xứ</option>
+                                                                ng-model="selectedXuatXu"
+                                                                onfocus="document.getElementById('eXuatXu').innerText = ''"
+                                                        >
+                                                            <option value="" selected>Chọn xuất xứ</option>
                                                             <option ng-repeat="x in xuatXuCr" ng-value="x.idXuatXu">
                                                                 {{x.ten}}
                                                             </option>
                                                         </select>
+                                                        <i id="eXuatXu" style="color: red" class="er"></i>
                                                     </div>
-
 
                                                     <div class="mb-3 m-4">
                                                         <label for="chatLieu">Chất liệu</label>
-
-
-                                                        <!-- Dropdown nếu chưa chọn giá trị -->
-                                                        <select id="chatLieu"
+                                                        <select
+                                                                id="chatLieu"
                                                                 class="form-control"
-                                                                ng-model="selectedChatLieu">
-                                                            <option value="" disabled selected>Chọn chất liệu</option>
+                                                                ng-model="selectedChatLieu"
+                                                                onfocus="document.getElementById('eChatLieu').innerText = ''"
+                                                        >
+                                                            <option value="" selected>Chọn chất liệu</option>
                                                             <option ng-repeat="c in chatLieuCr" ng-value="c.idChatLieu">
                                                                 {{c.ten}}
                                                             </option>
                                                         </select>
+                                                        <i id="eChatLieu" style="color: red" class="er"></i>
                                                     </div>
 
                                                 </div>
@@ -430,32 +431,35 @@
                                                 <div class="col-sm-6">
 
                                                     <div class="mb-3 m-4">
-                                                        <label for="thuongHieu">Thương Hiệu</label>
-
-                                                        <!-- Dropdown nếu chưa chọn giá trị -->
-                                                        <select id="thuongHieu"
+                                                        <label for="thuongHieu">Thương hiệu</label>
+                                                        <select
+                                                                id="thuongHieu"
                                                                 class="form-control"
-                                                                ng-model="selectedThuongHieu">
-                                                            <option value="" disabled selected>Chọn thương hiệu</option>
-                                                            <option ng-repeat="t in thuongHieuCr"
-                                                                    ng-value="t.idThuongHieu">
+                                                                ng-model="selectedThuongHieu"
+                                                                onfocus="document.getElementById('eThuongHieu').innerText = ''"
+                                                        >
+                                                            <option value="" selected>Chọn thương hiệu</option>
+                                                            <option ng-repeat="t in thuongHieuCr" ng-value="t.idThuongHieu">
                                                                 {{t.ten}}
                                                             </option>
                                                         </select>
+                                                        <i id="eThuongHieu" style="color: red" class="er"></i>
                                                     </div>
 
                                                     <div class="mb-3 m-4">
                                                         <label for="kieuDang">Kiểu dáng</label>
-
-                                                        <!-- Dropdown nếu chưa chọn giá trị -->
-                                                        <select id="kieuDang"
+                                                        <select
+                                                                id="kieuDang"
                                                                 class="form-control"
-                                                                ng-model="selectedKieuDang">
-                                                            <option value="" disabled selected>Chọn kiểu dáng</option>
+                                                                ng-model="selectedKieuDang"
+                                                                onfocus="document.getElementById('eKieuDang').innerText = ''"
+                                                        >
+                                                            <option value="" selected>Chọn kiểu dáng</option>
                                                             <option ng-repeat="k in kieuDangCr" ng-value="k.idKieuDang">
                                                                 {{k.ten}}
                                                             </option>
                                                         </select>
+                                                        <i id="eKieuDang" style="color: red" class="er"></i>
                                                     </div>
 
                                                 </div>
@@ -468,6 +472,7 @@
                                                         class="form-control"
                                                         rows="3"
                                                 ></textarea>
+                                                <i id="eMoTa" style="color: red" class="er"></i>
                                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                                             </div>
                                         </div>

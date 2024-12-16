@@ -89,11 +89,16 @@ app.controller("size-ctrl" ,function ($scope, $http){
             return;
         }
 
-        if ($scope.ten.length > 100) {
-            document.getElementById("eTenMau").innerText = "Tên tối đa 100 ký tự!!!";
+        if ($scope.ten.length > 30) {
+            document.getElementById("eTenMau").innerText = "Tên tối đa 30 ký tự!!!";
             return;
         }
-
+        // Kiểm tra tên có chứa ký tự đặc biệt
+        const containsSpecialChar = /[^a-zA-Z\s]/; // Biểu thức kiểm tra ký tự đặc biệt
+        if (containsSpecialChar.test($scope.ten)) {
+            document.getElementById('eTenMau').innerText = "Tên không được chứa ký tự đặc biệt";
+            return;
+        }
         // Gọi getAll để kiểm tra xem tên đã tồn tại chưa
         $http.get("/admin/size/get-all").then(function (response) {
             var existingKichCo = response.data;
@@ -129,34 +134,37 @@ app.controller("size-ctrl" ,function ($scope, $http){
         console.log(url)
         $http.get(url).then(function (r) {
             console.log(r.data)
-            let KichCo = r.data;
-            $scope.idKichCo=KichCo.idKichCo;
-            $scope.ma = KichCo.ma;
-            $scope.ten = KichCo.ten;
-            $scope.createBy = KichCo.createBy;
-            $scope.createDate = KichCo.createDate;
-            $scope.updateDate = KichCo.updateDate;
-            $scope.updateBy = KichCo.updateBy;
-            $scope.trangThai = KichCo.trangThai;
+            $scope.kc=r.data;
         })
     }
 
+    $scope.resetErrors = function () {
+        // Xóa các thông báo lỗi
+        document.getElementById("eTenMauUd").innerText = "";
+        document.getElementById("eTenMau").innerText = "";
+        $scope.ten="";
+    };
 
     $scope.update = function (ma) {
-        if ($scope.ten == undefined || $scope.ten.length == 0) {
+        if ($scope.kc.ten == undefined || $scope.kc.ten.length == 0) {
             document.getElementById("eTenMauUd").innerText = "Vui lòng nhập tên!!!";
             return
         }
-        if ($scope.ten.length > 100) {
-            document.getElementById("eTenMauUd").innerText = "Tên tối đa 100 ký tự!!!";
+        if ($scope.kc.ten.length > 30) {
+            document.getElementById("eTenMauUd").innerText = "Tên tối đa 30 ký tự!!!";
             return
         }
-
+        // Kiểm tra tên có chứa ký tự đặc biệt
+        const containsSpecialChar = /[^a-zA-Z\s]/; // Biểu thức kiểm tra ký tự đặc biệt
+        if (containsSpecialChar.test($scope.kc.ten)) {
+            document.getElementById('eTenMauUd').innerText = "Tên không được chứa ký tự đặc biệt";
+            return;
+        }
         $http.get("/admin/size/get-all").then(function (response) {
             var existingKichCo = response.data;
             var tenTonTai = false;
             angular.forEach(existingKichCo, function (item) {
-                if (item.ten.toLowerCase() === $scope.ten.toLowerCase() && item.ma !== ma) {
+                if (item.ten.toLowerCase() === $scope.kc.ten.toLowerCase() && item.ma !== ma) {
                     tenTonTai = true;
                 }
             });
@@ -168,7 +176,7 @@ app.controller("size-ctrl" ,function ($scope, $http){
                 var url = "/admin/size/update" + "/" + ma;
                 var KichCo = {
                     ma: ma,
-                    ten: $scope.ten
+                    ten: $scope.kc.ten
                 }
 
                 $http.post(url, KichCo).then(function (r) {

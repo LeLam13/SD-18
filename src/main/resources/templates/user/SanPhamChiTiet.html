@@ -139,7 +139,11 @@
                                 <div class="col-12">
                                     <div class="price-container">
 
-                                        <h5 class="text-danger" ng-if="price">Giá: {{price | number}}</h5>
+                                        <h5 class="text-danger" ng-if="price">
+                                            Giá bán:
+                                            <span ng-if="giaGiam" style="text-decoration: line-through; opacity: 0.6;">{{giaGiam | number}}</span>
+                                            <span>{{price | number}}</span>
+                                        </h5>
                                         <h5 class="text-danger" ng-if="!price">Liên hệ để biết giá</h5>
                                     </div>
                                 </div>

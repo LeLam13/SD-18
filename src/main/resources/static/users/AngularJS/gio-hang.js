@@ -60,13 +60,40 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
 
   $scope.getThuocTinh();
 
-  // Hàm lọc sản phẩm
+
+  $scope.isInvalidGiaMin = false;  // Biến kiểm tra lỗi cho Giá Min
+  $scope.isInvalidGiaMax = false;  // Biến kiểm tra lỗi cho Giá Max
+
+// Hàm kiểm tra khi người dùng nhập vào Giá Min
+  $scope.checkGiaMin = function() {
+    if ($scope.filterData.giaMin && (isNaN($scope.filterData.giaMin) || $scope.filterData.giaMin <= 0)) {
+      $scope.isInvalidGiaMin = true; // Đánh dấu lỗi cho Giá Min
+    } else {
+      $scope.isInvalidGiaMin = false; // Reset lỗi cho Giá Min
+    }
+  };
+
+// Hàm kiểm tra khi người dùng nhập vào Giá Max
+  $scope.checkGiaMax = function() {
+    if ($scope.filterData.giaMax && (isNaN($scope.filterData.giaMax) || $scope.filterData.giaMax <= 0)) {
+      $scope.isInvalidGiaMax = true; // Đánh dấu lỗi cho Giá Max
+    } else {
+      $scope.isInvalidGiaMax = false; // Reset lỗi cho Giá Max
+    }
+  };
+
+// Hàm lọc
   $scope.filter = function (filterData) {
     // Loại bỏ các thuộc tính không hợp lệ (rỗng/null)
     for (const [key, value] of Object.entries(filterData)) {
       if (!value || value.length === 0) {
         delete filterData[key];
       }
+    }
+
+    // Nếu có lỗi thì không gửi yêu cầu lọc
+    if ($scope.isInvalidGiaMin || $scope.isInvalidGiaMax) {
+      return; // Dừng việc gửi yêu cầu lọc
     }
 
     console.log("Dữ liệu lọc: ", filterData);
@@ -77,19 +104,12 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
       $scope.totalPages = response.data.totalPages; // Tổng số trang
       $scope.pageNumber = 0; // Reset lại trang hiện tại sau khi lọc
       console.log("Dữ liệu lọc: ", $scope.listProducts);
-
-      // Hiển thị số bộ lọc đang được áp dụng
-      // if (Object.keys(filterData).length > 0) {
-      //     document.getElementById('lengthFilter').innerText = Object.keys(filterData).length;
-      // } else {
-      //     document.getElementById('lengthFilter').innerText = "";
-      // }
-
     }).catch(function (error) {
       console.error("Lỗi khi lọc sản phẩm:", error);
       alertify.error("Không thể lọc sản phẩm. Vui lòng thử lại sau!");
     });
   };
+
 
   // Hàm xóa bộ lọc
   $scope.clearFilter = function () {
@@ -198,6 +218,32 @@ app.controller("gio-hang-ctrl", function ($scope, $http) {
       console.error("có lỗi xảy ra: ",errors)
     })
   }
+
+  $scope.searchQuery="";
+
+  $scope.handleKeyPress = function (event) {
+    if (event.key === "Enter") {
+      $scope.page = 0; // Reset về trang đầu tiên khi tìm kiếm
+      $scope.search();
+    }
+  };
+
+  $scope.search = function () {
+    if (!$scope.searchQuery || $scope.searchQuery.trim() === "") {
+      // Nếu query rỗng, gọi lại hàm getAllProduct
+      $scope.getAllProduct();
+    } else {
+      // Nếu có query, thực hiện tìm kiếm
+      const url = `/san-pham/search?page=${$scope.page}&size=${$scope.size}&query=${encodeURIComponent($scope.searchQuery)}`;
+      $http.get(url).then(resp => {
+        $scope.listProducts = resp.data.content;
+        $scope.totalPages = resp.data.totalPages;
+      }).catch(error => {
+        console.error("Lỗi khi tìm kiếm:", error);
+      });
+    }
+  };
+
 
   $scope.getAllProduct = function () {
     $http.get(`/san-pham/find-all-san-pham?page=${$scope.page}&size=${$scope.size}`).then(function (response) {
@@ -511,6 +557,7 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
   $scope.username = null;
   $scope.cart = [];
   var idGioHang = null;
+
 
 
 

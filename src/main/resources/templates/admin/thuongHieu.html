@@ -214,7 +214,13 @@
                     <!-- Modal Header -->
                     <div class="modal-header">
                         <h4 class="modal-title">Cập nhật</h4>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                                ng-click="resetErrors()"
+                        ></button>
                     </div>
                     <form>
                         <!-- Modal body -->
@@ -222,20 +228,20 @@
 
                             <div class="mb-3">
                                 <label class="form-label">Mã</label>
-                                <input type="text" disabled class="form-control" ng-model="ma">
+                                <input type="text" disabled class="form-control" ng-model="th.ma">
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Tên Thương Hiệu</label>
-                                <input type="text" class="form-control" ng-model="ten"
+                                <input type="text" class="form-control" ng-model="th.ten"
                                        onfocus="document.getElementById('erTenUd').innerText=''">
-                                <i id="erTenUd" class="er"></i>
+                                <i id="erTenUd" STYLE="color: red" class="er"></i>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                         </div>
                         <!-- Modal footer -->
                         <div class="modal-footer">
-                            <button type="button" ng-click="update(ma)" class="btn btn-danger">Cập nhật</button>
+                            <button type="button" ng-click="update(th.ma)" class="btn btn-danger">Cập nhật</button>
                         </div>
                     </form>
 
@@ -250,51 +256,57 @@
                     <!-- Modal Header -->
                     <div class="modal-header">
                         <h4 class="modal-title">Xem chi tiết</h4>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                                ng-click="resetErrors()"
+                        ></button>
                     </div>
                     <form>
                         <!-- Modal body -->
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label class="form-label">ID</label>
-                                <input type="text" ng-model="idThuongHieu" class="form-control" readonly>
+                                <input type="text" ng-model="th.idThuongHieu" class="form-control" readonly>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Mã</label>
-                                <input type="text" ng-model="ma" class="form-control" readonly>
+                                <input type="text" ng-model="th.ma" class="form-control" readonly>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Tên Thương Hiệu</label>
-                                <input type="text" ng-model="ten" class="form-control" readonly>
+                                <input type="text" ng-model="th.ten" class="form-control" readonly>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Người Tạo</label>
-                                <input type="text" ng-model="createBy" class="form-control" readonly>
+                                <input type="text" ng-model="th.createBy" class="form-control" readonly>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Ngày Tạo</label>
-                                <input type="text" ng-value="createDate | date:'yyyy-MM-dd'" class="form-control"
+                                <input type="text" ng-value="th.createDate | date:'yyyy-MM-dd'" class="form-control"
                                        readonly>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Người Cập Nhật</label>
-                                <input type="text" ng-model="updateBy" class="form-control" readonly>
+                                <input type="text" ng-model="th.updateBy" class="form-control" readonly>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Ngày Cập Nhật</label>
-                                <input type="text" ng-value="updateDate | date:'yyyy-MM-dd'" class="form-control"
+                                <input type="text" ng-value="th.updateDate | date:'yyyy-MM-dd'" class="form-control"
                                        readonly>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Trạng Thái</label>
-                                <input type="text" ng-value="trangThai?'Đang hoạt động':'Ngưng họat động'"
+                                <input type="text" ng-value="th.trangThai?'Đang hoạt động':'Ngưng họat động'"
                                        class="form-control" readonly>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
@@ -312,7 +324,13 @@
                     <!-- Modal Header -->
                     <div class="modal-header">
                         <h4 class="modal-title">Thêm Thương Hiệu</h4>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                                ng-click="resetErrors()"
+                        ></button>
                     </div>
                     <form>
                         <!-- Modal body -->
@@ -322,7 +340,7 @@
                                 <label class="form-label">Tên Thương Hiệu</label>
                                 <input type="text" class="form-control" ng-model="ten"
                                        onfocus="document.getElementById('erTen').innerText=''">
-                                <i id="erTen" class="er"></i>
+                                <i id="erTen" STYLE="color: red" class="er"></i>
                             </div>
                         </div>
                         <!-- Modal footer -->

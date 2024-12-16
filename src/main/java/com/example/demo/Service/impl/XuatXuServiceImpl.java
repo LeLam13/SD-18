@@ -71,6 +71,8 @@ public class XuatXuServiceImpl implements XuatXuService {
         } else {
             xx.setTrangThai(true);
         }
+        xx.setUpdateBy(getCurrentUsername());
+        xx.setUpdateDate(date);
         return xuatXuRepo.save(xx);
     }
 

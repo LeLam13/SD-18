@@ -90,11 +90,22 @@ app.controller("chat-lieu-ctrl", function ($scope, $http) {
             return;
         }
 
-        if ($scope.ten.length > 100) {
-            document.getElementById("eTenMau").innerText = "Tên tối đa 100 ký tự!!!";
+        if ($scope.ten.length > 30) {
+            document.getElementById("eTenMau").innerText = "Tên tối đa 30 ký tự!!!";
+            return;
+        }
+        const containsNumber = /\d/; // Biểu thức kiểm tra số
+        if (containsNumber.test($scope.ten)) {
+            document.getElementById('eTenMau').innerText = "Tên không được chứa số";
             return;
         }
 
+        // Kiểm tra tên có chứa ký tự đặc biệt
+        const containsSpecialChar = /[^a-zA-Z\s]/; // Biểu thức kiểm tra ký tự đặc biệt
+        if (containsSpecialChar.test($scope.ten)) {
+            document.getElementById('eTenMau').innerText = "Tên không được chứa ký tự đặc biệt";
+            return;
+        }
         // Gọi getAll để kiểm tra xem tên đã tồn tại chưa
         $http.get("/admin/chat-lieu/get-all").then(function (response) {
             var existingChatLieu = response.data;
@@ -130,34 +141,43 @@ app.controller("chat-lieu-ctrl", function ($scope, $http) {
         console.log(url)
         $http.get(url).then(function (r) {
             console.log(r.data)
-            let ChatLieu = r.data;
-            $scope.idChatLieu = ChatLieu.idChatLieu;
-            $scope.ma = ChatLieu.ma;
-            $scope.ten = ChatLieu.ten;
-            $scope.createBy = ChatLieu.createBy;
-            $scope.createDate = ChatLieu.createDate;
-            $scope.updateDate = ChatLieu.updateDate;
-            $scope.updateBy = ChatLieu.updateBy;
-            $scope.trangThai = ChatLieu.trangThai;
+            $scope.cl = r.data;
         })
     }
 
 
+    $scope.resetErrors = function () {
+        // Xóa các thông báo lỗi
+        document.getElementById("eTenMauUd").innerText = "";
+        document.getElementById("eTenMau").innerText = "";
+        $scope.ten="";
+    };
+
     $scope.update = function (ma) {
-        if ($scope.ten == undefined || $scope.ten.length == 0) {
+        if ($scope.cl.ten == undefined || $scope.cl.ten.length == 0) {
             document.getElementById("eTenMauUd").innerText = "Vui lòng nhập tên!!!";
             return
         }
-        if ($scope.ten.length > 100) {
-            document.getElementById("eTenMauUd").innerText = "Tên tối đa 100 ký tự!!!";
+        if ($scope.cl.ten.length > 30) {
+            document.getElementById("eTenMauUd").innerText = "Tên tối đa 30 ký tự!!!";
             return
         }
-
+        const containsNumber = /\d/; // Biểu thức kiểm tra số
+        if (containsNumber.test($scope.cl.ten)) {
+            document.getElementById('eTenMauUd').innerText = "Tên không được chứa số";
+            return;
+        }
+        // Kiểm tra tên có chứa ký tự đặc biệt
+        const containsSpecialChar = /[^a-zA-Z\s]/; // Biểu thức kiểm tra ký tự đặc biệt
+        if (containsSpecialChar.test($scope.cl.ten)) {
+            document.getElementById('eTenMauUd').innerText = "Tên không được chứa ký tự đặc biệt";
+            return;
+        }
         $http.get("/admin/chat-lieu/get-all").then(function (response) {
             var existingChatLieu = response.data;
             var tenTonTai = false;
             angular.forEach(existingChatLieu, function (item) {
-                if (item.ten.toLowerCase() === $scope.ten.toLowerCase() && item.ma !== ma) {
+                if (item.ten.toLowerCase() === $scope.cl.ten.toLowerCase() && item.ma !== ma) {
                     tenTonTai = true;
                 }
             });
@@ -169,7 +189,7 @@ app.controller("chat-lieu-ctrl", function ($scope, $http) {
                 var url = "/admin/chat-lieu/update" + "/" + ma;
                 var updateChatLieu = {
                     ma: ma,
-                    ten: $scope.ten
+                    ten: $scope.cl.ten
                 }
 
                 $http.post(url, updateChatLieu).then(function (r) {

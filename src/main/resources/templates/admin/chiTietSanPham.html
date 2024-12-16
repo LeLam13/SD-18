@@ -209,7 +209,13 @@
                     <!-- Modal Header -->
                     <div class="modal-header">
                         <h4 class="modal-title">Cập nhật</h4>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                                ng-click="resetErrors()"
+                        ></button>
                     </div>
                     <form>
                         <!-- Modal body -->
@@ -249,11 +255,13 @@
                                 <div class="col-md-4">
                                     <div class="mb-3">
                                         <label class="form-label">Giá Bán</label>
-                                        <input type="text" ng-model="spct.giaBan" class="form-control">
+                                        <input type="number" ng-model="spct.giaBan" class="form-control"  onfocus="document.getElementById('eGiaBan').innerText = ''">
+                                        <i id="eGiaBan" style="color: red" class="er"></i>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Số Lượng</label>
-                                        <input type="text" ng-model="spct.soLuong" class="form-control">
+                                        <input type="number" ng-model="spct.soLuong" class="form-control"  onfocus="document.getElementById('eSoLuong').innerText = ''">
+                                        <i id="eSoLuong" style="color: red" class="er"></i>
                                     </div>
                                     <!--                                    <div class="mb-3">-->
                                     <!--                                        <label class="form-label">Thương Hiệu</label>-->

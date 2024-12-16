@@ -217,7 +217,13 @@
                     <!-- Modal Header -->
                     <div class="modal-header">
                         <h4 class="modal-title">Thêm màu sắc</h4>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                                ng-click="resetErrors()"
+                        ></button>
                     </div>
                     <form>
                         <!-- Modal body -->
@@ -252,27 +258,33 @@
                     <!-- Modal Header -->
                     <div class="modal-header">
                         <h4 class="modal-title">Cập nhật</h4>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                                ng-click="resetErrors()"
+                        ></button>
                     </div>
                     <form>
                         <!-- Modal body -->
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label class="form-label">ID:</label>
-                                <input type="text" ng-model="idMauSac" class="form-control" readonly>
+                                <input type="text" ng-model="ms.idMauSac" class="form-control" readonly>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Mã màu:</label>
                                 <!-- Ô nhập mã màu -->
-                                <input type="color" ng-model="ma" class="form-control me-3"
+                                <input type="color" ng-model="ms.ma" class="form-control me-3"
                                        onfocus="document.getElementById('eMaMauUd').innerText = ''" readonly>
                                 <i id="eMaMauUd" style="color: red;"></i>
                                 <!-- Hình tròn hiển thị mã màu -->
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Tên Màu:</label>
-                                <input type="text" ng-model="ten" class="form-control"
+                                <input type="text" ng-model="ms.ten" class="form-control"
                                        onfocus="document.getElementById('eTenMauUd').innerText = ''">
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                                 <i id="eTenMauUd" class="er" style="color: red;"></i>
@@ -281,7 +293,7 @@
                         </div>
                         <!-- Modal footer -->
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-danger" ng-click="update(idMauSac)">Cập nhật</button>
+                            <button type="button" class="btn btn-danger" ng-click="update(ms.idMauSac)">Cập nhật</button>
                         </div>
                     </form>
                 </div>
@@ -302,50 +314,50 @@
                         <div class="modal-body">
                             <div class="mb-3">
                                 <label class="form-label">ID</label>
-                                <input type="text" ng-model="idMauSac" class="form-control" readonly>
+                                <input type="text" ng-model="ms.idMauSac" class="form-control" readonly>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Mã</label>
                                 <div class="d-flex align-items-center">
                                     <!-- Ô nhập mã màu -->
-                                    <input type="text" ng-model="ma" class="form-control me-3" readonly>
+                                    <input type="text" ng-model="ms.ma" class="form-control me-3" readonly>
 
                                     <!-- Hình tròn hiển thị mã màu -->
-                                    <div style="width: 30px; height: 30px; background-color: {{ma}}; border: 1px solid #000; border-radius: 50%;"></div>
+                                    <div style="width: 30px; height: 30px; background-color: {{ms.ma}}; border: 1px solid #000; border-radius: 50%;"></div>
                                 </div>
                             </div>
 
                             <div class="mb-3">
                                 <label class="form-label">Tên Màu</label>
-                                <input type="text" ng-model="ten" class="form-control" readonly>
+                                <input type="text" ng-model="ms.ten" class="form-control" readonly>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Người Tạo</label>
-                                <input type="text" ng-model="createBy" class="form-control" readonly>
+                                <input type="text" ng-model="ms.createBy" class="form-control" readonly>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Ngày Tạo</label>
-                                <input type="text" ng-value="createDate | date:'yyyy-MM-dd'" class="form-control"
+                                <input type="text" ng-value="ms.createDate | date:'yyyy-MM-dd'" class="form-control"
                                        readonly>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Người Cập Nhật</label>
-                                <input type="text" ng-model="updateBy" class="form-control" readonly>
+                                <input type="text" ng-model="ms.updateBy" class="form-control" readonly>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Ngày Cập Nhật</label>
-                                <input type="text" ng-value="updateDate | date:'yyyy-MM-dd'" class="form-control"
+                                <input type="text" ng-value="ms.updateDate | date:'yyyy-MM-dd'" class="form-control"
                                        readonly>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Trạng Thái</label>
-                                <input type="text" ng-value="trangThai ? 'Đang hoạt động' : 'Ngưng hoạt động'"
+                                <input type="text" ng-value="ms.trangThai ? 'Đang hoạt động' : 'Ngưng hoạt động'"
                                        class="form-control" readonly>
                                 <!-- <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div> -->
                             </div>

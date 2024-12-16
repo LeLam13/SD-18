@@ -73,6 +73,8 @@ public class ChatLieuServiceImpl implements ChatLieuService {
         else{
             cl.setTrangThai(true);
         }
+        cl.setUpdateBy(getCurrentUsername());
+        cl.setUpdateDate(date);
         return chatLieuRepo.save(cl);
     }
 

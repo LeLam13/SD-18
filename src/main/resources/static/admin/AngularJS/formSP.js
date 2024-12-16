@@ -315,68 +315,86 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
 
     $scope.create = function () {
         var hasError = false;
+        $scope.errorMessages = {};
+
+        // Kiểm tra lỗi cho từng màu sắc (tables)
+        if ($scope.tables.length === 0 || !$scope.tables.some(table => table.mau)) {
+            $scope.errorMessages.mauSac = "Vui lòng chọn ít nhất một màu sắc!";
+            hasError = true;
+        } else {
+            delete $scope.errorMessages.mauSac;
+        }
 
         // Kiểm tra lỗi cho từng table và từng size
         $scope.tables.forEach(function (table) {
+            table.errorMessages = table.errorMessages || {};
+
+            // Kiểm tra kích cỡ
+            if (table.size.length === 0) {
+                table.errorMessages.size = "Vui lòng chọn ít nhất một kích cỡ!";
+                hasError = true;
+            } else {
+                delete table.errorMessages.size;
+            }
+
+            // Kiểm tra ảnh
+            if (!table.img || !table.img.imageSrc) {
+                table.errorMessages.img = "Vui lòng chọn ảnh!";
+                hasError = true;
+            } else {
+                delete table.errorMessages.img;
+            }
+
+            // Kiểm tra lỗi trong từng kích cỡ
             table.size.forEach(function (size) {
                 var sizeForm = $scope.form[table.mau.idMauSac] && $scope.form[table.mau.idMauSac][size.idKichCo];
                 if (sizeForm) {
-
                     sizeForm.errorMessages = sizeForm.errorMessages || {};
 
-                    // Kiểm tra lỗi cho từng input
+                    // Kiểm tra số lượng
                     if (sizeForm.soLuong <= 0 || sizeForm.soLuong == null) {
                         sizeForm.errorMessages.soLuong = sizeForm.soLuong == null
                             ? "Số lượng không được để trống"
                             : "Số lượng phải lớn hơn 0";
                         hasError = true;
                     } else {
-                        delete sizeForm.errorMessages.soLuong;  // Xóa lỗi khi giá trị hợp lệ
+                        delete sizeForm.errorMessages.soLuong;
                     }
 
+                    // Kiểm tra giá nhập
                     if (sizeForm.giaNhap <= 0 || sizeForm.giaNhap == null) {
                         sizeForm.errorMessages.giaNhap = sizeForm.giaNhap == null
                             ? "Giá nhập không được để trống"
                             : "Giá nhập phải lớn hơn 0";
                         hasError = true;
                     } else {
-                        delete sizeForm.errorMessages.giaNhap;  // Xóa lỗi khi giá trị hợp lệ
+                        delete sizeForm.errorMessages.giaNhap;
                     }
 
+                    // Kiểm tra giá bán
                     if (sizeForm.giaBan <= 0 || sizeForm.giaBan == null) {
                         sizeForm.errorMessages.giaBan = sizeForm.giaBan == null
                             ? "Giá bán không được để trống"
                             : "Giá bán phải lớn hơn 0";
                         hasError = true;
                     } else {
-                        delete sizeForm.errorMessages.giaBan;  // Xóa lỗi khi giá trị hợp lệ
+                        delete sizeForm.errorMessages.giaBan;
                     }
 
+                    // Kiểm tra giá nhập phải nhỏ hơn giá bán
                     if (sizeForm.giaNhap >= sizeForm.giaBan) {
                         sizeForm.errorMessages.giaNhap = "Giá nhập phải nhỏ hơn giá bán";
                         sizeForm.errorMessages.giaBan = "Giá bán phải lớn hơn giá nhập";
                         hasError = true;
                     } else {
-                        delete sizeForm.errorMessages.giaNhap;  // Xóa lỗi khi giá trị hợp lệ
-                        delete sizeForm.errorMessages.giaBan;  // Xóa lỗi khi giá trị hợp lệ
+                        delete sizeForm.errorMessages.giaNhap;
+                        delete sizeForm.errorMessages.giaBan;
                     }
                 }
             });
         });
 
-        // Kiểm tra ảnh đã được chọn chưa
-        $scope.tables.forEach(function (table) {
-            if (!table.img || !table.img.imageSrc) {
-                // Nếu không có ảnh, thêm lỗi
-                table.errorMessages = table.errorMessages || {};
-                table.errorMessages.img = "Ảnh không được để trống!";
-                hasError = true;
-            } else {
-                delete table.errorMessages.img;  // Xóa lỗi khi ảnh đã được chọn
-            }
-        });
-
-        // Nếu có lỗi, không tiếp tục xử lý
+        // Nếu có lỗi, dừng lại
         if (hasError) return;
 
         // Kiểm tra sự tồn tại của sản phẩm chi tiết trong cơ sở dữ liệu
@@ -391,8 +409,8 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
                             idKichCo: size.idKichCo
                         }
                     }).then(function (response) {
-                        console.log("check spct:", response.data)
                         if (response.data) {
+<<<<<<< HEAD
                             // Kiểm tra nếu sizeForm tồn tại trước khi thay đổi thuộc tính
                             if (!sizeForm.errorMessages) {
                                 sizeForm.errorMessages = {};
@@ -402,6 +420,9 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
 
                             sizeForm.errorMessages.exists = "Sản phẩm chi tiết đã tồn tại!";
 
+=======
+                            sizeForm.errorMessages.exists = "Đã tồn tại";
+>>>>>>> feature/sanpham
                             hasError = true;
                         }
                     }).catch(function (err) {
@@ -417,7 +438,7 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
 
         // Chờ kiểm tra sự tồn tại hoàn tất
         Promise.all(checkExistPromises).then(function () {
-            if (hasError) return; // Nếu có lỗi tồn tại, không tiếp tục
+            if (hasError) return;
 
             // Tiếp tục thực hiện các bước tạo sản phẩm chi tiết
             var SanPhamChiTietList = [];
@@ -456,8 +477,9 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
                 });
 
                 if (SanPhamChiTietList.length > 0) {
-                    $http.post("/admin/san-pham/chi-tiet/add", SanPhamChiTietList).then(function (r) {
+                    $http.post("/admin/san-pham/chi-tiet/add", SanPhamChiTietList).then(function (response) {
                         alert("Thêm sản phẩm chi tiết thành công!");
+                        $scope.viewChiTiet();
                     }).catch(function (err) {
                         console.error("Thêm sản phẩm không thành công", err);
                     });
@@ -474,6 +496,22 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
 
 
 
+    $scope.back = function () {
+        window.location.href = '/admin/san-pham';
+    };
+
+    $scope.viewChiTiet = function () {
+        // Chuyển hướng đến trang chi tiết sản phẩm
+        location.href = `/admin/san-pham/` + idSanPham;
+    };
+
+    $scope.confirmUpdateSize = function (table, size) {
+        // Hiển thị hộp thoại xác nhận
+        var confirmed = confirm("Bạn có chắc chắn muốn cập nhật kích thước này?");
+        if (confirmed) {
+            $scope.updateSize(table, size);
+        }
+    };
 
 
     $scope.updateSize = function (table, size) {

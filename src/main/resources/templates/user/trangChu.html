@@ -81,6 +81,7 @@
             transform: translateY(0);
         }
     }
+
     .tenmenu {
         list-style: none; /* Bỏ dấu chấm của danh sách */
         padding: 0;
@@ -111,7 +112,6 @@
         transform: translateY(2px); /* Dịch xuống nhẹ khi hover */
         color: #5e5b5b; /* Màu đen đậm hoàn toàn khi hover */
     }
-
 
 
     .marquee-container {
@@ -152,18 +152,19 @@
         margin: 40px 0; /* Khoảng trắng phía trên và dưới để tách biệt */
         line-height: 1.5; /* Tăng khoảng cách dòng, giúp chữ thoáng hơn */
     }
+
     /* Tăng kích thước chữ và làm chữ đậm hơn */
     .intro-title {
-        color: #000000;  /* Màu chữ tối */
-        font-size: 4rem;  /* Tăng kích thước chữ */
-        font-weight: bold;  /* Làm chữ đậm */
+        color: #000000; /* Màu chữ tối */
+        font-size: 4rem; /* Tăng kích thước chữ */
+        font-weight: bold; /* Làm chữ đậm */
     }
 
     /* Tăng kích thước và đậm cho chữ phụ */
     .intro-subtitle {
-        color: #000000;  /* Màu chữ tối cho phần tiêu đề phụ */
-        font-size: 2.5rem;  /* Tăng kích thước chữ cho phụ đề */
-        font-weight: bold;  /* Làm chữ đậm */
+        color: #000000; /* Màu chữ tối cho phần tiêu đề phụ */
+        font-size: 2.5rem; /* Tăng kích thước chữ cho phụ đề */
+        font-weight: bold; /* Làm chữ đậm */
     }
     /* Footer Styles */
     .footer {
@@ -319,14 +320,14 @@
 
                     <a href="trang-chu" class="logo">
 
-                    <a ng-click="viewHome()" style="cursor: pointer;" class="logo">
+                        <a ng-click="viewHome()" style="cursor: pointer;" class="logo">
 
-                        <img src="/assets/img/img.png" alt="Eighteen Polo Logo" width="60" height="25">
+                            <img src="/assets/img/img.png" alt="Eighteen Polo Logo" width="60" height="25">
+                        </a>
+
                     </a>
 
-                    </a>
-
-                    <a class="tenlogo" href="trang-chu">Eighteen Polo</a>
+                    <a class="tenlogo" ng-click="viewHome()">Eighteen Polo</a>
 
                 </div><!-- End .header-left -->
 
@@ -350,6 +351,20 @@
                         </ul><!-- End .menu -->
                     </nav><!-- End .main-nav -->
 
+<<<<<<< HEAD
+=======
+                    <div class="header-search">
+                        <a class="search-toggle" role="button"><i class="icon-search"></i></a>
+                        <div class="header-search-wrapper me-2">
+                            <input type="search" class="form-control"
+                                   ng-model="searchQuery"
+                                   ng-keypress="handleKeyPress($event)"
+                                   placeholder="Search in ..."
+                                   required>
+                        </div><!-- End .header-search-wrapper -->
+                    </div><!-- End .header-search -->
+                    <!-- End .header-search -->
+>>>>>>> feature/sanpham
 
 
 
@@ -455,6 +470,7 @@
                             }
                         }
                     }'>
+<<<<<<< HEAD
                 <div class="intro-slide" style="background-image: url(/assets/img/anh6.webp);">
 <!--                    <div class="container intro-content">-->
 <!--                        <h3 class="intro-title highlighted-text">Ngày Hội Black Friday</h3>&lt;!&ndash; End .h3 intro-subtitle &ndash;&gt;-->
@@ -464,6 +480,18 @@
 <!--                            <i class="icon-long-arrow-right"></i>-->
 <!--                        </a>-->
 <!--                    </div>&lt;!&ndash; End .intro-content &ndash;&gt;-->
+=======
+                <div class="intro-slide" style="background-image: url(/assets/img/anh5.webp);">
+                    <div class="container intro-content">
+                        <h3 class="intro-title highlighted-text">Ngày Hội Black Friday</h3>
+                        <!-- End .h3 intro-subtitle -->
+                        <h1 class="intro-title highlighted-text">Tất cả <br>Giảm 50%</h1><!-- End .intro-title -->
+                        <a href="category.html" class="btn btn-outline-primary-2">
+                            <span>Mua ngay</span>
+                            <i class="icon-long-arrow-right"></i>
+                        </a>
+                    </div><!-- End .intro-content -->
+>>>>>>> feature/sanpham
                 </div><!-- End .intro-slide -->
 
                 <div class="intro-slide" style="background-image: url(/assets/img/anh5.webp);">
@@ -496,20 +524,29 @@
                 <div class="filter-area-wrapper">
                     <div class="row">
                         <div class="col-sm-6">
-<!--                            <div class="mb-3">-->
-<!--                                <label>Tên Sản Phẩm</label>-->
-<!--                                <input type="text" ng-model="filterData.ten"-->
-<!--                                       class="form-control"/>-->
-<!--                            </div>-->
+                            <!--                            <div class="mb-3">-->
+                            <!--                                <label>Tên Sản Phẩm</label>-->
+                            <!--                                <input type="text" ng-model="filterData.ten"-->
+                            <!--                                       class="form-control"/>-->
+                            <!--                            </div>-->
                             <div class="mb-3">
                                 <label>Giá min</label>
-                                <input type="text" ng-model="filterData.giaMin"
-                                       class="form-control"/>
+                                <input type="text" ng-model="filterData.giaMin" class="form-control"
+                                       ng-blur="checkGiaMin()" />
+                                <!-- Thông báo lỗi cho Giá min -->
+                                <div ng-if="isInvalidGiaMin" class="alert alert-danger">
+                                    Vui lòng nhập giá trị hợp lệ cho Giá Min (số dương).
+                                </div>
                             </div>
+
                             <div class="mb-3">
                                 <label>Giá Max</label>
-                                <input type="text" ng-model="filterData.giaMax"
-                                       class="form-control"/>
+                                <input type="text" ng-model="filterData.giaMax" class="form-control"
+                                       ng-blur="checkGiaMax()" />
+                                <!-- Thông báo lỗi cho Giá Max -->
+                                <div ng-if="isInvalidGiaMax" class="alert alert-danger">
+                                    Vui lòng nhập giá trị hợp lệ cho Giá Max (số dương).
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label>Xuất xứ</label>
@@ -522,15 +559,15 @@
                             </div>
                         </div>
                         <div class="col-sm-6">
-<!--                            <div class="mb-3">-->
-<!--                                <label>Màu sắc</label>-->
-<!--                                <select class="form-control" ng-model="filterData.idMauSac">-->
-<!--                                    <option value="" selected>Tất cả</option>-->
-<!--                                    <option ng-repeat="m in mauSac" value="{{m.idMauSac}}">-->
-<!--                                        {{m.ten}}-->
-<!--                                    </option>-->
-<!--                                </select>-->
-<!--                            </div>-->
+                            <!--                            <div class="mb-3">-->
+                            <!--                                <label>Màu sắc</label>-->
+                            <!--                                <select class="form-control" ng-model="filterData.idMauSac">-->
+                            <!--                                    <option value="" selected>Tất cả</option>-->
+                            <!--                                    <option ng-repeat="m in mauSac" value="{{m.idMauSac}}">-->
+                            <!--                                        {{m.ten}}-->
+                            <!--                                    </option>-->
+                            <!--                                </select>-->
+                            <!--                            </div>-->
                             <div class="mb-3">
                                 <label>Thương Hiệu</label>
                                 <select class="form-control"
@@ -561,12 +598,12 @@
                             </div>
                         </div>
                         <li>
-                        <button class="btn btn-danger" type="button" style="float: left"
-                                ng-click="clearFilter()">Bỏ lọc
-                        </button>
-                        <button class="btn btn-primary" type="button" style="float: right"
-                                ng-click="filter(filterData)">Lọc
-                        </button>
+                            <button class="btn btn-danger" type="button" style="float: left"
+                                    ng-click="clearFilter()">Bỏ lọc
+                            </button>
+                            <button class="btn btn-primary" type="button" style="float: right"
+                                    ng-click="filter(filterData)">Lọc
+                            </button>
                         </li>
                     </div><!-- End .row -->
                 </div><!-- End .filter-area-wrapper -->
@@ -583,7 +620,7 @@
                         <div class="product-media"
                              style="width: 100%; aspect-ratio: 4 / 3; background-color: #f9f9f9; border-radius: 8px; overflow: hidden; display: flex; justify-content: center; align-items: center; position: relative;">
                             <a
-                               style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;">
+                                    style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;">
                                 <img
                                         ng-src="/assets/img/{{products.hinhAnh}}"
                                         alt="Ảnh không tồn tại"
@@ -603,19 +640,19 @@
 
                             <!-- Mã màu và tên màu nằm cạnh nhau -->
                             <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px;">
-<!--                                &lt;!&ndash; Màu sắc &ndash;&gt;-->
-<!--                                <div style="width: 30px; height: 30px; background-color: {{products.idMauSac.ma}}; border: 1px solid #000; border-radius: 50%;"></div>-->
-<!--                                &lt;!&ndash; Tên màu &ndash;&gt;-->
-<!--                                <span>{{products.idMauSac.ten}}</span>-->
+                                <!--                                &lt;!&ndash; Màu sắc &ndash;&gt;-->
+                                <!--                                <div style="width: 30px; height: 30px; background-color: {{products.idMauSac.ma}}; border: 1px solid #000; border-radius: 50%;"></div>-->
+                                <!--                                &lt;!&ndash; Tên màu &ndash;&gt;-->
+                                <!--                                <span>{{products.idMauSac.ten}}</span>-->
                             </div>
                         </div><!-- End .product-body -->
 
                         <!-- Nút thêm vào giỏ hàng -->
-<!--                        ng-click="addProductIntocart(products.idSanPhamChiTiet)"-->
+                        <!--                        ng-click="addProductIntocart(products.idSanPhamChiTiet)"-->
                         <div class="product-action t-2">
 
-<!--&lt;!&ndash;                            <a href="/view-san-pham-chi-tiet/{{products.idSanPhamChiTiet}}"> Add to Cart</a>&ndash;&gt;-->
-<!--                            <button ng-click="addProductIntocart(products.idSanPhamChiTiet)"-->
+                            <!--&lt;!&ndash;                            <a href="/view-san-pham-chi-tiet/{{products.idSanPhamChiTiet}}"> Add to Cart</a>&ndash;&gt;-->
+                            <!--                            <button ng-click="addProductIntocart(products.idSanPhamChiTiet)"-->
 
                             <button
                                     ng-click="viewChiTiet(products.idSanPham)"

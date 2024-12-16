@@ -38,4 +38,6 @@ public interface SanPhamService {
     public Page<SanPham> filterProducts(FilterRequestDTO filterRequest, Pageable pageable);
 
     public Page<SanPham> filterProductsView(FilterRequestDTO filterRequest, Pageable pageable);
+
+    public Page<SanPham> search(String query, Pageable pageable);
 }

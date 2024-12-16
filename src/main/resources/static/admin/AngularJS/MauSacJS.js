@@ -133,11 +133,21 @@ app.controller("mau-sac-ctrl", function ($scope, $http,$sce,$timeout) {
         if (!mauSac.ten) {
             showError("eTenMau", "Vui lòng nhập tên!!!");
             check = false;
-        } else if (mauSac.ten.length > 100) {
-            showError("eTenMau", "Tên tối đa 100 ký tự!!!");
+        } else if (mauSac.ten.length > 30) {
+            showError("eTenMau", "Tên tối đa 30 ký tự!!!");
             check = false;
         }
-
+        const containsNumber = /\d/; // Biểu thức kiểm tra số
+        if (containsNumber.test($scope.ten)) {
+            showError("eTenMau", "Tên không được chứa số!!!");
+            check = false;
+        }
+        // Kiểm tra tên có chứa ký tự đặc biệt
+        const containsSpecialChar = /[^a-zA-Z\s]/; // Biểu thức kiểm tra ký tự đặc biệt
+        if (containsSpecialChar.test($scope.ten)) {
+            showError("eTenMau", "Tên không được chứa ký tự đặc biệt");
+            check = false;
+        }
         if (!check) return; // Dừng nếu có lỗi
 
         // Gọi getAll để kiểm tra xem tên đã tồn tại chưa
@@ -169,18 +179,20 @@ app.controller("mau-sac-ctrl", function ($scope, $http,$sce,$timeout) {
         console.log(url)
         $http.get(url).then(function (r) {
             console.log(r.data)
-            let mauSac = r.data;
-            $scope.idMauSac = mauSac.idMauSac;
-            $scope.ma = mauSac.ma;
-            $scope.ten = mauSac.ten;
-            $scope.createBy = mauSac.createBy;
-            $scope.createDate = mauSac.createDate;
-            $scope.updateDate = mauSac.updateDate;
-            $scope.updateBy = mauSac.updateBy;
-            $scope.trangThai = mauSac.trangThai;
+            $scope.ms = r.data;
         })
     }
 
+
+    $scope.resetErrors = function () {
+        // Xóa các thông báo lỗi
+        document.getElementById("eTenMau").innerText = "";
+        document.getElementById("eTenMauUd").innerText = "";
+        document.getElementById("eMaMau").innerText = "";
+        document.getElementById("eMaMauUd").innerText = "";
+        $scope.ten="";
+        $scope.ma="";
+    };
 
     $scope.update = function (idMauSac) {
         let check = true;
@@ -194,7 +206,7 @@ app.controller("mau-sac-ctrl", function ($scope, $http,$sce,$timeout) {
         showError("eTenMauUd", "");
 
         // Kiểm tra mã
-        if ($scope.ma == undefined || $scope.ma.length == 0) {
+        if ($scope.ms.ma == undefined || $scope.ms.ma.length == 0) {
             showError("eMaMauUd", "Vui lòng chọn mã!!!");
             check =
 
@@ -202,14 +214,24 @@ app.controller("mau-sac-ctrl", function ($scope, $http,$sce,$timeout) {
         }
 
         // Kiểm tra tên
-        if ($scope.ten == undefined || $scope.ten.length == 0) {
+        if ($scope.ms.ten == undefined || $scope.ms.ten.length == 0) {
             showError("eTenMauUd", "Vui lòng nhập tên!!!");
             check = false;
-        } else if ($scope.ten.length > 100) {
-            showError("eTenMauUd", "Tên tối đa 100 ký tự!!!");
+        } else if ($scope.ms.ten.length > 30) {
+            showError("eTenMauUd", "Tên tối đa 30 ký tự!!!");
             check = false;
         }
-
+        const containsNumber = /\d/; // Biểu thức kiểm tra số
+        if (containsNumber.test($scope.ms.ten)) {
+            showError("eTenMauUd", "Tên không được chứa số!!!");
+            check = false;
+        }
+        // Kiểm tra tên có chứa ký tự đặc biệt
+        const containsSpecialChar = /[^a-zA-Z\s]/; // Biểu thức kiểm tra ký tự đặc biệt
+        if (containsSpecialChar.test($scope.ms.ten)) {
+            showError("eTenMauUd", "Tên không được chứa ký tự đặc biệt");
+            check = false;
+        }
         if (!check) return; // Dừng nếu có lỗi
 
 
@@ -217,7 +239,7 @@ app.controller("mau-sac-ctrl", function ($scope, $http,$sce,$timeout) {
             var existingMauSac = response.data;
             var tenTonTai = false;
             angular.forEach(existingMauSac, function (item) {
-                if (item.ten.toLowerCase() === $scope.ten.toLowerCase() && item.idMauSac !== idMauSac) {
+                if (item.ten.toLowerCase() === $scope.ms.ten.toLowerCase() && item.idMauSac !== idMauSac) {
                     tenTonTai = true;
                 }
             });
@@ -229,8 +251,8 @@ app.controller("mau-sac-ctrl", function ($scope, $http,$sce,$timeout) {
                 var url = "/admin/mau-sac/update" + "/" + idMauSac;
                 var updateMau = {
                     idMauSac:idMauSac,
-                    ma: $scope.ma,
-                    ten: $scope.ten
+                    ma: $scope.ms.ma,
+                    ten: $scope.ms.ten
                 }
                 console.log("data", updateMau);
                 $http.post(url, updateMau).then(function (r) {

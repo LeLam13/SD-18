@@ -146,7 +146,7 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
 
             HinhAnh hinhAnh = hinhAnhRepo.findByIdHinhAnh(dto.getIdHinhAnh());
             chiTiet.setIdHinhAnh(hinhAnh);
-            chiTiet.setUpdateBy(getCurrentUsername());
+            chiTiet.setCreateBy(getCurrentUsername());
             sanPhamChiTietList.add(chiTiet);
         }
 
@@ -187,6 +187,8 @@ public class SanPhamChiTietServiceImpl implements SanPhamChiTietService {
         } else {
             ms.setTrangThai(true);
         }
+        ms.setUpdateBy(getCurrentUsername());
+        ms.setUpdateDate(date);
         return sanPhamChiTietRepo.save(ms);
     }
 

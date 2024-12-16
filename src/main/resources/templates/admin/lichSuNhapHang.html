@@ -76,6 +76,7 @@
                                                 ng-options="mauSacCT as mauSacCT.ten for mauSacCT in mauSacCT track by mauSacCT.idMauSac">
                                             <option value="" disabled selected>Chọn màu sắc</option>
                                         </select>
+                                        <i id="eMauSacNhap" style="color: red;"></i>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Kích Cỡ:</label>
@@ -84,15 +85,18 @@
                                                 ng-options="kichCoCT as kichCoCT.ten for kichCoCT in filteredKichCo track by kichCoCT.idKichCo">
                                             <option value="" disabled selected>Chọn kích cỡ</option>
                                         </select>
+                                        <i id="eKichCoNhap" style="color: red;"></i>
                                     </div>
 
                                     <div class="mb-3">
                                         <label class="form-label">Giá Nhập</label>
                                         <input type="number" ng-model="giaNhapNhap" class="form-control">
+                                        <i id="eGiaNhapNhap" style="color: red;"></i>
                                     </div>
                                     <div class="mb-3">
                                         <label class="form-label">Số Lượng</label>
                                         <input type="number" ng-model="soLuongNhap" class="form-control">
+                                        <i id="eSoLuongNhap" style="color: red;"></i>
                                     </div>
 
 
