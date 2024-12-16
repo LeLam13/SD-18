@@ -308,7 +308,7 @@ app.controller("chiTiet-ctrl",function ($scope,$location, $http,$interval,$sce, 
                 .then(function(response) {
                     // Cập nhật idTrangThai từ phản hồi server
                     const newTrangThai = response.data.trangThai.idTrangThai;
-
+                    $scope.currentStatus = newTrangThai;
                     // Chỉ cập nhật giao diện nếu trạng thái thay đổi
                     if ($scope.idTrangThai !== newTrangThai) {
                         $scope.idCheckTrangThai = newTrangThai;
