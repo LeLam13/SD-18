@@ -101,10 +101,11 @@ app.controller('ctrl', function ($scope, $http) {
         }
 
         // Kiểm tra tên có chứa ký tự đặc biệt
-        const containsSpecialChar = /[^a-zA-Z\s]/; // Biểu thức kiểm tra ký tự đặc biệt
+        // Kiểm tra tên có chứa ký tự đặc biệt
+        const containsSpecialChar = /[^a-zA-Z0-9À-ỹ\s]/;
         if (containsSpecialChar.test($scope.ten)) {
             document.getElementById('eTenMau').innerText = "Tên không được chứa ký tự đặc biệt";
-            isValid = false;
+            isValid =false;
         }else {
             document.getElementById("eTenMau").innerText = "";
         }
@@ -242,11 +243,11 @@ app.controller('ctrl', function ($scope, $http) {
         } else {
             document.getElementById("eTenMauUd").innerText = "";
         }
-        // Kiểm tra tên có chứa ký tự đặc biệt
-        const containsSpecialChar = /[^a-zA-Z\s]/; // Biểu thức kiểm tra ký tự đặc biệt
+        // Biểu thức kiểm tra ký tự đặc biệt (loại trừ cả chữ và số)
+        const containsSpecialChar = /[^a-zA-Z0-9À-ỹ\s]/;
         if (containsSpecialChar.test($scope.sp.ten)) {
             document.getElementById('eTenMauUd').innerText = "Tên không được chứa ký tự đặc biệt";
-            isValid = false;
+            return;
         }else {
             document.getElementById("eTenMauUd").innerText = "";
         }

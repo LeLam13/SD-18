@@ -1,6 +1,8 @@
 package com.example.demo.controller.admin;
 
 import com.example.demo.Service.KhachHangService;
+import com.example.demo.dto.reponse.CustomException;
+import com.example.demo.dto.reponse.ErrorResponseDTO;
 import com.example.demo.dto.reponse.KhachHangResponseDTO;
 import com.example.demo.dto.reponse.LichSuMuaHangResponseDTO;
 import com.example.demo.dto.request.KhachHangRequestDTO;
@@ -58,13 +60,21 @@ public class KhachHangController {
 
     @PostMapping("/api/add")
     @ResponseBody
-    public ResponseEntity<KhachHangResponseDTO> addKhachHang(
+    public ResponseEntity<?> addKhachHang(
             @RequestBody @Valid KhachHangRequestDTO khachHangRequestDTO) {
         try {
+            // Trả về KhachHangResponseDTO khi thành công
             KhachHangResponseDTO savedKhachHang = khachHangService.addKhachHang(khachHangRequestDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedKhachHang);
+        } catch (CustomException ex) {
+            // Trả về ErrorResponseDTO khi có lỗi
+            ErrorResponseDTO errorResponse = new ErrorResponseDTO(ex.getMessage(), ex.getErrorCode());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorResponse);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+            // Trả về lỗi 500 cho các trường hợp lỗi không xác định
+            ErrorResponseDTO errorResponse = new ErrorResponseDTO("Có lỗi hệ thống. Vui lòng thử lại sau.",
+                    "internal_server_error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
     }
 
@@ -78,11 +88,31 @@ public class KhachHangController {
             khachhang existingKhachHang = khachHangRepo.findById(id.intValue())
                     .orElseThrow(() -> new RuntimeException("Customer with ID " + id + " not found"));
 
-            // Update fields
-            existingKhachHang.setHoTen(khachHangRequestDTO.getHoTen());
-            existingKhachHang.setSoDienThoai(khachHangRequestDTO.getSoDienThoai());
-            existingKhachHang.setDiaChi(khachHangRequestDTO.getDiaChi());
-            existingKhachHang.setEmail(khachHangRequestDTO.getEmail()); // Update email
+            // Validate and update customer fields
+            if (khachHangRequestDTO.getHoTen() != null && !khachHangRequestDTO.getHoTen().trim().isEmpty()) {
+                existingKhachHang.setHoTen(khachHangRequestDTO.getHoTen());
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Họ tên không được để trống.");
+            }
+
+            if (khachHangRequestDTO.getSoDienThoai() != null
+                    && !khachHangRequestDTO.getSoDienThoai().trim().isEmpty()) {
+                existingKhachHang.setSoDienThoai(khachHangRequestDTO.getSoDienThoai());
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Số điện thoại không được để trống.");
+            }
+
+            if (khachHangRequestDTO.getDiaChi() != null && !khachHangRequestDTO.getDiaChi().trim().isEmpty()) {
+                existingKhachHang.setDiaChi(khachHangRequestDTO.getDiaChi());
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Địa chỉ không được để trống.");
+            }
+
+            if (khachHangRequestDTO.getEmail() != null && !khachHangRequestDTO.getEmail().trim().isEmpty()) {
+                existingKhachHang.setEmail(khachHangRequestDTO.getEmail());
+            } else {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email không được để trống.");
+            }
 
             // Validate and update gender
             Boolean gioiTinh = khachHangRequestDTO.getGioiTinh();
@@ -93,8 +123,12 @@ public class KhachHangController {
 
             // Validate and update date of birth
             try {
-                LocalDate ngaySinh = LocalDate.parse(khachHangRequestDTO.getNgaySinh());
-                existingKhachHang.setNgaySinh(ngaySinh);
+                if (khachHangRequestDTO.getNgaySinh() != null) {
+                    LocalDate ngaySinh = LocalDate.parse(khachHangRequestDTO.getNgaySinh());
+                    existingKhachHang.setNgaySinh(ngaySinh);
+                } else {
+                    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Ngày sinh không được để trống.");
+                }
             } catch (DateTimeParseException e) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body("Ngày sinh không hợp lệ. Định dạng đúng là yyyy-MM-dd.");
@@ -112,7 +146,7 @@ public class KhachHangController {
             responseDTO.setDiaChi(updatedKhachHang.getDiaChi());
             responseDTO.setGioiTinh(updatedKhachHang.isGioiTinh());
             responseDTO.setNgaySinh(updatedKhachHang.getNgaySinh().toString());
-            responseDTO.setEmail(updatedKhachHang.getEmail()); // Add email to response DTO
+            responseDTO.setEmail(updatedKhachHang.getEmail());
 
             return ResponseEntity.ok(responseDTO);
         } catch (RuntimeException e) {

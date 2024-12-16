@@ -604,10 +604,6 @@ app.controller("banhang-ctrl", function ($scope, $http,$sce,$timeout) {
     };
 
     $scope.openModalKhuyenMai = function() {
-        if(selectedId === null){
-            $scope.showNotification("Chưa chọn đơn hàng!","error");
-            return;
-        }
         $scope.getKhuyenmai();
         $('#show-modal-khuyen-mai').modal('show');
     };
@@ -672,7 +668,7 @@ app.controller("banhang-ctrl", function ($scope, $http,$sce,$timeout) {
         }).then(function(response) {
             //console.log('Sản phẩm thêm thành công');
             console.log('Sản phẩm thêm: ',response.data);
-             $scope.getProducts();
+            $scope.getProducts();
         }).catch(function(error) {
             console.error('Có lỗi xảy ra:', error);
         });
@@ -743,7 +739,7 @@ app.controller("banhang-ctrl", function ($scope, $http,$sce,$timeout) {
             tongTienGiam = $scope.getSum() * tienGiam;
         } else {
             let tienGiam = parseFloat($scope.discountRate);
-            tongTienGiam = $scope.getSum() - tienGiam;
+            tongTienGiam = tienGiam;
         }
         return tongTienGiam;
     }
@@ -784,7 +780,7 @@ app.controller("banhang-ctrl", function ($scope, $http,$sce,$timeout) {
             var discourate =  response.data.soTienToiThieu;
             let getDiscourate = parseFloat(discourate);
             if($scope.getSum() < getDiscourate){
-                $scope.showErrrorsMes("Giá Tiền Không Phù Hợp Với Mức Áp Dụng!");
+                $scope.showErrrorsMes1("Giá Tiền Không Phù Hợp Với Mức Áp Dụng!");
                 return;
             }
             $scope.khuyenMaiById = response.data;

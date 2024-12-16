@@ -20,7 +20,7 @@ public class KhuyenMaiServiceImpl implements KhuyenMaiService {
 
     @Override
     public Page<KhuyenMai> timKiemPhanTrang(int page, String search, String trangThai) {
-        Pageable pageable = PageRequest.of(page, 10); // 10 items per page
+        Pageable pageable = PageRequest.of(page, 3); // 10 items per page
         if (trangThai.equals("all")) {
             return khuyenMaiRepository.findByTenKhuyenMaiContaining(search, pageable);
         } else {
