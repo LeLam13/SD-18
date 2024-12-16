@@ -822,7 +822,7 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
       sumPromotionAmount = $scope.getSum() * reduceMoney;
     } else {
       let reduceMoney = parseFloat($scope.discountRate);
-      sumPromotionAmount = $scope.getSum() - reduceMoney;
+      sumPromotionAmount =  reduceMoney;
     }
     return sumPromotionAmount;
   }
@@ -1054,7 +1054,7 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
 
   //tăng số lượng
   $scope.soLuongPlus = function (orderProduct) {
-    console.log("orderProduct1: ", orderProduct);
+    console.log("orderProduct check tăng: ", orderProduct);
     // Tìm sản phẩm trong danh sách sản phẩm có sẵn
     let availableProduct = null;
     if (!$scope.username) {
@@ -1064,8 +1064,15 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
     }
 
     // Tìm sản phẩm trong giỏ hàng (itemsOrder)
-    let product = $scope.itemsOrder.find(item => item.idSanPhamChiTiet === orderProduct.idSanPhamChiTiet);
+    let product = null;
+    if (!$scope.username){
+      product = $scope.itemsOrder.find(item => item.idSanPhamChiTiet === orderProduct.idSanPhamChiTiet);
+    }else {
+       product = $scope.itemsOrder.find(item => item.sanPhamChiTiet.idSanPhamChiTiet === orderProduct.sanPhamChiTiet.idSanPhamChiTiet);
+    }
 
+    console.log("orderProduct check tăng find: ", product);
+    console.log("orderProduct check tăng find: ", $scope.itemsOrder);
     // Kiểm tra nếu cả hai sản phẩm đều tồn tại
     if (product && availableProduct) {
       // Nếu số lượng hiện tại trong giỏ hàng bằng hoặc lớn hơn số lượng có sẵn trong kho, không cho phép tăng
@@ -1123,7 +1130,13 @@ app.controller("don-hang-online-ctrl", function ($scope, $http,$sce,$timeout,$ro
 
   //Giảm Số Lượng
   $scope.soLuongReduce = function(orderProduct){
-    var product = $scope.itemsOrder.find(item=>item.idSanPhamChiTiet === orderProduct.idSanPhamChiTiet);
+    //var product = $scope.itemsOrder.find(item=>item.sanPhamChiTiet.idSanPhamChiTiet === orderProduct.sanPhamChiTiet.idSanPhamChiTiet);
+    var product = null;
+    if (!$scope.username){
+      product = $scope.itemsOrder.find(item => item.idSanPhamChiTiet === orderProduct.idSanPhamChiTiet);
+    }else {
+      product = $scope.itemsOrder.find(item => item.sanPhamChiTiet.idSanPhamChiTiet === orderProduct.sanPhamChiTiet.idSanPhamChiTiet);
+    }
     if(product.soLuong >1){
       product.soLuong = parseInt(product.soLuong) - 1;
       product.qty = parseInt(product.qty) - 1;

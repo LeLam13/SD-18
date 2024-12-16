@@ -604,6 +604,10 @@ app.controller("banhang-ctrl", function ($scope, $http,$sce,$timeout) {
     };
 
     $scope.openModalKhuyenMai = function() {
+        if(selectedId === null){
+            $scope.showNotification("Chưa chọn đơn hàng!","error");
+            return;
+        }
         $scope.getKhuyenmai();
         $('#show-modal-khuyen-mai').modal('show');
     };
