@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DonHangCuaKhacServiceImpl implements DonHangCuaKhachService {
@@ -71,14 +72,25 @@ public class DonHangCuaKhacServiceImpl implements DonHangCuaKhachService {
         if(donHang == null){
             throw new RuntimeException("Không tìm thấy đơn hàng!");
         }
-        KhuyenMai khuyenMai = khuyenMaiRepo.findById(donHang.getKhuyenMai().getIdKhuyenMai()).get();
-        if(khuyenMai != null){
-            khuyenMai.setSoLuong(khuyenMai.getSoLuong()+1);
-            khuyenMaiRepo.save(khuyenMai);
-        }
-//        else {
-//            throw new RuntimeException("Không tìm thấy khuyến mãi!");
+//        KhuyenMai khuyenMai = khuyenMaiRepo.findById(donHang.getKhuyenMai().getIdKhuyenMai()).get();
+//        if(khuyenMai != null){
+//            khuyenMai.setSoLuong(khuyenMai.getSoLuong()+1);
+//            khuyenMaiRepo.save(khuyenMai);
 //        }
+        if (donHang.getKhuyenMai() != null && donHang.getKhuyenMai().getIdKhuyenMai() != null) {
+            Optional<KhuyenMai> optionalKhuyenMai = khuyenMaiRepo.findById(donHang.getKhuyenMai().getIdKhuyenMai());
+            if (optionalKhuyenMai.isPresent()) {
+                KhuyenMai khuyenMai = optionalKhuyenMai.get();
+                khuyenMai.setSoLuong(khuyenMai.getSoLuong() + 1);
+                khuyenMaiRepo.save(khuyenMai);
+            } else {
+                // Xử lý nếu khuyến mãi không tồn tại
+                System.out.println("Khuyến mãi không tồn tại!");
+            }
+        } else {
+            // Xử lý nếu `donHang.getKhuyenMai()` hoặc `getIdKhuyenMai()` bị null
+            System.out.println("Khuyến mãi hoặc ID khuyến mãi không hợp lệ!");
+        }
         List<DonHangChiTiet> chiTietDonHangList = donHangChiTietRepo.findByDonHangId(donHang.getIdDonHang());
 
         // Cập nhật lại số lượng sản phẩm

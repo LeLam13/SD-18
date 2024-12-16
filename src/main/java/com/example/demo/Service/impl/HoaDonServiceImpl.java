@@ -134,15 +134,14 @@ public class HoaDonServiceImpl implements HoaDonService {
         // lấy dơn hàng
         DonHang donHang = donHangRepo.findById(hoaDon.getIdDonHang()).get();
 
-<<<<<<< HEAD
+
         //cập nhật dơn hàng
         TrangThai trangThaiDH1 = trangThaiRepo.findById(7).get();
-        TrangThai trangThaiDH2= trangThaiRepo.findById(5).get();
-=======
-        // cập nhật dơn hàng
-        TrangThai trangThaiDH1 = trangThaiRepo.findById(1).get();
         TrangThai trangThaiDH2 = trangThaiRepo.findById(5).get();
->>>>>>> feature/login
+        // cập nhật dơn hàng
+//        TrangThai trangThaiDH1 = trangThaiRepo.findById(1).get();
+//        TrangThai trangThaiDH2 = trangThaiRepo.findById(5).get();
+
         donHang.setTongTien(hoaDon.getTongTien());
         donHang.setTongTienKhuyenMai(hoaDon.getTongTienKhuyenMai());
         donHang.setTongTienSauKhuyenMai(hoaDon.getTongTienSauKhuyenMai());
