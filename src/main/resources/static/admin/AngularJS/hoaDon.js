@@ -16,7 +16,13 @@ app.controller("hoaDon-ctrl", function ($scope, $http) {
         );
     };
     $scope.searchHoaDon = function () {
-        $http.get("/admin/hoa-don/search?maHoaDon=" + $scope.searchMaHoaDon).then(
+        const url = `/admin/hoa-don/search-filter?keyword=${
+            $scope.searchMaHoaDon || ""
+        }&filterLoaiDonHang=${$scope.filterLoaiDonHang || ""}&filterTrangThaiThanhToan=${
+            $scope.filterTrangThaiThanhToan || ""
+        }`;
+
+        $http.get(url).then(
             function (response) {
                 $scope.hoaDons = response.data; // Cập nhật danh sách hóa đơn với kết quả tìm kiếm
             },
@@ -25,6 +31,7 @@ app.controller("hoaDon-ctrl", function ($scope, $http) {
             }
         );
     };
+
     $scope.viewDetails = function (idHoaDon) {
         $http.get("/admin/hoa-don/detail/" + idHoaDon).then(
             function (response) {

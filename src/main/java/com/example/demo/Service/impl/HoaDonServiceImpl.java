@@ -61,16 +61,40 @@ public class HoaDonServiceImpl implements HoaDonService {
 
     @Override
     public List<HoaDon> getAllHoaDons() {
-        return hoaDonRepo.findAll();  // Retrieve all invoices
+        return hoaDonRepo.findAll(); // Retrieve all invoices
     }
 
     @Override
     public Page<HoaDon> getAllHoaDons(Pageable pageable) {
         return hoaDonRepo.findAllByTrangThaiThanhToan(pageable);
     }
+
     @Override
     public List<HoaDon> searchHoaDonsByMaHoaDon(String maHoaDon) {
         return hoaDonRepo.findByMaHoaDonContaining(maHoaDon);
+    }
+
+    @Override
+    public List<HoaDon> searchFilterHoaDons(String keyword, String filterTrangThaiThanhToan, String filterLoaiDonHang) {
+        Boolean trangThaiThanhToan = null;
+        Integer loaiDonHang = null;
+
+        // Chuyển đổi filterTrangThaiThanhToan từ String sang Boolean
+        if (filterTrangThaiThanhToan != null && !filterTrangThaiThanhToan.isEmpty()) {
+            trangThaiThanhToan = Boolean.valueOf(filterTrangThaiThanhToan);
+        }
+
+        // Chuyển đổi filterLoaiDonHang từ String sang Integer
+        if (filterLoaiDonHang != null && !filterLoaiDonHang.isEmpty()) {
+            try {
+                loaiDonHang = Integer.valueOf(filterLoaiDonHang);
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("filterLoaiDonHang phải là số nguyên hợp lệ");
+            }
+        }
+
+        // Gọi repository và truyền các tham số đã chuyển đổi
+        return hoaDonRepo.searchFilterHoaDons(keyword, trangThaiThanhToan, loaiDonHang);
     }
 
     @Override
@@ -78,7 +102,6 @@ public class HoaDonServiceImpl implements HoaDonService {
         HoaDon hoaDon = hoaDonRepo.findById(id).get();
         return hoaDon;
     }
-
 
     @Override
     public String generateRandomString(int length) {
@@ -92,29 +115,28 @@ public class HoaDonServiceImpl implements HoaDonService {
         return sb.toString();
     }
 
-
     @Override
     @Transactional
     public HoaDon createHoaDon(HoaDonResquestDTO hoaDon, String username) {
         HoaDon newHoaDon = new HoaDon();
 
-        //lấy tài khoản
+        // lấy tài khoản
         taikhoan oldTaiKoan = taikhoanRepo.findByUsername(username);
-        //lấy nhân viên
+        // lấy nhân viên
         nhanvien getNV = nhanVienRepo.findById(oldTaiKoan.getNhanVien().getIdNhanVien()).get();
-        //lấy khách hàng
+        // lấy khách hàng
         khachhang khachhang = khachhangRePo.findById(hoaDon.getIdKhachHang()).get();
 
-        //lấy trạng thái hoá đơn
+        // lấy trạng thái hoá đơn
         TrangThai trangThai = trangThaiRepo.findById(hoaDon.getIdTrangThai()).get();
-        //lấy phương thức thanh toán
+        // lấy phương thức thanh toán
         PhuongThucThanhToan PTTT = phuongThucThanhToanRepo.findById(hoaDon.getIdPhuongThucThanhToan()).get();
-        //lấy dơn hàng
+        // lấy dơn hàng
         DonHang donHang = donHangRepo.findById(hoaDon.getIdDonHang()).get();
 
-        //cập nhật dơn hàng
+        // cập nhật dơn hàng
         TrangThai trangThaiDH1 = trangThaiRepo.findById(1).get();
-        TrangThai trangThaiDH2= trangThaiRepo.findById(5).get();
+        TrangThai trangThaiDH2 = trangThaiRepo.findById(5).get();
         donHang.setTongTien(hoaDon.getTongTien());
         donHang.setTongTienKhuyenMai(hoaDon.getTongTienKhuyenMai());
         donHang.setTongTienSauKhuyenMai(hoaDon.getTongTienSauKhuyenMai());
@@ -125,38 +147,34 @@ public class HoaDonServiceImpl implements HoaDonService {
         donHang.setNhanVien(getNV);
         donHang.setKhachHang(khachhang);
 
-        donHang.setTrangThai(trangThaiDH2);//đã hoàn thành
-        if(hoaDon.getPhuongThucNhan() ==2){
-            donHang.setTrangThai(trangThaiDH1);//chờ giao hàng
+        donHang.setTrangThai(trangThaiDH2);// đã hoàn thành
+        if (hoaDon.getPhuongThucNhan() == 2) {
+            donHang.setTrangThai(trangThaiDH1);// chờ giao hàng
         }
 
         donHang.setPhuongThucThanhToan(PTTT);
 
-        //lấy khuyến mãi
-        if(hoaDon.getIdKhuyenMai() != null){
+        // lấy khuyến mãi
+        if (hoaDon.getIdKhuyenMai() != null) {
             KhuyenMai khuyenMai = khuyenMaiRepo.findById(hoaDon.getIdKhuyenMai()).get();
             donHang.setKhuyenMai(khuyenMai);
 
             newHoaDon.setKhuyenMai(khuyenMai);
 
-            khuyenMai.setSoLuong(khuyenMai.getSoLuong()-1);
+            khuyenMai.setSoLuong(khuyenMai.getSoLuong() - 1);
             khuyenMaiRepo.save(khuyenMai);
         }
-
 
         donHang.setTenKhachNhan(hoaDon.getTenKhachNhan());
         donHang.setSoDienThoaiKhachNhan(hoaDon.getSoDienThoaiKhachNhan());
         donHang.setDiaChiNhan(hoaDon.getDiaChiKhachNhan());
         donHang.setPhuongThucNhan(hoaDon.getPhuongThucNhan());
         donHang.setLoaiDonHang(hoaDon.getLoaiDonHang());
-        LocalDate localDate1 = LocalDate.now();
-        donHang.setUpdateDate(localDate1);
-        donHang.setUpdateBy(getNV.getHoTen());
         donHangRepo.save(donHang);
-        //System.out.println("check đơn hàng update: "+donHang);
+        // System.out.println("check đơn hàng update: "+donHang);
 
-        //tạo hoá đơn
-        newHoaDon.setTrangThai(trangThai);//trạng thái hoá đơn hoàn thành
+        // tạo hoá đơn
+        newHoaDon.setTrangThai(trangThai);// trạng thái hoá đơn hoàn thành
         newHoaDon.setPhuongThucThanhToan(PTTT);
         newHoaDon.setDonHang(donHang);
         newHoaDon.setNhanVien(getNV);
@@ -173,17 +191,14 @@ public class HoaDonServiceImpl implements HoaDonService {
         newHoaDon.setGhiChu(hoaDon.getGhiChu());
         newHoaDon.setTrangThaiThanhToan(true);
         newHoaDon.setPhuongThucNhan(hoaDon.getPhuongThucNhan());
-        newHoaDon.setTenKhachNhan(donHang.getTenKhachNhan());
-        newHoaDon.setEmailKhachNhan(donHang.getEmailKhachNhan());
-        newHoaDon.setSoDienThoaiKhachNhan(donHang.getSoDienThoaiKhachNhan());
-        newHoaDon.setDiaChiNhan(donHang.getDiaChiNhan());
-        //System.out.println("check ;log hoá đơn: "+newHoaDon);
+
+        // System.out.println("check ;log hoá đơn: "+newHoaDon);
         hoaDonRepo.save(newHoaDon);
 
-        //lấy hoá đơn vừa tạo
+        // lấy hoá đơn vừa tạo
         HoaDon hd = hoaDonRepo.findByMaHoaDon(hoaDon.getMaHoaDon());
 
-        //thêm hoá đơn chi tiết
+        // thêm hoá đơn chi tiết
         List<DonHangChiTiet> donHangChiTietList = donHangChiTietRepo.findByDonHangId(hoaDon.getIdDonHang());
         for (DonHangChiTiet donHangChiTiet : donHangChiTietList) {
             HoaDonChiTiet hoaDonChiTiet = new HoaDonChiTiet();
@@ -196,25 +211,26 @@ public class HoaDonServiceImpl implements HoaDonService {
             hoaDonChiTiet.setTrangThai(true);
             hoaDonChiTiet.setGhiChu(donHangChiTiet.getGhiChu());
             hoaDonChiTiet.setHoaDon(hd);
-            hoaDonChiTiet.setSanPhamChiTiet(donHangChiTiet.getSanPhamChiTiet()); // giả sử bạn đã có phương thức lấy SanPhamChiTiet
+            hoaDonChiTiet.setSanPhamChiTiet(donHangChiTiet.getSanPhamChiTiet()); // giả sử bạn đã có phương thức lấy
+            // SanPhamChiTiet
 
             // Lưu vào cơ sở dữ liệu
             hoaDonChiTietRepo.save(hoaDonChiTiet);
         }
 
         return newHoaDon;
-        //return null;
+        // return null;
     }
 
     @Override
-    public String  printerInvoice(Integer id)   {
-        try{
+    public String printerInvoice(Integer id) {
+        try {
             HoaDon getHoaDon = hoaDonRepo.findById(id).get();
-            if(getHoaDon == null){
+            if (getHoaDon == null) {
                 System.out.println("không tìm thấy hoá đơn");
-                throw  new RuntimeException("không tìm thấy hoá đơn");
+                throw new RuntimeException("không tìm thấy hoá đơn");
             }
-//            String pdfFilePath  = "C:\\Users\\Admin\\Desktop\\TTS-XUONG\\invoice.pdf";
+            // String pdfFilePath = "C:\\Users\\Admin\\Desktop\\TTS-XUONG\\invoice.pdf";
             String folderPath = Paths.get("src", "main", "resources", "images").toAbsolutePath().toString();
             String pdfFilePath = folderPath + File.separator + getHoaDon.getMaHoaDon() + ".pdf";
 
@@ -223,7 +239,7 @@ public class HoaDonServiceImpl implements HoaDonService {
             if (!folder.exists()) {
                 folder.mkdirs();
             }
-            //String pdfFilePath = "images"+getHoaDon.getMaHoaDon()+".pdf";
+            // String pdfFilePath = "images"+getHoaDon.getMaHoaDon()+".pdf";
             File file = new File(pdfFilePath);
             if (file.exists()) {
                 file.delete(); // Xóa tệp nếu tồn tại
@@ -234,28 +250,27 @@ public class HoaDonServiceImpl implements HoaDonService {
             pdfDocument.setDefaultPageSize(PageSize.A4);
             Document document = new Document(pdfDocument);
 
-//            String imagePath = "D:\\DATN-FALL2024\\testgit\\src\\main\\resources\\images\\hinh1.jpg";
-//            ImageData imageData = ImageDataFactory.create(imagePath);
-//            Image image = new Image(imageData);
-//            float x = pdfDocument.getDefaultPageSize().getWidth()/2;
-//            float y = pdfDocument.getDefaultPageSize().getHeight()/2;
-//            image.setFixedPosition(x -150,y-170);
-//            image.setOpacity(0.1f);
-//            document.add(image);
-
+            // String imagePath =
+            // "D:\\DATN-FALL2024\\testgit\\src\\main\\resources\\images\\hinh1.jpg";
+            // ImageData imageData = ImageDataFactory.create(imagePath);
+            // Image image = new Image(imageData);
+            // float x = pdfDocument.getDefaultPageSize().getWidth()/2;
+            // float y = pdfDocument.getDefaultPageSize().getHeight()/2;
+            // image.setFixedPosition(x -150,y-170);
+            // image.setOpacity(0.1f);
+            // document.add(image);
 
             float threecol = 190f;
-            float towcol= 185f;
-            float towcol150 = towcol +150f;
-            //float towColumwidth[] = {400f, 400f};
-            float towColumwidth[] = {towcol150 ,towcol};
-            float columnWidths[] = {threecol*3}; // Define table column widths
-            float threeColumnWidth[] ={threecol,threecol,threecol};
-            // Định nghĩa lại chiều rộng của 5 cột
-            float[] fiveColumnWidth = {threecol, threecol, threecol, threecol, threecol}; // Cân đối các cột
+            float towcol = 185f;
+            float towcol150 = towcol + 150f;
+            // float towColumwidth[] = {400f, 400f};
+            float towColumwidth[] = { towcol150, towcol };
+            float columnWidths[] = { threecol * 3 }; // Define table column widths
+            float threeColumnWidth[] = { threecol, threecol, threecol };
 
-//            String fontPath = "C:\\Windows\\Fonts\\times.ttf";
-//            PdfFont pdfFont = PdfFontFactory.createFont(fontPath, PdfEncodings.IDENTITY_H, true);
+            // String fontPath = "C:\\Windows\\Fonts\\times.ttf";
+            // PdfFont pdfFont = PdfFontFactory.createFont(fontPath,
+            // PdfEncodings.IDENTITY_H, true);
             InputStream fontStream = HoaDonServiceImpl.class.getClassLoader().getResourceAsStream("fonts/times.ttf");
             PdfFont pdfFont = PdfFontFactory.createFont(fontStream.readAllBytes(), PdfEncodings.IDENTITY_H, true);
             Paragraph paragraph = new Paragraph("\n");
@@ -271,7 +286,8 @@ public class HoaDonServiceImpl implements HoaDonService {
             Text phoneShop = new Text("Số điện thoại: 0123456789").setFont(pdfFont);
             Text emailShop = new Text("Email: eighteenpolo@gmail.com").setFont(pdfFont);
             Text addressShop = new Text("Địa chỉ: Tòa nhà FPT Polytechnic...").setFont(pdfFont);
-            //document.add(new Paragraph("Số điện thoại: 0123456789\nEmail: beeshirt@gmail.com\nĐịa chỉ: Tòa nhà FPT Polytechnic..."));
+            // document.add(new Paragraph("Số điện thoại: 0123456789\nEmail:
+            // beeshirt@gmail.com\nĐịa chỉ: Tòa nhà FPT Polytechnic..."));
             Paragraph paragraphInfo = new Paragraph()
                     .add(phoneShop).add("\n")
                     .add(emailShop).add("\n")
@@ -279,37 +295,31 @@ public class HoaDonServiceImpl implements HoaDonService {
                     .setTextAlignment(TextAlignment.CENTER);
             document.add(paragraphInfo);
 
-            Border gb = new SolidBorder(new DeviceGray(0.5f),1f/2f);
+            Border gb = new SolidBorder(new DeviceGray(0.5f), 1f / 2f);
             Table divider = new Table(columnWidths);
             divider.setBorder(gb);
 
             document.add(paragraph);
             document.add(divider);
-            //document.add(paragraph);
+            // document.add(paragraph);
 
             Text text2 = new Text("Mã Hoá Đơn:").setFont(pdfFont);
             Text text1 = new Text("Hoá Đơn Bán Hàng").setFont(pdfFont);
-            //thông tin
+            // thông tin
             Text textSDT;
             Text textEmail;
             Text textHoTen = new Text(getHoaDon.getKhachHang().getHoTen()).setFont(pdfFont);
             Text textMaHD = new Text(getHoaDon.getMaHoaDon()).setFont(pdfFont);
 
-            if(getHoaDon.getKhachHang().getSoDienThoai() != null){
+            if (getHoaDon.getKhachHang().getSoDienThoai() != null) {
                 textSDT = new Text(getHoaDon.getKhachHang().getSoDienThoai()).setFont(pdfFont);
-            }else {
+            } else {
                 textSDT = new Text("").setFont(pdfFont);
             }
-            if(getHoaDon.getKhachHang().getEmail() != null){
+            if (getHoaDon.getKhachHang().getEmail() != null) {
                 textEmail = new Text(getHoaDon.getKhachHang().getEmail()).setFont(pdfFont);
-            }else {
+            } else {
                 textEmail = new Text("").setFont(pdfFont);
-            }
-            Text diaChiNhan;
-            if(getHoaDon.getDiaChiNhan() == null){
-                diaChiNhan = new Text(getHoaDon.getKhachHang().getDiaChi()).setFont(pdfFont);
-            }else {
-                diaChiNhan = new Text(getHoaDon.getDiaChiNhan()).setFont(pdfFont);
             }
 
             LocalDate createDate = getHoaDon.getCreateDate();
@@ -319,19 +329,19 @@ public class HoaDonServiceImpl implements HoaDonService {
 
             Table towColumnTable = new Table(columnWidths);
             Cell cell = new Cell().add(new Paragraph(text1)
-                    .setFontSize(16f)
-                    .setBold()
-                    .setTextAlignment(TextAlignment.CENTER))
+                            .setFontSize(16f)
+                            .setBold()
+                            .setTextAlignment(TextAlignment.CENTER))
                     .setBorder(Border.NO_BORDER);
             towColumnTable.addCell(cell);
             document.add(towColumnTable.setMarginBottom(10f));
 
             Table twoColTable2 = new Table(towColumwidth);
-            twoColTable2.addCell(getCell10fleft("Tên Khách Hàng:",true));
-            twoColTable2.addCell(getCell10fleft(text2,true));
-//            twoColTable2.addCell(getCell10fleft("Coding Errors",false));
-            twoColTable2.addCell(getCell10fleft(textHoTen,false));
-            twoColTable2.addCell(getCell10fleft(textMaHD,false));
+            twoColTable2.addCell(getCell10fleft("Tên Khách Hàng:", true));
+            twoColTable2.addCell(getCell10fleft(text2, true));
+            // twoColTable2.addCell(getCell10fleft("Coding Errors",false));
+            twoColTable2.addCell(getCell10fleft(textHoTen, false));
+            twoColTable2.addCell(getCell10fleft(textMaHD, false));
             twoColTable2.setWidthPercent(100);
             document.add(twoColTable2);
 
@@ -340,93 +350,78 @@ public class HoaDonServiceImpl implements HoaDonService {
             Text text5 = new Text("Số Điện Thoại:").setFont(pdfFont);
             Text text6 = new Text("Email:").setFont(pdfFont);
             Table twoColTable3 = new Table(towColumwidth);
-            twoColTable3.addCell(getCell10fleft(text3,true));
-            twoColTable3.addCell(getCell10fleft(text4,true));
-            twoColTable3.addCell(getCell10fleft(diaChiNhan,false));
-            twoColTable3.addCell(getCell10fleft(textNgayTao,false));
-            twoColTable3.addCell(getCell10fleft(text5,true));
-            twoColTable3.addCell(getCell10fleft(text6,true));
-            twoColTable3.addCell(getCell10fleft(textSDT,false));
-            twoColTable3.addCell(getCell10fleft(textEmail,false));
+            twoColTable3.addCell(getCell10fleft(text3, true));
+            twoColTable3.addCell(getCell10fleft(text4, true));
+            twoColTable3.addCell(getCell10fleft("", false));
+            twoColTable3.addCell(getCell10fleft(textNgayTao, false));
+            twoColTable3.addCell(getCell10fleft(text5, true));
+            twoColTable3.addCell(getCell10fleft(text6, true));
+            twoColTable3.addCell(getCell10fleft(textSDT, false));
+            twoColTable3.addCell(getCell10fleft(textEmail, false));
             twoColTable3.setWidthPercent(100);
             document.add(twoColTable3);
 
-
-
             Table tableDivider = new Table(columnWidths);
-            Border dbg = new DashedBorder(Color.GRAY,0.5f);
+            Border dbg = new DashedBorder(Color.GRAY, 0.5f);
             document.add(tableDivider.setBorder(dbg));
 
             Text textProduct = new Text("Danh Sách Sản Phẩm").setFont(pdfFont).setFontSize(12f).setBold();
             Paragraph productPara = new Paragraph(textProduct);
             document.add(productPara);
 
-            //Table threeColTable1 = new Table(threeColumnWidth);
-            Table threeColTable1 = new Table(fiveColumnWidth);
-            threeColTable1.setBackgroundColor(Color.BLACK,0.7f);
+            Table threeColTable1 = new Table(threeColumnWidth);
+            threeColTable1.setBackgroundColor(Color.BLACK, 0.7f);
 
-            threeColTable1.addCell(new Cell().add("Tên Sản Phẩm").setBold().setFont(pdfFont).setFontColor(Color.WHITE).setBorder(Border.NO_BORDER));
-            threeColTable1.addCell(new Cell().add("Màu Sắc").setBold().setFont(pdfFont).setFontColor(Color.WHITE).setTextAlignment(TextAlignment.CENTER));
-            threeColTable1.addCell(new Cell().add("Kích Thước").setBold().setFont(pdfFont).setFontColor(Color.WHITE).setTextAlignment(TextAlignment.CENTER));
-            threeColTable1.addCell(new Cell().add("Số Lượng").setBold().setFont(pdfFont).setFontColor(Color.WHITE).setTextAlignment(TextAlignment.CENTER));
-            threeColTable1.addCell(new Cell().add("Đơn Giá").setBold().setFont(pdfFont).setFontColor(Color.WHITE).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
+            threeColTable1.addCell(new Cell().add("Tên Sản Phẩm").setBold().setFont(pdfFont).setFontColor(Color.WHITE)
+                    .setBorder(Border.NO_BORDER));
+            threeColTable1.addCell(new Cell().add("Số Lượng").setBold().setFont(pdfFont).setFontColor(Color.WHITE)
+                    .setTextAlignment(TextAlignment.CENTER));
+            threeColTable1.addCell(new Cell().add("Đơn Giá").setBold().setFont(pdfFont).setFontColor(Color.WHITE)
+                    .setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
             document.add(threeColTable1);
 
             List<HoaDonChiTiet> listSanPham = hoaDonChiTietRepo.findByHoaDonId(getHoaDon.getIdHoaDon());
-            //Table threeColTable2 = new Table(threeColumnWidth);
-            Table threeColTable2 = new Table(fiveColumnWidth);
-            float totalSum =0;
-            for(HoaDonChiTiet spct:listSanPham){
-                float total = spct.getDonGia()* spct.getSoLuong();
-                totalSum +=total;
-                threeColTable2.addCell(new Cell().add(spct.getSanPhamChiTiet().getIdSanPham().getTen()).setFont(pdfFont).setBorder(Border.NO_BORDER).setMarginLeft(10f));
-                threeColTable2.addCell(new Cell().add(spct.getSanPhamChiTiet().getIdMauSac().getTen()).setFont(pdfFont).setTextAlignment(TextAlignment.CENTER).setBorder(Border.NO_BORDER));
-                threeColTable2.addCell(new Cell().add(spct.getSanPhamChiTiet().getIdKichCo().getTen()).setFont(pdfFont).setTextAlignment(TextAlignment.CENTER).setBorder(Border.NO_BORDER));
-                threeColTable2.addCell(new Cell().add(String.valueOf(spct.getSoLuong())).setFont(pdfFont).setTextAlignment(TextAlignment.CENTER).setBorder(Border.NO_BORDER));
-                threeColTable2.addCell(new Cell().add(String.valueOf(spct.getDonGia())).setFont(pdfFont).setTextAlignment(TextAlignment.RIGHT).setBorder(Border.NO_BORDER).setMarginRight(15f));
+            Table threeColTable2 = new Table(threeColumnWidth);
+            float totalSum = 0;
+            for (HoaDonChiTiet spct : listSanPham) {
+                float total = spct.getDonGia() * spct.getSoLuong();
+                totalSum += total;
+                threeColTable2.addCell(new Cell().add(spct.getSanPhamChiTiet().getIdSanPham().getTen()).setFont(pdfFont)
+                        .setBorder(Border.NO_BORDER).setMarginLeft(10f));
+                threeColTable2.addCell(new Cell().add(String.valueOf(spct.getSoLuong())).setFont(pdfFont)
+                        .setTextAlignment(TextAlignment.CENTER).setBorder(Border.NO_BORDER));
+                threeColTable2.addCell(new Cell().add(String.valueOf(spct.getDonGia())).setFont(pdfFont)
+                        .setTextAlignment(TextAlignment.RIGHT).setBorder(Border.NO_BORDER).setMarginRight(15f));
             }
             document.add(threeColTable2.setMarginBottom(20f));
-
-            float oneCol[] ={threecol+125f,threecol*2};
+            float oneCol[] = { threecol + 125f, threecol * 2 };
             Table threeColTable4 = new Table(oneCol);
             threeColTable4.addCell(new Cell().add("").setBorder(Border.NO_BORDER));
             threeColTable4.addCell(new Cell().add(tableDivider).setBorder(Border.NO_BORDER));
             document.add(threeColTable4);
 
-            Text tong = new Text("Tổng").setFont(pdfFont);
+            Text tong = new Text("Tổng Hoá Đơn").setFont(pdfFont);
             Paragraph paragraphTong = new Paragraph().add(tong);
-            Text tongHoaDon = new Text("Tổng hoá đơn").setFont(pdfFont);
-            Paragraph paragraphTongHoaDon = new Paragraph().add(tongHoaDon);
             Table threeColTable3 = new Table(threeColumnWidth);
 
             threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(10f));
-            threeColTable3.addCell(new Cell().add(paragraphTong).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
-            threeColTable3.addCell(new Cell().add(String.valueOf(totalSum)).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
-            //phí ship
-            if(getHoaDon.getPhiVanChuyen() >0){
-                threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(10f));
-                threeColTable3.addCell(new Cell().add("Phí Ship").setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
-                threeColTable3.addCell(new Cell().add(String.valueOf(getHoaDon.getPhiVanChuyen())).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
-                //tong + phi van chuyen
-                threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(15f));
-                threeColTable3.addCell(new Cell().add(paragraphTongHoaDon).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
-                threeColTable3.addCell(new Cell().add(String.valueOf(totalSum + getHoaDon.getPhiVanChuyen())).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
+            if (getHoaDon.getPhiVanChuyen() > 0) {
+                threeColTable3.addCell(
+                        new Cell().add("Phí Ship").setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
+                threeColTable3.addCell(new Cell().add(String.valueOf(getHoaDon.getPhiVanChuyen()))
+                        .setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
             }
-//            else {
-//                threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(10f));
-//                threeColTable3.addCell(new Cell().add(paragraphTong).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
-//                threeColTable3.addCell(new Cell().add(String.valueOf(totalSum)).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
-//            }
-//            threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(10f));
-//            threeColTable3.addCell(new Cell().add(paragraphTong).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
-//            threeColTable3.addCell(new Cell().add(String.valueOf(totalSum)).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
 
+            threeColTable3.addCell(new Cell().add("").setBorder(Border.NO_BORDER).setMarginLeft(15f));
+            threeColTable3.addCell(
+                    new Cell().add(paragraphTong).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.CENTER));
 
-            //threeColTable3.addCell(new Cell().add(String.valueOf(totalSum)).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
+            threeColTable3.addCell(new Cell().add(String.valueOf(totalSum)).setBorder(Border.NO_BORDER)
+                    .setTextAlignment(TextAlignment.RIGHT).setMarginRight(15f));
             document.add(threeColTable3);
             document.add(tableDivider);
             document.add(new Paragraph("\n"));
-            document.add(divider.setBorder(new SolidBorder(Color.GRAY,1)).setMarginBottom(15f));
+            document.add(divider.setBorder(new SolidBorder(Color.GRAY, 1)).setMarginBottom(15f));
 
             Table tb = new Table(columnWidths);
             tb.addCell(new Cell().add("Tems and conditition")).setBold().setBorder(Border.NO_BORDER);
@@ -434,14 +429,12 @@ public class HoaDonServiceImpl implements HoaDonService {
             tb.addCell(new Cell().add("2.Tems")).setBorder(Border.NO_BORDER);
             document.add(tb);
 
-
-
             document.close();
             pdfDocument.close();
             pdfWriter.close();
             return pdfFilePath;
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return null;
         }
@@ -449,7 +442,7 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public Cell getBillingShippingCell(Object  textValue) {
+    public Cell getBillingShippingCell(Object textValue) {
         Paragraph paragraph;
         // Kiểm tra xem textValue là kiểu String hay Text
         if (textValue instanceof String) {
@@ -465,7 +458,7 @@ public class HoaDonServiceImpl implements HoaDonService {
     }
 
     @Override
-    public  Cell getCell10fleft(Object textValue, Boolean isBoolean) {
+    public Cell getCell10fleft(Object textValue, Boolean isBoolean) {
         Paragraph paragraph;
         // Kiểm tra xem textValue là kiểu String hay Text
         if (textValue instanceof String) {
@@ -476,9 +469,9 @@ public class HoaDonServiceImpl implements HoaDonService {
             throw new IllegalArgumentException("Invalid text value type. Must be String or Text.");
         }
 
-        Cell cell = new Cell().add(paragraph).setFontSize(10f).setBorder(Border.NO_BORDER).setTextAlignment(TextAlignment.LEFT);
+        Cell cell = new Cell().add(paragraph).setFontSize(10f).setBorder(Border.NO_BORDER)
+                .setTextAlignment(TextAlignment.LEFT);
         return isBoolean ? cell.setBold() : cell;
     }
-
 
 }

@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html
         lang="en"
         xmlns:th="http://www.thymeleaf.org"
@@ -110,19 +110,42 @@
         <div class="container-fluid">
             <div class="col-xl-12">
                 <div class="d-flex justify-content-end mb-3">
-                    <div class="input-group" style="width: 300px">
-                        <!-- Đặt chiều rộng của input group -->
+                    <div class="input-group" style="width: 500px">
                         <input
                                 type="text"
                                 class="form-control"
                                 ng-model="searchMaHoaDon"
-                                placeholder="Tìm mã hóa đơn"
+                                placeholder="Tìm mã hóa đơn/Tên KH/SĐT Khách hàng/Email Khách hàng"
                         />
                         <div class="input-group-append">
                             <button class="btn btn-primary" ng-click="searchHoaDon()">
                                 Tìm kiếm
                             </button>
                         </div>
+                    </div>
+
+                    <div style="margin-left: 1rem">
+                        <select
+                                class="form-control"
+                                ng-model="filterLoaiDonHang"
+                                ng-change="searchHoaDon()"
+                        >
+                            <option value="">Tất cả Loại Đơn Hàng</option>
+                            <option value="1">Đơn hàng tại quầy</option>
+                            <option value="2">Đơn hàng online</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-left: 1rem">
+                        <select
+                                class="form-control"
+                                ng-model="filterTrangThaiThanhToan"
+                                ng-change="searchHoaDon()"
+                        >
+                            <option value="">Tất cả Trạng thái Đơn Hàng</option>
+                            <option value="true">Hoàn thành</option>
+                            <option value="false">Hủy đơn</option>
+                        </select>
                     </div>
                 </div>
 
@@ -147,6 +170,7 @@
                                         <th>Ngày tạo</th>
                                         <th>Mã Nhân Viên</th>
                                         <th>Tên Khách Hàng</th>
+                                        <th>SĐT Khách Hàng</th>
                                         <th>Tổng Tiền</th>
                                         <th>Tổng Tiền Khuyến Mãi</th>
                                         <th>Tổng Tiền Sau Khuyến Mãi</th>
@@ -164,6 +188,7 @@
                                         <td>{{ hoaDon.createDate }}</td>
                                         <td>{{ hoaDon.nhanVien.maNhanVien }}</td>
                                         <td>{{ hoaDon.khachHang.hoTen }}</td>
+                                        <td>{{ hoaDon.khachHang.soDienThoai }}</td>
                                         <td>{{ hoaDon.tongTien | currency:'₫':0 }}</td>
                                         <td>
                                             {{ hoaDon.tongTienKhuyenMai | currency:'₫':0 }}
@@ -183,8 +208,8 @@
                                         <!-- Cột loại đơn hàng -->
                                         <td>
                             <span>
-                              {{ hoaDon.loaiDonHang === '1' ? 'Đơn hàng tại
-                                    quầy' : 'Đơn hàng online' }}
+                              {{ hoaDon.phuongThucNhan === 2 ? 'Đơn hàng online'
+                              : 'Đơn hàng tại quầy' }}
                             </span>
                                         </td>
                                         <td style="white-space: nowrap">
@@ -196,6 +221,7 @@
                                                 Xem HĐ
                                             </button>
                                             <button
+                                                    ng-if="hoaDon.trangThaiThanhToan"
                                                     ng-click="exportHoaDon(hoaDon.idHoaDon)"
                                                     class="btn btn-success btn-sm"
                                                     style="display: inline-block"
@@ -251,63 +277,6 @@
                                 </table>
                             </div>
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Modal Xuất Hóa Đơn -->
-        <div
-                class="modal fade"
-                id="exportInvoiceModal"
-                tabindex="-1"
-                role="dialog"
-                aria-labelledby="exportInvoiceModalLabel"
-                aria-hidden="true"
-        >
-            <div
-                    class="modal-dialog modal-dialog-centered modal-lg"
-                    role="document"
-            >
-                <div class="modal-content">
-                    <!-- Modal Header -->
-                    <div
-                            class="modal-header"
-                            style="background-color: #343a40; color: #fff"
-                    >
-                        <h5
-                                class="modal-title w-100 text-center"
-                                id="exportInvoiceModalLabel"
-                                style="font-weight: bold; font-size: 24px"
-                        >
-                            Nhập Thông Tin Hóa Đơn
-                        </h5>
-                        <button
-                                type="button"
-                                class="close"
-                                data-dismiss="modal"
-                                aria-label="Close"
-                                style="color: #fff"
-                        >
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-
-                    <!-- Modal Footer -->
-                    <div class="modal-footer" style="background-color: #f1f1f1">
-                        <button
-                                type="button"
-                                class="btn btn-secondary"
-                                data-dismiss="modal"
-                        >
-                            Đóng
-                        </button>
-                        <button
-                                type="button"
-                                class="btn btn-success"
-                                ng-click="confirmExport()"
-                        >
-                            Xuất Hóa Đơn
-                        </button>
                     </div>
                 </div>
             </div>
@@ -391,7 +360,7 @@
                                     <th>Trạng Thái Thanh Toán</th>
                                     <td>
                                         {{ detail.hoaDon.trangThaiThanhToan ? 'Đã Thanh Toán' :
-                                            'Chưa Thanh Toán' }}
+                                        'Chưa Thanh Toán' }}
                                     </td>
                                 </tr>
                             </table>
@@ -406,6 +375,7 @@
                                     <th>Mã SP Chi Tiết</th>
                                     <th>Chất Liệu</th>
                                     <th>Kích Cỡ</th>
+                                    <th>Màu Sắc</th>
                                     <th>Số Lượng</th>
                                     <th>Đơn Giá</th>
                                     <th>Thành Tiền</th>
@@ -419,14 +389,15 @@
                                     <td>{{ item.maSanPhamChiTiet }}</td>
                                     <td>{{ item.chatLieu }}</td>
                                     <td>{{ item.kichCo }}</td>
+                                    <td>{{ item.mauSac }}</td>
                                     <td>{{ item.soLuong }}</td>
                                     <td>{{ item.donGia }}</td>
                                     <td>{{ item.soLuong * item.donGia }}</td>
                                     <td>
                                         <img
-                                                ng-src="{{ item.hinhAnh }}"
+                                                ng-src="/assets/img/{{ item.hinhAnh }}"
                                                 alt="Hình ảnh"
-                                                style="width: 50px; height: auto"
+                                                style="width: 45px; height: auto"
                                         />
                                     </td>
                                 </tr>

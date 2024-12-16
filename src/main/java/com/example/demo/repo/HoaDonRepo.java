@@ -15,11 +15,37 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
 
     List<HoaDon> findByKhachHang_IdKhachHang(Integer idKhachHang);
 
-    @Query("SELECT h FROM HoaDon h WHERE h.trangThaiThanhToan = true")
+    // @Query("SELECT h FROM HoaDon h WHERE h.trangThaiThanhToan = true")
+    // Page<HoaDon> findAllByTrangThaiThanhToan(Pageable pageable);
+
+    @Query("SELECT h FROM HoaDon h")
     Page<HoaDon> findAllByTrangThaiThanhToan(Pageable pageable);
 
     @Query(value = "SELECT * FROM hoa_don WHERE ma_hoa_don LIKE %:maHoaDon%", nativeQuery = true)
     List<HoaDon> findByMaHoaDonContaining(String maHoaDon);
+
+    @Query("SELECT h FROM HoaDon h " +
+            "LEFT JOIN h.khachHang kh " +
+            "LEFT JOIN h.donHang dh " +
+            "WHERE " +
+            "(:keyword IS NULL OR h.maHoaDon LIKE %:keyword% " +
+            "OR h.tenKhachNhan LIKE %:keyword% " +
+            "OR h.emailKhachNhan LIKE %:keyword% " +
+            "OR h.soDienThoaiKhachNhan LIKE %:keyword% " +
+            "OR kh.hoTen LIKE %:keyword% " +
+            "OR kh.email LIKE %:keyword% " +
+            "OR kh.soDienThoai LIKE %:keyword% " +
+            "OR dh.maDonHang LIKE %:keyword% " +
+            "OR dh.tenKhachNhan LIKE %:keyword% " +
+            "OR dh.emailKhachNhan LIKE %:keyword% " +
+            "OR dh.soDienThoaiKhachNhan LIKE %:keyword% " +
+            ") AND " +
+            "(h.trangThaiThanhToan = :filterTrangThaiThanhToan OR :filterTrangThaiThanhToan IS NULL) AND " +
+            "(h.phuongThucNhan = :filterLoaiDonHang OR :filterLoaiDonHang IS NULL)")
+    List<HoaDon> searchFilterHoaDons(
+            @Param("keyword") String keyword,
+            @Param("filterTrangThaiThanhToan") Boolean filterTrangThaiThanhToan,
+            @Param("filterLoaiDonHang") Integer filterLoaiDonHang);
 
     HoaDon findByMaHoaDon(String maHoaDon);
 
@@ -69,12 +95,14 @@ public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
     List<String> findDatesInRange(@Param("start") LocalDate start, @Param("end") LocalDate end);
 
     @Query(value = """
-                SELECT TOP 5 s.ten, SUM(d.so_luong) as total_quantity
-                FROM don_hang_chi_tiet d
-                JOIN san_pham_chi_tiet sp ON d.id_san_pham_chi_tiet = sp.id_san_pham_chi_tiet
-                JOIN san_pham s ON sp.id_san_pham = s.id_san_pham
-                GROUP BY s.ten
-                ORDER BY total_quantity DESC
+            SELECT TOP 5 sp.ten, SUM(hdc.so_luong) as total_quantity
+            FROM hoa_don hd
+            JOIN hoa_don_chi_tiet hdc ON hd.id_hoa_don = hdc.id_hoa_don
+            JOIN san_pham_chi_tiet spct ON hdc.id_san_pham_chi_tiet = spct.id_san_pham_chi_tiet
+            JOIN san_pham sp ON spct.id_san_pham = sp.id_san_pham
+            WHERE hd.create_date >= DATEADD(MONTH, -1, GETDATE())
+            GROUP BY sp.ten
+            ORDER BY total_quantity DESC
             """, nativeQuery = true)
     List<Object[]> findTopSellingProducts();
 

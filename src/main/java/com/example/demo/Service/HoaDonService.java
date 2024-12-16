@@ -9,19 +9,24 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import java.util.List;
 
-
 public interface HoaDonService {
     HoaDon createHoaDon(HoaDonResquestDTO hoaDon, String username);
+
     String generateRandomString(int length);
 
-    String  printerInvoice(Integer id);
-    Cell getBillingShippingCell(Object  textValue);
+    String printerInvoice(Integer id);
+
+    Cell getBillingShippingCell(Object textValue);
+
     Cell getCell10fleft(Object textValue, Boolean isBoolean);
 
     List<HoaDon> getAllHoaDons();
+
     Page<HoaDon> getAllHoaDons(Pageable pageable);
+
     List<HoaDon> searchHoaDonsByMaHoaDon(String maHoaDon);
 
+    List<HoaDon> searchFilterHoaDons(String keyword, String filterTrangThaiThanhToan, String filterLoaiDonHang);
 
     HoaDon getInvoice(Integer id);
 }
