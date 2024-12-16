@@ -52,11 +52,12 @@
 
         <div class="container-fluid">
             <div class="b-5 mb-4">
-            <button type="button" class="btn" style="background-color: #808080;color:white"
-                    ng-click="back()">
-                Về trang sản phẩm
-            </button>
-            <button type="button" class="btn btn-primary" ng-click="viewChiTiet()">Về trang chi tiết sản phẩm</button>
+                <button type="button" class="btn" style="background-color: #808080;color:white"
+                        ng-click="back()">
+                    Về trang sản phẩm
+                </button>
+                <button type="button" class="btn btn-primary" ng-click="viewChiTiet()">Về trang chi tiết sản phẩm
+                </button>
             </div>
             <div class="row justify-content-center w-100">
                 <div class="col-9">
@@ -93,6 +94,10 @@
                                                         }}
                                                     </option>
                                                 </select>
+                                                <!-- Hiển thị lỗi màu sắc -->
+                                                <div ng-show="errorMessages.mauSac" class="text-danger">
+                                                    {{ errorMessages.mauSac }}
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
@@ -129,6 +134,11 @@
                             <div style="display: flex; align-items: center; justify-content: space-between; margin: 0 20px;">
                                 <h3 class="m-4">Màu {{table.mau.ten}}</h3>
                                 <button class="btn btn-danger" ng-click="removeMau(table)">Xóa màu</button>
+                            </div>
+
+                            <!-- Hiển thị lỗi chưa chọn kích cỡ -->
+                            <div ng-show="table.errorMessages && table.errorMessages.size" class="text-danger m-4">
+                                {{ table.errorMessages.size }}
                             </div>
 
                             <!-- Bảng hiển thị thông tin kích cỡ -->
@@ -201,8 +211,8 @@
                                             <div ng-show="form[table.mau.idMauSac][size.idKichCo].errorMessages.exists"
                                                  class="text-danger">
                                                 <!-- Nút "Cập nhật" khi có lỗi -->
-                                                <button class="btn btn-warning" ng-click="updateSize(table, size)">Cập
-                                                    nhật
+                                                <button class="btn btn-warning" ng-click="confirmUpdateSize(table, size)">
+                                                    Cập nhật
                                                 </button>
                                                 <span>{{ form[table.mau.idMauSac][size.idKichCo].errorMessages.exists
                                                     }}</span>

@@ -94,7 +94,18 @@ app.controller("chat-lieu-ctrl", function ($scope, $http) {
             document.getElementById("eTenMau").innerText = "Tên tối đa 30 ký tự!!!";
             return;
         }
+        const containsNumber = /\d/; // Biểu thức kiểm tra số
+        if (containsNumber.test($scope.ten)) {
+            document.getElementById('eTenMau').innerText = "Tên không được chứa số";
+            return;
+        }
 
+        // Kiểm tra tên có chứa ký tự đặc biệt
+        const containsSpecialChar = /[^a-zA-Z\s]/; // Biểu thức kiểm tra ký tự đặc biệt
+        if (containsSpecialChar.test($scope.ten)) {
+            document.getElementById('eTenMau').innerText = "Tên không được chứa ký tự đặc biệt";
+            return;
+        }
         // Gọi getAll để kiểm tra xem tên đã tồn tại chưa
         $http.get("/admin/chat-lieu/get-all").then(function (response) {
             var existingChatLieu = response.data;
@@ -151,7 +162,17 @@ app.controller("chat-lieu-ctrl", function ($scope, $http) {
             document.getElementById("eTenMauUd").innerText = "Tên tối đa 30 ký tự!!!";
             return
         }
-
+        const containsNumber = /\d/; // Biểu thức kiểm tra số
+        if (containsNumber.test($scope.cl.ten)) {
+            document.getElementById('eTenMauUd').innerText = "Tên không được chứa số";
+            return;
+        }
+        // Kiểm tra tên có chứa ký tự đặc biệt
+        const containsSpecialChar = /[^a-zA-Z\s]/; // Biểu thức kiểm tra ký tự đặc biệt
+        if (containsSpecialChar.test($scope.cl.ten)) {
+            document.getElementById('eTenMauUd').innerText = "Tên không được chứa ký tự đặc biệt";
+            return;
+        }
         $http.get("/admin/chat-lieu/get-all").then(function (response) {
             var existingChatLieu = response.data;
             var tenTonTai = false;

@@ -100,6 +100,14 @@ app.controller('ctrl', function ($scope, $http) {
             document.getElementById("eTenMau").innerText = "";
         }
 
+        // Kiểm tra tên có chứa ký tự đặc biệt
+        const containsSpecialChar = /[^a-zA-Z\s]/; // Biểu thức kiểm tra ký tự đặc biệt
+        if (containsSpecialChar.test($scope.ten)) {
+            document.getElementById('eTenMau').innerText = "Tên không được chứa ký tự đặc biệt";
+            isValid = false;
+        }else {
+            document.getElementById("eTenMau").innerText = "";
+        }
         // Kiểm tra rỗng các trường select
         if (!$scope.selectedXuatXu) {
             document.getElementById("eXuatXu").innerText = "Vui lòng chọn xuất xứ!!!";
@@ -234,7 +242,14 @@ app.controller('ctrl', function ($scope, $http) {
         } else {
             document.getElementById("eTenMauUd").innerText = "";
         }
-
+        // Kiểm tra tên có chứa ký tự đặc biệt
+        const containsSpecialChar = /[^a-zA-Z\s]/; // Biểu thức kiểm tra ký tự đặc biệt
+        if (containsSpecialChar.test($scope.sp.ten)) {
+            document.getElementById('eTenMauUd').innerText = "Tên không được chứa ký tự đặc biệt";
+            isValid = false;
+        }else {
+            document.getElementById("eTenMauUd").innerText = "";
+        }
         // Kiểm tra tính hợp lệ của mô tả
         if (!$scope.sp.moTa || $scope.sp.moTa.trim().length === 0) {
             document.getElementById("eMoTaUd").innerText = "Vui lòng nhập mô tả!!!";

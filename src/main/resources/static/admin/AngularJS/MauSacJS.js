@@ -137,7 +137,17 @@ app.controller("mau-sac-ctrl", function ($scope, $http,$sce,$timeout) {
             showError("eTenMau", "Tên tối đa 30 ký tự!!!");
             check = false;
         }
-
+        const containsNumber = /\d/; // Biểu thức kiểm tra số
+        if (containsNumber.test($scope.ten)) {
+            showError("eTenMau", "Tên không được chứa số!!!");
+            check = false;
+        }
+        // Kiểm tra tên có chứa ký tự đặc biệt
+        const containsSpecialChar = /[^a-zA-Z\s]/; // Biểu thức kiểm tra ký tự đặc biệt
+        if (containsSpecialChar.test($scope.ten)) {
+            showError("eTenMau", "Tên không được chứa ký tự đặc biệt");
+            check = false;
+        }
         if (!check) return; // Dừng nếu có lỗi
 
         // Gọi getAll để kiểm tra xem tên đã tồn tại chưa
@@ -211,7 +221,17 @@ app.controller("mau-sac-ctrl", function ($scope, $http,$sce,$timeout) {
             showError("eTenMauUd", "Tên tối đa 30 ký tự!!!");
             check = false;
         }
-
+        const containsNumber = /\d/; // Biểu thức kiểm tra số
+        if (containsNumber.test($scope.ms.ten)) {
+            showError("eTenMauUd", "Tên không được chứa số!!!");
+            check = false;
+        }
+        // Kiểm tra tên có chứa ký tự đặc biệt
+        const containsSpecialChar = /[^a-zA-Z\s]/; // Biểu thức kiểm tra ký tự đặc biệt
+        if (containsSpecialChar.test($scope.ms.ten)) {
+            showError("eTenMauUd", "Tên không được chứa ký tự đặc biệt");
+            check = false;
+        }
         if (!check) return; // Dừng nếu có lỗi
 
 

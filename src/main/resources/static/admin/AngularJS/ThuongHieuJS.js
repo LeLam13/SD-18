@@ -86,6 +86,19 @@ app.controller("thuonghieu-ctrl", function ($scope, $http) {
             document.getElementById('erTen').innerText = "Tên thương hiệu tối đa 30 ký tự"
             return;
         }
+        // Kiểm tra tên có chứa số
+        const containsNumber = /\d/; // Biểu thức kiểm tra số
+        if (containsNumber.test($scope.ten)) {
+            document.getElementById('erTen').innerText = "Tên không được chứa số";
+            return;
+        }
+
+        // Kiểm tra tên có chứa ký tự đặc biệt
+        const containsSpecialChar = /[^a-zA-Z\s]/; // Biểu thức kiểm tra ký tự đặc biệt
+        if (containsSpecialChar.test($scope.ten)) {
+            document.getElementById('erTen').innerText = "Tên không được chứa ký tự đặc biệt";
+            return;
+        }
 
         $http.get("/admin/thuong-hieu/get-all").then(function (response) {
             var existingThuongHieu = response.data;
@@ -106,7 +119,7 @@ app.controller("thuonghieu-ctrl", function ($scope, $http) {
                 }
                 var url = "/admin/thuong-hieu/add";
                 $http.post(url, thuonghieu).then(function (response) {
-                    $scope.getAll();
+                    $scope.findAll();
                     alert("Thêm Thành Công !");
                 }).catch(error => {
                     console.log("Thêm không thành công", err);
@@ -141,6 +154,17 @@ app.controller("thuonghieu-ctrl", function ($scope, $http) {
         }
         if ($scope.th.ten.length > 30) {
             document.getElementById('erTenUd').innerText = "Tên thương hiệu tối đa 30 ký tự"
+            return;
+        }
+        const containsNumber = /\d/; // Biểu thức kiểm tra số
+        if (containsNumber.test($scope.th.ten)) {
+            document.getElementById('erTenUd').innerText = "Tên không được chứa số";
+            return;
+        }
+        // Kiểm tra tên có chứa ký tự đặc biệt
+        const containsSpecialChar = /[^a-zA-Z\s]/; // Biểu thức kiểm tra ký tự đặc biệt
+        if (containsSpecialChar.test($scope.th.ten)) {
+            document.getElementById('erTenUd').innerText = "Tên không được chứa ký tự đặc biệt";
             return;
         }
         $http.get("/admin/thuong-hieu/get-all").then(function (response) {
