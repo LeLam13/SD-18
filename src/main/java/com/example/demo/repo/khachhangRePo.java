@@ -35,5 +35,10 @@ public interface khachhangRePo extends JpaRepository<khachhang, Integer> {
 
     khachhang findByTaikhoanUsername(String username);
 
+    boolean existsByMaKhachHang(String maKhachHang);
+
+    boolean existsByEmail(String email);
+
+    boolean existsBySoDienThoai(String soDienThoai);
 
 }
