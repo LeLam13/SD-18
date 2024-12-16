@@ -7,7 +7,7 @@
 >
 <head>
     <meta charset="utf-8" />
-    <title>ALLDY STORE | Thống Kê</title>
+    <title>Eighteen polo | Thống Kê</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link
             rel="stylesheet"
@@ -27,11 +27,13 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Khởi tạo flatpickr và thiết lập ngày mặc định từ hôm qua đến hôm nay
+            let chart;
+
             const startDate = flatpickr("#startDate", {
                 dateFormat: "Y-m-d",
                 defaultDate: new Date(new Date().setDate(new Date().getDate() - 1)),
             });
+
             const endDate = flatpickr("#endDate", {
                 dateFormat: "Y-m-d",
                 defaultDate: new Date(),
@@ -48,6 +50,7 @@
                         fetch(`/api/revenue?start=${start}&end=${end}`)
                             .then((response) => response.json())
                             .then((data) => {
+                                console.log("Fetched revenue data:", data);
                                 updateRevenueChart(data);
                             })
                             .catch((error) =>
@@ -58,7 +61,6 @@
                     }
                 });
 
-            // Update revenue chart
             function updateRevenueChart(data) {
                 const options = {
                     series: [{ name: "Doanh thu", data: data.revenueValues }],
@@ -73,13 +75,16 @@
                     },
                 };
 
-                const chart = new ApexCharts(
+                if (chart) {
+                    chart.destroy();
+                }
+
+                chart = new ApexCharts(
                     document.querySelector("#revenueChart"),
                     options
                 );
                 chart.render();
             }
-
             // Currency formatting
             function formatCurrency(value) {
                 return Number(value).toLocaleString("vi-VN", {
