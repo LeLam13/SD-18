@@ -410,7 +410,7 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
                         }
                     }).then(function (response) {
                         if (response.data) {
-<<<<<<< HEAD
+
                             // Kiểm tra nếu sizeForm tồn tại trước khi thay đổi thuộc tính
                             if (!sizeForm.errorMessages) {
                                 sizeForm.errorMessages = {};
@@ -420,9 +420,9 @@ app.controller("san-pham-ctrl", function ($scope, $http) {
 
                             sizeForm.errorMessages.exists = "Sản phẩm chi tiết đã tồn tại!";
 
-=======
+
                             sizeForm.errorMessages.exists = "Đã tồn tại";
->>>>>>> feature/sanpham
+
                             hasError = true;
                         }
                     }).catch(function (err) {
