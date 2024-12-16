@@ -100,7 +100,13 @@ app.controller("KhachHangController", function ($scope, $http, $filter) {
     if (!$scope.newKhachHang.ho_ten || $scope.newKhachHang.ho_ten.trim() === '') {
       $scope.errors.ho_ten = "Họ tên không được để trống.";
       isValid = false;
+    } else if (!/^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂỀếệểễôốồổỗợĂĐầấậăắằẳẵặ ]+$/.test($scope.newKhachHang.ho_ten.trim())) {
+      $scope.errors.ho_ten = "Họ tên không được chứa số hoặc ký tự đặc biệt.";
+      isValid = false;
+    } else {
+      $scope.errors.ho_ten = "";
     }
+
 
     // Kiểm tra ngày sinh
     if (!$scope.newKhachHang.ngay_sinh) {
