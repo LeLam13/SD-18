@@ -62,9 +62,11 @@ public class HoaDonChiTietService {
         // Chuẩn bị thông tin hóa đơn chỉ với các trường cần thiết
         Map<String, Object> hoaDonMap = new HashMap<>();
         hoaDonMap.put("maHoaDon", hoaDon.getMaHoaDon());
-        hoaDonMap.put("tenKhachNhan", khachHang != null ? khachHang.getHoTen() : null); // Tên khách từ KhachHang
+        hoaDonMap.put("tenKhachNhan", khachHang != null ? khachHang.getHoTen() : null); // Tên khách từ
+        // KhachHang
         hoaDonMap.put("emailKhachNhan", khachHang != null ? khachHang.getEmail() : null); // Email khách
-        hoaDonMap.put("soDienThoaiKhachNhan", khachHang != null ? khachHang.getSoDienThoai() : null); // Số điện thoại
+        hoaDonMap.put("soDienThoaiKhachNhan", khachHang != null ? khachHang.getSoDienThoai() : null); // Số điện
+        // thoại
         // khách
         hoaDonMap.put("diaChiNhan", khachHang != null ? khachHang.getDiaChi() : null); // Địa chỉ khách
         hoaDonMap.put("tongTien", hoaDon.getTongTien());
@@ -79,7 +81,8 @@ public class HoaDonChiTietService {
             Map<String, Object> chiTietMap = new HashMap<>();
             chiTietMap.put("sanPhamTen", chiTiet.getSanPhamChiTiet().getIdSanPham().getTen());
             chiTietMap.put("maSanPhamChiTiet", chiTiet.getSanPhamChiTiet().getMa());
-//            chiTietMap.put("chatLieu", chiTiet.getSanPhamChiTiet().getIdChatLieu().getTen());
+            chiTietMap.put("chatLieu", chiTiet.getSanPhamChiTiet().getIdSanPham().getIdChatLieu().getTen());
+            chiTietMap.put("mauSac", chiTiet.getSanPhamChiTiet().getIdMauSac().getTen());
             chiTietMap.put("kichCo", chiTiet.getSanPhamChiTiet().getIdKichCo().getTen());
             chiTietMap.put("soLuong", chiTiet.getSoLuong());
             chiTietMap.put("donGia", chiTiet.getDonGia());
@@ -120,13 +123,15 @@ public class HoaDonChiTietService {
             Font italicFont = new Font(baseFont, 10, Font.ITALIC, BaseColor.BLACK);
 
             // **Thêm logo góc trên bên trái cùng 1 hàng với tiêu đề**
-            Image logoLeft = Image.getInstance(getClass().getClassLoader().getResource("images/img.png").toString());
+            Image logoLeft = Image.getInstance(
+                    getClass().getClassLoader().getResource("images/img.png").toString());
             logoLeft.scaleToFit(50, 50); // Kích thước logo (chiều rộng, chiều cao)
             logoLeft.setAlignment(Image.ALIGN_LEFT);
 
             // **Thêm logo làm background**
             PdfContentByte canvas = writer.getDirectContentUnder();
-            Image logo = Image.getInstance(getClass().getClassLoader().getResource("images/img.png").toString());
+            Image logo = Image.getInstance(
+                    getClass().getClassLoader().getResource("images/img.png").toString());
             logo.setAbsolutePosition(150, 300); // Vị trí logo (x, y)
             logo.scaleToFit(300, 300); // Kích thước logo
             PdfGState gState = new PdfGState();
@@ -150,15 +155,15 @@ public class HoaDonChiTietService {
             titleCell.setHorizontalAlignment(Element.ALIGN_CENTER);
 
             // Thêm "HÓA ĐƠN GIÁ TRỊ GIA TĂNG"
-            Paragraph titleParagraph = new Paragraph("HÓA ĐƠN GIÁ TRỊ GIA TĂNG", titleFont);
+            Paragraph titleParagraph = new Paragraph("HÓA ĐƠN", titleFont);
             titleParagraph.setAlignment(Element.ALIGN_CENTER);
             titleCell.addElement(titleParagraph);
 
-            // Thêm "VAT INVOICE"
-            Paragraph vatInvoiceParagraph = new Paragraph("VAT INVOICE",
-                    new Font(baseFont, 12, Font.NORMAL, BaseColor.BLACK));
-            vatInvoiceParagraph.setAlignment(Element.ALIGN_CENTER);
-            titleCell.addElement(vatInvoiceParagraph);
+            // // Thêm "VAT INVOICE"
+            // Paragraph vatInvoiceParagraph = new Paragraph("VAT INVOICE",
+            // new Font(baseFont, 12, Font.NORMAL, BaseColor.BLACK));
+            // vatInvoiceParagraph.setAlignment(Element.ALIGN_CENTER);
+            // titleCell.addElement(vatInvoiceParagraph);
 
             // Thêm ngày tháng năm
             LocalDate createdDate = hoaDon.getCreateDate();
@@ -166,7 +171,8 @@ public class HoaDonChiTietService {
                     createdDate.getDayOfMonth(),
                     createdDate.getMonthValue(),
                     createdDate.getYear());
-            Paragraph dateParagraph = new Paragraph(dateText, new Font(baseFont, 10, Font.NORMAL, BaseColor.BLACK));
+            Paragraph dateParagraph = new Paragraph(dateText,
+                    new Font(baseFont, 10, Font.NORMAL, BaseColor.BLACK));
             dateParagraph.setAlignment(Element.ALIGN_CENTER);
             titleCell.addElement(dateParagraph);
 
@@ -197,16 +203,19 @@ public class HoaDonChiTietService {
                     new Phrase(
                             "Địa chỉ: Số 123, Phố Trịnh Văn Bô, Phường Phương Canh, Quận Nam Từ Liêm, Thành phố Hà Nội, Việt Nam",
                             normalFont));
-            companyInfoCell.addElement(new Phrase("Điện thoại: 024.3754 5222 - Fax: 024.3754 5223", normalFont));
+            companyInfoCell.addElement(
+                    new Phrase("Điện thoại: 024.3754 5222 - Fax: 024.3754 5223", normalFont));
             companyInfoCell.addElement(new Phrase(
-                    "Số tài khoản: 0491001474862 tại Ngân hàng TMCP Ngoại Thương, CN Thăng Long - Hà Nội", normalFont));
+                    "Số tài khoản: 0491001474862 tại Ngân hàng TMCP Ngoại Thương, CN Thăng Long - Hà Nội",
+                    normalFont));
             companyInfoCell.setBorder(PdfPCell.BOX); // Có viền xung quanh
             companyInfoCell.setPadding(10); // Khoảng cách bên trong
             companyInfoTable.addCell(companyInfoCell);
             document.add(companyInfoTable);
 
             // **Thông tin khách hàng**
-            PdfPTable customerInfoTable = new PdfPTable(1); // Thông tin khách hàng hiển thị trong 1 ô duy nhất
+            PdfPTable customerInfoTable = new PdfPTable(1); // Thông tin khách hàng hiển thị trong 1 ô duy
+            // nhất
             customerInfoTable.setWidthPercentage(100);
             customerInfoTable.setSpacingBefore(10); // Khoảng cách trước box thông tin khách hàng
 
@@ -214,14 +223,20 @@ public class HoaDonChiTietService {
             customerInfoCell.setBorder(PdfPCell.BOX); // Có viền xung quanh
             customerInfoCell.setPadding(10); // Khoảng cách bên trong
             customerInfoCell.addElement(new Phrase(
-                    "Họ tên người mua hàng (Customer's name): " + hoaDon.getKhachHang().getHoTen(), normalFont));
+                    "Họ tên người mua hàng (Customer's name): " + hoaDon.getKhachHang().getHoTen(),
+                    normalFont));
             customerInfoCell.addElement(
-                    new Phrase("Số điện thoại (Phone number): " + hoaDon.getKhachHang().getSoDienThoai(), normalFont));
+                    new Phrase("Số điện thoại (Phone number): "
+                            + hoaDon.getKhachHang().getSoDienThoai(), normalFont));
             customerInfoCell
-                    .addElement(new Phrase("Địa chỉ (Address): " + hoaDon.getKhachHang().getDiaChi(), normalFont));
+                    .addElement(new Phrase(
+                            "Địa chỉ (Address): " + hoaDon.getKhachHang().getDiaChi(),
+                            normalFont));
             String paymentMethod = hoaDon.getTrangThaiThanhToan() ? "Chuyển khoản" : "Tiền mặt";
             customerInfoCell
-                    .addElement(new Phrase("Hình thức thanh toán (Payment method): " + paymentMethod, normalFont));
+                    .addElement(new Phrase(
+                            "Hình thức thanh toán (Payment method): " + paymentMethod,
+                            normalFont));
 
             // Thêm ô thông tin khách hàng vào bảng
             customerInfoTable.addCell(customerInfoCell);
@@ -236,7 +251,8 @@ public class HoaDonChiTietService {
             detailsTable.setWidths(new int[] { 1, 4, 2, 2, 2, 3 });
 
             detailsTable.addCell(createCell("STT", headerFont, Element.ALIGN_CENTER));
-            detailsTable.addCell(createCell("Tên hàng hóa, dịch vụ (Description)", headerFont, Element.ALIGN_CENTER));
+            detailsTable.addCell(createCell("Tên hàng hóa, dịch vụ (Description)", headerFont,
+                    Element.ALIGN_CENTER));
             detailsTable.addCell(createCell("Đơn vị tính (Unit)", headerFont, Element.ALIGN_CENTER));
             detailsTable.addCell(createCell("Số lượng (Quantity)", headerFont, Element.ALIGN_CENTER));
             detailsTable.addCell(createCell("Đơn giá (Unit Price)", headerFont, Element.ALIGN_CENTER));
@@ -248,14 +264,23 @@ public class HoaDonChiTietService {
                 double amount = chiTiet.getSoLuong() * chiTiet.getDonGia();
                 totalAmount += amount;
 
-                detailsTable.addCell(createCell(String.valueOf(stt++), normalFont, Element.ALIGN_CENTER));
-                detailsTable.addCell(createCell(chiTiet.getSanPhamChiTiet().getIdSanPham().getTen(), normalFont));
+                detailsTable.addCell(
+                        createCell(String.valueOf(stt++), normalFont, Element.ALIGN_CENTER));
+                detailsTable.addCell(createCell(
+                        chiTiet.getSanPhamChiTiet().getIdSanPham().getTen() + " - "
+                                + chiTiet.getSanPhamChiTiet().getIdKichCo().getTen()
+                                + " - "
+                                + chiTiet.getSanPhamChiTiet().getIdMauSac().getTen(),
+                        normalFont));
                 detailsTable.addCell(createCell("Cái", normalFont, Element.ALIGN_CENTER));
                 detailsTable
-                        .addCell(createCell(String.valueOf(chiTiet.getSoLuong()), normalFont, Element.ALIGN_CENTER));
+                        .addCell(createCell(String.valueOf(chiTiet.getSoLuong()), normalFont,
+                                Element.ALIGN_CENTER));
                 detailsTable.addCell(
-                        createCell(currencyFormat.format(chiTiet.getDonGia()), normalFont, Element.ALIGN_RIGHT));
-                detailsTable.addCell(createCell(currencyFormat.format(amount), normalFont, Element.ALIGN_RIGHT));
+                        createCell(currencyFormat.format(chiTiet.getDonGia()), normalFont,
+                                Element.ALIGN_RIGHT));
+                detailsTable.addCell(createCell(currencyFormat.format(amount), normalFont,
+                        Element.ALIGN_RIGHT));
 
             }
             document.add(detailsTable);
@@ -270,15 +295,21 @@ public class HoaDonChiTietService {
             currencyFormat.setGroupingUsed(true); // Bật tính năng ngăn cách hàng nghìn
 
             totalTable.addCell(createCell("Cộng tiền hàng (Total):", boldFont, Element.ALIGN_RIGHT));
-            totalTable.addCell(createCell(currencyFormat.format(totalAmount), normalFont, Element.ALIGN_RIGHT));
+            totalTable.addCell(createCell(currencyFormat.format(totalAmount), normalFont,
+                    Element.ALIGN_RIGHT));
 
-            double vatAmount = totalAmount * 0.1; // Thuế suất 8%
-            totalTable.addCell(createCell("Thuế suất GTGT (VAT rate): 10%", boldFont, Element.ALIGN_RIGHT));
-            totalTable.addCell(createCell(currencyFormat.format(vatAmount), normalFont, Element.ALIGN_RIGHT));
+            // double vatAmount = totalAmount * 0.1; // Thuế suất 8%
+            // totalTable.addCell(createCell("Thuế suất GTGT (VAT rate): 10%", boldFont,
+            // Element.ALIGN_RIGHT));
+            // totalTable.addCell(createCell(currencyFormat.format(vatAmount), normalFont,
+            // Element.ALIGN_RIGHT));
 
-            double totalPayment = totalAmount + vatAmount;
-            totalTable.addCell(createCell("Tổng cộng tiền thanh toán (Total payment):", boldFont, Element.ALIGN_RIGHT));
-            totalTable.addCell(createCell(currencyFormat.format(totalPayment), normalFont, Element.ALIGN_RIGHT));
+            // double totalPayment = totalAmount + vatAmount;
+            double totalPayment = totalAmount;
+            totalTable.addCell(createCell("Tổng cộng tiền thanh toán (Total payment):", boldFont,
+                    Element.ALIGN_RIGHT));
+            totalTable.addCell(createCell(currencyFormat.format(totalPayment), normalFont,
+                    Element.ALIGN_RIGHT));
 
             document.add(totalTable);
             PdfContentByte canva = writer.getDirectContent();
@@ -288,7 +319,8 @@ public class HoaDonChiTietService {
             canva.setColorFill(BaseColor.BLACK);
 
             // Tạo nội dung lưu ý
-            Phrase notePhrase = new Phrase("Theo form mẫu của Bộ Tài chính - Mẫu số 01GTKT0/001", italicFontDes);
+            Phrase notePhrase = new Phrase("Theo form mẫu của Bộ Tài chính - Mẫu số 01GTKT0/001",
+                    italicFontDes);
 
             // Xác định vị trí của dòng chữ (góc dưới cùng bên phải)
             ColumnText.showTextAligned(

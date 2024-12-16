@@ -87,6 +87,15 @@ public class HoaDonController {
         return hoaDonService.searchHoaDonsByMaHoaDon(maHoaDon);
     }
 
+    @GetMapping("/search-filter")
+    @ResponseBody
+    public List<HoaDon> searchFilterHoaDons(
+            @RequestParam(required = false) String keyword,
+            @RequestParam(required = false) String filterTrangThaiThanhToan,
+            @RequestParam(required = false) String filterLoaiDonHang) {
+        return hoaDonService.searchFilterHoaDons(keyword, filterTrangThaiThanhToan, filterLoaiDonHang);
+    }
+
     @GetMapping("/detail/{id}")
     @ResponseBody
     public Map<String, Object> getHoaDonChiTiet(@PathVariable Integer id) {
