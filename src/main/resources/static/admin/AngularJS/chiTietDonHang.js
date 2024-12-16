@@ -80,6 +80,10 @@ app.controller("chiTiet-ctrl",function ($scope,$location, $http,$interval,$sce, 
 
         const currentIndex = $scope.statusOrder.indexOf($scope.currentStatus);
         const newIndex = $scope.statusOrder.indexOf(idTrangThai);
+        if (newIndex !== currentIndex + 1) {
+            $scope.showNotification('Trạng thái phải được cập nhật theo thứ tự đúng!', 'error');
+            return;
+        }
         // Kiểm tra nếu trạng thái mới nằm trước trạng thái hiện tại
         if (newIndex <= currentIndex) {
             $scope.showNotification('Không thể quay lại trạng thái trước hoặc cập nhật trạng thái hiện tại!', 'error');
