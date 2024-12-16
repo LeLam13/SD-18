@@ -294,7 +294,15 @@
                             </div>
                             <div class="col-3" style="font-size: 14px">
                                 <div class="mb-3">
-                                    helllo
+                                    <div class="form-group">
+<!--                                        <label for="trangThai">Trạng thái:</label>-->
+                                        <select id="trangThai" class="form-control" ng-model="selectedTrangThai" ng-change="searchTrangThai()" style="font-size: 14px">
+                                            <option value="">-Trạng thái-</option>
+                                            <option ng-repeat="status in listStatus" value="{{status.idTrangThai}}">
+                                                {{status.tenTrangThai}}
+                                            </option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -406,7 +414,7 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="row">
-                                        <div class="col-8">Tổng Tiền:</div>
+                                        <div class="col-8">Tổng Tiền Sản Phẩm:</div>
                                         <div class="col-4" id="tong-tien">{{ formatCurrency(getSum()) }}</div>
                                     </div>
 
@@ -422,8 +430,8 @@
                                 </div>
                                 <div class="col-6">
                                     <div class="row">
-                                        <div class="col-8">Phải Thanh Toán:</div>
-                                        <div class="col-4" id="tong-tien-thanh-toan">{{ formatCurrency(getSum()) }}</div>
+                                        <div class="col-8">Tổng Tiền Đơn Hàng:</div>
+                                        <div class="col-4" id="tong-tien-thanh-toan">{{ formatCurrency(getSum() + getShip()) }}</div>
                                     </div>
 
                                 </div>

@@ -165,7 +165,7 @@
                                                 ng-change="validateQuantity(orderProduct)" type="text" class="form-control"  min="1">
                                         <button ng-click="soLuongPlus(orderProduct)" class="btn btn-outline-secondary bi bi-plus-circle" ></button>
                                     </div>
-                                    <div ng-show="orderProduct.invalidQuantity" class="error-message" style="color: red;">
+                                    <div ng-show="orderProduct.invalidQuantity" class="error-message" style="color: #ff0000;">
                                         {{ orderProduct.errorMessage }}
                                     </div>
                                 </td>
@@ -191,14 +191,14 @@
                                 <div class="col-6">
                                     <div class="mb-2">
                                         <label  class="form-label">Họ Và Tên</label>
-                                        <input type="Text" id="hoVaTen" class="form-control" >
+                                        <input type="Text" id="hoVaTen" class="form-control" readonly>
                                         <span id="messHoTen" style="color: red;"></span>
                                     </div>
                                 </div>
                                 <div class="col-6">
                                     <div class="mb-2">
                                         <label  class="form-label">email</label>
-                                        <input type="Text" id="email" class="form-control" >
+                                        <input type="Text" id="email" class="form-control" readonly>
                                         <span id="messEmail" style="color: red;"></span>
                                     </div>
                                 </div>
@@ -207,7 +207,7 @@
                                 <div class="col-6">
                                     <div class="mb-2">
                                         <label  class="form-label">Số điện thoại</label>
-                                        <input type="Text" id="soDienThoai" class="form-control" >
+                                        <input type="Text" id="soDienThoai" class="form-control" readonly>
                                         <span id="messSDT" style="color: red;"></span>
                                     </div>
                                 </div>

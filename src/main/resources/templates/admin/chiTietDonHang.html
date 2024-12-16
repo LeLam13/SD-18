@@ -273,8 +273,10 @@
                         </div>
                     </div>
                     <div class="buttons">
-                        <button class="button cancel" ng-click="showModalConfirm()" id="btn-huy">Hủy đơn hàng</button>
-                        <button ng-click="" class="btn btn-info" id="btn-in-hoa-don">In Hoá Đơn</button>
+                        <button class="button cancel" ng-click="showModalConfirm()" id="btn-huy"
+                                ng-show="idCheckTrangThai === 1">Hủy đơn hàng</button>
+                        <button  class="btn btn-info" id="btn-in-hoa-don"
+                                ng-show="idCheckTrangThai === 7" ng-click="checkInvoice()">In Hoá Đơn</button>
                     </div>
                 </div>
 
@@ -361,14 +363,20 @@
 
                                     </div>
                                 </div>
-<!--                                <div class="row">-->
-<!--                                    <div class="col-6">-->
-<!--                                        <div class="row">-->
-<!--                                            <div class="col-8">Trạng Thái Thanh Toán:</div>-->
-<!--                                            <div class="col-4" id="trang-thai-thanh-toan"></div>-->
-<!--                                        </div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
+                                <div class="row">
+                                    <div class="col-6">
+                                        <div class="row">
+                                            <div class="col-8">Trạng Thái Thanh Toán:</div>
+                                            <div class="col-4" id="trang-thai-thanh-toan"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="row">
+                                            <div class="col-8">Phương Thức Thanh Toán:</div>
+                                            <div class="col-4" id="phuong-thuc-thanh-toan"></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <br/>
                             <hr/>

@@ -30,7 +30,7 @@ public interface DonHangOnlineService {
     List<GioHangChiTiet> getDetailCart(Integer idGioHang);
 
     GioHangChiTiet updateCartDetail(GioHAngChiTietRequestDTO gioHAngChiTietRequestDTO);
-    GioHangChiTiet  deleteAndReturnBySanPhamChiTietId(Integer idSanPhamChiTiet);
+    GioHangChiTiet  deleteAndReturnBySanPhamChiTietId(Integer idSanPhamChiTiet,Integer idGioHangChiTiet);
 
     GioHangChiTiet updateCartDetailPlus(GioHAngChiTietRequestDTO gioHAngChiTietRequestDTO);
 
@@ -45,4 +45,6 @@ public interface DonHangOnlineService {
     DonHang findByID(Integer idDonHang);
 
     DonHang findByMaDonHang(String txnRef);
+
+    HoaDon updateInvoice(HoaDonOnlineRequestDTO hoaDonOnlineRequestDTO, String username);
 }

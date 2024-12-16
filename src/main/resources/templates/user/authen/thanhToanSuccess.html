@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <title>Thanh toán thất bại</title>
+    <title>Thanh toán thành công</title>
 </head>
 
 <body>
@@ -88,13 +88,13 @@
 
         </style>
         <div class="header">
-            <img src="/images/images-vnpay.png" alt="VN Pay" class="logo">
+            <img src="assets/img/images-vnpay.png" alt="VN Pay" class="logo">
         </div>
         <div class="content">
-            <p class="order-value">Giá trị đơn hàng: <span class="value">{{amount}} VND</span></p>
+            <p class="order-value">Giá trị đơn hàng: <span class="value" th:text="${amount} + ' VND'"></span></p>
             <div class="success-icon">✔</div>
             <h1>Đặt hàng thành công!</h1>
-            <p class="order-id">Mã đơn hàng: <span class="value">{{orderId}}</span></p>
+            <p class="order-id">Mã đơn hàng: <span class="value" th:text="${orderId}"></span></p>
             <p>Cảm ơn bạn đã đặt hàng tại cửa hàng của chúng tôi. Đơn hàng của bạn đang được xử lý.</p>
             <button class="continue-btn">Tiếp tục mua sắm</button>
         </div>

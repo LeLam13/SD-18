@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface GioHangchiTietRepo extends JpaRepository<GioHangChiTiet, Integer> {
@@ -25,4 +26,9 @@ public interface GioHangchiTietRepo extends JpaRepository<GioHangChiTiet, Intege
     @Query("DELETE FROM GioHangChiTiet g WHERE g.gioHang.idGioHang = :idGioHang")
     void deleteByGioHangId(@Param("idGioHang") Integer idGioHang);
 
+    @Query("SELECT ghct FROM GioHangChiTiet ghct WHERE ghct.idGioHangChiTiet = :idGioHangChiTiet AND ghct.sanPhamChiTiet.idSanPhamChiTiet = :idSanPhamChiTiet")
+    GioHangChiTiet findByGioHangChiTietIdAndSanPhamChiTietId(
+            @Param("idGioHangChiTiet") Integer idGioHangChiTiet,
+            @Param("idSanPhamChiTiet") Integer idSanPhamChiTiet
+    );
 }

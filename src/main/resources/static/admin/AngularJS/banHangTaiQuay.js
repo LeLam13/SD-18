@@ -64,7 +64,7 @@ app.controller("banhang-ctrl", function ($scope, $http,$sce,$timeout) {
     $scope.selectedId = null;
     $scope.khachThanhToan = 0;
     //hiển thị vận chuyển
-    $scope.shippingMethod = '1';
+    $scope.shippingMethod = "1";
     //phân trang
     $scope.currentPage = 1; // Trang hiện tại
     $scope.pageSize = 5;
@@ -163,6 +163,7 @@ app.controller("banhang-ctrl", function ($scope, $http,$sce,$timeout) {
         if ($scope.donHang.length >= 8) {
             console.error('Đã có 8 đơn hàng, không thể thêm mới.');
             //alert('Đã đạt đến giới hạn 8 đơn hàng, không thể thêm đơn hàng mới.');
+            $scope.showNotification('Đã có 8 đơn hàng, không thể thêm mới!','infor');
             return;  // Dừng function nếu đã có 8 item
         }
         var donHangData = angular.copy($scope.donHangAdd);
@@ -274,7 +275,17 @@ app.controller("banhang-ctrl", function ($scope, $http,$sce,$timeout) {
         }
         console.log("check Data spct",$scope.dataProduct);
     }
-
+    // $scope.khachThanhToan = '';
+    // $scope.loiTien = '';
+    //
+    // $scope.kiemTraTien = function(value) {
+    //     // Kiểm tra nếu không phải là số hoặc số nhỏ hơn 0
+    //     if (isNaN(value) || value < 0) {
+    //         $scope.loiTien = 'Số tiền không hợp lệ. Vui lòng nhập số lớn hơn hoặc bằng 0.';
+    //     } else {
+    //         $scope.loiTien = ''; // Xóa thông báo nếu hợp lệ
+    //     }
+    // };
     //tạo hoá đơn
     $scope.createHoaDon = function (){
         var nameKH = $('#nameKH').val();
@@ -304,9 +315,10 @@ app.controller("banhang-ctrl", function ($scope, $http,$sce,$timeout) {
 
         console.log("check id khach hàng1: ",$scope.khachHangById);
         var trangThai = 5;
-        if($scope.shippingMethod===2){
-            trangThai=1;
+        if (parseInt($scope.shippingMethod) === 2) {
+            trangThai = 1;
         }
+        console.log("check trangThai: ",trangThai);
         $scope.hoaDonData ={
             maHoaDon: $scope.generateRandomString(8),
             idKhuyenMai: phieuGiamGia,
@@ -948,9 +960,11 @@ app.controller("banhang-ctrl", function ($scope, $http,$sce,$timeout) {
         if (!Number.isInteger(details.soLuong) || details.soLuong <= 0) {
             // Số lượng không hợp lệ nếu không phải số nguyên hoặc <= 0
             details.invalidQuantity = true;
+            details.errorMessage = "Số lượng nhập không hợp lệ!";
         } else if (availableProduct && details.soLuong > availableProduct.soLuong) {
             // Kiểm tra nếu số lượng vượt quá số lượng có sẵn
             details.invalidQuantity = true;
+            details.errorMessage = "Số lượng nhập vượt quá số lượng có sẵn!";
         } else {
             // Số lượng hợp lệ
             details.invalidQuantity = false;

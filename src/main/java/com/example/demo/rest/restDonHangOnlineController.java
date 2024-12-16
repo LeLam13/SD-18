@@ -279,9 +279,9 @@ public class restDonHangOnlineController {
     }
 
     @DeleteMapping("/gio-hang-chi-tiet/xoa-theo-id-san-pham/{id}")
-    public ResponseEntity<?> deleteCartdetail(@PathVariable("id")Integer id){
+    public ResponseEntity<?> deleteCartdetail(@PathVariable("id")Integer id ,@RequestParam("idGioHangChiTiet") Integer idGioHangChiTiet){
         System.out.println("check id delete: "+id);
-        GioHangChiTiet deletedGioHangChiTiet = donHangOnlineService.deleteAndReturnBySanPhamChiTietId(id);
+        GioHangChiTiet deletedGioHangChiTiet = donHangOnlineService.deleteAndReturnBySanPhamChiTietId(id,idGioHangChiTiet);
         if (deletedGioHangChiTiet != null) {
             return ResponseEntity.ok(deletedGioHangChiTiet); // Trả về đối tượng đã xóa
         } else {

@@ -25,6 +25,8 @@ public class DonHangCuaKhacServiceImpl implements DonHangCuaKhachService {
     TrangThaiRepo trangThaiRepo;
     @Autowired
     KhuyenMaiRepo khuyenMaiRepo;
+    @Autowired
+    SanPhamChiTietRepo sanPhamChiTietRepo;
 
     @Override
     public List<DonHang> getAllOrderUsername(String username) {
@@ -77,6 +79,15 @@ public class DonHangCuaKhacServiceImpl implements DonHangCuaKhachService {
 //        else {
 //            throw new RuntimeException("Không tìm thấy khuyến mãi!");
 //        }
+        List<DonHangChiTiet> chiTietDonHangList = donHangChiTietRepo.findByDonHangId(donHang.getIdDonHang());
+
+        // Cập nhật lại số lượng sản phẩm
+        for (DonHangChiTiet chiTiet : chiTietDonHangList) {
+            SanPhamChiTiet sanPham = chiTiet.getSanPhamChiTiet();
+            sanPham.setSoLuong(sanPham.getSoLuong() + chiTiet.getSoLuong());
+            sanPhamChiTietRepo.save(sanPham);
+        }
+
         TrangThai trangThai = trangThaiRepo.findById(6).orElse(null);
         donHang.setTrangThai(trangThai);
         LocalDate localDate = LocalDate.now();

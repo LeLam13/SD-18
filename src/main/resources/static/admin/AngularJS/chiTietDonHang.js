@@ -16,6 +16,7 @@ app.controller("chiTiet-ctrl",function ($scope,$location, $http,$interval,$sce, 
     };
 
     var idDonHangShow = null;
+    $scope.idCheckTrangThai = null;
 
     $scope.getOrderByID = function (){
         //$scope.idDonHang = id;
@@ -28,21 +29,30 @@ app.controller("chiTiet-ctrl",function ($scope,$location, $http,$interval,$sce, 
                 itemOrder = item.donHang;
             });
             idDonHangShow = itemOrder.idDonHang;
+            idCheckTrangThai = itemOrder.trangThai.idTrangThai;
+            console.log("idCheckTrangThai: ",idCheckTrangThai);
             if (response.data && itemOrder) {
                 //console.log("check Detail: ",itemOrder);
                 $('#trang-thai').text(itemOrder.trangThai.tenTrangThai);
                 $('#ma-don-hang').text(itemOrder.maDonHang);
                 if (itemOrder.loaiDonHang === 2) {
                     $('#loai-don-hang').text("Đơn hàng online");
+                    $('#phuong-thuc-thanh-toan').text(
+                        itemOrder.phuongThucThanhToan.idPhuongThucThanhToan ===2 ? "Thanh Toán Online(ví VNPay)" : "Thanh Toán Sau Khi Nhận");
                 }
-                if (itemOrder.phuongThucNhan === 1) {
+                if(itemOrder.loaiDonHang === 1){
                     $('#loai-don-hang').text("Đơn hàng tại quầy");
+                    $('#phuong-thuc-thanh-toan').text(
+                        itemOrder.phuongThucThanhToan.idPhuongThucThanhToan ===2 ? "Thanh Toán Online" : "Tiền mặt");
                 }
+                // if (itemOrder.phuongThucNhan === 1) {
+                //     $('#loai-don-hang').text("Đơn hàng tại quầy");
+                // }
 
                 $('#tong-tien').text(itemOrder.tongTien);
                 $('#tong-tien-thanh-toan').text(itemOrder.tongTienThanhToan);
                 $('#phi-van-chuyen').text(itemOrder.phiVanChuyen);
-
+                $('#trang-thai-thanh-toan').text(itemOrder.trangThaiThanhToan ? "Đã thanh toán" : "Chưa thanh toán");
                 //khach mua
                 $('#ten-khach-mua').val(itemOrder.khachHang.hoTen);
                 $('#sdt-khach-mua').val(itemOrder.khachHang.soDienThoai);
@@ -78,7 +88,7 @@ app.controller("chiTiet-ctrl",function ($scope,$location, $http,$interval,$sce, 
 
         // Nếu trạng thái hiện tại đã là 5, không cho phép cập nhật
         if ($scope.currentStatus === 5 || $scope.currentStatus === 6) {
-            $scope.showNotification('Không thể cập nhật vì đơn hàng đã hoàn thành!', 'error');
+            $scope.showNotification('Không thể cập nhật vì đơn hàng đã hoàn thành hoặc huỷ đơn!', 'error');
             return;
         }
 
@@ -147,6 +157,30 @@ app.controller("chiTiet-ctrl",function ($scope,$location, $http,$interval,$sce, 
 
     };
 
+    $scope.checkInvoice = function (){
+        console.log('hoa dơn get id:', id);//lấy hoá đơn theo id của đơn hàng
+        $http.get("/don-hang/get-invoice/"+id).then(function (response) {
+            console.log('response.data has data',response.data);
+            if (response.data && response.data.idHoaDon) {
+                console.log('response.data has data',response.data);
+                $scope.printerInvoice(response.data.idHoaDon);
+            }
+        }).catch(function (errors) {
+            console.error('Có lỗi xảy ra:', errors);
+        })
+    }
+    //in hoá đơn
+    $scope.printerInvoice = function (idHoaDon){
+        console.log('check in hoá đơn:');
+        $http.get("/don-hang/invoice/"+idHoaDon).then(function (response) {
+            console.log('thanh cong:', response);
+            $scope.showNotification("In hoá đơn thành công!","success");
+        }).catch(function (errors) {
+            console.error('Có lỗi xảy ra:', errors);
+            $scope.showNotification("In hoá đơn thất bại!","error");
+        })
+    }
+
     $scope.showCancelOrder = function() {
         $(".step").removeClass("active");
         $("#step-6").show();
@@ -190,7 +224,7 @@ app.controller("chiTiet-ctrl",function ($scope,$location, $http,$interval,$sce, 
 
     //ẩn trạng thái
     $scope.hideStatusOrder = function (){
-        if(idDonHangShow !==1){
+        if(idCheckTrangThai !==1){
             $('#btn-huy').hide();
         }else {
             $('#btn-huy').show();
@@ -198,8 +232,8 @@ app.controller("chiTiet-ctrl",function ($scope,$location, $http,$interval,$sce, 
         $('#step-6').hide();
     }
 
-    $scope.hideStatusOrder = function (){
-        if(idDonHangShow === 7){
+    $scope.hideInvoiceOrder = function (){
+        if(idCheckTrangThai === 7){
             $('#btn-in-hoa-don').show();
         }else {
             $('#btn-in-hoa-don').hide();
@@ -209,8 +243,9 @@ app.controller("chiTiet-ctrl",function ($scope,$location, $http,$interval,$sce, 
 
     //load dữ liệu mặc định
     $scope.getOrderByID();
-    $scope.hideStatusOrder();
-
+    $('#step-6').hide();
+    // $scope.hideStatusOrder();
+    // $scope.hideInvoiceOrder();
 
 
     // tự động đồng bộ dữ liệu
@@ -239,8 +274,10 @@ app.controller("chiTiet-ctrl",function ($scope,$location, $http,$interval,$sce, 
                 .then(function(response) {
                     // Cập nhật idTrangThai từ phản hồi server
                     const newTrangThai = response.data.trangThai.idTrangThai;
+
                     // Chỉ cập nhật giao diện nếu trạng thái thay đổi
                     if ($scope.idTrangThai !== newTrangThai) {
+                        $scope.idCheckTrangThai = newTrangThai;
                         console.log("check.....")
                         if(newTrangThai ===1){
                             console.log(newTrangThai)

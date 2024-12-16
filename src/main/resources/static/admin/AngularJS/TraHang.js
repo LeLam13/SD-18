@@ -19,8 +19,12 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval,$sce, $timeout)
             $scope.listDonHang = response.data;
             console.log("get all order: ",response.data);
             $scope.totalPages = Math.ceil($scope.listDonHang.length / $scope.pageSize); // Tổng số trang
-        }).catch(function (errors){
-            console.error("Có lỗi xảy ra: ",errors);
+        }).catch(function (error){
+            console.error("Có lỗi xảy ra: ",error);
+            if (error.status === -1 || error.status === 500) { // Lỗi kết nối server
+                console.log("Server không phản hồi. Dừng tự động kiểm tra.");
+                $scope.stopAutoCheck();
+            }
         })
     }
     var idDonHangShow = null;
@@ -291,6 +295,9 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval,$sce, $timeout)
     $scope.searchLoaiDonHang = function (){
         $scope.stopAutoCheck();
         var loaiDonHang = $scope.selectedLoaiDon; // Lấy giá trị từ ng-model
+        if (!loaiDonHang || loaiDonHang.length === 0) {
+            $scope.getAllOrder();
+        }
         // if (!loaiDonHang) {
         //     $scope.showNotification("Vui lòng chọn loại đơn", "error");
         //     return;
@@ -300,13 +307,14 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval,$sce, $timeout)
             url: '/don-hang/tim-kiem-loai-don-hang', // URL cơ bản
             params: { loaiDonHang: loaiDonHang } // Truyền trực tiếp tham số
         }).then(function (response) {
-            if(response && response.data === null){
-                $scope.getAllOrder();
-            }else {
-                $scope.listDonHang = response.data;
-                console.log("get all order search: ",response.data);
-                $scope.totalPages = Math.ceil($scope.listDonHang.length / $scope.pageSize); // Tổng số trang
-            }
+            // if(response && response.data === null){
+            //     $scope.getAllOrder();
+            // }else {
+            //
+            // }
+            $scope.listDonHang = response.data;
+            console.log("get all order search: ",response.data);
+            $scope.totalPages = Math.ceil($scope.listDonHang.length / $scope.pageSize); // Tổng số trang
         }).catch(function (error) {
             console.error("Có lỗi khi lấy trạng thái", error);
         })
@@ -390,6 +398,30 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval,$sce, $timeout)
         }).catch(function (errors) {
             console.error("Có lỗi xảy ra trong quá trình ",errors);
             $scope.showNotification("Có lỗi xảy ra trong quá trình ", "error");
+        })
+    }
+
+    $scope.selectedTrangThai = null;
+    $scope.searchTrangThai = function (){
+        $scope.stopAutoCheck();
+        var idTrangThai = $scope.selectedTrangThai; // Lấy giá trị từ ng-model
+        if (!idTrangThai || idTrangThai.length === 0) {
+            $scope.getAllOrder();
+        }
+        $http({
+            method: 'GET',
+            url: '/don-hang/tim-kiem-trang-thai-don-hang', // URL cơ bản
+            params: { idTrangThai: idTrangThai } // Truyền trực tiếp tham số
+        }).then(function (response) {
+            if(response && response.data === null){
+                $scope.getAllOrder();
+            }else {
+                $scope.listDonHang = response.data;
+                console.log("get all order search: ",response.data);
+                $scope.totalPages = Math.ceil($scope.listDonHang.length / $scope.pageSize); // Tổng số trang
+            }
+        }).catch(function (error) {
+            console.error("Có lỗi khi lấy trạng thái", error);
         })
     }
 
