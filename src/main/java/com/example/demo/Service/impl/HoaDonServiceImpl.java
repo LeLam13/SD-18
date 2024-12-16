@@ -145,6 +145,8 @@ public class HoaDonServiceImpl implements HoaDonService {
 
 
 
+
+
         donHang.setTongTien(hoaDon.getTongTien());
         donHang.setTongTienKhuyenMai(hoaDon.getTongTienKhuyenMai());
         donHang.setTongTienSauKhuyenMai(hoaDon.getTongTienSauKhuyenMai());
