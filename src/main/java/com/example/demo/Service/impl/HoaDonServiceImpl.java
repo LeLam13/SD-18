@@ -143,10 +143,9 @@ public class HoaDonServiceImpl implements HoaDonService {
 //        TrangThai trangThaiDH1 = trangThaiRepo.findById(1).get();
 //        TrangThai trangThaiDH2 = trangThaiRepo.findById(5).get();
 
-<<<<<<< HEAD
 
-=======
->>>>>>> feature/login
+
+
 
         donHang.setTongTien(hoaDon.getTongTien());
         donHang.setTongTienKhuyenMai(hoaDon.getTongTienKhuyenMai());
