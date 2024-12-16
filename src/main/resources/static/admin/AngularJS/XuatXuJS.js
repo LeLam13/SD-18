@@ -100,8 +100,7 @@ app.controller("xuat-xu-ctrl",function ($scope,$http){
             document.getElementById('eTenMau').innerText = "Tên không được chứa số";
             return;
         }
-        // Kiểm tra tên có chứa ký tự đặc biệt
-        const containsSpecialChar = /[^a-zA-Z\s]/; // Biểu thức kiểm tra ký tự đặc biệt
+        const containsSpecialChar = /[^a-zA-Z0-9À-ỹ\s]/;
         if (containsSpecialChar.test($scope.ten)) {
             document.getElementById('eTenMau').innerText = "Tên không được chứa ký tự đặc biệt";
             return;
@@ -166,8 +165,8 @@ app.controller("xuat-xu-ctrl",function ($scope,$http){
             document.getElementById('eTenMauUd').innerText = "Tên không được chứa số";
             return;
         }
-        // Kiểm tra tên có chứa ký tự đặc biệt
-        const containsSpecialChar = /[^a-zA-Z\s]/; // Biểu thức kiểm tra ký tự đặc biệt
+        // Biểu thức kiểm tra ký tự đặc biệt (loại trừ cả chữ và số)
+        const containsSpecialChar = /[^a-zA-Z0-9À-ỹ\s]/;
         if (containsSpecialChar.test($scope.xx.ten)) {
             document.getElementById('eTenMauUd').innerText = "Tên không được chứa ký tự đặc biệt";
             return;
