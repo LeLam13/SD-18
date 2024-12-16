@@ -143,7 +143,7 @@ app.controller("mau-sac-ctrl", function ($scope, $http,$sce,$timeout) {
             check = false;
         }
         // Kiểm tra tên có chứa ký tự đặc biệt
-        const containsSpecialChar = /[^a-zA-Z\s]/; // Biểu thức kiểm tra ký tự đặc biệt
+        const containsSpecialChar = /[^a-zA-Z0-9À-ỹ\s]/;
         if (containsSpecialChar.test($scope.ten)) {
             showError("eTenMau", "Tên không được chứa ký tự đặc biệt");
             check = false;
@@ -227,7 +227,7 @@ app.controller("mau-sac-ctrl", function ($scope, $http,$sce,$timeout) {
             check = false;
         }
         // Kiểm tra tên có chứa ký tự đặc biệt
-        const containsSpecialChar = /[^a-zA-Z\s]/; // Biểu thức kiểm tra ký tự đặc biệt
+        const containsSpecialChar = /[^a-zA-Z0-9À-ỹ\s]/;
         if (containsSpecialChar.test($scope.ms.ten)) {
             showError("eTenMauUd", "Tên không được chứa ký tự đặc biệt");
             check = false;

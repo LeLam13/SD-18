@@ -101,7 +101,7 @@ app.controller("chat-lieu-ctrl", function ($scope, $http) {
         }
 
         // Kiểm tra tên có chứa ký tự đặc biệt
-        const containsSpecialChar = /[^a-zA-Z\s]/; // Biểu thức kiểm tra ký tự đặc biệt
+        const containsSpecialChar = /[^a-zA-Z0-9À-ỹ\s]/;
         if (containsSpecialChar.test($scope.ten)) {
             document.getElementById('eTenMau').innerText = "Tên không được chứa ký tự đặc biệt";
             return;
@@ -168,7 +168,7 @@ app.controller("chat-lieu-ctrl", function ($scope, $http) {
             return;
         }
         // Kiểm tra tên có chứa ký tự đặc biệt
-        const containsSpecialChar = /[^a-zA-Z\s]/; // Biểu thức kiểm tra ký tự đặc biệt
+        const containsSpecialChar = /[^a-zA-Z0-9À-ỹ\s]/;
         if (containsSpecialChar.test($scope.cl.ten)) {
             document.getElementById('eTenMauUd').innerText = "Tên không được chứa ký tự đặc biệt";
             return;
