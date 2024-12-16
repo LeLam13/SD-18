@@ -53,12 +53,20 @@ public class SampleController {
         } else if (dto.getUsername().length() < 5 || dto.getUsername().length() > 12) {
             model.addAttribute("errorMessage", "Username phải có từ 5 đến 12 ký tự.");
             return "signup";
+        } else if (!dto.getUsername().matches("^[a-zA-Z0-9]+$")) {
+            model.addAttribute("errorMessage", "Username không được chứa ký tự đặc biệt.");
+            return "signup";
         }
+
 
         if (dto.getPassword() == null || dto.getPassword().isEmpty()) {
             model.addAttribute("errorMessage", "Password không được để trống.");
             return "signup";
+        } else if (dto.getPassword().length() < 5 || dto.getPassword().length() > 20) {
+            model.addAttribute("errorMessage", "Password phải có từ 5 đến 20 ký tự.");
+            return "signup";
         }
+
         if (dto.getEmail() == null || dto.getEmail().isEmpty()) {
             model.addAttribute("errorMessage", "Email không được để trống.");
             return "signup";
