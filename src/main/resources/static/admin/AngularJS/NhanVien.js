@@ -99,11 +99,15 @@ app.controller("nhan-vien-ctrl", function ($scope, $http) {
         document.getElementById("eSoCanCuocCongDan").innerText = "";
 
         // Kiểm tra các trường hợp lỗi
-        if ($scope.hoTen == undefined || $scope.hoTen.length == 0) {
+        if ($scope.hoTen == undefined || $scope.hoTen.trim().length == 0) {
             document.getElementById("eHoTen").innerText = "Vui lòng nhập họ tên!";
             return;
         }
-        if ($scope.soDienThoai == undefined || $scope.soDienThoai.length == 0) {
+        if (!/^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỂễếỄỈỊọỏốồổỗộớờởỡợỤỦỨỪửữựỲỴÝỶỸỳỵỷỹ\s]+$/.test($scope.hoTen)) {
+            document.getElementById("eHoTen").innerText = "Họ tên chỉ được chứa chữ cái và khoảng trắng!";
+            return;
+        }
+        if ($scope.soDienThoai == undefined || $scope.soDienThoai.trim().length == 0) {
             document.getElementById("eSoDienThoai").innerText = "Vui lòng nhập số điện thoại!";
             return;
         }
@@ -111,14 +115,19 @@ app.controller("nhan-vien-ctrl", function ($scope, $http) {
             document.getElementById("eSoDienThoai").innerText = "Số điện thoại phải bắt đầu bằng 0 và có đúng 10 chữ số!";
             return;
         }
-        if ($scope.email == undefined || $scope.email.length == 0) {
+        if ($scope.email == undefined || $scope.email.trim().length == 0) {
             document.getElementById("eEmail").innerText = "Vui lòng nhập email!";
             return;
         }
-        if ($scope.soCanCuocCongDan == undefined || $scope.soCanCuocCongDan.length != 13) {
-            document.getElementById("eSoCanCuocCongDan").innerText = "Số căn cước công dân phải có 13 số!";
+        if ($scope.soCanCuocCongDan == undefined || $scope.soCanCuocCongDan.trim().length != 13 || !/^\d{13}$/.test($scope.soCanCuocCongDan)) {
+            document.getElementById("eSoCanCuocCongDan").innerText = "Số căn cước công dân phải có đúng 13 chữ số!";
             return;
         }
+        if ($scope.ngaySinh == undefined || $scope.ngaySinh.trim().length == 0) {
+            document.getElementById("eNgaySinh").innerText = "Vui lòng nhập ngày sinh!";
+            return;
+        }
+
 
         // Tạo object gửi yêu cầu
         var url = "/admin/nhan-vien/update" + "/" + idNhanVien;

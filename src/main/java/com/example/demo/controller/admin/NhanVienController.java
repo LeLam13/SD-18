@@ -78,26 +78,25 @@ public class NhanVienController {
 
         taikhoan existingTaiKhoan = taikhoanRepo.findById(username)
                 .orElseThrow(() -> new IllegalArgumentException("Tài khoản không tồn tại!"));
+
         // Kiểm tra định dạng email
         if (email != null && !email.isEmpty()) {
             String emailRegex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
             if (!email.matches(emailRegex)) {
                 model.addAttribute("error", "Email không đúng định dạng!");
-                nhanvien nhanVienFromDB = nhanVienRepository.findByTaikhoanUsername(username);
-                model.addAttribute("nhanVien", nhanVienFromDB); // Giữ lại thông tin nhân viên
+                model.addAttribute("nhanVien", nhanVienRepository.findByTaikhoanUsername(username));
                 return "admin/thongTinUser";
             }
-        }
+
             boolean emailExists = taikhoanRepo.existsByEmail(email);
             if (emailExists && !email.equals(existingTaiKhoan.getEmail())) {
                 model.addAttribute("error", "Email đã tồn tại trên hệ thống!");
-                nhanvien nhanVienFromDB = nhanVienRepository.findByTaikhoanUsername(username);
-                model.addAttribute("nhanVien", nhanVienFromDB); // Giữ lại thông tin nhân viên
+                model.addAttribute("nhanVien", nhanVienRepository.findByTaikhoanUsername(username));
                 return "admin/thongTinUser";
             }
 
             existingTaiKhoan.setEmail(email);
-
+        }
 
         if (password != null && !password.isEmpty()) {
             if (password.length() < 6) {
@@ -116,11 +115,52 @@ public class NhanVienController {
 
         nhanvien existingNhanVien = nhanVienRepository.findByTaikhoanUsername(username);
         if (existingNhanVien != null) {
+            // Kiểm tra họ tên không để trống
             if (nhanVien.getHoTen() == null || nhanVien.getHoTen().isEmpty()) {
                 model.addAttribute("error", "Họ tên không được để trống!");
                 model.addAttribute("nhanVien", existingNhanVien);
                 return "admin/thongTinUser";
             }
+            // Kiểm tra họ tên không chứa ký tự đặc biệt
+            String hoTenRegex = "^[a-zA-ZÀ-ỹ\\s]+$";
+            if (!nhanVien.getHoTen().matches(hoTenRegex)) {
+                model.addAttribute("error", "Họ tên không được chứa ký tự đặc biệt!");
+                model.addAttribute("nhanVien", existingNhanVien);
+                return "admin/thongTinUser";
+            }
+
+            // Kiểm tra số điện thoại
+            if (nhanVien.getSoDienThoai() == null || nhanVien.getSoDienThoai().isEmpty()) {
+                model.addAttribute("error", "Số điện thoại không được để trống!");
+                model.addAttribute("nhanVien", existingNhanVien);
+                return "admin/thongTinUser";
+            }
+            if (!nhanVien.getSoDienThoai().matches("^0\\d{9}$")) {
+                model.addAttribute("error", "Số điện thoại phải bắt đầu bằng 0 và có đúng 10 chữ số!");
+                model.addAttribute("nhanVien", existingNhanVien);
+                return "admin/thongTinUser";
+            }
+
+            // Kiểm tra ngày sinh
+            if (nhanVien.getNgaySinh() == null) {
+                model.addAttribute("error", "Ngày sinh không được để trống!");
+                model.addAttribute("nhanVien", existingNhanVien);
+                return "admin/thongTinUser";
+            }
+            if (nhanVien.getNgaySinh().isAfter(LocalDate.now())) {
+                model.addAttribute("error", "Ngày sinh không được là ngày trong tương lai!");
+                model.addAttribute("nhanVien", existingNhanVien);
+                return "admin/thongTinUser";
+            }
+
+            // Kiểm tra địa chỉ không để trống
+            if (nhanVien.getDiaChi() == null || nhanVien.getDiaChi().isEmpty()) {
+                model.addAttribute("error", "Địa chỉ không được để trống!");
+                model.addAttribute("nhanVien", existingNhanVien);
+                return "admin/thongTinUser";
+            }
+
+            // Cập nhật thông tin nhân viên
             existingNhanVien.setHoTen(nhanVien.getHoTen());
             existingNhanVien.setGioiTinh(nhanVien.getGioiTinh());
             existingNhanVien.setNgaySinh(nhanVien.getNgaySinh());
@@ -132,6 +172,7 @@ public class NhanVienController {
 
         return "redirect:/admin/nhan-vien/thong-tin-ca-nhan";
     }
+
 
 
 
@@ -153,6 +194,17 @@ public class NhanVienController {
             redirectAttributes.addFlashAttribute("dto", dto);
             return "redirect:/admin/nhan-vien";
         }
+
+// Kiểm tra tính hợp lệ của tên đăng nhập
+        String username = dto.getUsername().trim();
+        String usernameRegex = "^[a-zA-Z0-9]{5,20}$"; // Chỉ cho phép chữ cái và số, độ dài từ 5-20 ký tự
+
+        if (!username.matches(usernameRegex)) {
+            redirectAttributes.addFlashAttribute("error", "Tên đăng nhập không hợp lệ. Chỉ cho phép chữ cái, số, không dấu, và từ 5-20 ký tự.");
+            redirectAttributes.addFlashAttribute("dto", dto);
+            return "redirect:/admin/nhan-vien";
+        }
+
         if (dto.getEmail() == null || dto.getEmail().trim().isEmpty()) {
             redirectAttributes.addFlashAttribute("error", "Email không được để trống.");
             redirectAttributes.addFlashAttribute("dto", dto);
@@ -168,6 +220,17 @@ public class NhanVienController {
             redirectAttributes.addFlashAttribute("dto", dto);
             return "redirect:/admin/nhan-vien";
         }
+
+// Kiểm tra họ tên không chứa ký tự đặc biệt
+        String hoTen = dto.getHoTen().trim();
+        String hoTenRegex = "^[a-zA-ZÀÁÂÃÈÉÊÌÍÒÓÔÕÙÚĂĐĨŨƠàáâãèéêìíòóôõùúăđĩũơƯĂẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼỀỀỂưăạảấầẩẫậắằẳẵặẹẻẽềềểễếỄỈỊọỏốồổỗộớờởỡợỤỦỨỪỬỮỰỲỴÝỶỸỳỵỷỹ\\s]{1,50}$";
+
+        if (!hoTen.matches(hoTenRegex)) {
+            redirectAttributes.addFlashAttribute("error", "Họ tên không hợp lệ. Chỉ cho phép chữ cái và khoảng trắng, không chứa ký tự đặc biệt.");
+            redirectAttributes.addFlashAttribute("dto", dto);
+            return "redirect:/admin/nhan-vien";
+        }
+
         if (dto.getNgaySinh() == null) {
             redirectAttributes.addFlashAttribute("error", "Ngày sinh không được để trống.");
             redirectAttributes.addFlashAttribute("dto", dto);
