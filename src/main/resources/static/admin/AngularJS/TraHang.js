@@ -274,7 +274,11 @@ app.controller("trahang-ctrl", function ($scope, $http,$interval,$sce, $timeout)
     $scope.searchMa = function (){
         $scope.stopAutoCheck();
         var maHD = $('#maHoaDon').val().trim();
-
+        var regex = /^[a-zA-Z0-9]+$/; // Chỉ cho phép chữ cái và số
+        if (!regex.test(maHD)) {
+            $scope.showNotification('Mã hóa đơn không hợp lệ! Vui lòng nhập chỉ chữ và số.','error');
+            return; // Dừng lại nếu phát hiện ký tự đặc biệt
+        }
         $http({
             method: 'GET',
             url: '/don-hang/tim-kiem-ma-don-hang', // URL cơ bản

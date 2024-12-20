@@ -178,7 +178,8 @@ app.controller("donhanguser-ctrl", function ($scope, $http,$interval,$sce,$timeo
             ghiChu: ghichu
         }
         if(ghichu === null || ghichu ===""){
-            $scope.showNotification("Chưa điền lý do huỷ đơn!",'error')
+            $scope.showNotification("Chưa điền lý do huỷ đơn!",'error');
+            return;
         }
         var calcelData = angular.copy($scope.calcel);
         console.log("calcelData: ",calcelData);
