@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en" xmlns:th="http:/www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/admin/index}">
+<head>
+    <head>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    </head>
+
+    <title>Thêm sản phẩm chi tiết vào đợt giảm giá</title>
+    <style>
+        .imgProduct {
+            width: 100px;
+            height: 70px;
+        }
+    </style>
+</head>
+<body data-topbar="dark" ng-app="dot-giam-gia-admin" ng-controller="ctrl">
+<div class="main-content" layout:fragment="content">
+    <div class="page-content">
+        <div class="container-fluid">
+
+            <!-- Page Title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <h4 class="mb-sm-0 font-size-18">Sản Phẩm</h4>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Table -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body" style="min-height: 450px">
+
+                            <!-- Bảng sản phẩm trong đợt giảm giá -->
+                            <div ng-if="discountProducts.length > 0">
+                                <h5>Danh sách sản phẩm trong đợt giảm giá:</h5>
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>ID Sản Phẩm</th>
+                                        <th>Mã</th>
+                                        <th>Tên</th>
+                                        <th>Trạng Thái</th>
+                                        <th>Ngày Tạo</th>
+                                        <th>Người Tạo</th>
+                                        <th>Ngày Cập Nhật</th>
+                                        <th>Người Cập Nhật</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="product in discountProducts">
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ product.idSanPham }}</td>
+                                        <td>{{ product.ma }}</td>
+                                        <td>
+                                            <!-- Khi nhấn vào tên, mở modal hiển thị chi tiết -->
+                                            <a href="" ng-click="showProductDetails(product.idSanPham)">
+                                                {{ product.ten }}
+                                            </a>
+                                        </td>
+                                        <td>
+                    <span ng-class="{'text-success': product.trangThai, 'text-danger': !product.trangThai}">
+                        {{ product.trangThai ? "Đang hoạt động" : "Không hoạt động" }}
+                    </span>
+                                        </td>
+                                        <td>{{ product.createDate | date:'yyyy-MM-dd' }}</td>
+                                        <td>{{ product.createBy }}</td>
+                                        <td>{{ product.updateDate | date:'yyyy-MM-dd' }}</td>
+                                        <td>{{ product.updateBy }}</td>
+<!--                                        <td>-->
+<!--                                            <button class="btn btn-danger btn-sm" ng-click="removeFromDiscount(product.idSanPham)">-->
+<!--                                                Xóa-->
+<!--                                            </button>-->
+<!--                                        </td>-->
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <!-- Modal hiển thị chi tiết sản phẩm -->
+                            <div class="modal fade" id="productDetailsModal" tabindex="-1" aria-labelledby="productDetailsModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="productDetailsModalLabel">Chi Tiết Sản Phẩm</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <table class="table table-bordered">
+                                                <thead>
+                                                <tr>
+                                                    <th>STT</th>
+                                                    <th>ID Chi Tiết</th>
+                                                    <th>Mã</th>
+                                                    <th>Tên</th>
+                                                    <th>Số Lượng</th>
+                                                    <th>Giá Bán</th>
+                                                    <th>Màu Sắc</th>
+                                                    <th>Kích Cỡ</th>
+                                                    <th>Trạng Thái</th>
+                                                    <th>Ngày Tạo</th>
+                                                    <th>Thao Tác</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <tr ng-repeat="detail in productDetails">
+                                                    <td>{{ $index + 1 }}</td>
+                                                    <td>{{ detail.idSanPhamChiTiet }}</td>
+                                                    <td>{{ detail.ma }}</td>
+                                                    <td>{{ detail.idSanPham.ten }}</td>
+                                                    <td>{{ detail.soLuong }}</td>
+                                                    <td>{{ detail.giaBan | currency:'₫' }}</td>
+                                                    <td>{{ detail.idMauSac.ten }}</td>
+                                                    <td>{{ detail.idKichCo.ten }}</td>
+                                                    <td>
+                                <span ng-class="{'text-success': detail.trangThai, 'text-danger': !detail.trangThai}">
+                                    {{ detail.trangThai ? "Đang hoạt động" : "Không hoạt động" }}
+                                </span>
+                                                    </td>
+                                                    <td>{{ detail.createDate | date:'yyyy-MM-dd' }}</td>
+                                                    <td>
+                                                        <button class="btn btn-danger btn-sm" ng-click="removeProductDetail(detail.idSanPhamChiTiet)">
+                                                            Xóa
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <h5>Thêm Sản Phẩm</h5>
+                            <!-- Table: Products -->
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" ng-click="toggleSelectAll()" ng-model="selectAll" />
+
+                                    </th>
+                                    <th>STT</th>
+                                    <th>ID Sản Phẩm</th>
+                                    <th>Mã</th>
+                                    <th>Tên</th>
+                                    <th>Ngày Tạo</th>
+                                    <th>Trạng Thái</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-if="items.length === 0">
+                                    <td colspan="7">
+                                        <h3 class="text-center mt-5">Không có sản phẩm liên quan</h3>
+                                    </td>
+                                </tr>
+                                <tr ng-repeat="p in items">
+                                    <td>
+                                        <input type="checkbox" ng-model="p.selected" ng-change="toggleSelection(p)" />
+                                    </td>
+                                    <td>{{ page * size + $index + 1 }}</td>
+                                    <td>{{ p.idSanPham }}</td>
+                                    <td>{{ p.ma }}</td>
+                                    <td>{{ p.ten }}</td>
+                                    <td>{{ p.createDate | date:'yyyy-MM-dd' }}</td>
+                                    <td>
+                    <span ng-class="{'text-success': p.trangThai, 'text-danger': !p.trangThai}">
+                      {{ p.trangThai ? "Đang hoạt động" : "Không hoạt động" }}
+                    </span>
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                            <!-- Pagination -->
+                            <nav aria-label="Page navigation" class="d-flex justify-content-end mt-3">
+                                <ul class="pagination">
+                                    <li class="page-item" ng-class="{ 'disabled': page === 0 }">
+                                        <a class="page-link" href="" ng-click="previousPage()">
+                                            <span aria-hidden="true" class="me-2">&lt;</span> <!-- Add margin to the left -->
+                                        </a>
+                                    </li>
+                                    <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 }">
+                                        <a class="page-link" href="" ng-click="nextPage()">
+                                            <span aria-hidden="true" class="ms-2">&gt;</span> <!-- Add margin to the right -->
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+
+
+
+
+                            <!-- Selected Product Details -->
+                            <div ng-if="selectedProducts.length > 0">
+                                <h5>Chi tiết sản phẩm đã chọn:</h5>
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th>
+                                            <input type="checkbox" ng-model="selectAll2" ng-change="toggleSelectAll2(selectAll2)" />
+                                        </th>
+                                        <th>STT</th>
+                                        <th>ID Chi Tiết Sản Phẩm</th>
+                                        <th>Tên</th>
+                                        <th>Số Lượng</th>
+                                        <th>Giá Bán</th>
+                                        <th>Màu Sắc</th>
+                                        <th>Kích Cỡ</th>
+                                        <th>Ngày Tạo</th>
+                                        <th>Trạng Thái</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="product in selectedProducts">
+                                        <td>
+                                            <input type="checkbox"
+                                                   ng-model="product.selected"
+                                                   ng-change="updateSelectedProducts(product)"
+                                                   data-product-id="{{ product.idSanPhamChiTiet }}" />
+                                        </td>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ product.idSanPhamChiTiet }}</td>
+                                        <td>{{ product.idSanPham.ten }}</td>
+                                        <td>{{ product.soLuong }}</td>
+                                        <td>{{ product.giaBan | currency:'₫' }}</td>
+                                        <td>{{ product.idMauSac.ten }}</td>
+                                        <td>{{ product.idKichCo.ten }}</td>
+                                        <td>{{ product.createDate | date:'yyyy-MM-dd' }}</td>
+                                        <td>
+                <span ng-class="{'text-success': product.trangThai, 'text-danger': !product.trangThai}">
+                    {{ product.trangThai ? "Đang hoạt động" : "Không hoạt động" }}
+                </span>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <!-- Buttons -->
+                                <button class="btn btn-primary" onclick="addSanPhamToDotGiamGia()">
+                                    Thêm Chi Tiết Sản Phẩm Vào Đợt Giảm Giá
+                                </button>
+                                <button class="btn btn-danger" ng-click="removeSelectedProducts()">
+                                    Xóa sản phẩm được chọn
+                                </button>
+                            </div>
+                            <script>
+                                // Function to extract ID from the current URL
+                                function getDotGiamGiaIdFromUrl() {
+                                    const url = window.location.href;  // Lấy URL hiện tại
+                                    const regex = /\/dot-giam-gia\/detail\/(\d+)/;  // Tìm ID trong URL
+                                    const match = url.match(regex);  // Lấy phần tử phù hợp từ URL
+                                    if (match && match[1]) {
+                                        return match[1];  // Trả về ID từ URL
+                                    } else {
+                                        return null;  // Nếu không tìm thấy ID, trả về null
+                                    }
+                                }
+
+                                // Function to add selected products to the discount campaign
+                                async function addSanPhamToDotGiamGia() {
+                                    const dotGiamGiaId = getDotGiamGiaIdFromUrl();  // Lấy ID từ URL
+
+                                    if (!dotGiamGiaId) {
+                                        alert('Không tìm thấy ID đợt giảm giá!');
+                                        return;
+                                    }
+
+                                    const selectedProductIds = [];
+                                    // Collect the selected product IDs
+                                    document.querySelectorAll('input[type="checkbox"]:checked').forEach((checkbox) => {
+                                        const productId = checkbox.getAttribute('data-product-id');
+                                        if (productId && productId !== '0') {  // Kiểm tra ID hợp lệ
+                                            selectedProductIds.push(Number(productId));  // Chuyển thành số nếu cần
+                                        }
+                                    });
+
+                                    // Log mảng ID sản phẩm đã chọn
+                                    console.log('Selected product IDs:', selectedProductIds);
+                                    if (selectedProductIds.length === 0) {
+                                        alertify.error('Vui lòng chọn ít nhất một sản phẩm!');
+                                        return;
+                                    }
+
+                                    // Hiển thị hộp thoại xác nhận trước khi gọi API
+                                    alertify.confirm(
+                                        "Xác nhận", // Tiêu đề
+                                        "Bạn có chắc chắn muốn thêm sản phẩm vào đợt giảm giá?", // Nội dung
+                                        async function () {
+                                            // Nếu người dùng chọn "Có"
+                                            try {
+                                                // Call the API to add selected products to the discount campaign
+                                                const response = await fetch(`/admin/dot-giam-gia/${dotGiamGiaId}/add-san-pham`, {
+                                                    method: 'POST',
+                                                    headers: {
+                                                        'Content-Type': 'application/json',
+                                                    },
+                                                    body: JSON.stringify(selectedProductIds),
+                                                });
+
+                                                const data = await response.json();
+
+                                                if (response.ok) {
+                                                    alertify.success('Thêm sản phẩm vào đợt giảm giá thành công!');
+                                                    setTimeout(function () {
+                                                        location.reload(); // Tải lại trang sau 1 giây
+                                                    }, 1100);
+                                                } else {
+                                                    alertify.error('Lỗi khi thêm sản phẩm: ' + data.message); // Hiển thị thông báo lỗi
+                                                }
+                                            } catch (error) {
+                                                console.error('Lỗi khi thêm sản phẩm:', error);
+                                                alertify.error('Đã có lỗi xảy ra khi thêm sản phẩm vào đợt giảm giá!');
+                                            }
+                                        },
+                                        function () {
+                                            // Nếu người dùng chọn "Không"
+                                            alertify.warning("Hủy");
+                                        }
+                                    );
+                                }
+                            </script>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container-fluid">
+            <div class="row">
+                <footer>
+                    <div class="footer__copyright">
+                        <p>&copy; 2024 Eighteen Polo.</p>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </footer>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</body>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css" />
+<script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+</html>

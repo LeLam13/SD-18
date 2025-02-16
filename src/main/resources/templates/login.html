@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="assets/img/img.png" type="image/x-icon">
+    <!--=============== REMIXICONS ===============-->
+    <!--=============== CSS ===============-->
+    <link rel="stylesheet" href="assets/css/styles.css">
+
+    <title>Eighteen Polo</title>
+
+    <style>
+        .loader {
+            border: 8px solid #f3f3f3; /* Màu nền nhạt */
+            border-top: 8px solid #2b2826; /* Màu chính */
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            display: none;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+<div class="login">
+    <img src="assets/img/anh3.png" alt="login image" class="login__img">
+
+    <form action="" class="login__form" method="post"  autocomplete="off">
+        <h1 class="login__title">Login</h1>
+        <div th:if="${loginError}" class="error-message">
+            <p th:text="${loginError}" style="color: red; font-weight: bold;"></p>
+        </div>
+
+        <div class="login__content">
+            <div class="login__box">
+                <i class="ri-taikhoan-3-line login__icon"></i>
+                <div class="login__box-input">
+                    <input type="text" name="username" required class="login__input" id="login-username" placeholder=" ">
+                    <label for="login-username" class="login__label">Username</label>
+                </div>
+            </div>
+
+            <div class="login__box">
+                <i class="ri-lock-2-line login__icon"></i>
+                <div class="login__box-input">
+                    <input type="password" name="password" required class="login__input" id="login-pass" placeholder=" ">
+                    <label for="login-pass" class="login__label">Password</label>
+                    <i class="ri-eye-off-line login__eye" id="login-eye"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="login__check">
+            <a href="/forgot-password" class="login__forgot">Quên Mật Khẩu?</a>
+            <a href="/trang-chu" class="login__forgot">Quay lại</a>
+        </div>
+
+        <button type="submit" class="login__button">Login</button>
+
+        <p class="login__register">
+            <a href="/signup">Đăng Kí Tài Khoản</a>
+        </p>
+
+        <div class="loader" id="loadingIndicator"></div> <!-- Hiệu ứng loading -->
+    </form>
+</div>
+
+<!--=============== MAIN JS ===============-->
+<script src="assets/js/main.js"></script>
+<script>
+    document.querySelector('.login__form').addEventListener('submit', function(e) {
+        e.preventDefault(); // Ngăn chặn gửi biểu mẫu ngay lập tức
+
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        loadingIndicator.style.display = 'block'; // Hiện hiệu ứng loading
+
+        // Gửi biểu mẫu sau 1 giây
+        setTimeout(() => {
+            this.submit(); // Gửi biểu mẫu
+        }, 1500); // Thay đổi thời gian nếu cần
+    });
+</script>
+</body>
+</html>

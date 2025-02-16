@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{/user/trangChu}"
+>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Thông Tin Khách Hàng</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+            rel="stylesheet"
+    />
+    <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+</head>
+<body data-topbar="dark">
+<div layout:fragment="contentUser" class="bg-light py-5">
+    <style>
+        .custom-border {
+            border: 3px solid #3498db; /* Màu xanh da trời */
+            border-radius: 10px; /* Bo góc nếu cần */
+            padding: 5px; /* Khoảng cách giữa viền và ảnh */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Đổ bóng nhẹ */
+        }
+
+        .box-border {
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        /* CSS cho các nút */
+        .custom-button {
+            display: inline-flex; /* Để căn giữa nội dung */
+            justify-content: center; /* Căn giữa nội dung ngang */
+            align-items: center; /* Căn giữa nội dung dọc */
+            width: 50px; /* Chiều rộng nút */
+            height: 50px; /* Chiều cao nút (hình vuông) */
+            margin: 7px; /* Khoảng cách giữa các nút */
+            border-radius: 8px; /* Bo góc mềm mại */
+            color: black; /* Màu chữ mặc định */
+            text-decoration: none; /* Loại bỏ gạch chân */
+            border: 1px solid #000; /* Viền đen */
+            transition: all 0.2s ease; /* Hiệu ứng hover */
+            box-sizing: border-box; /* Đảm bảo kích thước chính xác */
+            text-align: center; /* Căn giữa nội dung */
+            overflow: hidden; /* Đảm bảo không bị tràn nội dung */
+        }
+
+        /* Trạng thái chọn */
+        .custom-button.selected {
+            border: 3px solid black; /* Viền đậm khi được chọn */
+        }
+
+        /* Hiệu ứng hover */
+        .custom-button:hover {
+            filter: brightness(1); /* Làm tối màu khi hover */
+        }
+
+        /* Hiệu ứng active (khi nhấn) */
+        .custom-button:active {
+            transform: scale(0.95); /* Hiệu ứng nhấn */
+            background-color: #e0e0e0; /* Màu nền khi nhấn */
+            border: 3px solid black; /* Viền đen khi nhấn */
+        }
+
+
+        /* Giới hạn chữ trong nút, sử dụng dấu ba chấm nếu chữ quá dài */
+        .custom-button span {
+            font-size: 1em; /* Kích thước chữ tự động thay đổi */
+            text-overflow: ellipsis; /* Nếu chữ quá dài, sẽ có dấu ba chấm */
+        }
+
+        .mtext-105 {
+            font-size: 3em; /* Tăng kích thước chữ */
+            font-weight: bold; /* In đậm */
+            font-style: italic; /* In nghiêng */
+        }
+
+        .text-danger {
+            font-size: 2em; /* Tăng kích thước chữ */
+            font-weight: bold; /* Đảm bảo chữ đậm */
+        }
+
+        .large-td {
+            font-size: 16px; /* Tăng kích thước font */
+            padding: 15px; /* Tăng khoảng cách trong ô */
+        }
+
+    </style>
+    <style>
+        .header-cart-buttons {
+            display: flex;
+            justify-content: center;
+        }
+    </style>
+    <!-- Product Detail -->
+    <section class="sec-product-detail bg0 p-t-65 ">
+        <div class="container" ng-controller="ctsp-ctrl">
+            <!-- Chỉ hiển thị một sản phẩm duy nhất theo màu sắc và kích cỡ đã chọn -->
+            <div class="row" ng-if="filteredItems.length > 0">
+                <div class="col-md-6 col-lg-7 p-b-30">
+                    <div class="p-l-25 p-r-30 p-lr-0-lg">
+                        <div class="wrap-slick3 flex-sb flex-w">
+                            <div class="slick3 gallery-lb">
+                                <div class="item-slick3">
+                                    <div class="wrap-pic-w pos-relative custom-border"
+                                         style="width: 400px; height: 400px;">
+                                        <img ng-src="/assets/img/{{filteredItems[0].idHinhAnh.ten}}"
+                                             alt="Ảnh không tồn tại"
+                                             class="img-fluid"
+                                             style="width: 100%; height: 100%; object-fit: cover; border-radius: 5px;">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-5 box-border">
+                    <div style="padding: 10px">
+                        <div class="d-flex align-content-center">
+                            <h4 class="mtext-105 cl2 js-name-detail p-b-14 me-2">
+                                {{filteredItems[0].idSanPham.ten}}
+                            </h4>
+                        </div>
+
+                        <!-- Giá sản phẩm -->
+                        <div class="p-t-3">
+                            <div class="row p-b-10">
+                                <div class="col-12">
+                                    <div class="price-container">
+
+                                        <h5 class="text-danger" ng-if="price">
+                                            Giá bán:
+                                            <span ng-if="giaGiam" style="text-decoration: line-through; opacity: 0.6;">{{giaGiam | number}}</span>
+                                            <span>{{price | number}}</span>
+                                        </h5>
+                                        <h5 class="text-danger" ng-if="!price">Liên hệ để biết giá</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Hiển thị số lượng -->
+                        <div class="row">
+                            <div class="col-6 m-t-10">
+                                <p ng-if="soLuong > 0" style="font-size: 16px">Số lượng: {{soLuong}}</p>
+                                <p ng-if="soLuong <= 0" style="font-size: 16px" class="text-danger">Hết hàng</p>
+                            </div>
+                        </div>
+
+                        <!-- Màu Sắc -->
+                        <div class="mt-3">
+                            <h5>Màu Sắc:</h5>
+                            <div class="button-group">
+                                <a href="javascript:void(0);"
+                                   class="custom-button"
+                                   ng-repeat="mau in uniqueColors"
+                                   ng-click="filterByColor(mau)"
+                                   ng-style="{'background-color': mau.ma}"
+                                   ng-class="{'selected': selectedColor && selectedColor.idMauSac === mau.idMauSac}">
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Kích Cỡ -->
+                        <div class="mt-3">
+                            <h5>Kích Cỡ:</h5>
+                            <div class="button-group">
+                                <a href="javascript:void(0);"
+                                   class="custom-button"
+                                   ng-repeat="size in filteredSizes"
+                                   ng-click="filterBySize(size)"
+                                   ng-class="{'selected': selectedSize && selectedSize.idKichCo === size.idKichCo}">
+                                    <span>{{size.ten}}</span>
+                                </a>
+                            </div>
+                        </div>
+
+
+                        <!-- Thêm vào giỏ hàng -->
+                        <div class="p-t-3 mt-5 d-flex justify-content-center align-items-center">
+                            <div class="row p-b-10">
+                                <div class="size-600 flex-w flex-m respon6-next">
+                                    <div class="col-5">
+                                        <button ng-click="addProductIntocart(idSanPhamChiTiet1)"
+                                                class="btn btn-primary">
+                                            Thêm vào giỏ hàng
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <div class="bor10 p-t-43 p-b-40 mt-5">
+                    <!-- Tab01 -->
+                    <div class="tab01">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="nav-item p-b-10">
+                                <a class="nav-link active" style="padding: 10px" data-toggle="tab" href="#description"
+                                   role="tab">Thông tin chi
+                                    tiết</a>
+                            </li>
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content p-t-43">
+                            <!-- - -->
+                            <div class="tab-pane fade show active" id="description" role="tabpanel">
+                                <div class="how-pos2 p-lr-15-md">
+                                    <table class="table mb-0 table-bordered">
+                                        <tbody>
+                                        <tr>
+                                            <th scope="row" style="width: 400px;">Thương hiệu</th>
+                                            <td class="large-td">{{filteredItems[0].idSanPham.idThuongHieu.ten}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Xuất xứ</th>
+                                            <td class="large-td">{{filteredItems[0].idSanPham.idXuatXu.ten}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Chất liệu</th>
+                                            <td class="large-td">{{filteredItems[0].idSanPham.idChatLieu.ten}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Kiểu dáng</th>
+                                            <td class="large-td">{{filteredItems[0].idSanPham.idKieuDang.ten}}</td>
+                                        </tr>
+                                        <tr>
+                                            <th scope="row">Mô tả</th>
+                                            <td class="large-td">{{filteredItems[0].idSanPham.moTa}}</td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

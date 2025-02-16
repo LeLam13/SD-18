@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chi tiết Hóa Đơn</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+
+<div class="container">
+    <h1 class="mt-4">Chi tiết Hóa Đơn</h1>
+    <div class="mb-4">
+        <a href="#" th:href="@{/admin/hoa-don}" class="btn btn-secondary">Quay lại</a>
+    </div>
+
+    <h3>Thông tin Hóa Đơn</h3>
+    <table class="table table-bordered">
+        <tr>
+            <th>Mã Hóa Đơn</th>
+            <td th:text="${hoaDon.maHoaDon}"></td>
+        </tr>
+        <tr>
+            <th>Tổng Tiền</th>
+            <td th:text="${hoaDon.tongTien}"></td>
+        </tr>
+        <tr>
+            <th>Ghi Chú</th>
+            <td th:text="${hoaDon.ghiChu}"></td>
+        </tr>
+        <tr>
+            <th>Trạng Thái</th>
+            <td th:text="${hoaDon.trangThaiThanhToan ? 'Đã Thanh Toán' : 'Chưa Thanh Toán'}"></td>
+        </tr>
+    </table>
+
+    <h3>Chi tiết Sản Phẩm</h3>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>STT</th>
+            <th>Tên Sản Phẩm</th>
+            <th>Mã Sản Phẩm</th>
+            <th>Số Lượng</th>
+            <th>Đơn Giá</th>
+            <th>Trạng Thái</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="chiTiet, iterStat : ${hoaDonChiTietList}">
+            <td th:text="${iterStat.index + 1}"></td>
+            <td th:text="${chiTiet.sanPhamChiTiet.ten}"></td>
+            <td th:text="${chiTiet.maHoaDonChiTiet}"></td>
+            <td th:text="${chiTiet.soLuong}"></td>
+            <td th:text="${chiTiet.donGia}"></td>
+            <td th:text="${chiTiet.trangThai ? 'Còn Hàng' : 'Hết Hàng'}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

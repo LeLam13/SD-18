@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="en" xmlns:th="http:/www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{/admin/index}">
+
+<head>
+    <title>Quản Lý Đơn Hàng</title>
+</head>
+
+<body data-topbar="dark">
+    <div class="main-content" layout:fragment="content">
+        <style>
+            /*body {*/
+            /*    font-family: sans-serif;*/
+            /*}*/
+
+            /*.container {*/
+            /*    display: flex;*/
+            /*    justify-content: center;*/
+            /*    align-items: center;*/
+            /*    height: 100vh;*/
+            /*}*/
+
+
+            .row.show{
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+                margin-top: 20px;
+
+            }
+
+            /* Container cho tiến trình */
+            .progress-container {
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                margin: 20px auto;
+                /*max-width: 900px;*/
+                max-width: 1900px;
+                position: relative;
+
+
+            }
+
+            /* Dòng tiến trình ngang */
+            .progress-line {
+                position: absolute;
+                top: 50%;
+                left: 0;
+                width: 100%;
+                height: 4px;
+                /*background-color: #ddd;*/
+                background-color: #2196F3;
+                /*z-index: -1;*/
+                z-index: 1;
+            }
+            /*Phần màu xanh phía trước biểu tượng đầu tiên */
+            /*.progress-line::before {*/
+            /*    content: "";*/
+            /*    position: absolute;*/
+            /*    left: 0;*/
+            /*    !*width: 20%; !* Điều chỉnh độ dài phần màu xanh *!*!*/
+            /*    height: 4px;*/
+            /*    background-color: #2196F3; !* Màu xanh *!*/
+            /*}*/
+
+            /* Mỗi bước */
+            .step {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                position: relative;
+                width: 25%;
+                text-align: center;
+                opacity: 0.4;
+
+                z-index: 2;
+            }
+
+            /* Kiểu dáng cho bước đang hoạt động */
+            .step.active {
+                opacity: 1;
+            }
+
+            /* Mũi tên */
+            .step .arrow {
+                display: inline-block;
+                background-color: #ddd;
+                color: white;
+                /*padding: 10px 15px;*/
+                padding: 12px 20px;
+                border-radius: 20px 0 0 20px;
+                position: relative;
+                margin-bottom: 5px;
+                width: 100%;
+                max-width: 120px;
+            }
+
+            .step.active .arrow {
+                background-color: #2196F3;
+                font-size: 13px;
+            }
+
+            /* Biểu tượng */
+            .icon {
+                /*width: 50px;*/
+                /*height: 50px;*/
+                width: 70px;          /* Tăng chiều rộng hình tròn */
+                height: 70px;         /* Tăng chiều cao hình tròn */
+                font-size: 32px;
+                border-radius: 50%;
+                background-color: #ddd;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                color: white;
+                margin-bottom: 5px;
+            }
+
+            .step.active .icon {
+                background-color: #2196F3;
+            }
+
+            /* Nhãn bước */
+            .text {
+                font-size: 14px;
+                font-weight: bold;
+                color: #333;
+            }
+
+            /* Thời gian */
+            .date {
+                font-size: 12px;
+                color: #888;
+            }
+
+            .buttons {
+                display: flex;
+                justify-content: space-between;
+            }
+
+            .button {
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+            . button:hover {
+                background-color: #4CAF50;
+                color: white;
+            }
+
+            .button.cancel {
+                background-color: #f44336;
+                color: white;
+            }
+
+            .button.cancel:hover {
+                background-color: #e53935;
+            }
+
+            .table-responsive{
+                margin-top: 20px;
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .notification-container {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%); /* Canh giữa màn hình */
+                background-color: rgba(0, 0, 0, 0.7); /* Màu nền trong suốt */
+                color: white;
+                padding: 15px;
+                border-radius: 10px;
+                z-index: 9999; /* Đảm bảo thông báo hiển thị trên cùng */
+                text-align: center; /* Canh chữ ở giữa */
+                max-width: 300px;
+                width: 100%;
+            }
+
+            .notification-content {
+                display: flex;
+                flex-direction: column; /* Chia icon và message theo chiều dọc */
+                align-items: center; /* Canh giữa icon và message */
+            }
+
+            .notification-icon {
+                font-size: 40px; /* Kích thước của icon */
+                margin-bottom: 10px; /* Khoảng cách giữa icon và message */
+            }
+
+            .notification-message {
+                font-size: 16px; /* Kích thước của message */
+                line-height: 1.5;
+                color: white; /* Màu chữ trắng cho message */
+            }
+
+
+            .modal-Big {
+                width: 80%;
+            }
+
+            .er {
+                color: red;
+                font-size: 13px;
+            }
+
+            .nameProduct {
+                width: 200px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .search-form {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 16px;
+            }
+
+            .form-group {
+                display: flex;
+                flex-direction: column;
+                flex: 1;
+                min-width: 200px;
+            }
+
+            .form-control {
+                padding: 8px;
+                font-size: 14px;
+            }
+
+            .button-group {
+                display: flex;
+                gap: 6px;
+                margin-top: 18px;
+            }
+
+            .btn {
+                padding: 8px 16px;
+                font-size: 14px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            .btn-primary {
+                background-color: #007bff;
+                color: white;
+            }
+
+            .btn-danger {
+                background-color: #dc3545;
+                color: white;
+            }
+
+        </style>
+        <div class="page-content" ng-app="trahang-app" ng-controller="trahang-ctrl">
+            <div class="container-fluid">
+                <div class="row show">
+                    <h2>Bộ Lọc Tìm Kiếm</h2>
+                    <div class="search-form">
+                        <div class="form-group">
+                            <label for="maHoaDon">Tìm kiếm:</label>
+                            <input
+                                    type="text"
+                                    id="maHoaDon"
+                                    class="form-control"
+                                    ng-model="inputData"
+                                    ng-model-options="{ debounce: 500 }" ng-change="searchMa()"
+                                    placeholder="Nhập mã hóa đơn"
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="loaiDon">Loại đơn:</label>
+                            <select id="loaiDon" class="form-control" ng-change="searchLoaiDonHang()" ng-model="selectedLoaiDon">
+                                <option value="">-Loại đơn-</option>
+                                <option value="1">Đơn hàng tại quầy</option>
+                                <option value="2">Đơn hàng online</option>
+                                <option value="3">Đơn hàng chờ</option>
+                                <!-- Thêm các tùy chọn khác tại đây -->
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="trangThai">Trạng thái:</label>
+                            <select id="trangThai" class="form-control" ng-model="selectedTrangThai" ng-change="searchTrangThai()">
+                                <option value="">-Trạng thái-</option>
+                                <option ng-repeat="status in listStatus" value="{{status.idTrangThai}}">
+                                    {{status.tenTrangThai}}
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="search-form">
+                        <div class="form-group">
+                            <label for="ngayBatDau">Ngày bắt đầu:</label>
+                            <input
+                                    type="text"
+                                    id="ngayBatDau"
+                                    class="form-control"
+                                    placeholder="dd/mm/yyyy"
+                            />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="ngayKetThuc">Ngày kết thúc:</label>
+                            <input
+                                    type="text"
+                                    id="ngayKetThuc"
+                                    class="form-control"
+                                    placeholder="dd/mm/yyyy"
+                                    ng-model="ngayKetThuc"
+                                    ng-change="searchByDateRange()"
+                            />
+                        </div>
+<!--                        <div class="button-group">-->
+<!--                            <button class="btn btn-primary">Làm mới</button>-->
+<!--&lt;!&ndash;                            <button class="btn btn-danger">Xóa</button>&ndash;&gt;-->
+<!--                        </div>-->
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="table-responsive">
+                        <h3>Danh Sách Đơn Hàng</h3>
+                        <table class="table table-bordered">
+                            <thead>
+                            <tr>
+                                <th scope="col">STT</th>
+                                <th scope="col">Mã Đơn Hàng</th>
+                                <th scope="col">Tên Khách Hàng</th>
+                                <th scope="col">Tổng Tiền Đơn Hàng</th>
+                                <th scope="col">Trạng Thái</th>
+                                <th scope="col">Loại Đơn Hàng</th>
+                                <th scope="col">Ngày Tạo</th>
+                                <th scope="col">Người Tạo</th>
+                                <th scope="col">Thao Tác</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!--                                ng-repeat="order in listDonHang"-->
+                            <tr ng-repeat="order in getPagedProducts()">
+                                <td>{{ ($index + 1) + (currentPage - 1) * pageSize }}</td>
+                                <td>{{ order.maDonHang}}</td>
+                                <td>{{ order.khachHang.hoTen}}</td>
+                                <td>{{ order.tongTienThanhToan}}</td>
+                                <td>{{ order.trangThai.tenTrangThai}}</td>
+                                <td ng-switch="order.loaiDonHang">
+                                    <span ng-switch-when="1">Đơn hàng tại quầy</span>
+                                    <span ng-switch-when="2">Đơn hàng online</span>
+                                    <span ng-switch-when="3">Đơn hàng chờ</span>
+                                </td>
+                                <td>{{ order.createDate}}</td>
+                                <td>{{ order.createBy}}</td>
+                                <td>
+                                    <a
+                                            ng-href="{{order.loaiDonHang != 3 ? '/admin/don-hang/' + order.idDonHang : '#'}}">
+                                        <button
+                                                type="button"
+                                                ng-disabled="order.loaiDonHang == 3"
+                                                class="btn btn-warning">
+                                            <i class="bi bi-pencil-square"></i>
+                                        </button>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="row">
+                            <nav aria-label="Page navigation example" ng-if="isPaginationVisible()">
+                                <ul class="pagination">
+                                    <!-- Nút Trang đầu -->
+                                    <li class="page-item" ng-class="{disabled: currentPage === 1}">
+                                        <a class="page-link" href="#" ng-click="setPage(1)" aria-label="First">
+                                            <span aria-hidden="true">« Đầu</span>
+                                        </a>
+                                    </li>
+
+                                    <!-- Nút Previous -->
+                                    <li class="page-item" ng-class="{disabled: currentPage === 1}">
+                                        <a class="page-link" href="#" ng-click="setPage(currentPage - 1)" aria-label="Previous">
+                                            <span aria-hidden="true">&laquo;</span>
+                                        </a>
+                                    </li>
+
+                                    <!-- Dấu "..." trước -->
+                                    <li class="page-item" ng-if="getPaginationRange()[0] > 1">
+                                        <span class="page-link">...</span>
+                                    </li>
+
+                                    <!-- Hiển thị các trang -->
+                                    <li class="page-item" ng-repeat="page in getPaginationRange()"
+                                        ng-class="{active: currentPage === page}">
+                                        <a class="page-link" href="#" ng-click="setPage(page)">{{ page }}</a>
+                                    </li>
+
+                                    <!-- Dấu "..." sau -->
+                                    <li class="page-item" ng-if="getPaginationRange()[getPaginationRange().length - 1] < totalPages">
+                                        <span class="page-link">...</span>
+                                    </li>
+
+                                    <!-- Nút Next -->
+                                    <li class="page-item" ng-class="{disabled: currentPage === totalPages}">
+                                        <a class="page-link" href="#" ng-click="setPage(currentPage + 1)" aria-label="Next">
+                                            <span aria-hidden="true">&raquo;</span>
+                                        </a>
+                                    </li>
+
+                                    <!-- Nút Trang cuối -->
+                                    <li class="page-item" ng-class="{disabled: currentPage === totalPages}">
+                                        <a class="page-link" href="#" ng-click="setPage(totalPages)" aria-label="Last">
+                                            <span aria-hidden="true">Cuối »</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+<!--                    <div class="col-6">-->
+<!--                        <div class="table-responsive">-->
+<!--                            <h3>Đơn Hàng Chi Tiết</h3>-->
+<!--                            <table class="table table-bordered">-->
+<!--                                <thead>-->
+<!--                                <tr>-->
+<!--                                    <th scope="col">STT</th>-->
+<!--                                    <th scope="col">Tên Sản phẩm</th>-->
+<!--                                    <th scope="col" class="text-center">Số lượng</th>-->
+<!--                                    <th scope="col">Đơn Giá</th>-->
+<!--                                    <th scope="col">Đơn Giá</th>-->
+<!--                                </tr>-->
+<!--                                </thead>-->
+<!--                                <tbody>-->
+<!--                                <tr ng-repeat="orderDetails in donHangChiTiet">-->
+<!--                                    <td>{{ $index + 1 }}</td>-->
+<!--                                    <td>{{ orderDetails.sanPhamChiTiet.idSanPham.ten}}</td>-->
+<!--                                    <td class="text-center">-->
+<!--                                        {{ orderDetails.soLuong}}-->
+<!--                                    </td>-->
+<!--                                    <td> {{ orderDetails.donGia}}</td>-->
+<!--                                    <td>{{ orderDetails.soLuong*orderDetails.donGia}}</td>-->
+<!--                                </tr>-->
+<!--                                </tbody>-->
+<!--                            </table>-->
+<!--                        </div>-->
+
+<!--                    </div>-->
+                </div>
+<!--                <div class="row">-->
+<!--                    <div class="table-responsive">-->
+<!--                        <div class="row">-->
+<!--                            <div class="row">-->
+<!--                                <h3>Thông Tin Đơn Hàng</h3>-->
+<!--                            </div>-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-3">-->
+<!--                                    <div class="mb-2">-->
+<!--                                        <label  class="form-label">Tổng Hoá Đơn</label>-->
+<!--                                        <input type="Text" id="tongHoaDon" class="form-control" readonly>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="col-3">-->
+<!--                                    <div class="mb-2">-->
+<!--                                        <label  class="form-label">Tổng Tiền KHuyến Mãi</label>-->
+<!--                                        <input type="Text" id="tongTienKhuyenMai" class="form-control" readonly>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="col-3">-->
+<!--                                    <div class="mb-2">-->
+<!--                                        <label  class="form-label">Tiền Khách Thanh Toán</label>-->
+<!--                                        <input type="Text" id="tienKhachThanhToan" class="form-control" readonly>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="col-3">-->
+<!--                                    <div class="mb-2">-->
+<!--                                        <label  class="form-label">Phương Thức Nhận</label>-->
+<!--                                        <input type="Text" id="phuongThucNhan" class="form-control" readonly>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="row mt-1">-->
+<!--                                <div class="col-3">-->
+<!--                                    <div class="mb-2">-->
+<!--                                        <label  class="form-label">Trạng Thái Thanh Toán</label>-->
+<!--                                        <input type="Text" id="trangThaiThanhToan" class="form-control" readonly>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="col-6">-->
+<!--                                <div class="row">-->
+<!--                                    <label class="form-label">Thông Tin Khách Mua</label>-->
+<!--                                </div>-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-6">-->
+<!--                                        <div class="mb-2">-->
+<!--                                            <label  class="form-label">Tên Khách Hàng</label>-->
+<!--                                            <input id="ten-khach-mua" type="Text" class="form-control" readonly>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div class="col-6">-->
+<!--                                        <div class="mb-2">-->
+<!--                                            <label  class="form-label">Số Điện Thoại</label>-->
+<!--                                            <input id="sdt-khach-mua" type="Text" class="form-control" readonly>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-6">-->
+<!--                                        <div class="mb-2">-->
+<!--                                            <label  class="form-label">Email</label>-->
+<!--                                            <input id="emal-khach-mua" type="Text" class="form-control" readonly>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div class="col-6">-->
+<!--                                        <div class="mb-2">-->
+<!--                                            <label  class="form-label">Địa Chỉ</label>-->
+<!--                                            <input id="dia-chi-khach-mua" type="Text" class="form-control" readonly>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="col-6">-->
+<!--                                <div class="row">-->
+<!--                                    <label class="form-label">Thông Tin Khách Nhận</label>-->
+<!--                                </div>-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-6">-->
+<!--                                        <div class="mb-2">-->
+<!--                                            <label  class="form-label">Tên Khách Hàng</label>-->
+<!--                                            <input id="ten-khach-nhan" type="Text" class="form-control" readonly>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div class="col-6">-->
+<!--                                        <div class="mb-2">-->
+<!--                                            <label  class="form-label">Số Điện Thoại</label>-->
+<!--                                            <input id="sdt-khach-nhan" type="Text" class="form-control" readonly>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div class="row">-->
+<!--                                    <div class="col-6">-->
+<!--                                        <div class="mb-2">-->
+<!--                                            <label  class="form-label">Email</label>-->
+<!--                                            <input id="email-khach-nhan" type="Text" class="form-control" readonly>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div class="col-6">-->
+<!--                                        <div class="mb-2">-->
+<!--                                            <label  class="form-label">Địa Chỉ</label>-->
+<!--                                            <input id="dia-chi-nhan" type="Text" class="form-control" readonly>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+
+            </div>
+
+            <div ng-if="notification.show" class="notification-container">
+                <div class="notification-content">
+                    <div class="notification-icon" ng-bind-html="notification.icon"></div>
+                    <div class="notification-message">{{ notification.message }}</div>
+                </div>
+            </div>
+
+
+            <!-- Modal cập nhật trạng thái đơn hàng -->
+            <div class="modal fade" id="modal-status" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="mb-3">
+                                    <label class="form-label">Trạng Thái</label>
+                                    <select class="form-select" aria-label="Default select example" readonly="">
+                                        <option selected>Xác Nhận Thay Đổi</option>
+                                    </select>
+                                </div>
+
+                            </div>
+                            <div class="row">
+                                <div class="mb-3">
+                                    <label for="ghi-chu" class="form-label">Ghi Chú</label>
+                                    <textarea class="form-control" id="ghi-chu" rows="3"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button ng-click="updateOrderStatus()" type="button" class="btn btn-primary">Cập Nhật</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <style>
+          .modal.show .modal-dialog {
+                    display: flex;
+                    align-items: center;
+                    /* Căn giữa theo chiều dọc */
+                    justify-content: center;
+                    /* Căn giữa theo chiều ngang */
+                    margin: auto;
+                    /* Đảm bảo modal nằm giữa */
+                    height: auto;
+                    /* Điều chỉnh chiều cao tự động */
+                }
+
+                .full-screen-modal .modal-dialog {
+                    width: 85%;
+                    /* Chiều rộng toàn bộ cửa sổ trình duyệt */
+                    max-width: 100vw;
+                    /* Đảm bảo không vượt quá chiều rộng cửa sổ */
+                    height: auto;
+                    /* Chiều cao toàn bộ cửa sổ trình duyệt */
+                    margin: 0;
+                    /* Loại bỏ khoảng cách mặc định */
+                    padding: 0;
+                    /* Loại bỏ khoảng đệm mặc định */
+                }
+
+                .full-screen-modal .modal-content {
+                    height: auto;
+                    /* Chiều cao toàn bộ modal */
+                    border-radius: 15px;
+                    /* Loại bỏ góc bo tròn */
+                }
+
+                .full-screen-modal .modal-body {
+                    overflow-y: auto;
+                    /* Cho phép cuộn nội dung khi nội dung quá dài */
+                }
+        </style>
+
+        <!-- End Page-content -->
+
+        <footer class="footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <script>document.write(new Date().getFullYear())</script>
+                        ©EIGHTEEN POLO.
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+    <!-- end main content-->
+</body>
+
+</html>

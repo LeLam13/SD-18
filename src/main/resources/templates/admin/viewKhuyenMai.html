@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{/admin/index}"
+>
+  <head>
+    <title>Chi Tiết Khuyến Mãi</title>
+  </head>
+  <body>
+    <div class="main-content" layout:fragment="content">
+      <div class="container" style="margin-top: 10rem">
+        <h2 class="mb-4">Chi Tiết Khuyến Mãi</h2>
+
+        <form>
+          <!-- Mã Khuyến Mãi -->
+          <div class="mb-3">
+            <label for="maKhuyenMai" class="form-label">Mã Khuyến Mãi</label>
+            <input
+              type="text"
+              class="form-control"
+              id="maKhuyenMai"
+              name="maKhuyenMai"
+              th:value="${khuyenMai.maKhuyenMai}"
+              readonly
+            />
+          </div>
+
+          <!-- Tên Khuyến Mãi -->
+          <div class="mb-3">
+            <label for="tenKhuyenMai" class="form-label">Tên Khuyến Mãi</label>
+            <input
+              type="text"
+              class="form-control"
+              id="tenKhuyenMai"
+              name="tenKhuyenMai"
+              th:value="${khuyenMai.tenKhuyenMai}"
+              readonly
+            />
+          </div>
+
+          <!-- Mức Giảm -->
+          <div class="mb-3">
+            <label for="mucGiamGia" class="form-label">Mức Giảm</label>
+            <input
+              type="text"
+              class="form-control"
+              id="mucGiamGia"
+              name="mucGiamGia"
+              th:value="${khuyenMai.mucGiamGia <= 100 ? khuyenMai.mucGiamGia + '%' : khuyenMai.mucGiamGia + ' VND'}"
+              readonly
+            />
+          </div>
+
+          <!-- Số Lượng -->
+          <div class="mb-3">
+            <label for="soLuong" class="form-label">Số Lượng</label>
+            <input
+              type="number"
+              class="form-control"
+              id="soLuong"
+              name="soLuong"
+              th:value="${khuyenMai.soLuong}"
+              readonly
+            />
+          </div>
+
+          <!-- Thời Gian Bắt Đầu -->
+          <div class="mb-3">
+            <label for="thoiGianBatDau" class="form-label">Thời Gian Bắt Đầu</label>
+            <input
+              type="text"
+              class="form-control"
+              id="thoiGianBatDau"
+              name="thoiGianBatDau"
+              th:value="${#dates.format(khuyenMai.thoiGianBatDau, 'MM/dd/yyyy')}"
+              readonly
+            />
+          </div>
+
+          <!-- Thời Gian Kết Thúc -->
+          <div class="mb-3">
+            <label for="thoiGianKetThuc" class="form-label">Thời Gian Kết Thúc</label>
+            <input
+              type="text"
+              class="form-control"
+              id="thoiGianKetThuc"
+              name="thoiGianKetThuc"
+              th:value="${#dates.format(khuyenMai.thoiGianKetThuc, 'MM/dd/yyyy')}"
+              readonly
+            />
+          </div>
+
+          <!-- Điều Kiện Áp Dụng -->
+          <div class="mb-3">
+            <label for="soTienToiThieu" class="form-label">Điều Kiện Áp Dụng</label>
+            <input
+              type="text"
+              class="form-control"
+              id="soTienToiThieu"
+              name="soTienToiThieu"
+              th:value="${khuyenMai.soTienToiThieu != null ? khuyenMai.soTienToiThieu + ' VND' : 'Không yêu cầu'}"
+              readonly
+            />
+          </div>
+
+          <!-- Mô Tả -->
+          <div class="mb-3">
+            <label for="moTa" class="form-label">Mô Tả</label>
+            <textarea
+              class="form-control"
+              id="moTa"
+              name="moTa"
+              rows="3"
+              readonly
+              th:text="${khuyenMai.moTa != null ? khuyenMai.moTa : 'Không có mô tả'}"
+            ></textarea>
+          </div>
+
+          <!-- Trạng Thái -->
+          <div class="mb-3">
+            <label for="trangThai" class="form-label">Trạng Thái</label>
+            <select
+              class="form-control"
+              id="trangThai"
+              name="trangThai"
+              disabled
+            >
+              <option th:selected="${khuyenMai.trangThai}" value="true">
+                Đang hoạt động
+              </option>
+              <option th:selected="${!khuyenMai.trangThai}" value="false">
+                Ngừng hoạt động
+              </option>
+            </select>
+          </div>
+
+          <!-- Nút Quay Lại -->
+          <a href="/admin/khuyen-mai" class="btn btn-primary">Quay Lại</a>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

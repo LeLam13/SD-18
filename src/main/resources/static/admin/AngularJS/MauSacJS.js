@@ -1,0 +1,321 @@
+var app = angular.module("mau-sac", [])
+app.controller("mau-sac-ctrl", function ($scope, $http,$sce,$timeout) {
+
+    $scope.items = []
+    $scope.page = 0;  // Trang hiện tại
+    $scope.size = 4; // Số lượng bản ghi trên mỗi trang
+    $scope.totalPages = 0; // Tổng số trang
+    $scope.pageInput = 1; // Giá trị nhập từ ô input
+    $scope.searchQuery = ""; // Lưu từ khóa tìm kiếm
+
+    $scope.findAll = function () {
+        if ($scope.searchQuery && $scope.searchQuery.trim() !== "") {
+            $scope.search(); // Gọi hàm tìm kiếm nếu có từ khóa
+        } else {
+            const url = `/admin/mau-sac/find-all?page=${$scope.page}&size=${$scope.size}`;
+            $http.get(url).then(resp => {
+                $scope.items = resp.data.content;
+                $scope.totalPages = resp.data.totalPages; // Cập nhật tổng số trang
+            }).catch(error => {
+                console.log(error);
+            });
+        }
+    };
+
+
+    // Hàm chuyển tới trang trước
+    $scope.previousPage = function () {
+        if ($scope.page > 0) {
+            $scope.page--;
+            $scope.findAll();
+        }
+    };
+
+    // Hàm chuyển tới trang sau
+    $scope.nextPage = function () {
+        if ($scope.page < $scope.totalPages - 1) {
+            $scope.page++;
+            $scope.findAll();
+        }
+    };
+
+    // Hàm chuyển tới trang đầu
+    $scope.goToFirstPage = function () {
+        if ($scope.page > 0) { // Kiểm tra nếu không phải trang đầu
+            $scope.page = 0;
+            $scope.findAll();
+        }
+    };
+
+// Hàm chuyển tới trang cuối
+    $scope.goToLastPage = function () {
+        if ($scope.page < $scope.totalPages - 1) { // Kiểm tra nếu không phải trang cuối
+            $scope.page = $scope.totalPages - 1;
+            $scope.findAll();
+        }
+    };
+
+    $scope.notification = {
+        show: false,
+        message: '',
+        type: '',
+        icon: ''
+    };
+
+    $scope.showNotification = function(message, type) {
+        $scope.notification.message = message;
+        $scope.notification.type = type;
+
+        // Chọn icon dựa trên loại thông báo
+        if (type === 'success') {
+            $scope.notification.icon = $sce.trustAsHtml('✔️');
+        } else if (type === 'error') {
+            $scope.notification.icon = $sce.trustAsHtml('❌');
+        } else {
+            $scope.notification.icon = $sce.trustAsHtml('ℹ️');
+        }
+
+        $scope.notification.show = true;
+
+        // Sử dụng $timeout để tự động ẩn sau 5 giây
+        $timeout(function() {
+            $scope.notification.show = false;
+        }, 3000);
+    };
+
+    $scope.generateRandomString = function (length) {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let result = '';
+
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            result += characters[randomIndex];
+        }
+
+        return result;
+    };
+
+    $scope.getAll = function () {
+        $http.get("/admin/mau-sac/get-all").then(resp => {
+            console.log(resp.data)
+            $scope.items = resp.data;
+        }).catch(error => {
+            console.log(error)
+        });
+    }
+
+    $scope.findAll();
+
+    $scope.create = function () {
+        var mauSac = {
+            ma: $scope.ma?.trim(),
+            ten: $scope.ten?.trim()
+        };
+
+        let check = true;
+
+        // Hàm hiển thị lỗi
+        const showError = (id, message) => {
+            document.getElementById(id).innerText = message || "";
+        };
+
+        // Xóa lỗi trước khi kiểm tra
+        showError("eMaMau", "");
+        showError("eTenMau", "");
+
+        // Kiểm tra mã
+        if (!mauSac.ma) {
+            showError("eMaMau", "Vui lòng chọn mã!!!");
+            check = false;
+        }
+
+        // Kiểm tra tên
+        if (!mauSac.ten) {
+            showError("eTenMau", "Vui lòng nhập tên!!!");
+            check = false;
+        } else if (mauSac.ten.length > 30) {
+            showError("eTenMau", "Tên tối đa 30 ký tự!!!");
+            check = false;
+        }
+        const containsNumber = /\d/; // Biểu thức kiểm tra số
+        if (containsNumber.test($scope.ten)) {
+            showError("eTenMau", "Tên không được chứa số!!!");
+            check = false;
+        }
+        // Kiểm tra tên có chứa ký tự đặc biệt
+        const containsSpecialChar = /[^a-zA-Z0-9À-ỹ\s]/;
+        if (containsSpecialChar.test($scope.ten)) {
+            showError("eTenMau", "Tên không được chứa ký tự đặc biệt");
+            check = false;
+        }
+        if (!check) return; // Dừng nếu có lỗi
+
+        // Gọi getAll để kiểm tra xem tên đã tồn tại chưa
+        $http.get("/admin/mau-sac/get-all").then(function (response) {
+            var existingMauSac = response.data;
+
+            // Kiểm tra trùng tên
+            const tenTonTai = existingMauSac.some(item => item.ten.toLowerCase() === mauSac.ten.toLowerCase());
+
+            if (tenTonTai) {
+                showError("eTenMau", "Tên đã tồn tại");
+            } else {
+                // Gửi yêu cầu tạo mới
+                $http.post("/admin/mau-sac/add", mauSac).then(function (r) {
+                    $scope.findAll();
+                    alert("Thêm thành công");
+                }).catch(function (err) {
+                    console.error("Thêm không thành công", err);
+                });
+            }
+        }).catch(function (err) {
+            console.error("Lỗi khi lấy dữ liệu", err);
+        });
+    };
+
+
+    $scope.getMauSac = function (idMauSac) {
+        var url = "/admin/mau-sac/chiTiet" + "/" + idMauSac;
+        console.log(url)
+        $http.get(url).then(function (r) {
+            console.log(r.data)
+            $scope.ms = r.data;
+        })
+    }
+
+
+    $scope.resetErrors = function () {
+        // Xóa các thông báo lỗi
+        document.getElementById("eTenMau").innerText = "";
+        document.getElementById("eTenMauUd").innerText = "";
+        document.getElementById("eMaMau").innerText = "";
+        document.getElementById("eMaMauUd").innerText = "";
+        $scope.ten="";
+        $scope.ma="";
+    };
+
+    $scope.update = function (idMauSac) {
+        let check = true;
+// Hàm hiển thị lỗi
+        const showError = (id, message) => {
+            document.getElementById(id).innerText = message || "";
+        };
+
+        // Xóa lỗi trước khi kiểm tra
+        showError("eMaMauUd", "");
+        showError("eTenMauUd", "");
+
+        // Kiểm tra mã
+        if ($scope.ms.ma == undefined || $scope.ms.ma.length == 0) {
+            showError("eMaMauUd", "Vui lòng chọn mã!!!");
+            check =
+
+                false;
+        }
+
+        // Kiểm tra tên
+        if ($scope.ms.ten == undefined || $scope.ms.ten.length == 0) {
+            showError("eTenMauUd", "Vui lòng nhập tên!!!");
+            check = false;
+        } else if ($scope.ms.ten.length > 30) {
+            showError("eTenMauUd", "Tên tối đa 30 ký tự!!!");
+            check = false;
+        }
+        const containsNumber = /\d/; // Biểu thức kiểm tra số
+        if (containsNumber.test($scope.ms.ten)) {
+            showError("eTenMauUd", "Tên không được chứa số!!!");
+            check = false;
+        }
+        // Kiểm tra tên có chứa ký tự đặc biệt
+        const containsSpecialChar = /[^a-zA-Z0-9À-ỹ\s]/;
+        if (containsSpecialChar.test($scope.ms.ten)) {
+            showError("eTenMauUd", "Tên không được chứa ký tự đặc biệt");
+            check = false;
+        }
+        if (!check) return; // Dừng nếu có lỗi
+
+
+        $http.get("/admin/mau-sac/get-all").then(function (response) {
+            var existingMauSac = response.data;
+            var tenTonTai = false;
+            angular.forEach(existingMauSac, function (item) {
+                if (item.ten.toLowerCase() === $scope.ms.ten.toLowerCase() && item.idMauSac !== idMauSac) {
+                    tenTonTai = true;
+                }
+            });
+
+            if (tenTonTai) {
+                document.getElementById("eTenMauUd").innerText = "Tên đã tồn tại";
+                return;
+            } else {
+                var url = "/admin/mau-sac/update" + "/" + idMauSac;
+                var updateMau = {
+                    idMauSac:idMauSac,
+                    ma: $scope.ms.ma,
+                    ten: $scope.ms.ten
+                }
+                console.log("data", updateMau);
+                $http.post(url, updateMau).then(function (r) {
+                    $scope.findAll();
+                    alert("Update thanh cong");
+                }).catch(function (err) {
+                    console.log("Update khong thanh cong", err);
+                })
+            }
+        }).catch(function (err) {
+            console.log("Lỗi khi lấy dữ liệu", err);
+        });
+    }
+
+    $scope.updateTT = function (idMauSac) {
+        if (confirm("Xác nhận đổi?")) {
+            var url = "/admin/mau-sac/updateTT" + "/" + idMauSac;
+            $http.post(url).then(function (r) {
+                alert("Doi thành công!!!")
+                $scope.findAll();
+            }).catch(function (err) {
+                console.log("Loi: ", err);
+            })
+        }
+    }
+
+    $scope.delete = function (idMauSac) {
+        if (confirm("Xác nhận xóa?")) {
+            var url = "/admin/mau-sac/delete" + "/" + idMauSac;
+            $http.delete(url).then(function (r) {
+                alert("Delete thành công!!!")
+                $scope.findAll();
+            }).catch(error => {
+                alert("Lỗi Xóa !")
+                console.log("error", error);
+            })
+        }
+    }
+
+
+
+    $scope.search = function () {
+        const url = `/admin/mau-sac/search?page=${$scope.page}&size=${$scope.size}&query=${encodeURIComponent($scope.searchQuery)}`;
+        $http.get(url).then(resp => {
+            $scope.items = resp.data.content;
+            $scope.totalPages = resp.data.totalPages;
+        }).catch(error => {
+            console.error("Lỗi khi tìm kiếm:", error);
+        });
+    };
+
+
+// Lắng nghe sự kiện khi nhấn Enter trong ô input
+    $scope.handleKeyPress = function (event) {
+        if (event.key === "Enter") {
+            $scope.page = 0; // Reset về trang đầu tiên khi tìm kiếm
+            $scope.search();
+        }
+    };
+
+    $scope.reload = function () {
+        $scope.searchQuery="";
+        $scope.findAll();
+    }
+
+})

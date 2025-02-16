@@ -1,0 +1,243 @@
+var app = angular.module("kieudang", [])
+app.controller("kieudang-ctrl", function ($scope, $http) {
+    const url = "http://localhost:8080/admin/kieu-dang"
+
+    $scope.itemss = [];
+    $scope.page = 0;  // Trang hiện tại
+    $scope.size = 4; // Số lượng bản ghi trên mỗi trang
+    $scope.totalPages = 0; // Tổng số trang
+    $scope.pageInput = 1; // Giá trị nhập từ ô input
+    $scope.searchQuery = ""; // Lưu từ khóa tìm kiếm
+
+    $scope.generateRandomString = function (length) {
+        const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+        let result = '';
+
+        for (let i = 0; i < length; i++) {
+            const randomIndex = Math.floor(Math.random() * characters.length);
+            result += characters[randomIndex];
+        }
+
+        return result;
+    };
+
+    $scope.findAll = function () {
+        if ($scope.searchQuery && $scope.searchQuery.trim() !== "") {
+            $scope.search(); // Gọi hàm tìm kiếm nếu có từ khóa
+        } else {
+            var url = `/admin/kieu-dang/find-all?page=${$scope.page}&size=${$scope.size}`;
+            $http.get(url).then(resp => {
+                $scope.itemss = resp.data.content;
+                $scope.totalPages = resp.data.totalPages; // Cập nhật tổng số trang
+            }).catch(error => {
+                console.log(error);
+            });
+        }
+    };
+
+
+    // Hàm chuyển tới trang trước
+    $scope.previousPage = function () {
+        if ($scope.page > 0) {
+            $scope.page--;
+            $scope.findAll();
+        }
+    };
+
+    // Hàm chuyển tới trang sau
+    $scope.nextPage = function () {
+        if ($scope.page < $scope.totalPages - 1) {
+            $scope.page++;
+            $scope.findAll();
+        }
+    };
+
+    // Hàm chuyển tới trang đầu
+    $scope.goToFirstPage = function () {
+        if ($scope.page > 0) { // Kiểm tra nếu không phải trang đầu
+            $scope.page = 0;
+            $scope.findAll();
+        }
+    };
+
+// Hàm chuyển tới trang cuối
+    $scope.goToLastPage = function () {
+        if ($scope.page < $scope.totalPages - 1) { // Kiểm tra nếu không phải trang cuối
+            $scope.page = $scope.totalPages - 1;
+            $scope.findAll();
+        }
+    };
+
+    $scope.getAll = function () {
+        $http.get("/admin/kieu-dang/get-all").then(r => {
+            console.log(r.data)
+            $scope.itemss = r.data;
+        }).catch(e => console.log(e))
+    }
+
+    $scope.findAll();
+
+
+    //add
+    $scope.create = function () {
+        if ($scope.ten == undefined || $scope.ten.length == 0) {
+            document.getElementById('erTen').innerText = "Vui lòng nhập tên kiểu dáng"
+            return;
+        }
+        if ($scope.ten.length > 30) {
+            document.getElementById('erTen').innerText = "Tên kiểu dáng tối đa 30 ký tự"
+            return;
+        }
+        const containsNumber = /\d/; // Biểu thức kiểm tra số
+        if (containsNumber.test($scope.ten)) {
+            document.getElementById('erTen').innerText = "Tên không được chứa số";
+            return;
+        }
+        const containsSpecialChar = /[^a-zA-Z0-9À-ỹ\s]/;
+        if (containsSpecialChar.test($scope.ten)) {
+            document.getElementById('erTen').innerText = "Tên không được chứa ký tự đặc biệt";
+            return;
+        }
+        $http.get("/admin/kieu-dang/get-all").then(function (response) {
+            var existingKieuDang = response.data;
+            var tenTonTai = false;
+            angular.forEach(existingKieuDang, function (item) {
+                if (item.ten.toLowerCase() === $scope.ten.toLowerCase()) {
+                    tenTonTai = true;
+                }
+            });
+
+            if (tenTonTai) {
+                document.getElementById("erTen").innerText = "Tên đã tồn tại";
+                return;
+            } else {
+                var kieuDang = {
+                    ma: $scope.generateRandomString(8),
+                    ten: $scope.ten
+                }
+                var url = "/admin/kieu-dang/add";
+                $http.post(url, kieuDang).then(function (response) {
+                    $scope.getAll();
+                    alertify.success("Thêm Kiểu Dáng thành công")
+                }).catch
+                (function (err) {
+                    console.log("Loi: ", err);
+                })
+            }
+        })
+    };
+
+    //Chi tiet
+    $scope.getKieuDang = function (ma) {
+        var url = "/admin/kieu-dang/chiTiet" + "/" + ma;
+        console.log(url)
+        $http.get(url).then(function (r) {
+            console.log(r.data)
+            $scope.kd = r.data;
+        })
+    }
+
+    $scope.resetErrors = function () {
+        // Xóa các thông báo lỗi
+        document.getElementById("erTenUd").innerText = "";
+        document.getElementById("erTen").innerText = "";
+        $scope.ten="";
+    };
+
+    //update
+    $scope.update = function (ma) {
+        if ($scope.kd.ten == undefined || $scope.kd.ten.length == 0) {
+            document.getElementById('erTenUd').innerText = "Vui lòng nhập tên kiểu dáng"
+            return;
+        }
+        if ($scope.kd.ten.length > 30) {
+            document.getElementById('erTenUd').innerText = "Tên kiểu dáng tối đa 30 ký tự"
+            return;
+        }
+        const containsNumber = /\d/; // Biểu thức kiểm tra số
+        if (containsNumber.test($scope.kd.ten)) {
+            document.getElementById('erTenUd').innerText = "Tên không được chứa số";
+            return;
+        }
+        // Kiểm tra tên có chứa ký tự đặc biệt
+        const containsSpecialChar = /[^a-zA-Z0-9À-ỹ\s]/;
+        if (containsSpecialChar.test($scope.kd.ten)) {
+            document.getElementById('erTenUd').innerText = "Tên không được chứa ký tự đặc biệt";
+            return;
+        }
+        $http.get("/admin/kieu-dang/get-all").then(function (response) {
+            var existingKieuDang = response.data;
+            var tenTonTai = false;
+            angular.forEach(existingKieuDang, function (item) {
+                if (item.ten.toLowerCase() === $scope.kd.ten.toLowerCase() && item.ma !== ma) {
+                    tenTonTai = true;
+                }
+            });
+
+            if (tenTonTai) {
+                document.getElementById("erTenUd").innerText = "Tên đã tồn tại";
+                return;
+            } else {
+                var url = "/admin/kieu-dang/update" + "/" + ma;
+                var kieudang = {
+                    ma: ma,
+                    ten: $scope.kd.ten
+                }
+                $http.post(url, kieudang).then(function (resp) {
+                    $scope.findAll();
+                    alert("Cập nhật thành công");
+                }).catch(function (err) {
+                    console.log("Loi: ", err);
+                })
+            }
+        })
+    }
+
+    $scope.updateTT = function (idKieuDang) {
+        if (confirm("Xác nhận đổi?")) {
+            var url = "/admin/kieu-dang/updateTT" + "/" + idKieuDang;
+            $http.post(url).then(function (r) {
+                $scope.findAll();
+            }).catch(function (err) {
+                console.log("Loi: ", err);
+            })
+        }
+    }
+
+// xóa
+    $scope.delete = function (idKieuDang) {
+        if (confirm("Bạn muốn xóa Kiểu Dáng này?")) {
+            var url = "/admin/kieu-dang/delete" + "/" + idKieuDang;
+            $http.delete(url).then(function (res) {
+                location.reload();
+                alertify.success("Xóa Kiểu Dáng thành công")
+            }).catch(error => {
+                alertify.error("Xóa Kiểu Dáng thất bại")
+                console.log("error", error);
+            })
+        }
+    }
+    $scope.search = function () {
+        const url = `/admin/kieu-dang/search?page=${$scope.page}&size=${$scope.size}&query=${encodeURIComponent($scope.searchQuery)}`;
+        $http.get(url).then(resp => {
+            $scope.itemss = resp.data.content;
+            $scope.totalPages = resp.data.totalPages;
+        }).catch(error => {
+            console.error("Lỗi khi tìm kiếm:", error);
+        });
+    };
+
+
+// Lắng nghe sự kiện khi nhấn Enter trong ô input
+    $scope.handleKeyPress = function (event) {
+        if (event.key === "Enter") {
+            $scope.page = 0; // Reset về trang đầu tiên khi tìm kiếm
+            $scope.search();
+        }
+    };
+
+    $scope.reload = function () {
+        $scope.searchQuery="";
+        $scope.findAll();
+    }
+})
