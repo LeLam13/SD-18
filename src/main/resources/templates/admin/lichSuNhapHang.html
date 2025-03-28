@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en" xmlns:th="http:/www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/admin/index}">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <title>Eighteen Polo | Nhập Hàng</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description"/>
+    <meta content="Themesbrand" name="author"/>
+    <style>
+        /* CSS cho nút Làm Mới với màu xám */
+        .btn-refresh {
+            background-color: #6c757d; /* Màu nền xám */
+            border-color: #6c757d; /* Màu viền xám */
+            color: white; /* Màu chữ trắng */
+        }
+
+        .btn-refresh:hover {
+            background-color: #5a6368; /* Màu nền khi hover (màu xám đậm hơn) */
+            border-color: #4e555b; /* Màu viền khi hover */
+            color: white; /* Chữ trắng khi hover */
+        }
+
+
+    </style>
+</head>
+
+<body data-topbar="dark">
+
+<!-- <body data-layout="horizontal"> -->
+
+<!-- ============================================================== -->
+<!-- Start right Content here -->
+<!-- ============================================================== -->
+<div class="main-content" layout:fragment="content">
+    <div ng-app="chiTietSP-app" ng-controller="chiTietSP-ctrl">
+
+        <div class="page-content">
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                            <h4 class="mb-sm-0 font-size-18">Nhập Hàng</h4>
+
+                            <!-- <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a href="javascript: void(0);">T</a></li>
+                                    <li class="breadcrumb-item active">DataTables</li>
+                                </ol>
+                            </div> -->
+
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row">
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <form action="/action_page.php" method="get">
+                                    <div class="mb-3">
+                                        <label class="form-label">Màu Sắc:</label>
+                                        <select id="mauSacCT" class="form-control"
+                                                ng-model="idMauSacNhap"
+                                                ng-change="updateKichCo()"
+                                                ng-options="mauSacCT as mauSacCT.ten for mauSacCT in mauSacCT track by mauSacCT.idMauSac">
+                                            <option value="" disabled selected>Chọn màu sắc</option>
+                                        </select>
+                                        <i id="eMauSacNhap" style="color: red;"></i>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Kích Cỡ:</label>
+                                        <select id="kichCoCT" class="form-control"
+                                                ng-model="idKichCoNhap"
+                                                ng-options="kichCoCT as kichCoCT.ten for kichCoCT in filteredKichCo track by kichCoCT.idKichCo">
+                                            <option value="" disabled selected>Chọn kích cỡ</option>
+                                        </select>
+                                        <i id="eKichCoNhap" style="color: red;"></i>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Giá Nhập</label>
+                                        <input type="number" ng-model="giaNhapNhap" class="form-control">
+                                        <i id="eGiaNhapNhap" style="color: red;"></i>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Số Lượng</label>
+                                        <input type="number" ng-model="soLuongNhap" class="form-control">
+                                        <i id="eSoLuongNhap" style="color: red;"></i>
+                                    </div>
+
+
+                                </form>
+                                <button type="button" class="btn btn-danger" ng-click="updateByNhap()">Thêm</button>
+
+                                <button type="button" class="btn btn-primary" ng-click="viewChiTiet()">Quay lại</button>
+                            </div>
+
+                        </div>
+                    </div> <!-- end col -->
+                </div> <!-- end row -->
+            </div>
+
+            <!-- container-fluid -->
+        </div>
+        <!-- End Page-content -->
+
+        <footer class="footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <script>document.write(new Date().getFullYear())</script>
+                        © Eighteen Polo.
+                    </div>
+                    <div class="col-sm-6">
+                        <!--                        <div class="text-sm-end d-none d-sm-block">-->
+                        <!--                            Design & Develop by <a href="#!" class="text-decoration-underline">Themesbrand</a>-->
+                        <!--                        </div>-->
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!--    modal update-->
+
+
+        <!--    modal save-->
+
+    </div>
+
+</div>
+<!-- Modal UPdate Quantity -->
+
+
+<!-- end main content-->
+</body>
+
+</html>

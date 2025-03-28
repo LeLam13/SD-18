@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        xmlns:th="http:/www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{/admin/index}"
+>
+<head>
+    <title>Sản Phẩm</title>
+</head>
+<body data-topbar="dark">
+<div class="main-content" layout:fragment="content">
+    <style>
+        .imgProduct {
+            width: 100px;
+            height: 70px;
+        }
+    </style>
+
+    <div class="page-content">
+        <div class="container-fluid">
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div
+                            class="page-title-box d-sm-flex align-items-center justify-content-between"
+                    >
+                        <h4 class="mb-sm-0 font-size-18">Thống Kê Số Lượng</h4>
+
+                        <!-- <div class="page-title-right">
+                                    <ol class="breadcrumb m-0">
+                                        <li class="breadcrumb-item"><a href="javascript: void(0);">T</a></li>
+                                        <li class="breadcrumb-item active">DataTables</li>
+                                    </ol>
+                                </div> -->
+                    </div>
+                </div>
+            </div>
+            <!-- end page title -->
+
+            <div class="row" ng-app="product-admin" ng-controller="ctrl">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row">
+
+
+                            </div>
+                        </div>
+                        <div class="card-body" style="min-height: 450px">
+                            <table
+                                    id="datatable"
+                                    class="table table-hover dt-responsive nowrap w-100"
+                            >
+                                <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên Áo</th>
+                                    <th>Số lượng</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-if="items.length == 0">
+                                    <td colspan="8">
+                                        <h3 class="text-center col-12 mt-5">
+                                            Không có sản phẩm liên quan
+                                        </h3>
+                                    </td>
+                                </tr>
+                                <tr ng-repeat="p in items" style="cursor: pointer">
+                                    <td>{{ page * size + $index + 1 }}</td>
+                                    <td>{{p.ten}}</td>
+                                    <td>{{p.totalInventory || 0}}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <nav aria-label="Page navigation" class="d-flex justify-content-center mt-3">
+                                <ul class="pagination pagination-sm-125">
+                                    <!-- Nút Trang đầu -->
+                                    <li class="page-item" ng-class="{ 'disabled': page === 0 }">
+                                        <a class="page-link" href="" ng-click="goToFirstPage()"><small>&#8676; Trang đầu</small></a>
+                                    </li>
+
+                                    <!-- Nút Trang trước -->
+                                    <li class="page-item" ng-class="{ 'disabled': page === 0 }">
+                                        <a class="page-link" href="" ng-click="previousPage()"><small>&#8592; Trang trước></small></a>
+                                    </li>
+
+                                    <!-- Hiển thị thông tin trang -->
+                                    <li class="page-item disabled">
+                                        <span class="page-link"><small>Trang {{ page + 1 }} / {{ totalPages }}</small></span>
+                                    </li>
+
+                                    <!-- Nút Trang sau -->
+                                    <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 }">
+                                        <a class="page-link" href="" ng-click="nextPage()"><small>Trang sau &#8594;</small></a>
+                                    </li>
+
+                                    <!-- Nút Trang cuối -->
+                                    <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 }">
+                                        <a class="page-link" href="" ng-click="goToLastPage()"><small>Trang cuối &#8677;</small></a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- end col -->
+            </div>
+            <!-- end row -->
+        </div>
+
+        <!-- container-fluid -->
+    </div>
+    <!-- End Page-content -->
+
+    <footer class="footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+                    <script>
+                        document.write(new Date().getFullYear());
+                    </script>
+
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+<!-- end main content-->
+</body>
+</html>

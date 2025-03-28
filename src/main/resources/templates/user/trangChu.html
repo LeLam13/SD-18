@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.w3.org/1999/xhtml">
+<!--<meta charset="utf-8"/>&lt;!&ndash;vi /Added by HTTrack http-equiv="content-type" content="text/html;charset=UTF-8"&ndash;&gt;-->
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Eighteen Polo</title>
+    <link rel="icon" href="assets/img/img.png" type="image/x-icon">
+    <!--    <meta name="keywords" content="HTML5 Template">-->
+    <meta name="description" content="Eighteen Polo">
+    <meta name="author" content="p-themes">
+    <!-- Favicon -->
+    <link href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/images/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/images/icons/favicon-16x16.png">
+    <link rel="manifest" href="/assets/images/icons/site.webmanifest">
+    <link rel="mask-icon" href="/assets/images/icons/safari-pinned-tab.svg" color="#666666">
+    <link rel="shortcut icon" href="/assets/images/icons/favicon.ico">
+    <meta name="apple-mobile-web-app-title" content="Molla">
+    <meta name="application-name" content="Molla">
+    <meta name="msapplication-TileColor" content="#cc9966">
+    <meta name="msapplication-config" content="/assets/images/icons/browserconfig.xml">
+    <meta name="theme-color" content="#ffffff">
+    <link rel="stylesheet" href="/assets/vendor/line-awesome/line-awesome/line-awesome/css/line-awesome.min.css">
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/plugins/owl-carousel/owl.carousel.css">
+    <link rel="stylesheet" href="/assets/css/plugins/magnific-popup/magnific-popup.css">
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/plugins/nouislider/nouislider.css">
+    <link rel="stylesheet" href="/assets/css/demos/demo-11.css">
+
+    <!--    Bootstrap 5-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://esgoo.net/scripts/jquery.js"></script>
+
+    <!--    <script>-->
+    <!--        var app = angular.module("mau-sac", []);-->
+    <!--        app.controller("mau-sac-ctrl", function ($scope, $http) {-->
+    <!--            // Your controller logic here-->
+    <!--            $scope.message = "Hello World!";-->
+    <!--        });-->
+    <!--    </script>-->
+    <!--    <script th:src="@{/admin/js/ajax.googleapis.com_ajax_libs_angularjs_1.6.9_angular.min.js}"></script>-->
+</head>
+<style>
+    .tenlogo {
+        font-family: 'Brush Script MT', cursive; /* Font chữ nghệ thuật */
+        font-size: 36px; /* Kích thước chữ nhỏ gọn */
+        color: #333333; /* Màu đen than tinh tế */
+        text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2); /* Hiệu ứng bóng chữ nhẹ */
+        letter-spacing: 1.5px; /* Khoảng cách giữa các chữ cái nhẹ nhàng */
+        text-align: center; /* Căn giữa chữ */
+        margin: 20px 10px; /* Khoảng cách trên và lệch sang phải */
+        padding-right: 10px; /* Đẩy chữ lệch sang phải */
+        background: none; /* Không có nền để giữ màu đen nổi bật */
+        animation: fadeIn 2s ease-in-out; /* Hiệu ứng chuyển động */
+    }
+
+    /* Hiệu ứng chuyển động */
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .tenmenu {
+        list-style: none; /* Bỏ dấu chấm của danh sách */
+        padding: 0;
+        margin: 0;
+        display: flex; /* Hiển thị danh sách ngang */
+        justify-content: space-evenly; /* Dàn đều các mục menu */
+        align-items: center; /* Căn giữa theo trục dọc */
+        background-color: transparent; /* Loại bỏ nền */
+        padding: 10px 0; /* Khoảng cách trên dưới */
+    }
+
+    .tenmenu li {
+        position: relative;
+    }
+
+    .tenmenu a {
+        font-family: 'Poppins', Arial, sans-serif; /* Phông chữ mềm mại và hiện đại */
+        font-size: 20px; /* Kích thước chữ vừa phải */
+        color: #1a1a1a; /* Màu đen đậm hơn */
+        font-weight: 500; /* Độ đậm vừa phải để trông nhẹ nhàng */
+        text-decoration: none; /* Bỏ gạch dưới */
+        text-transform: none; /* Giữ nguyên chữ */
+        padding: 5px 15px; /* Khoảng cách bên trong chữ */
+        transition: color 0.3s ease, transform 0.3s ease; /* Hiệu ứng hover */
+    }
+
+    .tenmenu a:hover {
+        transform: translateY(2px); /* Dịch xuống nhẹ khi hover */
+        color: #5e5b5b; /* Màu đen đậm hoàn toàn khi hover */
+    }
+
+
+    .marquee-container {
+        width: 100%; /* Chiếm toàn bộ chiều ngang */
+        background-color: #000; /* Màu nền đen */
+        color: #fff; /* Màu chữ trắng */
+        overflow: hidden; /* Ẩn phần nội dung ngoài phạm vi */
+        padding: 10px 0; /* Khoảng cách trên dưới */
+    }
+
+    .marquee-content {
+        display: flex; /* Hiển thị danh sách ngang */
+        animation: marquee 10s linear infinite; /* Hiệu ứng chạy liên tục */
+        white-space: nowrap; /* Đảm bảo không có ngắt dòng */
+    }
+
+    .marquee-content span {
+        padding-right: 30px; /* Khoảng cách giữa các phần tử */
+        font-family: 'Poppins', sans-serif; /* Font chữ mềm mại */
+        font-weight: 500; /* Độ đậm chữ vừa phải */
+        font-size: 14px; /* Kích thước chữ */
+    }
+
+    @keyframes marquee {
+        0% {
+            transform: translateX(0); /* Bắt đầu từ trái */
+        }
+        100% {
+            transform: translateX(-50%); /* Kéo hết 1 vòng */
+        }
+    }
+
+    .dssp {
+        font-size: 45px; /* Phông chữ to hơn */
+        font-weight: 500; /* Trọng lượng trung bình, nổi bật hơn */
+        text-align: center; /* Căn giữa chữ */
+        color: #2C3E50; /* Màu xanh đậm */
+        margin: 40px 0; /* Khoảng trắng phía trên và dưới để tách biệt */
+        line-height: 1.5; /* Tăng khoảng cách dòng, giúp chữ thoáng hơn */
+    }
+
+    /* Tăng kích thước chữ và làm chữ đậm hơn */
+    .intro-title {
+        color: #000000; /* Màu chữ tối */
+        font-size: 4rem; /* Tăng kích thước chữ */
+        font-weight: bold; /* Làm chữ đậm */
+    }
+
+    /* Tăng kích thước và đậm cho chữ phụ */
+    .intro-subtitle {
+        color: #000000; /* Màu chữ tối cho phần tiêu đề phụ */
+        font-size: 2.5rem; /* Tăng kích thước chữ cho phụ đề */
+        font-weight: bold; /* Làm chữ đậm */
+    }
+
+</style>
+
+<body>
+<div class="page-wrapper" ng-app="gio-hang" ng-controller="gio-hang-ctrl">
+    <div class="marquee-container">
+        <div class="marquee-content">
+            <span>🔥 Đơn từ 500k: Tặng Boxer Cao Cấp Trị Giá 99K</span>
+            <span>🔥 Đơn từ 800k: Tặng Combo Boxer + Vớ Cao Cấp Trị Giá 150K</span>
+            <span>🎁 Đơn từ 500k: Tặng Boxer Cao Cấp Trị Giá 99K</span>
+            <span>🔥 Đơn từ 500k: Tặng Boxer Cao Cấp Trị Giá 99K</span>
+            <!-- Nhân đôi nội dung để tạo hiệu ứng vòng lặp -->
+            <span>🔥 Đơn từ 500k: Tặng Boxer Cao Cấp Trị Giá 99K</span>
+            <span>🔥 Đơn từ 800k: Tặng Combo Boxer + Vớ Cao Cấp Trị Giá 150K</span>
+            <span>🎁 Đơn từ 500k: Tặng Boxer Cao Cấp Trị Giá 99K</span>
+        </div>
+    </div>
+    <header class="header header-7">
+        <div class="header-middle sticky-header">
+            <div class="container">
+                <div class="header-left">
+
+                    <a href="trang-chu" class="logo">
+
+                        <a ng-click="viewHome()" style="cursor: pointer;" class="logo">
+
+                            <img src="/assets/img/img.png" alt="Eighteen Polo Logo" width="60" height="25">
+                        </a>
+
+                    </a>
+
+                    <a class="tenlogo" ng-click="viewHome()">Eighteen Polo</a>
+
+                </div><!-- End .header-left -->
+
+
+                <div class="header-right">
+                    <nav class="main-nav">
+                        <ul class="tenmenu">
+                            <li class="megamenu-container active">
+                            <li>
+                                <a ng-click="viewHome()" class="sf-with-ul" style="cursor: pointer;">Trang Chủ</a>
+                            </li>
+                            <li>
+                                <a href="category.html" class="sf-with-ul">Sản Phẩm</a>
+                            </li>
+                            <li>
+                                <a href="/don-hang-khach" class="sf-with-ul">Đơn Hàng</a>
+                            </li>
+                            <li>
+                                <a href="blog.html" class="sf-with-ul">Giới Thiệu</a>
+                            </li>
+                            <li>
+                                <a href="elements-list.html" class="sf-with-ul">Liên Hệ</a>
+                            </li>
+                        </ul><!-- End .menu -->
+                    </nav><!-- End .main-nav -->
+
+                    <div class="header-search">
+                        <a class="search-toggle" role="button"><i class="icon-search"></i></a>
+                        <div class="header-search-wrapper me-2">
+                            <input type="search" class="form-control"
+                                   ng-model="searchQuery"
+                                   ng-keypress="handleKeyPress($event)"
+                                   placeholder="Search in ..."
+                                   required>
+                        </div><!-- End .header-search-wrapper -->
+                    </div><!-- End .header-search -->
+                    <!-- End .header-search -->
+
+                    <a href="wishlist.html" class="wishlist-link">
+                        <i class="icon-heart-o"></i>
+                        <span class="wishlist-count">3</span>
+                    </a>
+                    <div class="dropdown cart-dropdown">
+                        <a href="#" class="dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
+                           aria-expanded="false">
+                            <i class="icon-shopping-cart"></i>
+                            <span class="cart-count">{{ count() }}</span>
+                        </a>
+
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <div class="dropdown-cart-products">
+                                <div class="product" ng-repeat="item in items">
+                                    <div class="product-cart-details">
+                                        <h4 class="product-title">
+                                            <!--                                            <a href="product.html">Beige knitted elastic runner shoes</a>-->
+                                            <a href="product.html">{{item.idSanPham.ten}}</a>
+                                        </h4>
+
+                                        <span class="cart-product-info">
+                                            <span class="cart-product-qty">{{item.soLuong}}</span>
+                                            <!--                                            x $84.00-->x {{item.giaBan}}
+                                        </span>
+                                    </div><!-- End .product-cart-details -->
+
+                                    <figure class="product-image-container">
+                                        <a href="product.html" class="product-image">
+                                            <img src="/assets/images/products/cart/product-1.jpg" alt="product">
+                                        </a>
+                                    </figure>
+                                    <a href="#" ng-click="removeLocalStorage(item.sanPhamChiTiet.idSanPhamChiTiet)"
+                                       class="btn-remove" title="Remove Product"><i class="icon-close"></i></a>
+                                </div><!-- End .product -->
+
+                            </div><!-- End .cart-product -->
+
+                            <div class="dropdown-cart-total">
+                                <span>Tổng tiền</span>
+                                <span class="cart-total-price">$160.00</span>
+                            </div><!-- End .dropdown-cart-total -->
+
+                            <div class="dropdown-cart-action">
+                                <a href="/gio-hang" class="btn btn-primary">View Cart</a>
+                                <a href="checkout.html" class="btn btn-outline-primary-2">
+                                    <span>Checkout</span><i class="icon-long-arrow-right"></i>
+                                </a>
+                            </div><!-- End .dropdown-cart-total -->
+                        </div><!-- End .dropdown-menu -->
+                    </div><!-- End .cart-dropdown -->
+
+                    <div class="dropdown user-dropdown">
+                        <!-- Kiểm tra xem người dùng đã đăng nhập hay chưa -->
+                        <a href="#" class="dropdown-toggle" role="button" data-toggle="dropdown" aria-haspopup="true"
+                           aria-expanded="false" data-display="static">
+
+                            <!-- Hiển thị "Xin Chào, [Tên Người Dùng]" khi người dùng đã đăng nhập -->
+                            <span th:if="${#authentication.principal != 'anonymousUser'}">
+            <i class="icon-user"></i>
+            <span class="user-name">Xin Chào: <span th:text="${#authentication.name}"></span></span>
+        </span>
+
+                            <!-- Hiển thị icon người dùng khi chưa đăng nhập -->
+                            <span th:if="${#authentication.principal == 'anonymousUser'}">
+            <a href="/login" class="text-decoration-none">
+                <i class="icon-user"></i>
+            </a>
+        </span>
+                        </a>
+
+                        <!-- Nội dung dropdown -->
+                        <div class="dropdown-menu dropdown-menu-right">
+                            <!-- Thông tin cá nhân -->
+                            <a href="/thongtinuser" class="dropdown-item">
+                                <i class="icon-user"></i> Thông tin cá nhân
+                            </a>
+
+                            <!-- Đổi mật khẩu -->
+                            <a href="/user/doimatkhau" class="dropdown-item">
+                                <i class="icon-lock"></i> Đổi mật khẩu
+                            </a>
+
+                            <!-- Đăng xuất -->
+                            <a href="/logout" class="dropdown-item">
+                                <i class="icon-logout"></i> Đăng xuất
+                            </a>
+                        </div><!-- Kết thúc .dropdown-menu -->
+                    </div><!-- Kết thúc .user-dropdown -->
+
+                </div><!-- End .header-right -->
+
+
+            </div><!-- End .container -->
+
+        </div><!-- End .header-middle -->
+    </header><!-- End .header -->
+
+    <main class="main" layout:fragment="contentUser">
+        <div class="intro-slider-container mb-4">
+            <div class="intro-slider owl-carousel owl-simple owl-nav-inside" data-toggle="owl" data-owl-options='{
+                        "nav": false,
+                        "dots": true,
+                        "responsive": {
+                            "992": {
+                                "nav": true,
+                                "dots": false
+                            }
+                        }
+                    }'>
+                <div class="intro-slide" style="background-image: url(/assets/img/anh5.webp);">
+                    <div class="container intro-content">
+                        <h3 class="intro-title highlighted-text">Ngày Hội Black Friday</h3>
+                        <!-- End .h3 intro-subtitle -->
+                        <h1 class="intro-title highlighted-text">Tất cả <br>Giảm 50%</h1><!-- End .intro-title -->
+                        <a href="category.html" class="btn btn-outline-primary-2">
+                            <span>Mua ngay</span>
+                            <i class="icon-long-arrow-right"></i>
+                        </a>
+                    </div><!-- End .intro-content -->
+                </div><!-- End .intro-slide -->
+
+                <div class="intro-slide" style="background-image: url(/assets/img/anh6.webp);">
+                    <div class="container intro-content">
+                        <h3 class="intro-subtitle text-primary">all at 50% off</h3><!-- End .h3 intro-subtitle -->
+                        <h1 class="intro-title text-white">The Most Beautiful <br>Novelties In Our Shop</h1>
+                        <!-- End .intro-title -->
+
+                        <a href="category.html" class="btn btn-outline-primary-2 min-width-sm">
+                            <span>SHOP NOW</span>
+                            <i class="icon-long-arrow-right"></i>
+                        </a>
+                    </div><!-- End .intro-content -->
+                </div><!-- End .intro-slide -->
+            </div><!-- End .intro-slider owl-carousel owl-simple -->
+
+            <span class="slider-loader"></span><!-- End .slider-loader -->
+        </div><!-- End .intro-slider-container -->
+        <h2 class="dssp">Danh Sách Sản Phẩm</h2>
+        <div class="container">
+            <div class="toolbox toolbox-filter">
+                <div class="toolbox-left">
+                    <a href="#" class="filter-toggler">Filters</a>
+
+                </div><!-- End .toolbox-left -->
+                <!--                <div class="toolbox-right">-->
+                <!--                    <ul class="nav-filter product-filter">-->
+                <!--                        <li class="active"><a href="#" data-filter="*">All</a></li>-->
+                <!--                        <li><a href="#" data-filter=".furniture">Furniture</a></li>-->
+                <!--                        <li><a href="#" data-filter=".lighting">Lighting</a></li>-->
+                <!--                        <li><a href="#" data-filter=".accessories">Accessories</a></li>-->
+                <!--                        <li><a href="#" data-filter=".sale">Sale</a></li>-->
+                <!--                    </ul>-->
+                <!--                </div>&lt;!&ndash; End .toolbox-right &ndash;&gt;-->
+            </div><!-- End .filter-toolbox -->
+
+            <div class="widget-filter-area" id="product-filter-area">
+
+                <div class="filter-area-wrapper">
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <!--                            <div class="mb-3">-->
+                            <!--                                <label>Tên Sản Phẩm</label>-->
+                            <!--                                <input type="text" ng-model="filterData.ten"-->
+                            <!--                                       class="form-control"/>-->
+                            <!--                            </div>-->
+                            <div class="mb-3">
+                                <label>Giá min</label>
+                                <input type="text" ng-model="filterData.giaMin" class="form-control"
+                                       ng-blur="checkGiaMin()" />
+                                <!-- Thông báo lỗi cho Giá min -->
+                                <div ng-if="isInvalidGiaMin" class="alert alert-danger">
+                                    Vui lòng nhập giá trị hợp lệ cho Giá Min (số dương).
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label>Giá Max</label>
+                                <input type="text" ng-model="filterData.giaMax" class="form-control"
+                                       ng-blur="checkGiaMax()" />
+                                <!-- Thông báo lỗi cho Giá Max -->
+                                <div ng-if="isInvalidGiaMax" class="alert alert-danger">
+                                    Vui lòng nhập giá trị hợp lệ cho Giá Max (số dương).
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label>Xuất xứ</label>
+                                <select class="form-control" ng-model="filterData.idXuatXu">
+                                    <option value="" selected>Tất cả</option>
+                                    <option ng-repeat="x in xuatXu" value="{{x.idXuatXu}}">
+                                        {{x.ten}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <!--                            <div class="mb-3">-->
+                            <!--                                <label>Màu sắc</label>-->
+                            <!--                                <select class="form-control" ng-model="filterData.idMauSac">-->
+                            <!--                                    <option value="" selected>Tất cả</option>-->
+                            <!--                                    <option ng-repeat="m in mauSac" value="{{m.idMauSac}}">-->
+                            <!--                                        {{m.ten}}-->
+                            <!--                                    </option>-->
+                            <!--                                </select>-->
+                            <!--                            </div>-->
+                            <div class="mb-3">
+                                <label>Thương Hiệu</label>
+                                <select class="form-control"
+                                        ng-model="filterData.idThuongHieu">
+                                    <option value="" selected>Tất cả</option>
+                                    <option ng-repeat="t in thuongHieu" value="{{t.idThuongHieu}}">
+                                        {{t.ten}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label>Kiểu dáng</label>
+                                <select class="form-control" ng-model="filterData.idKieuDang">
+                                    <option value="" selected>Tất cả</option>
+                                    <option ng-repeat="k in kieuDang" value="{{k.idKieuDang}}">
+                                        {{k.ten}}
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label>Chất liệu</label>
+                                <select class="form-control" ng-model="filterData.idChatLieu">
+                                    <option value="" selected>Tất cả</option>
+                                    <option ng-repeat="c in chatLieu" value="{{c.idChatLieu}}">
+                                        {{c.ten}}
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <li>
+                            <button class="btn btn-danger" type="button" style="float: left"
+                                    ng-click="clearFilter()">Bỏ lọc
+                            </button>
+                            <button class="btn btn-primary" type="button" style="float: right"
+                                    ng-click="filter(filterData)">Lọc
+                            </button>
+                        </li>
+                    </div><!-- End .row -->
+                </div><!-- End .filter-area-wrapper -->
+            </div><!-- End #product-filter-area.widget-filter-area ng-repeat="products in listProducts"-->
+
+
+            <div class="products-container"
+                 style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; width: 100%; padding: 16px; box-sizing: border-box;">
+                <div class="product-item"
+                     ng-repeat="products in listProducts"
+                     style="border: 1px solid #ddd; border-radius: 8px; text-align: center; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); background-color: #fff; padding: 16px; display: flex; flex-direction: column; align-items: center; justify-content: space-between;">
+                    <div class="product product-4" style="width: 100%;">
+                        <!-- Hiển thị ảnh sản phẩm -->
+                        <div class="product-media"
+                             style="width: 100%; aspect-ratio: 4 / 3; background-color: #f9f9f9; border-radius: 8px; overflow: hidden; display: flex; justify-content: center; align-items: center; position: relative;">
+                            <a
+                                    style="display: flex; justify-content: center; align-items: center; width: 100%; height: 100%;">
+                                <img
+                                        ng-src="/assets/img/{{products.hinhAnh}}"
+                                        alt="Ảnh không tồn tại"
+                                        style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                            </a>
+                        </div><!-- End .product-media -->
+
+                        <!-- Tên sản phẩm -->
+                        <div class="product-body" style="margin-top: 16px;">
+                            <h5 class="product-title" style="margin-bottom: 8px; font-size: 20px; font-weight: 500;">
+                                <a>{{products.ten}}</a>
+                            </h5>
+
+                            <h4 class="product-title" style="margin-bottom: 8px; font-size: 16px; font-weight: 500;">
+                                <a style="color: red">Giá Bán: {{products.minGiaBan | number}}</a>
+                            </h4>
+
+                            <!-- Mã màu và tên màu nằm cạnh nhau -->
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px;">
+                                <!--                                &lt;!&ndash; Màu sắc &ndash;&gt;-->
+                                <!--                                <div style="width: 30px; height: 30px; background-color: {{products.idMauSac.ma}}; border: 1px solid #000; border-radius: 50%;"></div>-->
+                                <!--                                &lt;!&ndash; Tên màu &ndash;&gt;-->
+                                <!--                                <span>{{products.idMauSac.ten}}</span>-->
+                            </div>
+                        </div><!-- End .product-body -->
+
+                        <!-- Nút thêm vào giỏ hàng -->
+                        <!--                        ng-click="addProductIntocart(products.idSanPhamChiTiet)"-->
+                        <div class="product-action t-2">
+
+                            <!--&lt;!&ndash;                            <a href="/view-san-pham-chi-tiet/{{products.idSanPhamChiTiet}}"> Add to Cart</a>&ndash;&gt;-->
+                            <!--                            <button ng-click="addProductIntocart(products.idSanPhamChiTiet)"-->
+
+                            <button
+                                    ng-click="viewChiTiet(products.idSanPham)"
+
+                                    class="btn-product btn-cart"
+                                    style="padding: 8px 16px; font-size: 0.875rem; border: none; background-color: #007bff; color: #fff; border-radius: 4px; cursor: pointer;">
+                                <span>Mua Hàng</span>
+                            </button>
+                        </div><!-- End .product-action -->
+                    </div><!-- End .product -->
+                </div><!-- End .product-item -->
+            </div>
+
+
+            <!-- End .products-container -->
+
+
+            <!-- Điều hướng phân trang -->
+            <nav aria-label="Page navigation" class="d-flex justify-content-center mt-3">
+                <ul class="pagination pagination-sm-125">
+                    <!-- Nút Trang đầu -->
+                    <li class="page-item" ng-class="{ 'disabled': page === 0 }">
+                        <a class="page-link" href="" ng-click="goToFirstPage()"><small>&#8676; Trang
+                            đầu</small></a>
+                    </li>
+
+                    <!-- Nút Trang trước -->
+                    <li class="page-item" ng-class="{ 'disabled': page === 0 }">
+                        <a class="page-link" href="" ng-click="previousPage()"><small>&#8592; Trang
+                            trước></small></a>
+                    </li>
+
+                    <!-- Hiển thị thông tin trang -->
+                    <li class="page-item disabled">
+                                            <span class="page-link"><small>Trang {{ page + 1 }} / {{ totalPages
+                                                }}</small></span>
+                    </li>
+
+                    <!-- Nút Trang sau -->
+                    <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 }">
+                        <a class="page-link" href="" ng-click="nextPage()"><small>Trang sau
+                            &#8594;</small></a>
+                    </li>
+
+                    <!-- Nút Trang cuối -->
+                    <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 }">
+                        <a class="page-link" href="" ng-click="goToLastPage()"><small>Trang cuối
+                            &#8677;</small></a>
+                    </li>
+                </ul>
+            </nav>
+
+        </div><!-- End .container -->
+    </main><!-- End .main -->
+
+</div><!-- End .page-wrapper -->
+
+
+<script src="/users/AngularJS/gio-hang.js"></script>
+<script src="/users/AngularJS/don-hang-khach.js"></script>
+<script src="/users/AngularJS/SanPhamChiTiet.js"></script>
+<!--<script src="/users/AngularJS/DonHangOnline.js"></script>-->
+<!--<script src="/admin/AngularJS/MauSacJS.js"></script>-->
+
+<!-- Plugins JS File -->
+<script src="/assets/js/jquery.min.js"></script>
+<script src="/assets/js/bootstrap.bundle.min.js"></script>
+<script src="/assets/js/jquery.hoverIntent.min.js"></script>
+<script src="/assets/js/jquery.waypoints.min.js"></script>
+<script src="/assets/js/superfish.min.js"></script>
+<script src="/assets/js/owl.carousel.min.js"></script>
+<script src="/assets/js/imagesloaded.pkgd.min.js"></script>
+<script src="/assets/js/isotope.pkgd.min.js"></script>
+<script src="/assets/js/wNumb.js"></script>
+<script src="/assets/js/nouislider.min.js"></script>
+<script src="/assets/js/bootstrap-input-spinner.js"></script>
+<script src="/assets/js/jquery.magnific-popup.min.js"></script>
+
+<!-- Main JS File -->
+<script src="/assets/js/main.js"></script>
+<script src="/assets/js/demos/demo-11.js"></script>
+
+<script th:src="@{/admin/assets/libs/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<a href="https://m.me/547997145053868" target="_blank" class="messenger-chat">
+    <img src="/assets/img/messengerlogo_icon.png" alt="Chat với chúng tôi trên Messenger"
+         style="width: 50px; height: 50px; background-color: #0084ff; padding: 10px; border-radius: 50%;"/>
+</a>
+
+<style>
+    .messenger-chat {
+        position: fixed; /* Đặt vị trí cố định */
+        right: 20px; /* Đưa logo sang phải 20px */
+        bottom: 40px; /* Dịch logo lên cao hơn 20px */
+        z-index: 9999; /* Đảm bảo logo ở trên các phần tử khác */
+    }
+
+    /* Hiệu ứng rung lắc */
+    .shake {
+        animation: shake 0.7s ease-in-out;
+    }
+
+    @keyframes shake {
+        0% {
+            transform: translateX(0); /* Vị trí ban đầu */
+        }
+        25% {
+            transform: translateX(-10px); /* Rung sang trái */
+        }
+        50% {
+            transform: translateX(10px); /* Rung sang phải */
+        }
+        75% {
+            transform: translateX(-10px); /* Rung sang trái */
+        }
+        100% {
+            transform: translateX(0); /* Quay lại vị trí ban đầu */
+        }
+    }
+
+</style>
+
+<script>
+    function startShaking() {
+        var messengerChat = document.querySelector('.messenger-chat');
+
+        // Thêm class "shake" để bắt đầu hiệu ứng rung
+        messengerChat.classList.add('shake');
+
+        // Sau 1 giây, bỏ class "shake" để dừng rung
+        setTimeout(function () {
+            messengerChat.classList.remove('shake');
+        }, 1000); // 1s để rung xong
+
+        // Sau đó, lại bắt đầu rung sau 5 giây
+        setTimeout(startShaking, 5000); // Sau 5s tiếp tục rung
+    }
+
+    // Bắt đầu hiệu ứng ngay khi trang được tải
+    window.onload = function () {
+        startShaking();
+    };
+</script>
+
+</body>
+
+
+<!-- Mirrored from portotheme.com/html/molla/index-11.html by HTTrack Website Copier/3.x [XR&CO'2014], Wed, 30 Oct 2024 05:28:28 GMT -->
+</html>

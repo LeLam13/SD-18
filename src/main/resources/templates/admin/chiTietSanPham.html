@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en" xmlns:th="http:/www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/admin/index}">
+
+<head>
+
+    <meta charset="utf-8"/>
+    <title>Eighteen Polo | Chi tiết Sản Phẩm</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="Premium Multipurpose Admin & Dashboard Template" name="description"/>
+    <meta content="Themesbrand" name="author"/>
+    <!--    Bootstrap 5-->
+
+</head>
+
+<body data-topbar="dark">
+<!-- ============================================================== -->
+<!-- Start right Content here -->
+<!-- ============================================================== -->
+<div class="main-content" layout:fragment="content">
+    <div ng-app="chiTietSP-app" ng-controller="chiTietSP-ctrl">
+        <div class="page-content">
+            <div class="container-fluid">
+
+                <!-- start page title -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                            <h4 class="mb-sm-0 font-size-18">Chi Tiết Sản Phẩm</h4>
+
+                            <!-- <div class="page-title-right">
+                                <ol class="breadcrumb m-0">
+                                    <li class="breadcrumb-item"><a href="javascript: void(0);">T</a></li>
+                                    <li class="breadcrumb-item active">DataTables</li>
+                                </ol>
+                            </div> -->
+
+                        </div>
+                    </div>
+                </div>
+                <!-- end page title -->
+
+                <div class="row height:75%">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <button type="button" class="btn btn-primary" ng-click="navigateToForm()">
+                                            Thêm Mới
+                                        </button>
+
+                                        <button type="button" class="btn btn-primary" ng-click="navigateToHistory()">
+                                            Nhập Hàng
+                                        </button>
+
+                                        <button type="button" class="btn btn-primary"
+                                                ng-click="navigateToViewHistory()">
+                                            Lịch Sử Nhập
+                                        </button>
+
+                                        <button type="button" class="btn" style="background-color: #808080;color:white"
+                                                ng-click="back()">
+                                            Trở về
+                                        </button>
+                                    </div>
+                                    <div class="col-6 nav justify-content-end">
+                                        <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                                data-bs-target="#filterModal">
+                                            <i data-feather="filter"></i>
+                                            <span class="badge bg-primary ms-1 ml-2"
+                                                  style="font-size: 11px; font-weight: bold;" id="lengthFilter"></span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <table id="datatable"
+                                       class="table table-striped table-hover dt-responsive  nowrap w-100">
+                                    <thead>
+                                    <tr>
+                                        <th>STT</th>
+                                        <th>Mã</th>
+                                        <th>Số lượng</th>
+                                        <th>Giá bán</th>
+                                        <th>Màu sắc</th>
+                                        <th>Kích cỡ</th>
+                                        <th>Ngày Tạo</th>
+                                        <th>Trạng Thái</th>
+                                        <th>Thao Tác</th>
+                                    </tr>
+                                    </thead>
+
+
+                                    <tbody>
+                                    <tr ng-if="items.length == 0">
+                                        <td colspan="8">
+                                            <h3 class="text-center col-12 mt-5">Không có sản phẩm chi tiết</h3>
+                                        </td>
+                                    </tr>
+                                    <tr ng-repeat="m in items">
+                                        <td>{{ page * size + $index + 1 }}</td>
+                                        <td>{{m.ma}}</td>
+                                        <td>{{m.soLuong}}</td>
+                                        <td>{{m.giaBan}}</td>
+                                        <td>
+                                            <div style="display: flex; align-items: center; gap: 10px;">
+                                                <!-- Ô màu -->
+                                                <div style="width: 30px; height: 30px; background-color: {{m.idMauSac.ma}}; border: 1px solid #000; border-radius: 50%;"></div>
+                                                <!-- Tên màu -->
+                                                <span>{{m.idMauSac.ten}}</span>
+                                            </div>
+                                        </td>
+                                        <td>{{m.idKichCo.ten}}</td>
+                                        <td>{{m.createDate | date:'yyyy-MM-dd'}}</td>
+                                        <td>
+        <span ng-class="{'text-success': m.trangThai, 'text-danger': !m.trangThai}">
+            {{m.trangThai ? "Đang hoạt động" : "Không hoạt động"}}
+        </span>
+                                        </td>
+                                        <td>
+                                            <a href="" class="edit" data-bs-toggle="modal" data-bs-target="#view"
+                                               ng-click="getSanPhamChiTiet(m.ma)">
+                                                <i style='font-size:24px' class='fas'>&#xf06e;</i>
+                                            </a>
+                                            <a href="" class="edit" data-bs-toggle="modal" data-bs-target="#update"
+                                               ng-click="getSanPhamChiTiet(m.ma)">
+                                                <i class="material-icons" title="Edit">&#xE254;</i>
+                                            </a>
+                                            <a href="" class="edit" ng-click="updateTT(m.idSanPhamChiTiet)">
+                                                <i style="font-size:20px" class="fa">&#xf021;</i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                                <!-- Điều hướng phân trang -->
+                                <nav aria-label="Page navigation" class="d-flex justify-content-center mt-3">
+                                    <ul class="pagination pagination-sm-125">
+                                        <!-- Nút Trang đầu -->
+                                        <li class="page-item" ng-class="{ 'disabled': page === 0 }">
+                                            <a class="page-link" href="" ng-click="goToFirstPage()"><small>&#8676; Trang
+                                                đầu</small></a>
+                                        </li>
+
+                                        <!-- Nút Trang trước -->
+                                        <li class="page-item" ng-class="{ 'disabled': page === 0 }">
+                                            <a class="page-link" href="" ng-click="previousPage()"><small>&#8592; Trang
+                                                trước></small></a>
+                                        </li>
+
+                                        <!-- Hiển thị thông tin trang -->
+                                        <li class="page-item disabled">
+                                            <span class="page-link"><small>Trang {{ page + 1 }} / {{ totalPages
+                                                }}</small></span>
+                                        </li>
+
+                                        <!-- Nút Trang sau -->
+                                        <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 }">
+                                            <a class="page-link" href="" ng-click="nextPage()"><small>Trang sau
+                                                &#8594;</small></a>
+                                        </li>
+
+                                        <!-- Nút Trang cuối -->
+                                        <li class="page-item" ng-class="{ 'disabled': page === totalPages - 1 }">
+                                            <a class="page-link" href="" ng-click="goToLastPage()"><small>Trang cuối
+                                                &#8677;</small></a>
+                                        </li>
+                                    </ul>
+                                </nav>
+
+                                <div class="row">
+                                    <div class="col-6">
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div> <!-- end col -->
+                </div> <!-- end row -->
+            </div>
+
+            <!-- container-fluid -->
+        </div>
+        <!-- End Page-content -->
+
+        <footer class="footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <script>document.write(new Date().getFullYear())</script>
+                        © Eighteen Polo.
+                    </div>
+
+                </div>
+            </div>
+        </footer>
+
+
+        <!--    modal mau-->
+
+        <div class="modal" id="update">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Cập nhật</h4>
+                        <button
+                                type="button"
+                                class="btn-close"
+                                data-bs-dismiss="modal"
+                                aria-label="Close"
+                                ng-click="resetErrors()"
+                        ></button>
+                    </div>
+                    <form>
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <div class="row g-3">
+                                <!-- Cột 1: ID, Mã -->
+                                <div class="col-md-4">
+                                    <img ng-src="/assets/img/{{spct.idHinhAnh.ten ? spct.idHinhAnh.ten : selectedFileName}}"
+                                         alt="Ảnh sản phẩm"
+                                         class="img-thumbnail"
+                                         style="width: 120px; height: 120px; object-fit: cover; cursor: pointer;"
+                                         ng-click="triggerFileInput(spct.idSanPhamChiTiet)"/>
+
+                                    <input type="file" id="formFile-{{spct.idSanPhamChiTiet}}" class="d-none"
+                                           onchange="angular.element(this).scope().onFileSelected1(event)">
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">ID</label>
+                                        <input type="text" ng-model="spct.idSanPhamChiTiet" class="form-control"
+                                               readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Mã</label>
+                                        <input type="text" ng-model="spct.ma" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                <!-- Cột 2: Tên sản phẩm, Người tạo -->
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Tên Sản Phẩm</label>
+                                        <input type="text" ng-model="spct.idSanPham.ten" class="form-control" readonly>
+                                    </div>
+                                </div>
+
+                                <!-- Cột 3: Ngày tạo, Ngày cập nhật -->
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Giá Bán</label>
+                                        <input type="number" ng-model="spct.giaBan" class="form-control"  onfocus="document.getElementById('eGiaBan').innerText = ''">
+                                        <i id="eGiaBan" style="color: red" class="er"></i>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Số Lượng</label>
+                                        <input type="number" ng-model="spct.soLuong" class="form-control"  onfocus="document.getElementById('eSoLuong').innerText = ''">
+                                        <i id="eSoLuong" style="color: red" class="er"></i>
+                                    </div>
+                                    <!--                                    <div class="mb-3">-->
+                                    <!--                                        <label class="form-label">Thương Hiệu</label>-->
+                                    <!--                                        <select id="thuongHieu" class="form-control"-->
+                                    <!--                                                ng-model="spct.idSanPham.idThuongHieu"-->
+                                    <!--                                                ng-options="thuongHieu as thuongHieu.ten for thuongHieu in thuongHieu track by thuongHieu.idThuongHieu">-->
+                                    <!--                                        </select>-->
+                                    <!--                                    </div>-->
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Màu Sắc</label>
+                                        <select id="mauSac" class="form-control"
+                                                ng-model="spct.idMauSac"
+                                                ng-options="mauSac as mauSac.ten for mauSac in mauSac track by mauSac.idMauSac"
+                                                disabled>
+                                        </select>
+
+
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Size</label>
+                                        <select id="kichCo" class="form-control"
+                                                ng-model="spct.idKichCo"
+                                                ng-options="kichCo as kichCo.ten for kichCo in kichCo track by kichCo.idKichCo"
+                                                disabled>
+                                        </select>
+                                    </div>
+                                    <!--                                    <div class="mb-3">-->
+                                    <!--                                        <label class="form-label">Chất Liệu</label>-->
+                                    <!--                                        <select id="chatLieu" class="form-control"-->
+                                    <!--                                                ng-model="spct.idSanPham.idChatLieu"-->
+                                    <!--                                                ng-options="chatLieu as chatLieu.ten for chatLieu in chatLieu track by chatLieu.idChatLieu">-->
+                                    <!--                                        </select>-->
+                                    <!--                                    </div>-->
+                                </div>
+                                <div class="col-md-4">
+                                    <!--                                    <div class="mb-3">-->
+                                    <!--                                        <label class="form-label">Kiểu Dáng</label>-->
+                                    <!--                                        <select id="kieuDang" class="form-control"-->
+                                    <!--                                                ng-model="spct.idSanPham.idKieuDang"-->
+                                    <!--                                                ng-options="kieuDang as kieuDang.ten for kieuDang in kieuDang track by kieuDang.idKieuDang">-->
+                                    <!--                                        </select>-->
+                                    <!--                                    </div>-->
+                                    <!--                                    <div class="mb-3">-->
+                                    <!--                                        <label class="form-label">Xuất Xứ</label>-->
+                                    <!--                                        <select id="xuatXu" class="form-control"-->
+                                    <!--                                                ng-model="spct.idSanPham.idXuatXu"-->
+                                    <!--                                                ng-options="xuatXu as xuatXu.ten for xuatXu in xuatXu track by xuatXu.idXuatXu">-->
+                                    <!--                                        </select>-->
+                                    <!--                                    </div>-->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" ng-click="update(spct.ma)">Cập nhật</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal" id="view">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">Xem chi tiết</h4>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <form>
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            <div class="row g-3">
+                                <!-- Cột 1: ID, Mã -->
+                                <div class="col-md-4">
+                                    <img ng-src="/assets/img/{{spct.idHinhAnh.ten}}"
+                                         alt="Ảnh sản phẩm"
+                                         class="img-thumbnail"
+                                         style="width: 120px; height: 120px; object-fit: cover; margin-bottom: 10px;">
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">ID</label>
+                                        <input type="text" ng-model="spct.idSanPhamChiTiet" class="form-control"
+                                               readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Mã</label>
+                                        <input type="text" ng-model="spct.ma" class="form-control" readonly>
+                                    </div>
+                                </div>
+                                <!-- Cột 2: Tên sản phẩm, Người tạo -->
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Tên Sản Phẩm</label>
+                                        <input type="text" ng-model="spct.idSanPham.ten" class="form-control" readonly>
+                                    </div>
+                                </div>
+
+                                <!-- Cột 3: Ngày tạo, Ngày cập nhật -->
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Giá Bán</label>
+                                        <input type="text" ng-model="spct.giaBan" class="form-control" readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Số Lượng</label>
+                                        <input type="text" ng-model="spct.soLuong" class="form-control" readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Thương Hiệu</label>
+                                        <input type="text" ng-model="spct.idSanPham.idThuongHieu.ten"
+                                               class="form-control"
+                                               readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Màu Sắc</label>
+                                        <input type="text" ng-model="spct.idMauSac.ten" class="form-control" readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Size</label>
+                                        <input type="text" ng-model="spct.idKichCo.ten" class="form-control" readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Chất Liệu</label>
+                                        <input type="text" ng-model="spct.idSanPham.idChatLieu.ten" class="form-control"
+                                               readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="mb-3">
+                                        <label class="form-label">Kiểu Dáng</label>
+                                        <input type="text" ng-model="spct.idSanPham.idKieuDang.ten" class="form-control"
+                                               readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Xuất Xứ</label>
+                                        <input type="text" ng-model="spct.idSanPham.idXuatXu.ten" class="form-control"
+                                               readonly>
+                                    </div>
+                                </div>
+                                <!-- Hàng thứ hai: Người cập nhật, Trạng thái -->
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Người Tạo</label>
+                                        <input type="text" ng-model="spct.createBy" class="form-control" readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Người Cập Nhật</label>
+                                        <input type="text" ng-model="spct.updateBy" class="form-control" readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Trạng Thái</label>
+                                        <input type="text"
+                                               ng-value="spct.trangThai ? 'Đang hoạt động' : 'Ngưng hoạt động'"
+                                               class="form-control" readonly>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Ngày Tạo</label>
+                                        <input type="text" ng-value="spct.createDate | date:'yyyy-MM-dd'"
+                                               class="form-control" readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Ngày Cập Nhật</label>
+                                        <input type="text" ng-value="spct.updateDate | date:'yyyy-MM-dd'"
+                                               class="form-control" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="filterModal" tabindex="-1" aria-labelledby="filterModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="filterModalLabel">Lọc chi tiết sản phẩm</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="mb-3">
+                                    <label>Mã</label>
+                                    <input type="text" ng-model="filterData.ten" class="form-control"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label>Giá min</label>
+                                    <input type="text" ng-model="filterData.giaMin" class="form-control"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label>Giá Max</label>
+                                    <input type="text" ng-model="filterData.giaMax" class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="mb-3">
+                                    <label>Màu sắc</label>
+                                    <select class="form-control" ng-model="filterData.idMauSac">
+
+
+                                        <option value="" selected>Tất cả</option>
+                                        <option ng-repeat="m in mauSac" value="{{m.idMauSac}}">{{m.ten}}</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label>Kích Cỡ</label>
+                                    <select class="form-control" ng-model="filterData.idKichCo">
+                                        <option value="" selected>Tất cả</option>
+                                        <option ng-repeat="k in kichCo" value="{{k.idKichCo}}">{{k.ten}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-danger" type="button" data-bs-dismiss="modal" ng-click="clearFilter()">Bỏ
+                            lọc
+                        </button>
+                        <button class="btn btn-primary" type="button" data-bs-dismiss="modal"
+                                ng-click="filter(filterData)">Lọc
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- end main content-->
+<script src="app.js"></script>
+</body>
+
+</html>

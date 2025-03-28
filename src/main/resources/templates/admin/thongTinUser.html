@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/admin/index}">
+
+<head>
+
+</head>
+<style></style>
+<body data-topbar="dark">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.1/css/bootstrap.min.css">
+<!-- ============================================================== -->
+<!-- Start right Content here -->
+<!-- ============================================================== -->
+<div class="main-content" layout:fragment="content">
+    <div class="page-content">
+        <style>
+            .er {
+                color: red;
+                font-size: 13px;
+            }
+        </style>
+        <div class="row d-flex justify-content-center">
+            <div class="col-10">
+                <div class="container mt-5">
+                    <form action="/admin/nhan-vien/updateUser" method="post" class="needs-validation" novalidate>
+                        <!-- Hiển thị thông báo lỗi -->
+                        <div th:if="${error}" class="alert alert-danger">
+                            <p th:text="${error}"></p>
+                        </div>
+
+                        <!-- Họ và tên -->
+                        <div class="mb-3">
+                            <label for="hoTen" class="form-label">Họ và tên:</label>
+                            <input type="text" class="form-control" id="hoTen" name="hoTen" th:value="${nhanVien.hoTen}" required />
+                        </div>
+
+                        <!-- Giới tính -->
+                        <div class="mb-3">
+                            <label for="gioiTinh" class="form-label">Giới tính:</label>
+                            <select class="form-select" id="gioiTinh" name="gioiTinh" required>
+                                <option value="Nam" th:selected="${nhanVien.gioiTinh == 'Nam'}">Nam</option>
+                                <option value="Nữ" th:selected="${nhanVien.gioiTinh == 'Nữ'}">Nữ</option>
+                            </select>
+                        </div>
+
+                        <!-- Ngày sinh -->
+                        <div class="mb-3">
+                            <label for="ngaySinh" class="form-label">Ngày sinh:</label>
+                            <input type="date" class="form-control" id="ngaySinh" name="ngaySinh" th:value="${nhanVien.ngaySinh}" required />
+                            <div id="ngaySinhError" class="text-danger d-none">Ngày sinh không được là ngày trong tương lai!</div>
+                        </div>
+
+                        <!-- JavaScript validation cho Ngày sinh -->
+                        <script>
+                            document.getElementById('ngaySinh').addEventListener('change', function () {
+                                var ngaySinhInput = this.value;
+                                var currentDate = new Date().toISOString().split('T')[0];
+
+                                if (ngaySinhInput > currentDate) {
+                                    document.getElementById('ngaySinhError').classList.remove('d-none');
+                                    this.setCustomValidity("Ngày sinh không được là ngày trong tương lai!");
+                                } else {
+                                    document.getElementById('ngaySinhError').classList.add('d-none');
+                                    this.setCustomValidity("");
+                                }
+                            });
+                        </script>
+
+                        <!-- Số điện thoại -->
+                        <div class="mb-3">
+                            <label for="soDienThoai" class="form-label">Số điện thoại:</label>
+                            <input type="text" class="form-control" id="soDienThoai" name="soDienThoai"
+                                   th:value="${nhanVien.soDienThoai}" required
+                                   pattern="^0[0-9]{9}$"
+                                   title="Số điện thoại phải bắt đầu bằng 0 và có 10 chữ số" />
+                        </div>
+
+                        <!-- Email -->
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email:</label>
+                            <input type="email" class="form-control" id="email" name="email"
+                                   th:value="${nhanVien.taikhoan.email}" required />
+                        </div>
+
+                        <!-- Địa chỉ -->
+                        <div class="mb-3">
+                            <label for="diaChi" class="form-label">Địa chỉ:</label>
+                            <input type="text" class="form-control" id="diaChi" name="diaChi"
+                                   th:value="${nhanVien.diaChi}" required />
+                        </div>
+
+                        <!-- Submit button -->
+                        <button type="submit" class="btn btn-primary">Cập nhật thông tin</button>
+                    </form>
+                </div>
+
+
+            </div>
+        </div>
+
+    </div>
+    <!-- container-fluid -->
+</div>
+<!-- End Page-content -->
+
+<footer class="footer">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-6">
+                <script>document.write(new Date().getFullYear())</script>
+                © eight.
+            </div>
+            <div class="col-sm-6">
+                <div class="text-sm-end d-none d-sm-block">
+                    Design & Develop by <a href="#!" class="text-decoration-underline">Themesbrand</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+</div>
+
+
+</body>
+
+</html>
