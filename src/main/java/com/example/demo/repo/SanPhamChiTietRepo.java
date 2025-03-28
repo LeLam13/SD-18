@@ -1,0 +1,43 @@
+package com.example.demo.repo;
+
+import com.example.demo.entity.SanPham;
+import com.example.demo.entity.SanPhamChiTiet;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface SanPhamChiTietRepo extends JpaRepository<SanPhamChiTiet, Integer> {
+
+    @Query("SELECT spct FROM SanPhamChiTiet spct JOIN spct.idSanPham sp WHERE LOWER(sp.ten) LIKE LOWER(CONCAT('%', :ten, '%'))")
+    List<SanPhamChiTiet> findBySanPhamTenContainingIgnoreCase(String ten);
+
+    @Query("SELECT s FROM SanPhamChiTiet s WHERE s.idSanPham.idSanPham = :idSanPham")
+    Page<SanPhamChiTiet> getByID(@Param("idSanPham") Integer idSanPham, Pageable pageable);
+
+    Page<SanPhamChiTiet> findByIdSanPham_IdSanPham(Integer idSanPham, Pageable pageable);
+
+    List<SanPhamChiTiet> findAllByIdSanPhamChiTietIn(List<Integer> idSanPhamChiTietList);
+
+    SanPhamChiTiet findByMa(String ma);
+
+    SanPhamChiTiet findByIdSanPhamChiTiet(Integer idSanPhamChiTiet);
+
+    @Query("SELECT spct.idSanPhamChiTiet, SUM(hdct.soLuong) " +
+            "FROM HoaDonChiTiet hdct " +
+            "JOIN hdct.sanPhamChiTiet spct " +
+            "WHERE spct.idSanPham.idSanPham = :idSanPham " +
+            "GROUP BY spct.idSanPhamChiTiet")
+    List<Object[]> getDetailedTotalSoldByProduct(@Param("idSanPham") Integer idSanPham);
+
+    @Query("SELECT COALESCE(SUM(spct.soLuong), 0) " +
+            "FROM SanPhamChiTiet spct " +
+            "WHERE spct.idSanPham.idSanPham = :idSanPham")
+    Integer getTotalInventoryByProduct(@Param("idSanPham") Integer idSanPham);
+
+}

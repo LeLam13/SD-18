@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/admin/index}">
+<head>
+    <title>ALLDY SNEAKER | Form sản phẩm</title>
+
+</head>
+<style></style>
+<body data-topbar="dark">
+
+<!-- ============================================================== -->
+<!-- Start right Content here -->
+<!-- ============================================================== -->
+<div class="main-content" layout:fragment="content">
+    <div class="page-content" ng-app="formSP-app" ng-controller="san-pham-ctrl">
+
+        <style>
+            .er {
+                color: #ff0000;
+                font-size: 13px;
+            }
+        </style>
+        <link th:href="@{/admin/css/fileupload.css}" rel="stylesheet" type="text/css"/>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<!--        <style>-->
+<!--            .er {-->
+<!--                color: red;-->
+<!--                font-size: 13px;-->
+<!--            }-->
+<!--        </style>-->
+<!--        <link th:href="@{/admin/css/fileupload.css}" rel="stylesheet" type="text/css"/>-->
+<!--        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">-->
+
+
+
+        <div class="container-fluid">
+
+            <div class="row justify-content-center w-100">
+                <div class="col-9">
+                    <div class="card">
+                        <!-- Centered "Sản Phẩm" Field on Top -->
+                        <div class="row justify-content-center">
+                            <div class="col-sm-6">
+                                <div class="mb-3 m-4 text-center">
+                                    <label for="tenSP">Sản Phẩm</label>
+
+
+                                    <input id="tenSP" ng-model="tenSP" class="form-control" disabled>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Two Columns for Remaining Attributes -->
+                        <div class="row">
+
+
+                            <div class="col-sm-6">
+                                <div class="mb-3 m-4">
+                                    <label for="xuatXu">Xuất xứ</label>
+                                    <select id="xuatXu" class="form-control" ng-model="selectedXuatXu">
+                                        <option ng-repeat="x in xuatXu" value="{{x.idXuatXu}}">
+                                            {{x.ten}}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="mb-3 m-4">
+                                    <label for="chatLieu">Chất liệu</label>
+                                    <select id="chatLieu" class="form-control" ng-model="selectedChatLieu">
+                                        <option ng-repeat="c in chatLieu" value="{{c.idChatLieu}}">
+                                            {{c.ten}}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-sm-6">
+                                <div class="mb-3 m-4">
+                                    <label for="thuongHieu">Thương Hiệu</label>
+                                    <select id="thuongHieu" class="form-control" ng-model="selectedThuongHieu">
+                                        <option ng-repeat="t in thuongHieu" value="{{t.idThuongHieu}}">
+                                            {{t.ten}}
+                                        </option>
+                                    </select>
+                                </div>
+
+
+                                <div class="mb-3 m-4">
+                                    <label for="kieuDang">Kiểu dáng</label>
+                                    <select id="kieuDang" class="form-control" ng-model="selectedKieuDang">
+                                        <option ng-repeat="k in kieuDang" value="{{k.idKieuDang}}">
+                                            {{k.ten}}
+                                        </option>
+                                    </select>
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center w-100">
+                <div class="col-9">
+                    <div class="card">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <!-- Chọn màu sắc -->
+                                <div class="mb-3 m-4">
+                                    <label>Màu Sắc: </label>
+                                    <input type="text" ng-model="colorSearch" placeholder="Nhập màu để tìm kiếm"
+                                           ng-change="autoSelectColor()">
+                                    <select class="form-control" ng-model="selectedMauSac" multiple
+                                            ng-change="selectColor()">
+                                        <option ng-repeat="mau in mauSac | filter:colorFilterFunction" ng-value="mau">
+                                            {{ mau.ten
+                                            }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <!-- Chọn kích cỡ -->
+                                <div class="mb-3 m-4">
+                                    <label>Kích Cỡ: </label>
+                                    <input type="text" ng-model="sizeSearch" placeholder="Nhập kích cỡ để tìm kiếm"
+                                           ng-change="autoSelectSize()">
+                                    <select class="form-control" ng-model="selectedKichCo" multiple
+                                            ng-change="selectSize()">
+                                        <option ng-repeat="size in kichCo | filter:sizeFilterFunction" ng-value="size">
+                                            {{ size.ten
+                                            }}
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row p-3 m-5">
+                <div class="col-12">
+                    <div class="card">
+                        <!-- Hiển thị bảng theo từng màu -->
+                        <div ng-repeat="table in tables" style="margin-top: 20px;">
+                            <h3 class="m-4">Màu {{table.mau.ten}}</h3>
+                            <table class="table table-striped table-hover dt-responsive  nowrap w-75 m-4">
+                                <tr>
+                                    <!-- Checkbox chính để chọn tất cả -->
+                                    <th>
+                                        <input type="checkbox"
+                                               ng-model="form[table.mau.idMauSac].allSelected"
+                                               ng-change="toggleAllCheckboxes(table)">
+                                    </th>
+                                    <th>Kích Cỡ</th>
+                                    <th>Số lượng</th>
+                                    <th>Giá nhập</th>
+                                    <th>Giá bán</th>
+                                    <th>Xóa</th>
+                                    <th>Ảnh</th>
+                                </tr>
+                                <tr ng-repeat="size in table.size">
+                                    <td><input type="checkbox"
+                                               ng-model="form[table.mau.idMauSac][size.idKichCo].selected"
+                                               ng-change="syncSelectedValues(table, size)">
+                                    </td>
+                                    <td>{{size.ten}}</td>
+                                    <td><input ng-model="form[table.mau.idMauSac][size.idKichCo].soLuong"
+                                               type="number"
+                                               ng-change="updateAllSelectedValues('soLuong', form[table.mau.idMauSac][size.idKichCo].soLuong, table)">
+                                        <!-- Hiển thị lỗi số lượng -->
+                                        <div ng-show="form[table.mau.idMauSac][size.idKichCo].errorMessages.soLuong"
+                                             class="text-danger">
+                                            {{ form[table.mau.idMauSac][size.idKichCo].errorMessages.soLuong }}
+                                        </div>
+                                    </td>
+                                    <td><input ng-model="form[table.mau.idMauSac][size.idKichCo].giaNhap"
+                                               type="number"
+                                               ng-change="updateAllSelectedValues('giaNhap', form[table.mau.idMauSac][size.idKichCo].giaNhap, table)">
+                                        <!-- Hiển thị lỗi giá nhập -->
+                                        <div ng-show="form[table.mau.idMauSac][size.idKichCo].errorMessages.giaNhap"
+                                             class="text-danger">
+                                            {{ form[table.mau.idMauSac][size.idKichCo].errorMessages.giaNhap }}
+                                        </div>
+                                    </td>
+                                    <td><input ng-model="form[table.mau.idMauSac][size.idKichCo].giaBan"
+                                               type="number"
+                                               ng-change="updateAllSelectedValues('giaBan', form[table.mau.idMauSac][size.idKichCo].giaBan, table)">
+                                        <!-- Hiển thị lỗi giá bán -->
+                                        <div ng-show="form[table.mau.idMauSac][size.idKichCo].errorMessages.giaBan"
+                                             class="text-danger">
+                                            {{ form[table.mau.idMauSac][size.idKichCo].errorMessages.giaBan }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-danger" ng-click="removeSize(table, size)">Xóa</button>
+                                    </td>
+                                    <td>
+                                        <!-- Image Upload Input -->
+                                        <input type="file" ng-model="form[table.mau.idMauSac][size.idKichCo].imageFile"
+                                               onchange="angular.element(this).scope().handleFileSelect(event, table.mau.idMauSac, size.idKichCo)">
+
+                                        <!-- Image Preview -->
+                                        <img ng-if="form[table.mau.idMauSac][size.idKichCo].imageSrc"
+                                             ng-src="{{form[table.mau.idMauSac][size.idKichCo].imageSrc}}"
+                                             alt="Image Preview" style="width: 50px; height: 50px;">
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-danger" ng-click="create()">Thêm</button>
+
+        </div>
+    </div>
+
+    <!-- End Page-content -->
+
+    <footer class="footer">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+                    <script>document.write(new Date().getFullYear())</script>
+                    © ALLDY STORE.
+                </div>
+                <div class="col-sm-6">
+                    <div class="text-sm-end d-none d-sm-block">
+                        Design & Develop by <a href="#!" class="text-decoration-underline">Themesbrand</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script>
+
+    </script>
+</div>
+
+</body>
+
+</html>

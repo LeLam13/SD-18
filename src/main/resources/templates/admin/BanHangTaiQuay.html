@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http:/www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{/admin/index}">
+
+<head>
+    <title>ALLDY SNAEKER | Bán Hàng Tại Quầy</title>
+</head>
+
+<body>
+    <div class="main-content" layout:fragment="content">
+        <style>
+            .table-responsive{
+                margin-top: 50px;
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            .cart-header {
+                margin-bottom: 20px;
+                font-size: 24px;
+                font-weight: bold;
+            }
+
+            table.table-bordered {
+                border: 1px solid #ccc; /* Tạo đường viền bao quanh bảng */
+                max-height: 40%;
+            }
+
+            table.table-bordered th,
+            table.table-bordered td {
+                border: 1px solid #ccc; /* Tạo đường viền cho các ô */
+            }
+            /*.table-bordered tr{*/
+            /*    height: 80px;*/
+            /*}*/
+            .table th, .table td {
+                vertical-align: middle;
+            }
+            .quantity-input {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .quantity-input input {
+                width: 70px;
+                text-align: center;
+            }
+
+            .table th,
+            .table td {
+                padding: 12px;
+            }
+
+            .table thead th {
+                /*background-color: #f8f9fa;*/
+                background-color: #9dc6f2;
+                /* Màu nền cho tiêu đề cột */
+                position: sticky;
+                /* Giữ tiêu đề cố định khi cuộn */
+                top: 0;
+                /* Vị trí của tiêu đề */
+                z-index: 1;
+                /* Đảm bảo tiêu đề nằm trên cùng */
+            }
+
+            .payment-box {
+                border: 1px solid #ccc;
+                padding: 10px;
+                border-radius: 10px;
+                max-width: 400px;
+                max-height: 4500px;
+                margin: 0 auto;
+                font-size: 16px;
+            }
+            .payment-box input, .payment-box select {
+                margin-bottom: 10px;
+            }
+            .total-amount {
+                font-weight: bold;
+                font-size: 20px;
+            }
+            .customer-box {
+                border: 1px solid #ccc;  /* Viền xám nhạt */
+                padding: 10px;           /* Khoảng cách bên trong */
+                border-radius: 5px;      /* Bo góc cho hộp */
+                background-color: #f9f9f9; /* Màu nền xám nhạt */
+                color: #a5a5a5;          /* Màu chữ xám nhạt */
+                font-size: 14px;         /* Giảm kích thước chữ */
+            }
+            .customer-box .input-group-text,
+            .customer-box .form-control {
+                height: 40px !important;
+                padding: 0 !important;
+                display: flex;
+                align-items: center;
+                font-size: 14px;
+            }
+            .item {
+                display: flex;
+                flex-direction: column;
+                justify-content: center; /* Giữ các phần tử ở giữa theo chiều dọc */
+                background-color: #282c34;
+                color: white;
+                border-radius: 10px;
+                padding: 7px;
+                width: 80px;
+                height: 40px;
+                cursor: pointer;
+                margin-right: 5px;
+                position: relative; /* Đặt các phần tử con một cách chính xác */
+            }
+
+
+            .item .count, .item .badge {
+                font-size: 10px;
+                font-weight: bold;
+                position: absolute;  /* Đặt vị trí chính xác */
+                left: 5px;           /* Canh sang trái */
+            }
+
+            .item .count {
+                top: 5px;             /* Canh phía trên cho count */
+            }
+
+            .item .badge {
+                bottom: 5px;          /* Canh phía dưới cho badge */
+            }
+
+            .item .icon {
+                font-size: 20px;
+                margin: auto;         /* Đặt icon vào giữa */
+                z-index: 1;           /* Đảm bảo icon nằm trên các phần tử khác nếu cần */
+            }
+
+            .item .close-icon {
+                font-size: 12px;
+                position: absolute;
+                right: 5px;  /* Đặt icon X ở phía bên phải */
+                top: 5px;    /* Canh phía trên */
+                z-index: 2;  /* Đảm bảo icon X nằm trên các phần tử khác */
+            }
+
+            .plus-button {
+                background-color: #282c34;
+                color: white;
+                border: none;
+                border-radius: 50%;
+                padding: 10px;
+                font-size: 14px;
+                cursor: pointer;
+            }
+            .selected {
+                background-color: blue; /* Màu nền khi được chọn */
+            }
+
+        </style>
+        <div class="page-content">
+            <div class="container-fluid" ng-app="banhang-app" ng-controller="banhang-ctrl">
+
+                <div class="row mb-1">
+                    <div class="item" ng-repeat="donHangs in donHang" ng-click="selectOrder(donHangs.idDonHang)" ng-class="{'selected': selectedId === donHangs.idDonHang}">
+                        <div class="count" hidden>{{ donHangs.idDonHang }}</div>
+                        <div class="count">Đơn</div>
+                        <div class="icon">🛒</div>
+                        <button ng-click="deleteDonHang(donHangs.idDonHang)" class="close-icon fas fa-times-circle"></button>
+                        <div class="badge">{{ $index + 1 }}</div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-7">
+                        <div class="row">
+                            <div class="table-responsive">
+                                <div class="cart-header">Đơn Hàng Chi Tiết</div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">Tên Sản phẩm</th>
+                                        <th scope="col" class="text-center">Số lượng</th>
+                                        <th scope="col">Đơn Giá</th>
+                                        <th scope="col">Giá bán</th>
+                                        <th scope="col">Tổng tiền</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="details in productDetails">
+                                        <td class="text-center">
+                                            <button ng-click="deleteDonHangChiTiet(details.idDonHangChiTiet, details.idSanPham)" type="button" class="btn btn-danger bi bi-trash3-fill"></button>
+                                        </td>
+                                        <td>{{ details.tenSanPham}}</td>
+                                        <td class="text-center">
+                                            <div class="quantity-input">
+                                                <button ng-click="soLuongReduce(details)" class="btn btn-outline-secondary bi bi-dash-circle"></button>
+                                                <input ng-model="details.soLuong" ng-forcus="saveOriginalQuantity(details)"
+                                                       ng-blur="checkQuantity(details)" type="number" class="form-control" value="1" min="1">
+                                                <button ng-click="soLuongPlus(details)" class="btn btn-outline-secondary bi bi-plus-circle"></button>
+                                            </div>
+                                        </td>
+                                        <td>{{ details.giaBan}}</td>
+                                        <td>{{ details.giaBan}}</td>
+                                        <td>{{details.soLuong*details.giaBan}}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                            <div class="row">
+                                <nav aria-label="Page navigation example">
+                                    <ul class="pagination">
+                                        <li class="page-item">
+                                            <a class="page-link" href="#" aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+                                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                        <li class="page-item">
+                                            <a class="page-link" href="#" aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="table-responsive">
+                                <div class="cart-header">
+                                 <div class="row">
+                                     <div class="col-4">
+                                         Sản Phẩm
+                                     </div>
+                                     <div class="col-6">
+                                         <div class="input-group mb-3">
+                                             <input type="text" ng-model="inputData" ng-model-options="{ debounce: 500 }" ng-change="searchSanPham(inputData)" class="form-control" placeholder="Tìm kiếm" id="search-product">
+                                         </div>
+                                     </div>
+                                     <div class="col-2">
+<!--                                         <button  class="btn btn-outline-secondary">-->
+<!--                                             QR CODE-->
+<!--                                         </button>-->
+                                     </div>
+                                 </div>
+                                </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col"></th>
+                                        <th scope="col">Tên Sản phẩm</th>
+                                        <th scope="col" class="text-center">Số lượng</th>
+                                        <th scope="col">Đơn Giá</th>
+                                        <th scope="col">Giá bán</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="itemProducts in products">
+                                        <td>
+                                            <img ng-src="/assets/img/{{itemProducts.idHinhAnh.ten}}" alt="" class="img-fluid mx-auto d-block" style="max-height: 80px; max-width: 80px;">
+                                        </td>
+                                        <td>{{itemProducts.idSanPham.ten}}</td>
+                                        <td class="text-center">
+                                            {{itemProducts.soLuong}}
+                                        </td>
+                                        <td>{{itemProducts.giaBan}}</td>
+                                        <td>{{itemProducts.giaBan}}</td>
+                                        <td class="text-center">
+                                            <button ng-click="addProductsDetail(itemProducts.idSanPhamChiTiet)" class="btn btn-outline-secondary">
+                                                <i class="bi bi-cart-plus" style="font-size: 20px;"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                                <div class="row">
+                                    <nav aria-label="Page navigation example">
+                                        <ul class="pagination">
+                                            <li class="page-item">
+                                                <a class="page-link" href="#" aria-label="Previous">
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+                                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                            <li class="page-item">
+                                                <a class="page-link" href="#" aria-label="Next">
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-5">
+                        <div class="row ml-1">
+                            <div class="col-5">
+                                <button ng-click="addDonHang()" type="button" class="btn btn-primary" id="add-don-hang">Tạo Đơn Hàng</button>
+                            </div>
+                            <div class="col-5">
+                                <button ng-click="openModal()" type="button" class="btn btn-secondary" id="chon-KH">Chọn Khách Hàng</button>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="payment-box mt-2">
+                                <div class="customer-box">
+                                    <div class="input-group">
+                                        <span class="input-group-text">Khach Hang</span>
+                                        <input type="text" id="nameKH" aria-label="First name" class="form-control">
+                                        <input type="text" id="sdtKH" aria-label="Last name" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Tổng tiền:</label>
+                                    <span class="total-amount">{{getSum()}}</span>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label" >Phiếu giảm giá:</label>
+                                    <select class="form-select" id="discountSelect">
+                                        <option value="1" selected>Giảm giá mừng lễ</option>
+                                    </select>
+<!--                                    <span>200,000</span>-->
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Tiền giảm:</label>
+                                    <span>{{ getTienGiam() }}</span>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Khách phải trả:</label>
+                                    <span>{{ getTienKhachPTra() }}</span>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Khách còn thiếu:</label>
+                                    <span>{{ getTienKhachPTra() }}</span>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Phương thức thanh toán:</label>
+                                    <select class="form-select" id="paymentMethodSelect">
+                                        <option value="2" selected>Tiền Mặt</option>
+                                        <option value="3" >Thanh Toán Online</option>
+                                    </select>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Khách thanh toán:</label>
+<!--                                    <button class="btn btn-success btn-sm"><i class="bi bi-calculator"></i></button>-->
+                                    <input type="text" class="form-control" ng-model="khachThanhToan" id="id-khach-thanh-toan">
+
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Số tiền thừa:</label>
+                                    <span>{{ tinhTienThua()  }}</span>
+                                </div>
+                                <div class="mb-2" id="hinh-thuc-van-chuyen">
+                                    <label class="form-label">Hình Thức Nhận Hàng:</label>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" ng-model="shippingMethod" id="hinh-thuc-van-chuyen1" value="1"  checked>
+                                        <label class="form-check-label" for="hinh-thuc-van-chuyen1">
+                                            Nhận hàng tại quầy
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="flexRadioDefault" ng-model="shippingMethod" value="2" id="hinh-thuc-van-chuyen2" >
+                                        <label class="form-check-label" for="hinh-thuc-van-chuyen2">
+                                            Vận chuyển (Ship)
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="customer-box" ng-show="shippingMethod == '2'">
+                                    <div class="input-group">
+                                        <span class="input-group-text">Khách Hàng Nhận:</span>
+                                        <input type="text" id="nameKHNhan" aria-label="First name" class="form-control">
+                                        <input type="text" id="sdtKHNhan" aria-label="Last name" class="form-control">
+                                    </div>
+                                    <div class="mb-2" id="address-selection">
+                                        <label class="form-label">Địa Chỉ Giao Hàng:</label>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label class="form-label">Tỉnh/Thành Phố:</label>
+                                                <select class="form-select" id="tinh" name="tinh" title="Chọn Tỉnh Thành">
+                                                    <option value="0">Tỉnh Thành</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label">Quận/Huyện:</label>
+                                                <select class="form-select" id="quan" name="quan" title="Chọn Quận Huyện">
+                                                    <option value="0">Quận Huyện</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-6">
+                                                <label class="form-label">Xã/Phường:</label>
+                                                <select class="form-select" id="phuong" name="phuong" title="Chọn Phường Xã">
+                                                    <option value="0">Phường Xã</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-6">
+                                                <label class="form-label">Số Nhà:</label>
+                                                <input type="text" id="soNha" class="form-control">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="form-label">Ghi chú:</label>
+                                    <textarea class="form-control" rows="2"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row mt-2 ml-1">
+                            <div class="col-4">
+                                <button ng-click="createHoaDon()" type="button" class="btn btn-primary">Lưu Hoá Đơn</button>
+                            </div>
+                            <div class="col-4">
+                                <button ng-click="printer()" type="button" class="btn btn-secondary">In Hoá Đơn</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--modal-->
+                <div class="modal fade" id="show-modal-khach" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Danh Sách Khách Hàng</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row mb-2">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="Nhập số điện thoại" id="sdt-khach-hang">
+                                        <button ng-click="addKhachHang()" class="btn btn-outline-secondary" type="button">Thêm</button>
+                                        <button ng-click="searchKhachHang()" class="btn btn-outline-secondary" type="button">Tìm Kiếm</button>
+                                    </div>
+                                </div>
+                                <div class="row" id="erroresMessage">
+                                    <div class="alert alert-danger" role="alert">
+                                        <span id="showMessage"></span>
+                                    </div>
+                                </div>
+                                <table class="table table-bordered">
+                                    <thead>
+                                    <tr>
+                                        <th scope="col">STT</th>
+                                        <th scope="col">Mã Khách Hàng</th>
+                                        <th scope="col">Tên Khách Hàng</th>
+                                        <th scope="col">Số Điện Thoại</th>
+                                        <th scope="col"></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="kh in khachHang">
+                                        <th scope="row">{{ $index + 1 }}</th>
+                                        <td>{{ kh.ma_khach_hang}}</td>
+                                        <td>{{ kh.ho_ten }}</td>
+                                        <td>{{ kh.so_dien_thoai }}</td>
+                                        <td>
+                                            <button ng-click="getKhachHangByID(kh.id_khach_hang)" type="button" class="btn btn-primary bi bi-box-fill"></button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+
+</html>

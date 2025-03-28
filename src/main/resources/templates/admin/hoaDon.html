@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html
+        lang="en"
+        xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{/admin/index}"
+>
+<link
+        rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+/>
+<head>
+    <title>ALLDY SNEAKER | Hóa Đơn</title>
+    <style>
+        /* General Styling */
+        .modal-Big {
+            width: auto;
+            height: auto;
+        }
+
+        .er {
+            color: red;
+            font-size: 13px;
+        }
+
+        .table-responsive {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        /* Card Styling */
+        .card {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            background-color: #343a40;
+            color: #ffffff;
+            padding: 15px;
+            border-bottom: 1px solid #eaeaea;
+            text-align: center;
+        }
+
+        .card-title {
+            margin: 0;
+            font-size: 1.25rem;
+        }
+
+        /* Table Styling */
+        .table {
+            border: 1px solid #eaeaea;
+            margin: 20px 0;
+        }
+
+        .table th,
+        .table td {
+            padding: 16px;
+            vertical-align: middle;
+            text-align: center;
+        }
+
+        .table th {
+            background-color: #f8f9fa;
+            color: #333;
+            position: sticky;
+            top: 0;
+            z-index: 1;
+        }
+
+        .table tbody tr:hover {
+            background-color: #f1f3f5;
+        }
+
+        /* Status Styling */
+        .status-complete {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .status-canceled {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        /* Hiệu ứng khi hover dòng */
+        .table-hover tbody tr:hover {
+            background-color: #f5f5f5;
+            cursor: pointer;
+        }
+
+        /* Căn giữa nội dung trong các ô */
+        .table td,
+        .table th {
+            vertical-align: middle;
+        }
+
+        /* Điều chỉnh nút đóng ở phần header */
+        .modal-header .close {
+            padding: 0;
+            margin: 0;
+        }
+    </style>
+</head>
+
+<body>
+<div class="main-content" layout:fragment="content">
+    <div class="page-content" ng-app="hoaDon-app" ng-controller="hoaDon-ctrl">
+        <div class="container-fluid">
+            <div class="col-xl-12">
+                <div class="d-flex justify-content-end mb-3">
+                    <div class="input-group" style="width: 300px">
+                        <!-- Đặt chiều rộng của input group -->
+                        <input
+                                type="text"
+                                class="form-control"
+                                ng-model="searchMaHoaDon"
+                                placeholder="Tìm mã hóa đơn"
+                        />
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" ng-click="searchHoaDon()">
+                                Tìm kiếm
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <!-- Card Header -->
+                    <div class="card-header">
+                        <h5 class="card-title">Danh Sách Hóa Đơn</h5>
+                    </div>
+
+                    <!-- Table Content -->
+                    <div class="tab-content p-3 text-muted">
+                        <div class="tab-pane active" id="donhang1" role="tabpanel">
+                            <div class="table-responsive">
+                                <table
+                                        class="table align-middle datatable dt-responsive table-check nowrap"
+                                >
+                                    <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Mã Hóa Đơn</th>
+                                        <th>Người tạo</th>
+                                        <th>Ngày tạo</th>
+                                        <th>Mã Nhân Viên</th>
+                                        <th>Tên Khách Hàng</th>
+                                        <th>Tổng Tiền</th>
+                                        <th>Tổng Tiền Khuyến Mãi</th>
+                                        <th>Tổng Tiền Sau Khuyến Mãi</th>
+                                        <th>Ghi Chú</th>
+                                        <th>Trạng Thái</th>
+                                        <th>Loại Đơn Hàng</th>
+                                        <th>Hành Động</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="hoaDon in hoaDons">
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>{{ hoaDon.maHoaDon }}</td>
+                                        <td>{{ hoaDon.createBy }}</td>
+                                        <td>{{ hoaDon.createDate }}</td>
+                                        <td>{{ hoaDon.nhanVien.maNhanVien }}</td>
+                                        <td>{{ hoaDon.khachHang.hoTen }}</td>
+                                        <td>{{ hoaDon.tongTien | currency:'₫':0 }}</td>
+                                        <td>
+                                            {{ hoaDon.tongTienKhuyenMai | currency:'₫':0 }}
+                                        </td>
+                                        <td>
+                                            {{ hoaDon.tongTienSauKhuyenMai | currency:'₫':0 }}
+                                        </td>
+                                        <td>{{ hoaDon.ghiChu }}</td>
+                                        <td>
+                            <span
+                                    ng-class="{'status-complete': hoaDon.trangThaiThanhToan, 'status-canceled': !hoaDon.trangThaiThanhToan}"
+                            >
+                              {{ hoaDon.trangThaiThanhToan ? 'Hoàn thành' : 'Hủy
+                              đơn' }}
+                            </span>
+                                        </td>
+                                        <!-- Cột loại đơn hàng -->
+                                        <td>
+                            <span>
+                              {{ hoaDon.loaiDonHang === '1' ? 'Đơn hàng tại
+                                    quầy' : 'Đơn hàng online' }}
+                            </span>
+                                        </td>
+                                        <td style="white-space: nowrap">
+                                            <button
+                                                    ng-click="viewDetails(hoaDon.idHoaDon)"
+                                                    class="btn btn-info btn-sm"
+                                                    style="display: inline-block; margin-right: 8px"
+                                            >
+                                                Xem HĐ
+                                            </button>
+                                            <button
+                                                    ng-click="exportHoaDon(hoaDon.idHoaDon)"
+                                                    class="btn btn-success btn-sm"
+                                                    style="display: inline-block"
+                                            >
+                                                Xuất HĐ
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+
+                                    <nav aria-label="Page navigation">
+                                        <ul class="pagination">
+                                            <li
+                                                    class="page-item"
+                                                    ng-class="{'disabled': currentPage === 0}"
+                                            >
+                                                <a
+                                                        class="page-link"
+                                                        href="#"
+                                                        ng-click="getHoaDons(currentPage - 1)"
+                                                        aria-label="Previous"
+                                                >
+                                                    <span aria-hidden="true">&laquo;</span>
+                                                </a>
+                                            </li>
+                                            <li
+                                                    class="page-item"
+                                                    ng-repeat="page in [].constructor(totalPages) track by $index"
+                                                    ng-class="{'active': $index === currentPage}"
+                                            >
+                                                <a
+                                                        class="page-link"
+                                                        href="#"
+                                                        ng-click="getHoaDons($index)"
+                                                >{{$index + 1}}</a
+                                                >
+                                            </li>
+                                            <li
+                                                    class="page-item"
+                                                    ng-class="{'disabled': currentPage >= totalPages - 1}"
+                                            >
+                                                <a
+                                                        class="page-link"
+                                                        href="#"
+                                                        ng-click="getHoaDons(currentPage + 1)"
+                                                        aria-label="Next"
+                                                >
+                                                    <span aria-hidden="true">&raquo;</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Xuất Hóa Đơn -->
+        <div
+                class="modal fade"
+                id="exportInvoiceModal"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="exportInvoiceModalLabel"
+                aria-hidden="true"
+        >
+            <div
+                    class="modal-dialog modal-dialog-centered modal-lg"
+                    role="document"
+            >
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div
+                            class="modal-header"
+                            style="background-color: #343a40; color: #fff"
+                    >
+                        <h5
+                                class="modal-title w-100 text-center"
+                                id="exportInvoiceModalLabel"
+                                style="font-weight: bold; font-size: 24px"
+                        >
+                            Nhập Thông Tin Hóa Đơn
+                        </h5>
+                        <button
+                                type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-label="Close"
+                                style="color: #fff"
+                        >
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <!-- Modal Footer -->
+                    <div class="modal-footer" style="background-color: #f1f1f1">
+                        <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-dismiss="modal"
+                        >
+                            Đóng
+                        </button>
+                        <button
+                                type="button"
+                                class="btn btn-success"
+                                ng-click="confirmExport()"
+                        >
+                            Xuất Hóa Đơn
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div
+                class="modal fade"
+                id="detailsModal"
+                tabindex="-1"
+                role="dialog"
+                aria-labelledby="detailsModalLabel"
+                aria-hidden="true"
+        >
+            <div
+                    class="modal-dialog modal-dialog-centered modal-lg"
+                    role="document"
+            >
+                <div class="modal-content">
+                    <!-- Modal Header -->
+                    <div
+                            class="modal-header"
+                            style="background-color: #343a40; color: #fff"
+                    >
+                        <h5
+                                class="modal-title w-100 text-center"
+                                id="detailsModalLabel"
+                                style="font-weight: bold; font-size: 24px"
+                        >
+                            Chi Tiết Hóa Đơn
+                        </h5>
+                        <button
+                                type="button"
+                                class="close"
+                                data-dismiss="modal"
+                                aria-label="Close"
+                                style="color: #fff"
+                        >
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <!-- Modal Body -->
+                    <div
+                            class="modal-body"
+                            style="padding: 20px; background-color: #f8f9fa"
+                    >
+                        <div class="table-responsive">
+                            <!-- Invoice Information -->
+                            <h6 class="text-primary mb-3">Thông Tin Hóa Đơn</h6>
+                            <table
+                                    class="table table-bordered text-center"
+                                    style="background-color: #fff"
+                            >
+                                <tr>
+                                    <th>Mã Hóa Đơn</th>
+                                    <td>{{ detail.hoaDon.maHoaDon }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Tên Khách Nhận</th>
+                                    <td>{{ detail.hoaDon.tenKhachNhan || "Không có" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Email Khách Nhận</th>
+                                    <td>{{ detail.hoaDon.emailKhachNhan || "Không có" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Số Điện Thoại</th>
+                                    <td>
+                                        {{ detail.hoaDon.soDienThoaiKhachNhan || "Không có" }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Địa Chỉ Giao Hàng</th>
+                                    <td>{{ detail.hoaDon.diaChiNhan || "Không có" }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Tổng Tiền</th>
+                                    <td>{{ detail.hoaDon.tongTien }}</td>
+                                </tr>
+                                <tr>
+                                    <th>Trạng Thái Thanh Toán</th>
+                                    <td>
+                                        {{ detail.hoaDon.trangThaiThanhToan ? 'Đã Thanh Toán' :
+                                            'Chưa Thanh Toán' }}
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <!-- Product Details -->
+                            <h6 class="text-primary mt-4 mb-3">Chi Tiết Sản Phẩm</h6>
+                            <table class="table table-hover table-bordered text-center">
+                                <thead style="background-color: #007bff; color: white">
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên Sản Phẩm</th>
+                                    <th>Mã SP Chi Tiết</th>
+                                    <th>Chất Liệu</th>
+                                    <th>Kích Cỡ</th>
+                                    <th>Số Lượng</th>
+                                    <th>Đơn Giá</th>
+                                    <th>Thành Tiền</th>
+                                    <th>Hình Ảnh</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="item in detail.chiTietHoaDon">
+                                    <td>{{ $index + 1 }}</td>
+                                    <td>{{ item.sanPhamTen }}</td>
+                                    <td>{{ item.maSanPhamChiTiet }}</td>
+                                    <td>{{ item.chatLieu }}</td>
+                                    <td>{{ item.kichCo }}</td>
+                                    <td>{{ item.soLuong }}</td>
+                                    <td>{{ item.donGia }}</td>
+                                    <td>{{ item.soLuong * item.donGia }}</td>
+                                    <td>
+                                        <img
+                                                ng-src="{{ item.hinhAnh }}"
+                                                alt="Hình ảnh"
+                                                style="width: 50px; height: auto"
+                                        />
+                                    </td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- Modal Footer -->
+                    <div class="modal-footer" style="background-color: #f1f1f1">
+                        <button
+                                type="button"
+                                class="btn btn-secondary"
+                                data-dismiss="modal"
+                        >
+                            Đóng
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

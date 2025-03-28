@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/user/trangChu}">
+<!--xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/user/trangChu}"-->
+
+<head>
+    <meta charset="UTF-8">
+    <title>Giỏ Hàng | ALLDY STORE </title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+
+
+</head>
+<!--layout:fragment="contentUser"-->
+<body>
+    <div layout:fragment="contentUser" class="bg0 m-t-23 p-b-140 container" >
+        <style>
+            .table-responsive{
+                margin-top: 20px;
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                font-size: 18px;
+            }
+            .table-responsive label{
+                font-size: 16px;
+                color: black;
+            }
+            .table-responsive input{
+                font-size: 14px;
+            }
+            .table-responsive textarea{
+                font-size: 14px;
+            }
+            .table-responsive select{
+                font-size: 14px;
+            }
+            #action-remove{
+                font-size: 18px;
+                width: auto;
+                /*max-width: 50px;*/
+                min-width: 0 !important;
+            }
+            #action-khuyenMai{
+                font-size: 18px;
+                width: auto;
+                /*max-width: 50px;*/
+                min-width: 0 !important;
+            }
+
+            .voucher{
+                margin-top: 20px;
+                background: white;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                font-size: 18px;
+            }
+
+            .notification-container {
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%); /* Canh giữa màn hình */
+                background-color: rgba(0, 0, 0, 0.7); /* Màu nền trong suốt */
+                color: white;
+                padding: 15px;
+                border-radius: 10px;
+                z-index: 9999; /* Đảm bảo thông báo hiển thị trên cùng */
+                text-align: center; /* Canh chữ ở giữa */
+                max-width: 300px;
+                width: 100%;
+            }
+
+            .notification-content {
+                display: flex;
+                flex-direction: column; /* Chia icon và message theo chiều dọc */
+                align-items: center; /* Canh giữa icon và message */
+            }
+
+            .notification-icon {
+                font-size: 40px; /* Kích thước của icon */
+                margin-bottom: 10px; /* Khoảng cách giữa icon và message */
+            }
+
+            .notification-message {
+                font-size: 16px; /* Kích thước của message */
+                line-height: 1.5;
+                color: white; /* Màu chữ trắng cho message */
+            }
+
+            #messHoTen,#messEmail,#messSDT,#messSoNha,#messThanhPho,#messQuan,#messPhuong{
+                font-size: 14px;
+            }
+            input, #messHoTen,#messEmail,#messSDT,#messSoNha,#messThanhPho,#messQuan,#messPhuong {
+                margin: 0;
+                padding: 0;
+                line-height: 1;  /* Loại bỏ khoảng cách dòng */
+                vertical-align: top;  /* Điều chỉnh căn chỉnh theo chiều dọc */
+                box-sizing: border-box;  /* Đảm bảo padding và border không ảnh hưởng đến kích thước */
+            }
+            .table th, .table td {
+                vertical-align: middle;
+            }
+
+            .quantity-input {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .quantity-input input {
+                width: 50px;
+                text-align: center;
+                height: 30px; /* Set input height to match button height */
+                box-sizing: border-box; /* Ensure padding/border is included in height */
+                margin: 0; /* Remove any default margin */
+            }
+
+            .quantity-input button {
+                min-width: 30px;  /* Ensure button width is consistent with input */
+                min-height: 30px; /* Set button height to match input */
+                padding: 0;   /* Remove any internal padding from buttons */
+                box-sizing: border-box; /* Include padding/border in the height */
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.5rem; /* Adjust icon size if needed */
+                margin-left: 5px;
+                margin-right: 5px;
+            }
+
+            .quantity-input button i {
+                line-height: 1; /* Align icon vertically */
+            }
+
+        </style>
+        <div class="row" ng-controller="don-hang-online-ctrl">
+            <div class="row">
+                <div class="table-responsive">
+                    <h3>Danh Sách Đơn Hàng</h3>
+                    <div class="row">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">STT</th>
+                                <th scope="col">Tên Sản Phẩm</th>
+                                <th scope="col" style="text-align: center;">Số Lượng</th>
+                                <th scope="col" >đơn giá</th>
+                                <th scope="col">Tổng</th>
+                                <th scope="col"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="orderProduct in itemsOrder">
+                                <th scope="row">${index+1}</th>
+                                <td>{{ username ? orderProduct.idSanPham.ten : orderProduct.idSanPham.ten }}</td>
+                                <!--{{orderProduct.soLuong}}-->
+                                <td class="text-center">
+                                    <div class="quantity-input">
+                                        <button ng-click="soLuongReduce(orderProduct)" class="btn btn-outline-secondary bi bi-dash-circle" ></button>
+                                        <input  ng-model="orderProduct.soLuong" type="text" class="form-control"  min="1">
+                                        <button ng-click="soLuongPlus(orderProduct)" class="btn btn-outline-secondary bi bi-plus-circle" ></button>
+                                    </div>
+                                </td>
+                                <td>{{orderProduct.giaBan}}</td>
+                                <td>{{orderProduct.giaBan * orderProduct.soLuong}}</td>
+                                <td>
+                                    <button type="button" ng-click="removeLocalStorage(orderProduct)" class="btn btn-danger" id="action-remove">
+                                        <i class="bi bi-trash3" style="font-size: 12px"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            <div class="row">
+                <div class="col-7">
+                    <div class="table-responsive">
+                        <h3>Thông Tin Thanh Toán</h3>
+                        <div class="row">
+                            <div class="row mt-1">
+                                <div class="col-6">
+                                    <div class="mb-2">
+                                        <label  class="form-label">Họ Và Tên</label>
+                                        <input type="Text" id="hoVaTen" class="form-control" >
+                                        <span id="messHoTen" style="color: red;"></span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="mb-2">
+                                        <label  class="form-label">email</label>
+                                        <input type="Text" id="email" class="form-control" >
+                                        <span id="messEmail" style="color: red;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="mb-2">
+                                        <label  class="form-label">Số điện thoại</label>
+                                        <input type="Text" id="soDienThoai" class="form-control" >
+                                        <span id="messSDT" style="color: red;"></span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="mb-2">
+                                        <label  class="form-label">Số Nhà</label>
+                                        <input type="Text" id="soNha" class="form-control" >
+                                        <span id="messSoNha" style="color: red;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-4">
+                                    <div class="mb-2">
+                                        <label  class="form-label">Tỉnh - Thành Phố</label>
+                                        <select class="form-select" aria-label="Default select example" ng-model="selectedProvince"
+                                                ng-change="getDisTricts()"
+                                                ng-options="province.ProvinceName for province in provinces track by province.ProvinceID">
+                                            <option value="" selected>Chọn Tỉnh - Thành Phố</option>
+                                        </select>
+                                        <span id="messThanhPho" style="color: red;"></span>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="mb-2">
+                                        <label  class="form-label">Quận - Huyện</label>
+                                        <select class="form-select" aria-label="Default select example" ng-model="selectedDistricts"
+                                                ng-change="getWard()">
+                                            <option value="" selected>Chọn Quận - Huyện</option>
+                                            <option ng-repeat="district in districts" value="{{district.DistrictID}}">{{district.DistrictName}}</option>
+                                        </select>
+                                        <span id="messQuan" style="color: red;"></span>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="mb-2">
+                                        <label  class="form-label">Phường - Xã</label>
+                                        <select class="form-select" aria-label="Default select example"
+                                                ng-model="selectedWards" ng-change="feeShippingApi()">
+                                            <option value="" selected>Chọn Phường - Xã</option>
+                                            <option ng-repeat="ward in wards" value="{{ward.WardCode}}">{{ward.WardName}}</option>
+                                        </select>
+                                        <span id="messPhuong" style="color: red;"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-5">
+                    <div class="voucher">
+                        <div class="row">
+                            <div class="row">
+                                <div class="mb-2 col-4">
+                                    <label  class="form-label">Mã Khuyến Mãi:</label>
+                                </div>
+                                <div class="mb-2 col-5">
+                                    <input type="Text" id="maKhuyenMai" class="form-control" >
+                                </div>
+                                <div class="mb-2 col-1">
+                                    <button type="button" id="action-khuyenMai" class="btn btn-primary">
+                                        <i class="bi bi-trash3" style="font-size: 12px"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="mb-2 col-7">
+                                <label  class="form-label">Tổng Tiền:</label>
+                            </div>
+                            <div class="mb-2 col-5">
+                                <span>{{ formatCurrency(getSum()) }}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-2 col-7">
+                                <label  class="form-label">Tiền Khuyến Mãi:</label>
+                            </div>
+                            <div class="mb-2 col-5">
+                                <span>{{ formatCurrency(promotionAmount()) }}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-2 col-7">
+                                <label  class="form-label">Tổng Tiền Sau Khuyến Mãi:</label>
+                            </div>
+                            <div class="mb-2 col-5">
+                                <span>{{ formatCurrency(totalPromotionAmountAfter()) }}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-2 col-7">
+                                <label  class="form-label">Đơn vị Vận chuyển:</label>
+                            </div>
+                            <div class="mb-2 col-5">
+                                <img src="assets/img/logoghn.png" alt="" class="img-fluid " style="max-height: 55px; max-width: 130px;">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-2 col-7">
+                                <label  class="form-label">Phí Vận chuyển:</label>
+                            </div>
+                            <div class="mb-2 col-5">
+                                <span>{{ formatCurrency(getFeeShip()) }}</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-2 col-7">
+                                <label  class="form-label">Tổng Tiền Thanh Toán:</label>
+                            </div>
+                            <div class="mb-2 col-5">
+                                <span>{{ formatCurrency(sumAmount()) }}</span>
+                            </div>
+                        </div>
+                        <div class="col-7">
+                            <div class="mb-2">
+                                <label  class="form-label">Phương Thức Thanh Toán</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" value="1" ng-model="paymentMethod" ng-checked="paymentMethod == 1" id="phuongThuc3" >
+                                    <label class="form-check-label" for="phuongThuc3">
+                                        Thanh Toán Sau Khi Nhận Hàng
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="flexRadioDefault" value="2" ng-model="paymentMethod" id="phuongThuc4" >
+                                    <label class="form-check-label" for="phuongThuc4">
+                                        Thanh Toán Online
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-2">
+                            <label for="ghi-chu" class="form-label">Ghi Chú đơn Hàng:</label>
+                            <textarea class="form-control" id="ghi-chu" rows="3"></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <button type="button" ng-click="createOrderOnline()" id="order" class="btn btn-primary">Đặt Hàng</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+<!--            thông báo-->
+            <<div ng-if="notification.show" class="notification-container">
+            <div class="notification-content">
+                <div class="notification-icon" ng-bind-html="notification.icon"></div>
+                <div class="notification-message">{{ notification.message }}</div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+
+</html>

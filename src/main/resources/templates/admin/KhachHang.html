@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{/admin/index}" ng-app="khachhangApp">
+<head>
+    <style>
+        .textDetail {
+            font-weight: bold;
+            font-size: 15px;
+            font-style: italic;
+        }
+
+        .er {
+            color: red;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body data-topbar="dark">
+<div class="main-content" layout:fragment="content" ng-controller="KhachHangController">
+    <div class="page-content">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-6"></div>
+                <div class="col-md-6 d-flex justify-content-end">
+                    <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3 me-2">
+                        <div>
+                            <input class="form-control" ng-model="searchQuery" placeholder="Nhập mã, tên hoặc sđt">
+                        </div>
+                    </div>
+                    <div class="d-flex flex-wrap align-items-center justify-content-end gap-2 mb-3">
+                        <div>
+                            <button class="btn btn-secondary" ng-click="showAddForm()">
+                                <i class="bx bx-plus me-1"></i> Thêm mới khách hàng
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <h2>Thông Tin Khách Hàng</h2>
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Mã Khách Hàng</th>
+                    <th>Họ Tên</th>
+                    <th>Ngày Sinh</th>
+                    <th>Số Điện Thoại</th>
+                    <th>Giới Tính</th>
+                    <th>Địa Chỉ</th>
+                    <th>Tên Tài Khoản</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="khach in khachhangList | filter: { ma_khach_hang: searchQuery }">
+                    <td>{{ khach.id_khach_hang }}</td>
+                    <td>{{ khach.ma_khach_hang }}</td>
+                    <td>{{ khach.ho_ten }}</td>
+                    <td>{{ khach.ngay_sinh | date:'yyyy-MM-dd' }}</td>
+                    <td>{{ khach.so_dien_thoai }}</td>
+                    <td>{{ khach.gioi_tinh ? 'Nam' : 'Nữ' }}</td>
+                    <td>{{ khach.dia_chi }}</td>
+                    <td>{{ khach.username_tai_khoan }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Modal for Adding Customer -->
+        <div class="modal fade" id="viewAdd" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true" style="display: none;">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Thêm Khách Hàng Mới</h5>
+                        <button type="button" class="close" ng-click="closeAddForm()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form>
+                            <div class="mb-3">
+                                <label for="maKhachHang">Mã Khách Hàng</label>
+                                <input type="text" id="maKhachHang" class="form-control" ng-model="newKhachHang.ma_khach_hang">
+                            </div>
+                            <div class="mb-3">
+                                <label for="hoTen">Họ Tên</label>
+                                <input type="text" id="hoTen" class="form-control" ng-model="newKhachHang.ho_ten">
+                            </div>
+                            <div class="mb-3">
+                                <label for="ngaySinh">Ngày Sinh</label>
+                                <input type="date" id="ngaySinh" class="form-control" ng-model="newKhachHang.ngay_sinh">
+                            </div>
+                            <div class="mb-3">
+                                <label for="soDienThoai">Số Điện Thoại</label>
+                                <input type="text" id="soDienThoai" class="form-control" ng-model="newKhachHang.so_dien_thoai">
+                            </div>
+                            <div class="mb-3">
+                                <label for="gioiTinh">Giới Tính</label>
+                                <select id="gioiTinh" class="form-control" ng-model="newKhachHang.gioi_tinh">
+                                    <option value="true">Nam</option>
+                                    <option value="false">Nữ</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="diaChi">Địa Chỉ</label>
+                                <input type="text" id="diaChi" class="form-control" ng-model="newKhachHang.dia_chi">
+                            </div>
+                            <div class="mb-3">
+                                <label for="usernameTaiKhoan">Tên Tài Khoản</label>
+                                <input type="text" id="usernameTaiKhoan" class="form-control" ng-model="newKhachHang.username_tai_khoan">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" ng-click="closeAddForm()">Đóng</button>
+                        <button type="button" class="btn btn-primary" ng-click="addKhachHang()">Thêm Khách Hàng</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Phân trang -->
+    <div class="d-flex justify-content-center my-3">
+        <button class="btn btn-primary" ng-click="previousPage()" ng-disabled="currentPage === 1">Trang trước</button>
+        <span class="mx-2">Trang {{currentPage}} / {{totalPages}}</span>
+        <button class="btn btn-primary" ng-click="nextPage()" ng-disabled="currentPage === totalPages">Trang kế tiếp</button>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Ký</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+    <h1 class="text-center">Đăng Ký Tài Khoản</h1>
+
+    <!-- Hiển thị thông báo lỗi nếu có -->
+    <div th:if="${errorMessage}" class="alert alert-danger">
+        <p th:text="${errorMessage}"></p>
+    </div>
+
+    <!-- Hiển thị thông báo thành công nếu có -->
+    <div th:if="${successMessage}" class="alert alert-success">
+        <p th:text="${successMessage}"></p>
+        <p id="countdown" class="mt-3"></p> <!-- Hiển thị bộ đếm ngược -->
+    </div>
+
+    <form action="/signup/customer" method="post">
+        <div class="form-group">
+            <label for="username">Tên Đăng Nhập:</label>
+            <input type="text" id="username" name="username" class="form-control" required placeholder="Nhập tên đăng nhập">
+        </div>
+
+        <div class="form-group">
+            <label for="password">Mật Khẩu:</label>
+            <input type="password" id="password" name="password" class="form-control" required placeholder="Nhập mật khẩu">
+        </div>
+
+        <div class="form-group">
+            <label for="hoTen">Họ Tên:</label>
+            <input type="text" id="hoTen" name="hoTen" class="form-control" required placeholder="Nhập họ tên">
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" class="form-control" required placeholder="Nhập email">
+        </div>
+
+        <div class="form-group">
+            <label for="soDienThoai">Số Điện Thoại:</label>
+            <input type="text" id="soDienThoai" name="soDienThoai" class="form-control" required placeholder="Nhập số điện thoại">
+        </div>
+
+        <div class="form-group">
+            <label for="diaChi">Địa Chỉ:</label>
+            <input type="text" id="diaChi" name="diaChi" class="form-control" required placeholder="Nhập địa chỉ">
+        </div>
+
+        <div class="form-group">
+            <label for="gioiTinh">Giới Tính:</label>
+            <select id="gioiTinh" name="gioiTinh" class="form-control">
+                <option value="true">Nam</option>
+                <option value="false">Nữ</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Đăng Ký</button>
+    </form>
+
+    <div class="mt-3 text-center">
+        <a href="/login" class="btn btn-link">Đã có tài khoản? Đăng Nhập</a>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+    // Kiểm tra nếu thông báo thành công tồn tại
+    if (document.querySelector('.alert-success')) {
+        let countdown = 5; // Thời gian đếm ngược 5 giây
+        const countdownElement = document.getElementById('countdown');
+
+        // Cập nhật đếm ngược mỗi giây
+        const interval = setInterval(function() {
+            countdownElement.textContent = `Chuyển hướng đến trang đăng nhập sau ${countdown} giây...`;
+            countdown--;
+
+            // Khi đếm ngược về 0
+            if (countdown < 0) {
+                clearInterval(interval);
+                window.location.href = '/login'; // Chuyển hướng đến trang đăng nhập
+            }
+        }, 1000); // 1000ms = 1 giây
+    }
+</script>
+</body>
+</html>

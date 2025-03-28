@@ -1,0 +1,83 @@
+package com.example.demo.repo;
+
+import com.example.demo.entity.HoaDon;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.query.Param;
+
+import java.time.LocalDate;
+import java.util.List;
+
+@Repository
+public interface HoaDonRepo extends JpaRepository<HoaDon, Integer> {
+
+    @Query(value = "SELECT * FROM hoa_don WHERE ma_hoa_don LIKE %:maHoaDon%", nativeQuery = true)
+    List<HoaDon> findByMaHoaDonContaining(String maHoaDon);
+
+    HoaDon findByMaHoaDon(String maHoaDon);
+
+    // Tổng doanh thu
+    @Query("SELECT COALESCE(SUM(h.tongTienSauKhuyenMai), 0) FROM HoaDon h")
+    Float calculateTotalRevenue();
+
+    // Doanh thu theo ngày hiện tại
+    @Query(value = "SELECT COALESCE(SUM(tong_tien_sau_khuyen_mai), 0) FROM hoa_don WHERE CAST(create_date AS DATE) = CAST(GETDATE() AS DATE)", nativeQuery = true)
+    Float calculateRevenueToday();
+
+    // Doanh thu ngày hôm qua
+    @Query(value = "SELECT COALESCE(SUM(tong_tien_sau_khuyen_mai), 0) FROM hoa_don WHERE CAST(create_date AS DATE) = CAST(DATEADD(DAY, -1, GETDATE()) AS DATE)", nativeQuery = true)
+    Float calculateRevenueYesterday();
+
+    // Doanh thu theo tháng hiện tại
+    @Query(value = "SELECT COALESCE(SUM(tong_tien_sau_khuyen_mai), 0) FROM hoa_don WHERE YEAR(create_date) = YEAR(GETDATE()) AND MONTH(create_date) = MONTH(GETDATE())", nativeQuery = true)
+    Float calculateRevenueThisMonth();
+
+    // Doanh thu theo năm hiện tại
+    @Query(value = "SELECT COALESCE(SUM(tong_tien_sau_khuyen_mai), 0) FROM hoa_don WHERE YEAR(create_date) = YEAR(GETDATE())", nativeQuery = true)
+    Float calculateRevenueThisYear();
+
+    // Doanh thu tháng trước
+    @Query(value = "SELECT COALESCE(SUM(tong_tien_sau_khuyen_mai), 0) FROM hoa_don WHERE YEAR(create_date) = YEAR(DATEADD(MONTH, -1, GETDATE())) AND MONTH(create_date) = MONTH(DATEADD(MONTH, -1, GETDATE()))", nativeQuery = true)
+    Float calculateRevenueLastMonth();
+
+    // Doanh thu năm trước
+    @Query(value = "SELECT COALESCE(SUM(tong_tien_sau_khuyen_mai), 0) FROM hoa_don WHERE YEAR(create_date) = YEAR(DATEADD(YEAR, -1, GETDATE()))", nativeQuery = true)
+    Float calculateRevenueLastYear();
+
+    // Dữ liệu doanh thu theo thời gian cho biểu đồ
+    @Query("SELECT FORMAT(h.createDate, 'yyyy-MM-dd') AS date, SUM(h.tongTienSauKhuyenMai) " +
+            "FROM HoaDon h GROUP BY FORMAT(h.createDate, 'yyyy-MM-dd') " +
+            "ORDER BY FORMAT(h.createDate, 'yyyy-MM-dd')")
+    List<Object[]> getRevenueOverTime();
+
+    // Doanh thu trong khoảng thời gian cụ thể
+    @Query("SELECT SUM(h.tongTienSauKhuyenMai) FROM HoaDon h WHERE h.createDate BETWEEN :start AND :end GROUP BY h.createDate ORDER BY h.createDate")
+    List<Float> findRevenueInRange(@Param("start") LocalDate start, @Param("end") LocalDate end);
+
+    // Ngày trong khoảng thời gian cụ thể
+    @Query("SELECT FORMAT(h.createDate, 'yyyy-MM-dd') FROM HoaDon h WHERE h.createDate BETWEEN :start AND :end GROUP BY h.createDate ORDER BY h.createDate")
+    List<String> findDatesInRange(@Param("start") LocalDate start, @Param("end") LocalDate end);
+
+    @Query(value = """
+                SELECT TOP 5 s.ten, SUM(d.so_luong) as total_quantity
+                FROM don_hang_chi_tiet d
+                JOIN san_pham_chi_tiet sp ON d.id_san_pham_chi_tiet = sp.id_san_pham_chi_tiet
+                JOIN san_pham s ON sp.id_san_pham = s.id_san_pham
+                GROUP BY s.ten
+                ORDER BY total_quantity DESC
+            """, nativeQuery = true)
+    List<Object[]> findTopSellingProducts();
+
+    // Tính tỷ lệ tăng trưởng doanh thu theo ngày
+    default Float calculateDailyGrowthRate() {
+        Float revenueToday = calculateRevenueToday();
+        Float revenueYesterday = calculateRevenueYesterday();
+
+        if (revenueYesterday != null && revenueYesterday > 0) {
+            return ((revenueToday - revenueYesterday) / revenueYesterday) * 100;
+        } else {
+            return 0.0f; // Trường hợp không có doanh thu hôm qua hoặc là 0
+        }
+    }
+}
